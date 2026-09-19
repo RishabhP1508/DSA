@@ -91,8 +91,13 @@ export type TraceValue =
 export interface TraceObject {
   id: ObjectId;
   type: string; // e.g. "list", "dict", "TreeNode"
-  /** For containers: ordered/keyed children. For objects: attribute map. */
-  entries?: { key: string; value: TraceValue }[];
+  /**
+   * For containers: ordered/keyed children. For objects: attribute map.
+   * `key` is always a display string; `keyKind` preserves the original key TYPE
+   * for dicts so an int key `1` is distinguishable from a str key `"1"`
+   * (the plan requires serializable values that preserve dictionary key types).
+   */
+  entries?: { key: string; keyKind?: TraceValue["kind"]; value: TraceValue }[];
   /** For scalars wrapped as objects or opaque types. */
   repr?: string;
 }
@@ -173,6 +178,7 @@ export type VisualModel =
   | "graph"
   | "dp-table"
   | "bits"
+  | "recursion" // call-stack / recursion tree (reads frames, not a variable)
   | "object"; // generic fallback
 
 /**
@@ -335,6 +341,42 @@ export interface PatternDefinition {
 // ---------------------------------------------------------------------------
 // Local progress / persistence
 // ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Curriculum coverage inventory
+// ---------------------------------------------------------------------------
+
+/**
+ * One required subtopic from the versioned curriculum inventory and the
+ * evidence that it is covered. The inventory is built from the Notion syllabus
+ * checklist plus the agreed additional topics; a broad heading does NOT count
+ * as coverage of its subtopics, so each subtopic gets its own entry.
+ *
+ * See docs/coverage.md (the human-readable inventory) and
+ * src/content/coverage.ts (the machine-checkable list).
+ */
+export interface CoverageEntry {
+  /** Stable id, e.g. "arrays/sliding-window". */
+  id: string;
+  /** Main topic heading, e.g. "Arrays". */
+  area: string;
+  /** The specific required subtopic, e.g. "Sliding windows". */
+  subtopic: string;
+  /** Lesson id that teaches this subtopic (once authored). */
+  lessonId?: string;
+  /** Whether the lesson has a working visual example for this subtopic. */
+  hasVisualExample?: boolean;
+  /** Whether an exercise with feedback exists for this subtopic. */
+  hasExercise?: boolean;
+  /** Pattern id(s) providing recognition guidance where applicable. */
+  patternIds?: string[];
+  /** Optional external practice (e.g. LeetCode) mapped as further practice. */
+  externalPractice?: { name: string; url: string }[];
+  /** Authoring status. */
+  status: "planned" | "in-progress" | "authored" | "verified";
+  /** Free-text note on evidence / open questions. */
+  notes?: string;
+}
 
 export interface ProgressRecord {
   /** Lesson id -> completion state. */

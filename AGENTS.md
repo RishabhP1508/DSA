@@ -67,6 +67,30 @@ unilaterally.
 
 ---
 
+## Curriculum coverage (binding)
+
+The required curriculum is a **coverage checklist**, tracked in
+`src/content/coverage.ts` (machine-checkable) and `docs/coverage.md`
+(human-readable). It is built from the Notion syllabus
+(https://chocolate-candy-c79.notion.site/DSA-Topics-Patterns-and-LeetCode-Questions-3d2d8c33330f80dc9623f6b1dce29e03)
+plus the agreed additional topics.
+
+Rules:
+- **Every required subtopic** gets its own `CoverageEntry`. A broad topic
+  heading does NOT count as coverage of its subtopics.
+- Each subtopic must map to: a detailed explanation, a working visual example +
+  Python implementation, an exercise with feedback, references, and
+  pattern-recognition guidance where applicable.
+- Shared lessons are allowed, but each different application must be explained.
+- When you author/verify a subtopic, update its entry's `status`
+  (`planned → in-progress → authored → verified`) and the `lessonId`,
+  `hasVisualExample`, `hasExercise`, `patternIds` fields, then regenerate
+  `docs/coverage.md`.
+- Map the Notion page's LeetCode questions as OPTIONAL further practice
+  (`externalPractice`); still author original local exercises for the technique.
+- `no requested topic silently dropped` is an acceptance criterion — the
+  coverage list makes gaps visible. Do not delete entries to make it look done.
+
 ## Content authoring rules
 
 - Every lesson follows the sequence: **simple explanation → vocabulary →

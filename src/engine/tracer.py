@@ -29,6 +29,32 @@ import builtins
 # _LIMIT_EVENTS and _LIMIT_TRACE_BYTES. Time is enforced on the JS side by
 # terminating the worker, but we also guard event count here.
 
+import types as _types
+
+
+def _is_opaque(obj):
+    """True for non-data objects we show as a short repr instead of walking.
+
+    Modules, classes/types, functions, methods and built-ins are program
+    machinery, not the data being taught. Walking them (especially modules)
+    would drag in __builtins__ and the whole type/function graph.
+    """
+    return isinstance(
+        obj,
+        (
+            _types.ModuleType,
+            type,
+            _types.FunctionType,
+            _types.BuiltinFunctionType,
+            _types.MethodType,
+            _types.BuiltinMethodType,
+            _types.MethodWrapperType,
+            _types.WrapperDescriptorType,
+            _types.MethodDescriptorType,
+            _types.GetSetDescriptorType,
+        ),
+    )
+
 
 class _TraceRecorder:
     def __init__(self, source_name, limit_events, limit_bytes, stdin_lines):
@@ -77,6 +103,13 @@ class _TraceRecorder:
         if isinstance(obj, str):
             return {"kind": "str", "value": obj}
 
+        # Opaque, non-data objects (modules, classes, functions, builtins) are
+        # shown inline as a short repr and NOT walked. Expanding a module would
+        # pull in __builtins__ and hundreds of type/function objects, bloating
+        # the trace and distracting from the data structures being taught.
+        if _is_opaque(obj):
+            return {"kind": "unknown", "repr": self._safe_repr(obj)}
+
         oid = self._oid(obj)
         # Register the object shell first so cycles resolve to a ref.
         if oid not in self._obj_table:
@@ -109,9 +142,26 @@ class _TraceRecorder:
         if isinstance(obj, dict):
             entries = []
             for k, v in obj.items():
-                key = k if isinstance(k, str) else self._safe_repr(k)
+                # Display key as a string but preserve its original type so an
+                # int key 1 is distinguishable from a str key "1".
+                if isinstance(k, str):
+                    key, key_kind = k, "str"
+                elif isinstance(k, bool):
+                    key, key_kind = ("True" if k else "False"), "bool"
+                elif isinstance(k, int):
+                    key, key_kind = str(k), "int"
+                elif isinstance(k, float):
+                    key, key_kind = repr(k), "float"
+                elif k is None:
+                    key, key_kind = "None", "none"
+                else:
+                    key, key_kind = self._safe_repr(k), "unknown"
                 entries.append(
-                    {"key": key, "value": self._encode_value(v, depth + 1)}
+                    {
+                        "key": key,
+                        "keyKind": key_kind,
+                        "value": self._encode_value(v, depth + 1),
+                    }
                 )
             return {"id": oid, "type": tname, "entries": entries}
         if isinstance(obj, (set, frozenset)):
