@@ -1,8 +1,8 @@
 # Curriculum coverage inventory
 
-Coverage version: 5. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
+Coverage version: 6. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
 
-**Progress: 66 / 129 verified.**
+**Progress: 83 / 129 verified.**
 
 Status legend: planned · in-progress · authored · verified
 
@@ -72,21 +72,21 @@ Status legend: planned · in-progress · authored · verified
 | Singly/doubly/circular | `linked-lists/variants` | planned | — |
 | Deques | `linked-lists/deques` | planned | — |
 
-## Trees and tries (0/11)
+## Trees and tries (11/11)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
-| DFS | `trees/dfs` | planned | — |
-| BFS / level order | `trees/bfs-level-order` | planned | — |
-| Preorder/inorder/postorder | `trees/traversals` | planned | — |
-| BSTs | `trees/bst` | planned | — |
-| Height/depth | `trees/height-depth` | planned | — |
-| Lowest common ancestor | `trees/lca` | planned | — |
-| Tree construction | `trees/construction` | planned | — |
-| Trie insertion | `trees/trie-insertion` | planned | — |
-| Prefix search | `trees/prefix-search` | planned | — |
-| Word search | `trees/word-search` | planned | — |
-| AVL trees | `trees/avl` | planned | — |
+| DFS | `trees/dfs` | verified | tree-dfs |
+| BFS / level order | `trees/bfs-level-order` | verified | tree-bfs |
+| Preorder/inorder/postorder | `trees/traversals` | verified | tree-traversals |
+| BSTs | `trees/bst` | verified | bst-operations |
+| Height/depth | `trees/height-depth` | verified | tree-height-depth |
+| Lowest common ancestor | `trees/lca` | verified | lowest-common-ancestor |
+| Tree construction | `trees/construction` | verified | tree-construction |
+| Trie insertion | `trees/trie-insertion` | verified | trie-insertion |
+| Prefix search | `trees/prefix-search` | verified | prefix-search |
+| Word search | `trees/word-search` | verified | word-search |
+| AVL trees | `trees/avl` | verified | avl-rotations |
 
 ## Stacks and queues (6/6)
 
@@ -143,16 +143,16 @@ Status legend: planned · in-progress · authored · verified
 | Divide and conquer | `dp/divide-and-conquer` | planned | — |
 | N-Queens | `dp/n-queens` | planned | — |
 
-## Heaps (0/6)
+## Heaps (6/6)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
-| Min/max heaps | `heaps/min-max` | planned | — |
-| Top-K elements | `heaps/top-k` | planned | — |
-| Kth largest/smallest | `heaps/kth` | planned | — |
-| Running median | `heaps/running-median` | planned | — |
-| Merging sorted data | `heaps/merge-sorted` | planned | — |
-| Two-heap pattern | `heaps/two-heap` | planned | — |
+| Min/max heaps | `heaps/min-max` | verified | min-max-heaps |
+| Top-K elements | `heaps/top-k` | verified | top-k |
+| Kth largest/smallest | `heaps/kth` | verified | kth-largest |
+| Running median | `heaps/running-median` | verified | running-median |
+| Merging sorted data | `heaps/merge-sorted` | verified | merge-sorted-data |
+| Two-heap pattern | `heaps/two-heap` | verified | two-heap-pattern |
 
 ## Hashing (7/7)
 

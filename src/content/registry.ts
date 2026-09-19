@@ -70,6 +70,23 @@ import { bitShifts } from "./lessons/bit-shifts";
 import { bitCheckSetClear } from "./lessons/bit-check-set-clear";
 import { xorCancellation } from "./lessons/xor-cancellation";
 import { countSetBits } from "./lessons/count-set-bits";
+import { minMaxHeaps } from "./lessons/min-max-heaps";
+import { topK } from "./lessons/top-k";
+import { kthLargest } from "./lessons/kth-largest";
+import { runningMedian } from "./lessons/running-median";
+import { mergeSortedData } from "./lessons/merge-sorted-data";
+import { twoHeapPattern } from "./lessons/two-heap-pattern";
+import { treeDfs } from "./lessons/tree-dfs";
+import { treeBfs } from "./lessons/tree-bfs";
+import { treeTraversals } from "./lessons/tree-traversals";
+import { bstOperations } from "./lessons/bst-operations";
+import { treeHeightDepth } from "./lessons/tree-height-depth";
+import { lowestCommonAncestor } from "./lessons/lowest-common-ancestor";
+import { treeConstruction } from "./lessons/tree-construction";
+import { trieInsertion } from "./lessons/trie-insertion";
+import { prefixSearch } from "./lessons/prefix-search";
+import { wordSearch } from "./lessons/word-search";
+import { avlRotations } from "./lessons/avl-rotations";
 import { linkedListTraversal } from "./lessons/linked-list-traversal";
 
 export const lessons: LessonDefinition[] = [
@@ -147,6 +164,25 @@ export const lessons: LessonDefinition[] = [
   bitCheckSetClear,
   xorCancellation,
   countSetBits,
+  // Heaps
+  minMaxHeaps,
+  topK,
+  kthLargest,
+  runningMedian,
+  mergeSortedData,
+  twoHeapPattern,
+  // Trees and tries
+  treeDfs,
+  treeBfs,
+  treeTraversals,
+  bstOperations,
+  treeHeightDepth,
+  lowestCommonAncestor,
+  treeConstruction,
+  trieInsertion,
+  prefixSearch,
+  wordSearch,
+  avlRotations,
   // Linear structures
   linkedListTraversal,
 ];

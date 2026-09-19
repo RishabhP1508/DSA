@@ -12,7 +12,7 @@
 
 import type { CoverageEntry } from "../core/types";
 
-export const COVERAGE_VERSION = 5;
+export const COVERAGE_VERSION = 6;
 
 function e(
   area: string,
@@ -85,17 +85,17 @@ export const coverage: CoverageEntry[] = [
   e("Linked lists", "Deques", "linked-lists/deques"),
 
   // --- Trees and tries ---
-  e("Trees and tries", "DFS", "trees/dfs"),
-  e("Trees and tries", "BFS / level order", "trees/bfs-level-order"),
-  e("Trees and tries", "Preorder/inorder/postorder", "trees/traversals"),
-  e("Trees and tries", "BSTs", "trees/bst"),
-  e("Trees and tries", "Height/depth", "trees/height-depth"),
-  e("Trees and tries", "Lowest common ancestor", "trees/lca"),
-  e("Trees and tries", "Tree construction", "trees/construction"),
-  e("Trees and tries", "Trie insertion", "trees/trie-insertion"),
-  e("Trees and tries", "Prefix search", "trees/prefix-search"),
-  e("Trees and tries", "Word search", "trees/word-search"),
-  e("Trees and tries", "AVL trees", "trees/avl"),
+  e("Trees and tries", "DFS", "trees/dfs", { lessonId: "tree-dfs", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Trees and tries", "BFS / level order", "trees/bfs-level-order", { lessonId: "tree-bfs", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Trees and tries", "Preorder/inorder/postorder", "trees/traversals", { lessonId: "tree-traversals", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Trees and tries", "BSTs", "trees/bst", { lessonId: "bst-operations", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Trees and tries", "Height/depth", "trees/height-depth", { lessonId: "tree-height-depth", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Trees and tries", "Lowest common ancestor", "trees/lca", { lessonId: "lowest-common-ancestor", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Trees and tries", "Tree construction", "trees/construction", { lessonId: "tree-construction", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Trees and tries", "Trie insertion", "trees/trie-insertion", { lessonId: "trie-insertion", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Trees and tries", "Prefix search", "trees/prefix-search", { lessonId: "prefix-search", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Trees and tries", "Word search", "trees/word-search", { lessonId: "word-search", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Trees and tries", "AVL trees", "trees/avl", { lessonId: "avl-rotations", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Stacks and queues ---
   e("Stacks and queues", "Stack/queue operations", "stacks/operations", { lessonId: "stack-queue-operations", hasVisualExample: true, hasExercise: true, status: "verified" }),
@@ -144,12 +144,12 @@ export const coverage: CoverageEntry[] = [
   e("DP and recursion", "N-Queens", "dp/n-queens"),
 
   // --- Heaps ---
-  e("Heaps", "Min/max heaps", "heaps/min-max"),
-  e("Heaps", "Top-K elements", "heaps/top-k"),
-  e("Heaps", "Kth largest/smallest", "heaps/kth"),
-  e("Heaps", "Running median", "heaps/running-median"),
-  e("Heaps", "Merging sorted data", "heaps/merge-sorted"),
-  e("Heaps", "Two-heap pattern", "heaps/two-heap"),
+  e("Heaps", "Min/max heaps", "heaps/min-max", { lessonId: "min-max-heaps", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Heaps", "Top-K elements", "heaps/top-k", { lessonId: "top-k", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Heaps", "Kth largest/smallest", "heaps/kth", { lessonId: "kth-largest", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Heaps", "Running median", "heaps/running-median", { lessonId: "running-median", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Heaps", "Merging sorted data", "heaps/merge-sorted", { lessonId: "merge-sorted-data", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Heaps", "Two-heap pattern", "heaps/two-heap", { lessonId: "two-heap-pattern", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Hashing ---
   e("Hashing", "Maps and sets", "hashing/maps-sets", { lessonId: "maps-sets", hasVisualExample: true, hasExercise: true, status: "verified" }),
