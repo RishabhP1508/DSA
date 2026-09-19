@@ -12,6 +12,7 @@ import type { LessonDefinition } from "../core/types";
 import { useEngine } from "./useEngine";
 import { CodeEditor } from "./CodeEditor";
 import { VariablesPanel } from "./VariablesPanel";
+import { ComplexityPanel } from "./ComplexityPanel";
 import { Visualizer } from "../visualizers";
 import { markLessonViewed } from "../storage/progress";
 
@@ -20,13 +21,18 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
   // Initialised from the lesson; the parent remounts this component per lesson
   // (via a `key`), so state resets naturally without a setState-in-effect.
   const [source, setSource] = useState(lesson.code);
+  // Lines highlighted by hovering a complexity-derivation row (overrides the
+  // trace line while hovering).
+  const [cxHighlight, setCxHighlight] = useState<number[] | null>(null);
 
   useEffect(() => {
     // Side-effect only: record that the lesson was viewed.
     void markLessonViewed(lesson.id);
   }, [lesson.id]);
 
-  const currentLine = engine.event?.line ?? null;
+  // The code editor highlights a single line; when the complexity panel is
+  // hovering a multi-line contribution we highlight its first line.
+  const currentLine = cxHighlight?.[0] ?? engine.event?.line ?? null;
 
   const lineExplanation = useMemo(() => {
     if (!currentLine) return null;
@@ -95,6 +101,14 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
           })()}
         </div>
         <VariablesPanel event={engine.event} output={engine.outputSoFar} />
+        {lesson.complexityExplanation && (
+          <ComplexityPanel
+            explanation={lesson.complexityExplanation}
+            result={engine.result}
+            onHighlightLines={setCxHighlight}
+            fixedData
+          />
+        )}
       </div>
     </div>
   );

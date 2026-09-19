@@ -12,7 +12,7 @@
 
 import type { CoverageEntry } from "../core/types";
 
-export const COVERAGE_VERSION = 1;
+export const COVERAGE_VERSION = 2;
 
 function e(
   area: string,
@@ -31,22 +31,22 @@ export const coverage: CoverageEntry[] = [
     hasExercise: true,
     status: "verified",
   }),
-  e("Programming foundations", "Expressions", "foundations/expressions"),
-  e("Programming foundations", "Conditions", "foundations/conditions"),
-  e("Programming foundations", "Loops", "foundations/loops"),
-  e("Programming foundations", "Functions", "foundations/functions"),
-  e("Programming foundations", "Scope", "foundations/scope"),
-  e("Programming foundations", "Input/output", "foundations/io"),
-  e("Programming foundations", "References and mutation", "foundations/references-mutation"),
-  e("Programming foundations", "Classes", "foundations/classes"),
-  e("Programming foundations", "Errors", "foundations/errors"),
+  e("Programming foundations", "Expressions", "foundations/expressions", { lessonId: "expressions", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Programming foundations", "Conditions", "foundations/conditions", { lessonId: "conditions", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Programming foundations", "Loops", "foundations/loops", { lessonId: "loops", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Programming foundations", "Functions", "foundations/functions", { lessonId: "functions", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Programming foundations", "Scope", "foundations/scope", { lessonId: "scope", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Programming foundations", "Input/output", "foundations/io", { lessonId: "io", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Programming foundations", "References and mutation", "foundations/references-mutation", { lessonId: "references-mutation", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Programming foundations", "Classes", "foundations/classes", { lessonId: "classes", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Programming foundations", "Errors", "foundations/errors", { lessonId: "errors", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- DSA foundations (agreed additions) ---
-  e("DSA foundations", "Representations", "dsa/representations"),
-  e("DSA foundations", "Correctness", "dsa/correctness"),
-  e("DSA foundations", "Time/space complexity", "dsa/complexity"),
-  e("DSA foundations", "Best/average/worst cases", "dsa/cases"),
-  e("DSA foundations", "Amortized costs", "dsa/amortized"),
+  e("DSA foundations", "Representations", "dsa/representations", { lessonId: "representations", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DSA foundations", "Correctness", "dsa/correctness", { lessonId: "correctness", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DSA foundations", "Time/space complexity", "dsa/complexity", { lessonId: "complexity", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DSA foundations", "Best/average/worst cases", "dsa/cases", { lessonId: "cases", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DSA foundations", "Amortized costs", "dsa/amortized", { lessonId: "amortized", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Arrays ---
   e("Arrays", "Traversal", "arrays/traversal"),

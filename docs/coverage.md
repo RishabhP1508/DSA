@@ -1,37 +1,37 @@
 # Curriculum coverage inventory
 
-Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
+Coverage version: 2. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
 
-**Progress: 2 / 129 verified.**
+**Progress: 16 / 129 verified.**
 
 Status legend: planned · in-progress · authored · verified
 
-## Programming foundations
+## Programming foundations (10/10)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
 | Values, variables, types | `foundations/variables-and-types` | verified | variables-and-types |
-| Expressions | `foundations/expressions` | planned | — |
-| Conditions | `foundations/conditions` | planned | — |
-| Loops | `foundations/loops` | planned | — |
-| Functions | `foundations/functions` | planned | — |
-| Scope | `foundations/scope` | planned | — |
-| Input/output | `foundations/io` | planned | — |
-| References and mutation | `foundations/references-mutation` | planned | — |
-| Classes | `foundations/classes` | planned | — |
-| Errors | `foundations/errors` | planned | — |
+| Expressions | `foundations/expressions` | verified | expressions |
+| Conditions | `foundations/conditions` | verified | conditions |
+| Loops | `foundations/loops` | verified | loops |
+| Functions | `foundations/functions` | verified | functions |
+| Scope | `foundations/scope` | verified | scope |
+| Input/output | `foundations/io` | verified | io |
+| References and mutation | `foundations/references-mutation` | verified | references-mutation |
+| Classes | `foundations/classes` | verified | classes |
+| Errors | `foundations/errors` | verified | errors |
 
-## DSA foundations
+## DSA foundations (5/5)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
-| Representations | `dsa/representations` | planned | — |
-| Correctness | `dsa/correctness` | planned | — |
-| Time/space complexity | `dsa/complexity` | planned | — |
-| Best/average/worst cases | `dsa/cases` | planned | — |
-| Amortized costs | `dsa/amortized` | planned | — |
+| Representations | `dsa/representations` | verified | representations |
+| Correctness | `dsa/correctness` | verified | correctness |
+| Time/space complexity | `dsa/complexity` | verified | complexity |
+| Best/average/worst cases | `dsa/cases` | verified | cases |
+| Amortized costs | `dsa/amortized` | verified | amortized |
 
-## Arrays
+## Arrays (0/8)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
@@ -44,7 +44,7 @@ Status legend: planned · in-progress · authored · verified
 | Matrix traversal | `arrays/matrix-traversal` | planned | — |
 | Intervals | `arrays/intervals` | planned | — |
 
-## Strings
+## Strings (0/8)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
@@ -57,7 +57,7 @@ Status legend: planned · in-progress · authored · verified
 | Substrings | `strings/substrings` | planned | — |
 | KMP string matching | `strings/kmp` | planned | — |
 
-## Linked lists
+## Linked lists (1/10)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
@@ -72,7 +72,7 @@ Status legend: planned · in-progress · authored · verified
 | Singly/doubly/circular | `linked-lists/variants` | planned | — |
 | Deques | `linked-lists/deques` | planned | — |
 
-## Trees and tries
+## Trees and tries (0/11)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
@@ -88,7 +88,7 @@ Status legend: planned · in-progress · authored · verified
 | Word search | `trees/word-search` | planned | — |
 | AVL trees | `trees/avl` | planned | — |
 
-## Stacks and queues
+## Stacks and queues (0/6)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
@@ -99,7 +99,7 @@ Status legend: planned · in-progress · authored · verified
 | BFS queues | `stacks/bfs-queues` | planned | — |
 | Min/max tracking | `stacks/min-max-tracking` | planned | — |
 
-## Graphs
+## Graphs (0/14)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
@@ -118,7 +118,7 @@ Status legend: planned · in-progress · authored · verified
 | Prim | `graphs/prim` | planned | — |
 | Kruskal | `graphs/kruskal` | planned | — |
 
-## DP and recursion
+## DP and recursion (0/20)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
@@ -143,7 +143,7 @@ Status legend: planned · in-progress · authored · verified
 | Divide and conquer | `dp/divide-and-conquer` | planned | — |
 | N-Queens | `dp/n-queens` | planned | — |
 
-## Heaps
+## Heaps (0/6)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
@@ -154,7 +154,7 @@ Status legend: planned · in-progress · authored · verified
 | Merging sorted data | `heaps/merge-sorted` | planned | — |
 | Two-heap pattern | `heaps/two-heap` | planned | — |
 
-## Hashing
+## Hashing (0/7)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
@@ -166,7 +166,7 @@ Status legend: planned · in-progress · authored · verified
 | Prefix sums with maps | `hashing/prefix-sums-maps` | planned | — |
 | Caching seen values | `hashing/caching` | planned | — |
 
-## Bit manipulation
+## Bit manipulation (0/5)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
@@ -176,7 +176,7 @@ Status legend: planned · in-progress · authored · verified
 | XOR cancellation | `bits/xor-cancellation` | planned | — |
 | Counting set bits | `bits/count-set-bits` | planned | — |
 
-## Sorting
+## Sorting (0/11)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
@@ -192,7 +192,7 @@ Status legend: planned · in-progress · authored · verified
 | Custom ordering/comparators | `sorting/comparators` | planned | — |
 | Interval sorting | `sorting/intervals` | planned | — |
 
-## Searching
+## Searching (0/6)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
@@ -203,7 +203,7 @@ Status legend: planned · in-progress · authored · verified
 | Lower/upper bounds | `searching/bounds` | planned | — |
 | Matrix search | `searching/matrix` | planned | — |
 
-## Range queries
+## Range queries (0/2)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
