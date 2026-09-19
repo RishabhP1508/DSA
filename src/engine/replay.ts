@@ -97,7 +97,7 @@ export function displayValue(
           .slice(0, 6)
           .map((e) =>
             obj.type === "dict"
-              ? `${e.key}: ${displayValue(e.value, objects, depth + 1)}`
+              ? `${e.keyKind === "str" ? JSON.stringify(e.key) : e.key}: ${displayValue(e.value, objects, depth + 1)}`
               : displayValue(e.value, objects, depth + 1),
           )
           .join(", ");

@@ -30,6 +30,7 @@ it is a starting point for that topic's research.
 | [Staying — graph docs](https://staying.fun/en/docs/graph) | Code-linked structures and graph visualization ideas |
 | [W3Schools Python DSA](https://www.w3schools.com/python/python_dsa.asp) | Beginner explanations and small Python examples |
 | [Awesome LeetCode Resources](https://github.com/ashishps1/awesome-leetcode-resources) | Discovering pattern guides, exercises, further references |
+| [Notion topic & subtopic syllabus](https://chocolate-candy-c79.notion.site/DSA-Topics-Patterns-and-LeetCode-Questions-3d2d8c33330f80dc9623f6b1dce29e03) | Required coverage checklist and topic-to-practice mapping (see docs/coverage.md) |
 
 ## Added free reference sources
 
@@ -73,6 +74,19 @@ the claims verified, conventions adopted, and access date.
 Executed the lesson program on CPython 3.14.4 and confirmed output
 `Ada 42.5 True None` / `[10, 20, 30, 40]`, plus alias identity (`a is b`) — see
 `scripts/lesson_variables.py` and `scripts/verify_pipeline.mjs`.
+
+### linked-lists/traversal — ✅ authored (Phase 2 demo)
+
+- [GeeksforGeeks — Traversal of Singly Linked List](https://www.geeksforgeeks.org/traversal-of-singly-linked-list/)
+  — traversal visits each node from the head following `next` until the last
+  node whose `next` is None. Accessed 2026-09-19.
+- [Hyperskill — Singly linked list](https://hyperskill.org/learn/step/5336)
+  — no random access; reaching an index is O(n). Accessed 2026-09-19.
+- [Programiz — Linked list time complexity](https://programiz.pro/resources/dsa-linked-list-complexity/)
+  — full traversal is O(n) in the number of nodes. Accessed 2026-09-19.
+
+Executed on CPython 3.14.4; output `1\n2\n3\n` confirmed (and via
+`scripts/verify_lessons.mjs` against the bundled Pyodide).
 
 ### (pending topics)
 

@@ -2,10 +2,9 @@
  * Lesson Workspace: code beside a large diagram, playback controls, the
  * current-line explanation, and expandable variables/stack/output.
  *
- * This is a Phase-1 slice of the full workspace described in the plan. It wires
- * the real execution engine to the array visualizer and per-line explanations,
- * proving the trace -> visual pipeline. Later phases add the remaining
- * structure visualizers, breakpoints, speed control and reduced-motion polish.
+ * Renders every VisualBinding the lesson declares through the visualizer
+ * dispatcher, so any structure family (array, tree, graph, heap, …) is drawn
+ * without workspace changes. Later phases add breakpoints and speed control.
  */
 
 import { useEffect, useMemo, useState } from "react";
@@ -13,7 +12,7 @@ import type { LessonDefinition } from "../core/types";
 import { useEngine } from "./useEngine";
 import { CodeEditor } from "./CodeEditor";
 import { VariablesPanel } from "./VariablesPanel";
-import { ArrayVisualizer } from "../visualizers/ArrayVisualizer";
+import { Visualizer } from "../visualizers";
 import { markLessonViewed } from "../storage/progress";
 
 export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
@@ -33,8 +32,6 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
     if (!currentLine) return null;
     return lesson.codeExplanations.find((c) => c.line === currentLine) ?? null;
   }, [currentLine, lesson]);
-
-  const arrayBinding = lesson.bindings.find((b) => b.model === "array");
 
   return (
     <div className="workspace">
@@ -85,11 +82,17 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
       <div className="workspace-right">
         <div className="diagram">
           <h4>Visualization</h4>
-          {engine.event && arrayBinding ? (
-            <ArrayVisualizer event={engine.event} binding={arrayBinding} />
-          ) : (
-            <p className="dim">The array “{arrayBinding?.variable}” will appear here once it is created.</p>
-          )}
+          {(() => {
+            const ev = engine.event;
+            if (!ev) return <p className="dim">Run the program to see the visualization.</p>;
+            if (lesson.bindings.length === 0)
+              return <p className="dim">This lesson has no visual bindings.</p>;
+            return lesson.bindings.map((b, i) => (
+              <div key={`${b.variable}-${b.model}-${i}`} className="viz-slot">
+                <Visualizer event={ev} binding={b} />
+              </div>
+            ));
+          })()}
         </div>
         <VariablesPanel event={engine.event} output={engine.outputSoFar} />
       </div>
