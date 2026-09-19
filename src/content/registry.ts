@@ -20,6 +20,21 @@ import { complexity } from "./lessons/complexity";
 import { cases } from "./lessons/cases";
 import { amortized } from "./lessons/amortized";
 import { correctness } from "./lessons/correctness";
+import { arrayTraversal } from "./lessons/array-traversal";
+import { twoPointers } from "./lessons/two-pointers";
+import { prefixSums } from "./lessons/prefix-sums";
+import { slidingWindow } from "./lessons/sliding-window";
+import { kadane } from "./lessons/kadane";
+import { inPlaceModification } from "./lessons/in-place-modification";
+import { matrixTraversal } from "./lessons/matrix-traversal";
+import { intervals } from "./lessons/intervals";
+import { stringFrequency } from "./lessons/string-frequency";
+import { stringTwoPointers } from "./lessons/string-two-pointers";
+import { stringSlidingWindow } from "./lessons/string-sliding-window";
+import { stringParsing } from "./lessons/string-parsing";
+import { palindromes } from "./lessons/palindromes";
+import { anagrams } from "./lessons/anagrams";
+import { substrings } from "./lessons/substrings";
 import { linkedListTraversal } from "./lessons/linked-list-traversal";
 
 export const lessons: LessonDefinition[] = [
@@ -40,6 +55,23 @@ export const lessons: LessonDefinition[] = [
   cases,
   amortized,
   correctness,
+  // Arrays
+  arrayTraversal,
+  twoPointers,
+  prefixSums,
+  slidingWindow,
+  kadane,
+  inPlaceModification,
+  matrixTraversal,
+  intervals,
+  // Strings
+  stringFrequency,
+  stringTwoPointers,
+  stringSlidingWindow,
+  stringParsing,
+  palindromes,
+  anagrams,
+  substrings,
   // Linear structures
   linkedListTraversal,
 ];

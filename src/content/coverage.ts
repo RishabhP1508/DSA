@@ -12,7 +12,7 @@
 
 import type { CoverageEntry } from "../core/types";
 
-export const COVERAGE_VERSION = 2;
+export const COVERAGE_VERSION = 3;
 
 function e(
   area: string,
@@ -49,23 +49,23 @@ export const coverage: CoverageEntry[] = [
   e("DSA foundations", "Amortized costs", "dsa/amortized", { lessonId: "amortized", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Arrays ---
-  e("Arrays", "Traversal", "arrays/traversal"),
-  e("Arrays", "Two pointers", "arrays/two-pointers"),
-  e("Arrays", "Sliding windows", "arrays/sliding-window"),
-  e("Arrays", "Prefix sums", "arrays/prefix-sums"),
-  e("Arrays", "Kadane's algorithm", "arrays/kadane"),
-  e("Arrays", "In-place modification", "arrays/in-place"),
-  e("Arrays", "Matrix traversal", "arrays/matrix-traversal"),
-  e("Arrays", "Intervals", "arrays/intervals"),
+  e("Arrays", "Traversal", "arrays/traversal", { lessonId: "array-traversal", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Arrays", "Two pointers", "arrays/two-pointers", { lessonId: "two-pointers", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Arrays", "Sliding windows", "arrays/sliding-window", { lessonId: "sliding-window", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Arrays", "Prefix sums", "arrays/prefix-sums", { lessonId: "prefix-sums", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Arrays", "Kadane's algorithm", "arrays/kadane", { lessonId: "kadane", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Arrays", "In-place modification", "arrays/in-place", { lessonId: "in-place-modification", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Arrays", "Matrix traversal", "arrays/matrix-traversal", { lessonId: "matrix-traversal", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Arrays", "Intervals", "arrays/intervals", { lessonId: "intervals", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Strings ---
-  e("Strings", "Character frequency counting", "strings/frequency"),
-  e("Strings", "Two pointers", "strings/two-pointers"),
-  e("Strings", "Sliding windows", "strings/sliding-window"),
-  e("Strings", "Parsing", "strings/parsing"),
-  e("Strings", "Palindromes", "strings/palindromes"),
-  e("Strings", "Anagrams", "strings/anagrams"),
-  e("Strings", "Substrings", "strings/substrings"),
+  e("Strings", "Character frequency counting", "strings/frequency", { lessonId: "string-frequency", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Strings", "Two pointers", "strings/two-pointers", { lessonId: "string-two-pointers", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Strings", "Sliding windows", "strings/sliding-window", { lessonId: "string-sliding-window", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Strings", "Parsing", "strings/parsing", { lessonId: "string-parsing", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Strings", "Palindromes", "strings/palindromes", { lessonId: "palindromes", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Strings", "Anagrams", "strings/anagrams", { lessonId: "anagrams", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Strings", "Substrings", "strings/substrings", { lessonId: "substrings", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Linked lists ---
   e("Linked lists", "Traversal", "linked-lists/traversal", {

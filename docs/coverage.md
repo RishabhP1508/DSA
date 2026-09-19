@@ -1,8 +1,8 @@
 # Curriculum coverage inventory
 
-Coverage version: 2. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
+Coverage version: 3. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
 
-**Progress: 16 / 129 verified.**
+**Progress: 31 / 129 verified.**
 
 Status legend: planned · in-progress · authored · verified
 
@@ -31,30 +31,30 @@ Status legend: planned · in-progress · authored · verified
 | Best/average/worst cases | `dsa/cases` | verified | cases |
 | Amortized costs | `dsa/amortized` | verified | amortized |
 
-## Arrays (0/8)
+## Arrays (8/8)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
-| Traversal | `arrays/traversal` | planned | — |
-| Two pointers | `arrays/two-pointers` | planned | — |
-| Sliding windows | `arrays/sliding-window` | planned | — |
-| Prefix sums | `arrays/prefix-sums` | planned | — |
-| Kadane's algorithm | `arrays/kadane` | planned | — |
-| In-place modification | `arrays/in-place` | planned | — |
-| Matrix traversal | `arrays/matrix-traversal` | planned | — |
-| Intervals | `arrays/intervals` | planned | — |
+| Traversal | `arrays/traversal` | verified | array-traversal |
+| Two pointers | `arrays/two-pointers` | verified | two-pointers |
+| Sliding windows | `arrays/sliding-window` | verified | sliding-window |
+| Prefix sums | `arrays/prefix-sums` | verified | prefix-sums |
+| Kadane's algorithm | `arrays/kadane` | verified | kadane |
+| In-place modification | `arrays/in-place` | verified | in-place-modification |
+| Matrix traversal | `arrays/matrix-traversal` | verified | matrix-traversal |
+| Intervals | `arrays/intervals` | verified | intervals |
 
-## Strings (0/8)
+## Strings (7/8)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
-| Character frequency counting | `strings/frequency` | planned | — |
-| Two pointers | `strings/two-pointers` | planned | — |
-| Sliding windows | `strings/sliding-window` | planned | — |
-| Parsing | `strings/parsing` | planned | — |
-| Palindromes | `strings/palindromes` | planned | — |
-| Anagrams | `strings/anagrams` | planned | — |
-| Substrings | `strings/substrings` | planned | — |
+| Character frequency counting | `strings/frequency` | verified | string-frequency |
+| Two pointers | `strings/two-pointers` | verified | string-two-pointers |
+| Sliding windows | `strings/sliding-window` | verified | string-sliding-window |
+| Parsing | `strings/parsing` | verified | string-parsing |
+| Palindromes | `strings/palindromes` | verified | palindromes |
+| Anagrams | `strings/anagrams` | verified | anagrams |
+| Substrings | `strings/substrings` | verified | substrings |
 | KMP string matching | `strings/kmp` | planned | — |
 
 ## Linked lists (1/10)
