@@ -12,7 +12,7 @@
 
 import type { CoverageEntry } from "../core/types";
 
-export const COVERAGE_VERSION = 3;
+export const COVERAGE_VERSION = 4;
 
 function e(
   area: string,
@@ -168,25 +168,25 @@ export const coverage: CoverageEntry[] = [
   e("Bit manipulation", "Counting set bits", "bits/count-set-bits"),
 
   // --- Sorting ---
-  e("Sorting", "Bubble sort", "sorting/bubble"),
-  e("Sorting", "Selection sort", "sorting/selection"),
-  e("Sorting", "Insertion sort", "sorting/insertion"),
-  e("Sorting", "Merge sort", "sorting/merge"),
-  e("Sorting", "Quick sort", "sorting/quick"),
-  e("Sorting", "Counting sort", "sorting/counting"),
-  e("Sorting", "Bucket sort", "sorting/bucket"),
-  e("Sorting", "Heap sort", "sorting/heap"),
-  e("Sorting", "Radix sort", "sorting/radix"),
-  e("Sorting", "Custom ordering/comparators", "sorting/comparators"),
-  e("Sorting", "Interval sorting", "sorting/intervals"),
+  e("Sorting", "Bubble sort", "sorting/bubble", { lessonId: "bubble-sort", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Sorting", "Selection sort", "sorting/selection", { lessonId: "selection-sort", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Sorting", "Insertion sort", "sorting/insertion", { lessonId: "insertion-sort", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Sorting", "Merge sort", "sorting/merge", { lessonId: "merge-sort", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Sorting", "Quick sort", "sorting/quick", { lessonId: "quick-sort", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Sorting", "Counting sort", "sorting/counting", { lessonId: "counting-sort", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Sorting", "Bucket sort", "sorting/bucket", { lessonId: "bucket-sort", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Sorting", "Heap sort", "sorting/heap", { lessonId: "heap-sort", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Sorting", "Radix sort", "sorting/radix", { lessonId: "radix-sort", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Sorting", "Custom ordering/comparators", "sorting/comparators", { lessonId: "comparators", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Sorting", "Interval sorting", "sorting/intervals", { lessonId: "interval-sorting", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Searching ---
-  e("Searching", "Linear search", "searching/linear"),
-  e("Searching", "Binary search (sorted arrays)", "searching/binary"),
-  e("Searching", "Binary search on the answer", "searching/binary-on-answer"),
-  e("Searching", "Rotated arrays", "searching/rotated"),
-  e("Searching", "Lower/upper bounds", "searching/bounds"),
-  e("Searching", "Matrix search", "searching/matrix"),
+  e("Searching", "Linear search", "searching/linear", { lessonId: "linear-search", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Searching", "Binary search (sorted arrays)", "searching/binary", { lessonId: "binary-search", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Searching", "Binary search on the answer", "searching/binary-on-answer", { lessonId: "binary-search-answer", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Searching", "Rotated arrays", "searching/rotated", { lessonId: "rotated-array-search", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Searching", "Lower/upper bounds", "searching/bounds", { lessonId: "bounds", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Searching", "Matrix search", "searching/matrix", { lessonId: "matrix-search", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Further range-query structures & strings (agreed additions) ---
   e("Range queries", "Fenwick trees", "range/fenwick"),

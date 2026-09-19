@@ -1,8 +1,8 @@
 # Curriculum coverage inventory
 
-Coverage version: 3. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
+Coverage version: 4. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
 
-**Progress: 31 / 129 verified.**
+**Progress: 48 / 129 verified.**
 
 Status legend: planned · in-progress · authored · verified
 
@@ -176,32 +176,32 @@ Status legend: planned · in-progress · authored · verified
 | XOR cancellation | `bits/xor-cancellation` | planned | — |
 | Counting set bits | `bits/count-set-bits` | planned | — |
 
-## Sorting (0/11)
+## Sorting (11/11)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
-| Bubble sort | `sorting/bubble` | planned | — |
-| Selection sort | `sorting/selection` | planned | — |
-| Insertion sort | `sorting/insertion` | planned | — |
-| Merge sort | `sorting/merge` | planned | — |
-| Quick sort | `sorting/quick` | planned | — |
-| Counting sort | `sorting/counting` | planned | — |
-| Bucket sort | `sorting/bucket` | planned | — |
-| Heap sort | `sorting/heap` | planned | — |
-| Radix sort | `sorting/radix` | planned | — |
-| Custom ordering/comparators | `sorting/comparators` | planned | — |
-| Interval sorting | `sorting/intervals` | planned | — |
+| Bubble sort | `sorting/bubble` | verified | bubble-sort |
+| Selection sort | `sorting/selection` | verified | selection-sort |
+| Insertion sort | `sorting/insertion` | verified | insertion-sort |
+| Merge sort | `sorting/merge` | verified | merge-sort |
+| Quick sort | `sorting/quick` | verified | quick-sort |
+| Counting sort | `sorting/counting` | verified | counting-sort |
+| Bucket sort | `sorting/bucket` | verified | bucket-sort |
+| Heap sort | `sorting/heap` | verified | heap-sort |
+| Radix sort | `sorting/radix` | verified | radix-sort |
+| Custom ordering/comparators | `sorting/comparators` | verified | comparators |
+| Interval sorting | `sorting/intervals` | verified | interval-sorting |
 
-## Searching (0/6)
+## Searching (6/6)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
-| Linear search | `searching/linear` | planned | — |
-| Binary search (sorted arrays) | `searching/binary` | planned | — |
-| Binary search on the answer | `searching/binary-on-answer` | planned | — |
-| Rotated arrays | `searching/rotated` | planned | — |
-| Lower/upper bounds | `searching/bounds` | planned | — |
-| Matrix search | `searching/matrix` | planned | — |
+| Linear search | `searching/linear` | verified | linear-search |
+| Binary search (sorted arrays) | `searching/binary` | verified | binary-search |
+| Binary search on the answer | `searching/binary-on-answer` | verified | binary-search-answer |
+| Rotated arrays | `searching/rotated` | verified | rotated-array-search |
+| Lower/upper bounds | `searching/bounds` | verified | bounds |
+| Matrix search | `searching/matrix` | verified | matrix-search |
 
 ## Range queries (0/2)
 

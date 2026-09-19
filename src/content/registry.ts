@@ -35,6 +35,23 @@ import { stringParsing } from "./lessons/string-parsing";
 import { palindromes } from "./lessons/palindromes";
 import { anagrams } from "./lessons/anagrams";
 import { substrings } from "./lessons/substrings";
+import { linearSearch } from "./lessons/linear-search";
+import { binarySearch } from "./lessons/binary-search";
+import { binarySearchAnswer } from "./lessons/binary-search-answer";
+import { rotatedArraySearch } from "./lessons/rotated-array-search";
+import { bounds } from "./lessons/bounds";
+import { matrixSearch } from "./lessons/matrix-search";
+import { bubbleSort } from "./lessons/bubble-sort";
+import { selectionSort } from "./lessons/selection-sort";
+import { insertionSort } from "./lessons/insertion-sort";
+import { mergeSort } from "./lessons/merge-sort";
+import { quickSort } from "./lessons/quick-sort";
+import { countingSort } from "./lessons/counting-sort";
+import { bucketSort } from "./lessons/bucket-sort";
+import { heapSort } from "./lessons/heap-sort";
+import { radixSort } from "./lessons/radix-sort";
+import { comparators } from "./lessons/comparators";
+import { intervalSorting } from "./lessons/interval-sorting";
 import { linkedListTraversal } from "./lessons/linked-list-traversal";
 
 export const lessons: LessonDefinition[] = [
@@ -72,6 +89,25 @@ export const lessons: LessonDefinition[] = [
   palindromes,
   anagrams,
   substrings,
+  // Searching
+  linearSearch,
+  binarySearch,
+  binarySearchAnswer,
+  rotatedArraySearch,
+  bounds,
+  matrixSearch,
+  // Sorting
+  bubbleSort,
+  selectionSort,
+  insertionSort,
+  mergeSort,
+  quickSort,
+  countingSort,
+  bucketSort,
+  heapSort,
+  radixSort,
+  comparators,
+  intervalSorting,
   // Linear structures
   linkedListTraversal,
 ];
