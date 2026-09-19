@@ -6,8 +6,9 @@
 
 import type { LessonDefinition, PatternDefinition } from "../core/types";
 import { variablesAndTypes } from "./lessons/variables-and-types";
+import { linkedListTraversal } from "./lessons/linked-list-traversal";
 
-export const lessons: LessonDefinition[] = [variablesAndTypes];
+export const lessons: LessonDefinition[] = [variablesAndTypes, linkedListTraversal];
 
 export const patterns: PatternDefinition[] = [];
 

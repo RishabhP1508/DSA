@@ -1,37 +1,24 @@
 /**
  * Array / list visualizer.
  *
- * Renders a list value from a trace object table as a row of cells, with stable
- * cell positions between steps (index = x-position), labels, and optional
- * pointer/window/boundary overlays driven by other variables in the frame.
- *
- * This is the Phase-1 proof that the trace -> visual pipeline works end to end;
- * later phases add the remaining structure families using the same contract.
+ * Renders a list value as a row of cells with stable positions (index =
+ * x-position), index labels, and pointer/boundary/highlight overlays driven by
+ * other variables in the frame (e.g. two-pointer `lo`/`hi`, sliding window).
  */
 
-import type { TraceEvent, TraceObject, TraceValue, VisualBinding } from "../core/types";
+import type { TraceEvent, VisualBinding } from "../core/types";
 import { displayValue } from "../engine/replay";
+import {
+  resolveBindingObject,
+  resolveOverlays,
+  indexOverlays,
+  overlayColor,
+} from "./helpers";
 
 const CELL = 52;
 const GAP = 8;
 const PAD = 16;
-const TOP = 44;
-
-function resolveVariable(event: TraceEvent, name: string): TraceValue | undefined {
-  // innermost frame first
-  for (let i = event.frames.length - 1; i >= 0; i--) {
-    const found = event.frames[i].locals.find((l) => l.name === name);
-    if (found) return found.value;
-  }
-  return undefined;
-}
-
-function asNumber(v: TraceValue | undefined): number | undefined {
-  if (!v) return undefined;
-  if (v.kind === "int" && typeof v.value === "number") return v.value;
-  if (v.kind === "float") return v.value;
-  return undefined;
-}
+const TOP = 48;
 
 export function ArrayVisualizer({
   event,
@@ -40,25 +27,20 @@ export function ArrayVisualizer({
   event: TraceEvent;
   binding: VisualBinding;
 }) {
-  const value = resolveVariable(event, binding.variable);
-  if (!value || value.kind !== "ref") {
-    return <p className="viz-empty">No array named “{binding.variable}” in scope yet.</p>;
-  }
-  const obj: TraceObject | undefined = event.objects[value.id];
+  const { object: obj } = resolveBindingObject(event, binding);
   if (!obj || !obj.entries) {
-    return <p className="viz-empty">“{binding.variable}” is not a list here.</p>;
+    return <p className="viz-empty">No array “{binding.variable}” in scope yet.</p>;
   }
 
   const cells = obj.entries;
-  const width = PAD * 2 + cells.length * CELL + Math.max(0, cells.length - 1) * GAP;
-  const height = TOP + CELL + 60;
+  const width = PAD * 2 + Math.max(1, cells.length) * CELL + Math.max(0, cells.length - 1) * GAP;
+  const height = TOP + CELL + 64;
 
-  // Resolve overlay indices.
-  const pointers = (binding.overlays ?? [])
-    .filter((o) => o.role === "pointer" || o.role === "boundary" || o.role === "highlight")
-    .map((o) => ({ ...o, idx: asNumber(resolveVariable(event, o.source)) }))
-    .filter((o) => o.idx !== undefined && o.idx >= 0 && o.idx < cells.length);
+  const overlays = resolveOverlays(event, binding);
+  const marks = indexOverlays(overlays, cells.length);
 
+  // Sliding-window overlays: a "window" overlay whose label encodes lo..hi could
+  // be added later; for now window ranges are shown via two boundary overlays.
   const cellX = (i: number) => PAD + i * (CELL + GAP);
 
   return (
@@ -72,8 +54,14 @@ export function ArrayVisualizer({
         {binding.variable} ({obj.type}, len {cells.length})
       </text>
 
+      {cells.length === 0 && (
+        <text x={PAD} y={TOP + CELL / 2} className="viz-empty-svg">
+          (empty)
+        </text>
+      )}
+
       {cells.map((cell, i) => {
-        const highlighted = pointers.some((p) => p.idx === i);
+        const mark = marks.find((m) => m.index === i);
         return (
           <g key={i}>
             <rect
@@ -82,7 +70,7 @@ export function ArrayVisualizer({
               width={CELL}
               height={CELL}
               rx={6}
-              className={highlighted ? "cell cell-active" : "cell"}
+              className={mark ? "cell cell-active" : "cell"}
             />
             <text x={cellX(i) + CELL / 2} y={TOP + CELL / 2 + 5} className="cell-value">
               {displayValue(cell.value, event.objects)}
@@ -94,16 +82,16 @@ export function ArrayVisualizer({
         );
       })}
 
-      {pointers.map((p, k) => (
-        <g key={`ptr-${k}`}>
-          <text
-            x={cellX(p.idx!) + CELL / 2}
-            y={TOP - 16 - (k % 2) * 16}
-            className="pointer-label"
-          >
-            {p.label}↓
-          </text>
-        </g>
+      {marks.map((m, k) => (
+        <text
+          key={`ptr-${k}`}
+          x={cellX(m.index!) + CELL / 2}
+          y={TOP - 14 - (k % 2) * 16}
+          className="pointer-label"
+          fill={overlayColor(k)}
+        >
+          {m.label}↓
+        </text>
       ))}
     </svg>
   );
