@@ -1,8 +1,8 @@
 # Curriculum coverage inventory
 
-Coverage version: 4. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
+Coverage version: 5. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
 
-**Progress: 48 / 129 verified.**
+**Progress: 66 / 129 verified.**
 
 Status legend: planned · in-progress · authored · verified
 
@@ -88,16 +88,16 @@ Status legend: planned · in-progress · authored · verified
 | Word search | `trees/word-search` | planned | — |
 | AVL trees | `trees/avl` | planned | — |
 
-## Stacks and queues (0/6)
+## Stacks and queues (6/6)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
-| Stack/queue operations | `stacks/operations` | planned | — |
-| Monotonic stacks | `stacks/monotonic` | planned | — |
-| Parentheses matching | `stacks/parentheses` | planned | — |
-| Expression evaluation | `stacks/expression-eval` | planned | — |
-| BFS queues | `stacks/bfs-queues` | planned | — |
-| Min/max tracking | `stacks/min-max-tracking` | planned | — |
+| Stack/queue operations | `stacks/operations` | verified | stack-queue-operations |
+| Monotonic stacks | `stacks/monotonic` | verified | monotonic-stack |
+| Parentheses matching | `stacks/parentheses` | verified | parentheses-matching |
+| Expression evaluation | `stacks/expression-eval` | verified | expression-evaluation |
+| BFS queues | `stacks/bfs-queues` | verified | bfs-queues |
+| Min/max tracking | `stacks/min-max-tracking` | verified | min-max-tracking |
 
 ## Graphs (0/14)
 
@@ -154,27 +154,27 @@ Status legend: planned · in-progress · authored · verified
 | Merging sorted data | `heaps/merge-sorted` | planned | — |
 | Two-heap pattern | `heaps/two-heap` | planned | — |
 
-## Hashing (0/7)
+## Hashing (7/7)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
-| Maps and sets | `hashing/maps-sets` | planned | — |
-| Frequency counting | `hashing/frequency` | planned | — |
-| Duplicate detection | `hashing/duplicates` | planned | — |
-| Value-to-index mapping | `hashing/value-to-index` | planned | — |
-| Grouping | `hashing/grouping` | planned | — |
-| Prefix sums with maps | `hashing/prefix-sums-maps` | planned | — |
-| Caching seen values | `hashing/caching` | planned | — |
+| Maps and sets | `hashing/maps-sets` | verified | maps-sets |
+| Frequency counting | `hashing/frequency` | verified | hashing-frequency |
+| Duplicate detection | `hashing/duplicates` | verified | duplicate-detection |
+| Value-to-index mapping | `hashing/value-to-index` | verified | value-to-index |
+| Grouping | `hashing/grouping` | verified | grouping |
+| Prefix sums with maps | `hashing/prefix-sums-maps` | verified | prefix-sums-map |
+| Caching seen values | `hashing/caching` | verified | caching-seen |
 
-## Bit manipulation (0/5)
+## Bit manipulation (5/5)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
-| AND/OR/XOR/NOT | `bits/logical-ops` | planned | — |
-| Left/right shifts | `bits/shifts` | planned | — |
-| Check/set/clear bits | `bits/check-set-clear` | planned | — |
-| XOR cancellation | `bits/xor-cancellation` | planned | — |
-| Counting set bits | `bits/count-set-bits` | planned | — |
+| AND/OR/XOR/NOT | `bits/logical-ops` | verified | bit-logical-ops |
+| Left/right shifts | `bits/shifts` | verified | bit-shifts |
+| Check/set/clear bits | `bits/check-set-clear` | verified | bit-check-set-clear |
+| XOR cancellation | `bits/xor-cancellation` | verified | xor-cancellation |
+| Counting set bits | `bits/count-set-bits` | verified | count-set-bits |
 
 ## Sorting (11/11)
 

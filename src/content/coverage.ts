@@ -12,7 +12,7 @@
 
 import type { CoverageEntry } from "../core/types";
 
-export const COVERAGE_VERSION = 4;
+export const COVERAGE_VERSION = 5;
 
 function e(
   area: string,
@@ -98,12 +98,12 @@ export const coverage: CoverageEntry[] = [
   e("Trees and tries", "AVL trees", "trees/avl"),
 
   // --- Stacks and queues ---
-  e("Stacks and queues", "Stack/queue operations", "stacks/operations"),
-  e("Stacks and queues", "Monotonic stacks", "stacks/monotonic"),
-  e("Stacks and queues", "Parentheses matching", "stacks/parentheses"),
-  e("Stacks and queues", "Expression evaluation", "stacks/expression-eval"),
-  e("Stacks and queues", "BFS queues", "stacks/bfs-queues"),
-  e("Stacks and queues", "Min/max tracking", "stacks/min-max-tracking"),
+  e("Stacks and queues", "Stack/queue operations", "stacks/operations", { lessonId: "stack-queue-operations", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Stacks and queues", "Monotonic stacks", "stacks/monotonic", { lessonId: "monotonic-stack", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Stacks and queues", "Parentheses matching", "stacks/parentheses", { lessonId: "parentheses-matching", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Stacks and queues", "Expression evaluation", "stacks/expression-eval", { lessonId: "expression-evaluation", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Stacks and queues", "BFS queues", "stacks/bfs-queues", { lessonId: "bfs-queues", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Stacks and queues", "Min/max tracking", "stacks/min-max-tracking", { lessonId: "min-max-tracking", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Graphs ---
   e("Graphs", "Representations / adjacency lists", "graphs/representations"),
@@ -152,20 +152,20 @@ export const coverage: CoverageEntry[] = [
   e("Heaps", "Two-heap pattern", "heaps/two-heap"),
 
   // --- Hashing ---
-  e("Hashing", "Maps and sets", "hashing/maps-sets"),
-  e("Hashing", "Frequency counting", "hashing/frequency"),
-  e("Hashing", "Duplicate detection", "hashing/duplicates"),
-  e("Hashing", "Value-to-index mapping", "hashing/value-to-index"),
-  e("Hashing", "Grouping", "hashing/grouping"),
-  e("Hashing", "Prefix sums with maps", "hashing/prefix-sums-maps"),
-  e("Hashing", "Caching seen values", "hashing/caching"),
+  e("Hashing", "Maps and sets", "hashing/maps-sets", { lessonId: "maps-sets", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Hashing", "Frequency counting", "hashing/frequency", { lessonId: "hashing-frequency", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Hashing", "Duplicate detection", "hashing/duplicates", { lessonId: "duplicate-detection", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Hashing", "Value-to-index mapping", "hashing/value-to-index", { lessonId: "value-to-index", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Hashing", "Grouping", "hashing/grouping", { lessonId: "grouping", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Hashing", "Prefix sums with maps", "hashing/prefix-sums-maps", { lessonId: "prefix-sums-map", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Hashing", "Caching seen values", "hashing/caching", { lessonId: "caching-seen", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Bit manipulation ---
-  e("Bit manipulation", "AND/OR/XOR/NOT", "bits/logical-ops"),
-  e("Bit manipulation", "Left/right shifts", "bits/shifts"),
-  e("Bit manipulation", "Check/set/clear bits", "bits/check-set-clear"),
-  e("Bit manipulation", "XOR cancellation", "bits/xor-cancellation"),
-  e("Bit manipulation", "Counting set bits", "bits/count-set-bits"),
+  e("Bit manipulation", "AND/OR/XOR/NOT", "bits/logical-ops", { lessonId: "bit-logical-ops", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Bit manipulation", "Left/right shifts", "bits/shifts", { lessonId: "bit-shifts", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Bit manipulation", "Check/set/clear bits", "bits/check-set-clear", { lessonId: "bit-check-set-clear", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Bit manipulation", "XOR cancellation", "bits/xor-cancellation", { lessonId: "xor-cancellation", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Bit manipulation", "Counting set bits", "bits/count-set-bits", { lessonId: "count-set-bits", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Sorting ---
   e("Sorting", "Bubble sort", "sorting/bubble", { lessonId: "bubble-sort", hasVisualExample: true, hasExercise: true, status: "verified" }),

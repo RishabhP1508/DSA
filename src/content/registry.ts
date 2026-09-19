@@ -52,6 +52,24 @@ import { heapSort } from "./lessons/heap-sort";
 import { radixSort } from "./lessons/radix-sort";
 import { comparators } from "./lessons/comparators";
 import { intervalSorting } from "./lessons/interval-sorting";
+import { stackQueueOperations } from "./lessons/stack-queue-operations";
+import { monotonicStack } from "./lessons/monotonic-stack";
+import { parenthesesMatching } from "./lessons/parentheses-matching";
+import { expressionEvaluation } from "./lessons/expression-evaluation";
+import { bfsQueues } from "./lessons/bfs-queues";
+import { minMaxTracking } from "./lessons/min-max-tracking";
+import { mapsSets } from "./lessons/maps-sets";
+import { hashingFrequency } from "./lessons/hashing-frequency";
+import { duplicateDetection } from "./lessons/duplicate-detection";
+import { valueToIndex } from "./lessons/value-to-index";
+import { grouping } from "./lessons/grouping";
+import { prefixSumsMap } from "./lessons/prefix-sums-map";
+import { cachingSeen } from "./lessons/caching-seen";
+import { bitLogicalOps } from "./lessons/bit-logical-ops";
+import { bitShifts } from "./lessons/bit-shifts";
+import { bitCheckSetClear } from "./lessons/bit-check-set-clear";
+import { xorCancellation } from "./lessons/xor-cancellation";
+import { countSetBits } from "./lessons/count-set-bits";
 import { linkedListTraversal } from "./lessons/linked-list-traversal";
 
 export const lessons: LessonDefinition[] = [
@@ -108,6 +126,27 @@ export const lessons: LessonDefinition[] = [
   radixSort,
   comparators,
   intervalSorting,
+  // Stacks and queues
+  stackQueueOperations,
+  monotonicStack,
+  parenthesesMatching,
+  expressionEvaluation,
+  bfsQueues,
+  minMaxTracking,
+  // Hashing
+  mapsSets,
+  hashingFrequency,
+  duplicateDetection,
+  valueToIndex,
+  grouping,
+  prefixSumsMap,
+  cachingSeen,
+  // Bit manipulation
+  bitLogicalOps,
+  bitShifts,
+  bitCheckSetClear,
+  xorCancellation,
+  countSetBits,
   // Linear structures
   linkedListTraversal,
 ];
