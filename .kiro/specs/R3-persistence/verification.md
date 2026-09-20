@@ -32,7 +32,7 @@ New R3 storage tests run against the unchanged `progress.ts`:
   IDB connection also blocks `deleteDatabase` (fixed by exposing a test-only
   close in the implementation).
 
-## Results after the fix (tested commit: HEAD of `repair/r3-persistence`)
+## Results after the fix (tested commit: `07a86b6`, PR #14 → `main`)
 
 | Check | Result |
 |---|---|
