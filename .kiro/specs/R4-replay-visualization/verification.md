@@ -340,7 +340,7 @@ Follow-up on amendment 5:
    work (≤ MAX_BITS cells materialized via masking) PLUS O(digits) to read the
    input decimal string — not "O(256) for the entire renderer".
 
-Amendment-6 verification (tested commit: <FILLED AT COMMIT>):
+Amendment-6 verification (tested commit: `f9a0f9a`, PR #16):
 `check:all` green — lint 0 err / 9 warns; unit **167/167** (24 files); 130
 lessons + 29 patterns UNCHANGED; 130 complexity; 27/27 visualizer shapes.
 `test:browser`: **9 passed / 5 skipped** (the 5 skips are the R2 P-RUNNER-ORIGIN
