@@ -103,6 +103,15 @@ import { floydWarshall } from "./lessons/floyd-warshall";
 import { prim } from "./lessons/prim";
 import { kruskal } from "./lessons/kruskal";
 import { linkedListTraversal } from "./lessons/linked-list-traversal";
+import { linkedListSlowFast } from "./lessons/linked-list-slow-fast";
+import { linkedListCycleDetection } from "./lessons/linked-list-cycle-detection";
+import { linkedListReversal } from "./lessons/linked-list-reversal";
+import { linkedListMerging } from "./lessons/linked-list-merging";
+import { linkedListMiddle } from "./lessons/linked-list-middle";
+import { linkedListDummyNodes } from "./lessons/linked-list-dummy-nodes";
+import { linkedListPointerManipulation } from "./lessons/linked-list-pointer-manipulation";
+import { linkedListVariants } from "./lessons/linked-list-variants";
+import { linkedListDeques } from "./lessons/linked-list-deques";
 
 export const lessons: LessonDefinition[] = [
   // Programming foundations
@@ -214,8 +223,17 @@ export const lessons: LessonDefinition[] = [
   floydWarshall,
   prim,
   kruskal,
-  // Linear structures
+  // Linear structures — linked lists
   linkedListTraversal,
+  linkedListSlowFast,
+  linkedListCycleDetection,
+  linkedListReversal,
+  linkedListMiddle,
+  linkedListDummyNodes,
+  linkedListMerging,
+  linkedListPointerManipulation,
+  linkedListVariants,
+  linkedListDeques,
 ];
 
 export const patterns: PatternDefinition[] = [];

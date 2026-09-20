@@ -1,8 +1,8 @@
 # Curriculum coverage inventory
 
-Coverage version: 7. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
+Coverage version: 8. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
 
-**Progress: 98 / 130 verified.**
+**Progress: 107 / 130 verified.**
 
 Status legend: planned · in-progress · authored · verified
 
@@ -57,20 +57,20 @@ Status legend: planned · in-progress · authored · verified
 | Substrings | `strings/substrings` | verified | substrings |
 | KMP string matching | `strings/kmp` | planned | — |
 
-## Linked lists (1/10)
+## Linked lists (10/10)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
 | Traversal | `linked-lists/traversal` | verified | linked-list-traversal |
-| Slow/fast pointers | `linked-lists/slow-fast` | planned | — |
-| Cycle detection | `linked-lists/cycle-detection` | planned | — |
-| Reversal | `linked-lists/reversal` | planned | — |
-| Merging | `linked-lists/merging` | planned | — |
-| Finding the middle | `linked-lists/middle` | planned | — |
-| Dummy nodes | `linked-lists/dummy-nodes` | planned | — |
-| Pointer manipulation | `linked-lists/pointer-manipulation` | planned | — |
-| Singly/doubly/circular | `linked-lists/variants` | planned | — |
-| Deques | `linked-lists/deques` | planned | — |
+| Slow/fast pointers | `linked-lists/slow-fast` | verified | linked-list-slow-fast |
+| Cycle detection | `linked-lists/cycle-detection` | verified | linked-list-cycle-detection |
+| Reversal | `linked-lists/reversal` | verified | linked-list-reversal |
+| Merging | `linked-lists/merging` | verified | linked-list-merging |
+| Finding the middle | `linked-lists/middle` | verified | linked-list-middle |
+| Dummy nodes | `linked-lists/dummy-nodes` | verified | linked-list-dummy-nodes |
+| Pointer manipulation | `linked-lists/pointer-manipulation` | verified | linked-list-pointer-manipulation |
+| Singly/doubly/circular | `linked-lists/variants` | verified | linked-list-variants |
+| Deques | `linked-lists/deques` | verified | linked-list-deques |
 
 ## Trees and tries (11/11)
 

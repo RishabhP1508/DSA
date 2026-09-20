@@ -12,7 +12,7 @@
 
 import type { CoverageEntry } from "../core/types";
 
-export const COVERAGE_VERSION = 7;
+export const COVERAGE_VERSION = 8;
 
 function e(
   area: string,
@@ -74,15 +74,15 @@ export const coverage: CoverageEntry[] = [
     hasExercise: true,
     status: "verified",
   }),
-  e("Linked lists", "Slow/fast pointers", "linked-lists/slow-fast"),
-  e("Linked lists", "Cycle detection", "linked-lists/cycle-detection"),
-  e("Linked lists", "Reversal", "linked-lists/reversal"),
-  e("Linked lists", "Merging", "linked-lists/merging"),
-  e("Linked lists", "Finding the middle", "linked-lists/middle"),
-  e("Linked lists", "Dummy nodes", "linked-lists/dummy-nodes"),
-  e("Linked lists", "Pointer manipulation", "linked-lists/pointer-manipulation"),
-  e("Linked lists", "Singly/doubly/circular", "linked-lists/variants"),
-  e("Linked lists", "Deques", "linked-lists/deques"),
+  e("Linked lists", "Slow/fast pointers", "linked-lists/slow-fast", { lessonId: "linked-list-slow-fast", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Linked lists", "Cycle detection", "linked-lists/cycle-detection", { lessonId: "linked-list-cycle-detection", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Linked lists", "Reversal", "linked-lists/reversal", { lessonId: "linked-list-reversal", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Linked lists", "Merging", "linked-lists/merging", { lessonId: "linked-list-merging", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Linked lists", "Finding the middle", "linked-lists/middle", { lessonId: "linked-list-middle", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Linked lists", "Dummy nodes", "linked-lists/dummy-nodes", { lessonId: "linked-list-dummy-nodes", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Linked lists", "Pointer manipulation", "linked-lists/pointer-manipulation", { lessonId: "linked-list-pointer-manipulation", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Linked lists", "Singly/doubly/circular", "linked-lists/variants", { lessonId: "linked-list-variants", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Linked lists", "Deques", "linked-lists/deques", { lessonId: "linked-list-deques", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Trees and tries ---
   e("Trees and tries", "DFS", "trees/dfs", { lessonId: "tree-dfs", hasVisualExample: true, hasExercise: true, status: "verified" }),
