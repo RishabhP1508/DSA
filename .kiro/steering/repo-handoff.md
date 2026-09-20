@@ -20,10 +20,24 @@ current as things change.
 
 ## Progress
 
-- **Phase 3 is COMPLETE and merged into `main`: 130 / 130 subtopics verified**,
-  `COVERAGE_VERSION = 10`, `docs/coverage.md` shows 130/130.
-- Remaining roadmap: **Phase 4** (Pattern Library + recognition practice +
-  persistence/backups) and **Phase 5** (offline Windows package).
+- **Phase 3 COMPLETE and merged into `main`: 130 / 130 subtopics verified**
+  (`COVERAGE_VERSION` was 10 at that merge; Phase 4 bumped it to 11 by linking
+  `patternIds` into coverage entries).
+- **Phase 4 built** on branch `phase-4-patterns-practice` (PR into `main`):
+  Pattern Library (10 verified patterns in `src/content/patterns/`, registered
+  in `registry.ts` `patterns[]` + `getPattern`), a top-level view switcher
+  (Learn / Patterns / Practice / Playground / Backup) in `App.tsx`, recognition
+  practice with progressive hints, a runnable coding-exercise runner
+  (`useExerciseRunner` + `tests` field on `Exercise`), a Code Playground, and
+  IndexedDB persistence with versioned JSON backup/restore
+  (`src/storage/progress.ts`, validates before replacing data).
+  New verify scripts: `scripts/verify_patterns.mjs` (walkthrough stdout) and
+  `scripts/verify_exercise_tests.mjs` (model answers pass their own tests).
+  UI is verified via `npx tsc -b` + `npm run build` (no server smoke test in the
+  sandbox — the production build succeeding is the proxy).
+- Remaining roadmap: extend the Pattern Library with more patterns as needed,
+  then **Phase 5** (offline Windows package: Start.cmd launcher, portable Node,
+  bundled runtimes, ZIP delivery).
 
 ## How to verify content (repeatable — all must pass)
 
