@@ -1,8 +1,8 @@
 # Curriculum coverage inventory
 
-Coverage version: 8. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
+Coverage version: 9. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
 
-**Progress: 107 / 130 verified.**
+**Progress: 127 / 130 verified.**
 
 Status legend: planned · in-progress · authored · verified
 
@@ -119,30 +119,30 @@ Status legend: planned · in-progress · authored · verified
 | Prim | `graphs/prim` | verified | prim |
 | Kruskal | `graphs/kruskal` | verified | kruskal |
 
-## DP and recursion (0/20)
+## DP and recursion (20/20)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
-| Base cases | `dp/base-cases` | planned | — |
-| Recursive calls | `dp/recursive-calls` | planned | — |
-| Backtracking | `dp/backtracking` | planned | — |
-| Subsets | `dp/subsets` | planned | — |
-| Permutations | `dp/permutations` | planned | — |
-| Combinations | `dp/combinations` | planned | — |
-| Memoization | `dp/memoization` | planned | — |
-| Tabulation | `dp/tabulation` | planned | — |
-| 1D/2D DP | `dp/1d-2d` | planned | — |
-| Knapsack (0/1) | `dp/knapsack` | planned | — |
-| Subsequences | `dp/subsequences` | planned | — |
-| State transitions | `dp/state-transitions` | planned | — |
-| Climbing stairs | `dp/climbing-stairs` | planned | — |
-| House robber | `dp/house-robber` | planned | — |
-| Grid paths | `dp/grid-paths` | planned | — |
-| Coin change | `dp/coin-change` | planned | — |
-| Longest increasing subsequence | `dp/lis` | planned | — |
-| Longest common subsequence | `dp/lcs` | planned | — |
-| Divide and conquer | `dp/divide-and-conquer` | planned | — |
-| N-Queens | `dp/n-queens` | planned | — |
+| Base cases | `dp/base-cases` | verified | dp-base-cases |
+| Recursive calls | `dp/recursive-calls` | verified | dp-recursive-calls |
+| Backtracking | `dp/backtracking` | verified | dp-backtracking |
+| Subsets | `dp/subsets` | verified | dp-subsets |
+| Permutations | `dp/permutations` | verified | dp-permutations |
+| Combinations | `dp/combinations` | verified | dp-combinations |
+| Memoization | `dp/memoization` | verified | dp-memoization |
+| Tabulation | `dp/tabulation` | verified | dp-tabulation |
+| 1D/2D DP | `dp/1d-2d` | verified | dp-1d-2d |
+| Knapsack (0/1) | `dp/knapsack` | verified | dp-knapsack |
+| Subsequences | `dp/subsequences` | verified | dp-subsequences |
+| State transitions | `dp/state-transitions` | verified | dp-state-transitions |
+| Climbing stairs | `dp/climbing-stairs` | verified | dp-climbing-stairs |
+| House robber | `dp/house-robber` | verified | dp-house-robber |
+| Grid paths | `dp/grid-paths` | verified | dp-grid-paths |
+| Coin change | `dp/coin-change` | verified | dp-coin-change |
+| Longest increasing subsequence | `dp/lis` | verified | dp-lis |
+| Longest common subsequence | `dp/lcs` | verified | dp-lcs |
+| Divide and conquer | `dp/divide-and-conquer` | verified | dp-divide-and-conquer |
+| N-Queens | `dp/n-queens` | verified | dp-n-queens |
 
 ## Heaps (6/6)
 

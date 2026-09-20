@@ -12,7 +12,7 @@
 
 import type { CoverageEntry } from "../core/types";
 
-export const COVERAGE_VERSION = 8;
+export const COVERAGE_VERSION = 9;
 
 function e(
   area: string,
@@ -123,26 +123,26 @@ export const coverage: CoverageEntry[] = [
   e("Graphs", "Kruskal", "graphs/kruskal", { lessonId: "kruskal", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Dynamic programming and recursion ---
-  e("DP and recursion", "Base cases", "dp/base-cases"),
-  e("DP and recursion", "Recursive calls", "dp/recursive-calls"),
-  e("DP and recursion", "Backtracking", "dp/backtracking"),
-  e("DP and recursion", "Subsets", "dp/subsets"),
-  e("DP and recursion", "Permutations", "dp/permutations"),
-  e("DP and recursion", "Combinations", "dp/combinations"),
-  e("DP and recursion", "Memoization", "dp/memoization"),
-  e("DP and recursion", "Tabulation", "dp/tabulation"),
-  e("DP and recursion", "1D/2D DP", "dp/1d-2d"),
-  e("DP and recursion", "Knapsack (0/1)", "dp/knapsack"),
-  e("DP and recursion", "Subsequences", "dp/subsequences"),
-  e("DP and recursion", "State transitions", "dp/state-transitions"),
-  e("DP and recursion", "Climbing stairs", "dp/climbing-stairs"),
-  e("DP and recursion", "House robber", "dp/house-robber"),
-  e("DP and recursion", "Grid paths", "dp/grid-paths"),
-  e("DP and recursion", "Coin change", "dp/coin-change"),
-  e("DP and recursion", "Longest increasing subsequence", "dp/lis"),
-  e("DP and recursion", "Longest common subsequence", "dp/lcs"),
-  e("DP and recursion", "Divide and conquer", "dp/divide-and-conquer"),
-  e("DP and recursion", "N-Queens", "dp/n-queens"),
+  e("DP and recursion", "Base cases", "dp/base-cases", { lessonId: "dp-base-cases", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "Recursive calls", "dp/recursive-calls", { lessonId: "dp-recursive-calls", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "Backtracking", "dp/backtracking", { lessonId: "dp-backtracking", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "Subsets", "dp/subsets", { lessonId: "dp-subsets", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "Permutations", "dp/permutations", { lessonId: "dp-permutations", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "Combinations", "dp/combinations", { lessonId: "dp-combinations", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "Memoization", "dp/memoization", { lessonId: "dp-memoization", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "Tabulation", "dp/tabulation", { lessonId: "dp-tabulation", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "1D/2D DP", "dp/1d-2d", { lessonId: "dp-1d-2d", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "Knapsack (0/1)", "dp/knapsack", { lessonId: "dp-knapsack", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "Subsequences", "dp/subsequences", { lessonId: "dp-subsequences", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "State transitions", "dp/state-transitions", { lessonId: "dp-state-transitions", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "Climbing stairs", "dp/climbing-stairs", { lessonId: "dp-climbing-stairs", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "House robber", "dp/house-robber", { lessonId: "dp-house-robber", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "Grid paths", "dp/grid-paths", { lessonId: "dp-grid-paths", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "Coin change", "dp/coin-change", { lessonId: "dp-coin-change", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "Longest increasing subsequence", "dp/lis", { lessonId: "dp-lis", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "Longest common subsequence", "dp/lcs", { lessonId: "dp-lcs", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "Divide and conquer", "dp/divide-and-conquer", { lessonId: "dp-divide-and-conquer", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "N-Queens", "dp/n-queens", { lessonId: "dp-n-queens", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Heaps ---
   e("Heaps", "Min/max heaps", "heaps/min-max", { lessonId: "min-max-heaps", hasVisualExample: true, hasExercise: true, status: "verified" }),

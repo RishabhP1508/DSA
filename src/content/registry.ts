@@ -112,6 +112,26 @@ import { linkedListDummyNodes } from "./lessons/linked-list-dummy-nodes";
 import { linkedListPointerManipulation } from "./lessons/linked-list-pointer-manipulation";
 import { linkedListVariants } from "./lessons/linked-list-variants";
 import { linkedListDeques } from "./lessons/linked-list-deques";
+import { dpBaseCases } from "./lessons/dp-base-cases";
+import { dpRecursiveCalls } from "./lessons/dp-recursive-calls";
+import { dpBacktracking } from "./lessons/dp-backtracking";
+import { dpSubsets } from "./lessons/dp-subsets";
+import { dpPermutations } from "./lessons/dp-permutations";
+import { dpCombinations } from "./lessons/dp-combinations";
+import { dpMemoization } from "./lessons/dp-memoization";
+import { dpTabulation } from "./lessons/dp-tabulation";
+import { dp1d2d } from "./lessons/dp-1d-2d";
+import { dpKnapsack } from "./lessons/dp-knapsack";
+import { dpSubsequences } from "./lessons/dp-subsequences";
+import { dpStateTransitions } from "./lessons/dp-state-transitions";
+import { dpClimbingStairs } from "./lessons/dp-climbing-stairs";
+import { dpHouseRobber } from "./lessons/dp-house-robber";
+import { dpGridPaths } from "./lessons/dp-grid-paths";
+import { dpCoinChange } from "./lessons/dp-coin-change";
+import { dpLis } from "./lessons/dp-lis";
+import { dpLcs } from "./lessons/dp-lcs";
+import { dpDivideAndConquer } from "./lessons/dp-divide-and-conquer";
+import { dpNQueens } from "./lessons/dp-n-queens";
 
 export const lessons: LessonDefinition[] = [
   // Programming foundations
@@ -234,6 +254,27 @@ export const lessons: LessonDefinition[] = [
   linkedListPointerManipulation,
   linkedListVariants,
   linkedListDeques,
+  // DP and recursion
+  dpBaseCases,
+  dpRecursiveCalls,
+  dpBacktracking,
+  dpSubsets,
+  dpPermutations,
+  dpCombinations,
+  dpMemoization,
+  dpTabulation,
+  dp1d2d,
+  dpKnapsack,
+  dpSubsequences,
+  dpStateTransitions,
+  dpClimbingStairs,
+  dpHouseRobber,
+  dpGridPaths,
+  dpCoinChange,
+  dpLis,
+  dpLcs,
+  dpDivideAndConquer,
+  dpNQueens,
 ];
 
 export const patterns: PatternDefinition[] = [];
