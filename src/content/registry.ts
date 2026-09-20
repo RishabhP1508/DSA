@@ -87,6 +87,21 @@ import { trieInsertion } from "./lessons/trie-insertion";
 import { prefixSearch } from "./lessons/prefix-search";
 import { wordSearch } from "./lessons/word-search";
 import { avlRotations } from "./lessons/avl-rotations";
+import { graphRepresentations } from "./lessons/graph-representations";
+import { adjacencyLists } from "./lessons/adjacency-lists";
+import { graphBfs } from "./lessons/graph-bfs";
+import { graphDfs } from "./lessons/graph-dfs";
+import { connectedComponents } from "./lessons/connected-components";
+import { graphCycleDetection } from "./lessons/graph-cycle-detection";
+import { topologicalSort } from "./lessons/topological-sort";
+import { multiSourceBfs } from "./lessons/multi-source-bfs";
+import { shortestPathsUnweighted } from "./lessons/shortest-paths-unweighted";
+import { unionFind } from "./lessons/union-find";
+import { dijkstra } from "./lessons/dijkstra";
+import { bellmanFord } from "./lessons/bellman-ford";
+import { floydWarshall } from "./lessons/floyd-warshall";
+import { prim } from "./lessons/prim";
+import { kruskal } from "./lessons/kruskal";
 import { linkedListTraversal } from "./lessons/linked-list-traversal";
 
 export const lessons: LessonDefinition[] = [
@@ -183,6 +198,22 @@ export const lessons: LessonDefinition[] = [
   prefixSearch,
   wordSearch,
   avlRotations,
+  // Graphs
+  graphRepresentations,
+  adjacencyLists,
+  graphBfs,
+  graphDfs,
+  connectedComponents,
+  graphCycleDetection,
+  topologicalSort,
+  multiSourceBfs,
+  shortestPathsUnweighted,
+  unionFind,
+  dijkstra,
+  bellmanFord,
+  floydWarshall,
+  prim,
+  kruskal,
   // Linear structures
   linkedListTraversal,
 ];

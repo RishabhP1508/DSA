@@ -80,7 +80,7 @@ export type ObjectId = string;
  */
 export type TraceValue =
   | { kind: "int"; value: number | string }
-  | { kind: "float"; value: number }
+  | { kind: "float"; value: number | string } // string for Infinity/-Infinity/NaN
   | { kind: "bool"; value: boolean }
   | { kind: "str"; value: string }
   | { kind: "none" }

@@ -12,7 +12,7 @@
 
 import type { CoverageEntry } from "../core/types";
 
-export const COVERAGE_VERSION = 6;
+export const COVERAGE_VERSION = 7;
 
 function e(
   area: string,
@@ -106,20 +106,21 @@ export const coverage: CoverageEntry[] = [
   e("Stacks and queues", "Min/max tracking", "stacks/min-max-tracking", { lessonId: "min-max-tracking", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Graphs ---
-  e("Graphs", "Representations / adjacency lists", "graphs/representations"),
-  e("Graphs", "BFS", "graphs/bfs"),
-  e("Graphs", "DFS", "graphs/dfs"),
-  e("Graphs", "Components", "graphs/components"),
-  e("Graphs", "Cycle detection", "graphs/cycle-detection"),
-  e("Graphs", "Topological sorting", "graphs/topo-sort"),
-  e("Graphs", "Shortest paths", "graphs/shortest-paths"),
-  e("Graphs", "Multi-source BFS", "graphs/multi-source-bfs"),
-  e("Graphs", "Union-find", "graphs/union-find"),
-  e("Graphs", "Dijkstra", "graphs/dijkstra"),
-  e("Graphs", "Bellman-Ford", "graphs/bellman-ford"),
-  e("Graphs", "Floyd-Warshall", "graphs/floyd-warshall"),
-  e("Graphs", "Prim", "graphs/prim"),
-  e("Graphs", "Kruskal", "graphs/kruskal"),
+  e("Graphs", "Representations", "graphs/representations", { lessonId: "graph-representations", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Graphs", "Adjacency lists", "graphs/adjacency-lists", { lessonId: "adjacency-lists", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Graphs", "BFS", "graphs/bfs", { lessonId: "graph-bfs", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Graphs", "DFS", "graphs/dfs", { lessonId: "graph-dfs", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Graphs", "Components", "graphs/components", { lessonId: "connected-components", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Graphs", "Cycle detection", "graphs/cycle-detection", { lessonId: "graph-cycle-detection", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Graphs", "Topological sorting", "graphs/topo-sort", { lessonId: "topological-sort", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Graphs", "Shortest paths", "graphs/shortest-paths", { lessonId: "shortest-paths-unweighted", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Graphs", "Multi-source BFS", "graphs/multi-source-bfs", { lessonId: "multi-source-bfs", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Graphs", "Union-find", "graphs/union-find", { lessonId: "union-find", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Graphs", "Dijkstra", "graphs/dijkstra", { lessonId: "dijkstra", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Graphs", "Bellman-Ford", "graphs/bellman-ford", { lessonId: "bellman-ford", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Graphs", "Floyd-Warshall", "graphs/floyd-warshall", { lessonId: "floyd-warshall", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Graphs", "Prim", "graphs/prim", { lessonId: "prim", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Graphs", "Kruskal", "graphs/kruskal", { lessonId: "kruskal", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Dynamic programming and recursion ---
   e("DP and recursion", "Base cases", "dp/base-cases"),

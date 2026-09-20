@@ -1,8 +1,8 @@
 # Curriculum coverage inventory
 
-Coverage version: 6. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
+Coverage version: 7. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
 
-**Progress: 83 / 129 verified.**
+**Progress: 98 / 130 verified.**
 
 Status legend: planned · in-progress · authored · verified
 
@@ -99,24 +99,25 @@ Status legend: planned · in-progress · authored · verified
 | BFS queues | `stacks/bfs-queues` | verified | bfs-queues |
 | Min/max tracking | `stacks/min-max-tracking` | verified | min-max-tracking |
 
-## Graphs (0/14)
+## Graphs (15/15)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
-| Representations / adjacency lists | `graphs/representations` | planned | — |
-| BFS | `graphs/bfs` | planned | — |
-| DFS | `graphs/dfs` | planned | — |
-| Components | `graphs/components` | planned | — |
-| Cycle detection | `graphs/cycle-detection` | planned | — |
-| Topological sorting | `graphs/topo-sort` | planned | — |
-| Shortest paths | `graphs/shortest-paths` | planned | — |
-| Multi-source BFS | `graphs/multi-source-bfs` | planned | — |
-| Union-find | `graphs/union-find` | planned | — |
-| Dijkstra | `graphs/dijkstra` | planned | — |
-| Bellman-Ford | `graphs/bellman-ford` | planned | — |
-| Floyd-Warshall | `graphs/floyd-warshall` | planned | — |
-| Prim | `graphs/prim` | planned | — |
-| Kruskal | `graphs/kruskal` | planned | — |
+| Representations | `graphs/representations` | verified | graph-representations |
+| Adjacency lists | `graphs/adjacency-lists` | verified | adjacency-lists |
+| BFS | `graphs/bfs` | verified | graph-bfs |
+| DFS | `graphs/dfs` | verified | graph-dfs |
+| Components | `graphs/components` | verified | connected-components |
+| Cycle detection | `graphs/cycle-detection` | verified | graph-cycle-detection |
+| Topological sorting | `graphs/topo-sort` | verified | topological-sort |
+| Shortest paths | `graphs/shortest-paths` | verified | shortest-paths-unweighted |
+| Multi-source BFS | `graphs/multi-source-bfs` | verified | multi-source-bfs |
+| Union-find | `graphs/union-find` | verified | union-find |
+| Dijkstra | `graphs/dijkstra` | verified | dijkstra |
+| Bellman-Ford | `graphs/bellman-ford` | verified | bellman-ford |
+| Floyd-Warshall | `graphs/floyd-warshall` | verified | floyd-warshall |
+| Prim | `graphs/prim` | verified | prim |
+| Kruskal | `graphs/kruskal` | verified | kruskal |
 
 ## DP and recursion (0/20)
 
