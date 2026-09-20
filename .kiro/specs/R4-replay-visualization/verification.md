@@ -307,7 +307,7 @@ omission marker is shown, the LSB position is labelled, the low bits render, and
 construction is bounded (< 2 s guard). A separate case asserts `2**80` is NOT
 marked truncated.
 
-Amendment-5 verification (tested commit: <FILLED AT COMMIT>):
+Amendment-5 verification (tested commit: `1894633`, PR #16):
 `check:all` green — lint 0 err / 9 warns; unit **164/164** (24 files); 130
 lessons + 29 patterns UNCHANGED; 130 complexity; 27/27 visualizer shapes.
 `test:browser`: **9 passed / 5 skipped** (the 5 skips are the R2 P-RUNNER-ORIGIN
