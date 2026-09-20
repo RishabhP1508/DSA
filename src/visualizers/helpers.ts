@@ -63,7 +63,8 @@ export function resolveBindingObject(
 export function asNumber(v: TraceValue | undefined): number | undefined {
   if (!v) return undefined;
   if (v.kind === "int" && typeof v.value === "number") return v.value;
-  if (v.kind === "float") return v.value;
+  // float value may be a string for Infinity/-Infinity/NaN — not a usable index.
+  if (v.kind === "float" && typeof v.value === "number") return v.value;
   return undefined;
 }
 

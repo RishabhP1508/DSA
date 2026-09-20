@@ -80,7 +80,7 @@ export type ObjectId = string;
  */
 export type TraceValue =
   | { kind: "int"; value: number | string }
-  | { kind: "float"; value: number }
+  | { kind: "float"; value: number | string } // string for Infinity/-Infinity/NaN
   | { kind: "bool"; value: boolean }
   | { kind: "str"; value: string }
   | { kind: "none" }
@@ -249,7 +249,7 @@ export interface Exercise {
   hints: string[];
 }
 
-/** Complexity claim for an operation or the lesson subject. */
+/** Complexity claim for an operation or the lesson subject (summary table row). */
 export interface ComplexityClaim {
   operation: string;
   best?: string;
@@ -257,6 +257,121 @@ export interface ComplexityClaim {
   worst?: string;
   space?: string;
   note?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Complexity explanation (mandatory Time & Space panel — plan §4)
+// ---------------------------------------------------------------------------
+
+/** An input-size variable used in a complexity bound, e.g. n = number of items. */
+export interface ComplexityVariable {
+  /** Symbol as used in bounds, e.g. "n", "m", "V", "E", "k", "h". */
+  symbol: string;
+  /** Plain-English meaning, e.g. "the number of elements in nums". */
+  meaning: string;
+}
+
+/** Which analysis case a bound describes. */
+export type ComplexityCase =
+  | "worst"
+  | "average"
+  | "best"
+  | "expected"
+  | "amortized";
+
+/**
+ * One contribution to the overall bound, linked to the code lines/operation it
+ * comes from. This is how the panel teaches *why* the bound holds rather than
+ * asserting it.
+ */
+export interface ComplexityContribution {
+  /** 1-based code lines this contribution comes from. */
+  lines: number[];
+  /** What happens there, in plain English (e.g. "one pass over all n items"). */
+  description: string;
+  /** The cost this contributes, e.g. "O(n)" time or "O(1)" space. */
+  cost: string;
+  /** "time" or "space". */
+  dimension: "time" | "space";
+}
+
+/**
+ * A named observed-count definition the visual counters display. Counts are
+ * evidence about a particular run, NOT a proof of asymptotic growth, and must
+ * exclude tracing/visualization overhead.
+ */
+export interface OperationCounter {
+  /** Label shown to the learner, e.g. "comparisons" or "loop iterations". */
+  label: string;
+  /** How the count is defined, e.g. "executions of lines 4-5". */
+  definition: string;
+  /** 1-based lines whose executions are counted (used to compute from a trace). */
+  countLines: number[];
+}
+
+/**
+ * The full, authored Time & Space explanation for one code example. Every
+ * supplied executable example, baseline, variant, and exercise solution must
+ * have one of these (plan §4).
+ */
+export interface ComplexityExplanation {
+  /** Input-size variables referenced by the bounds. */
+  variables: ComplexityVariable[];
+  /** A short statement of the operation-cost model / assumptions used. */
+  costModel: string;
+  time: {
+    bound: string; // e.g. "O(n)"
+    case: ComplexityCase;
+    /** Plain-English explanation of the time bound. */
+    explanation: string;
+    /** Extra cases where they differ (e.g. best vs worst for quicksort). */
+    otherCases?: { case: ComplexityCase; bound: string; note: string }[];
+  };
+  space: {
+    /** Auxiliary space, EXCLUDING input/output and tracer overhead. */
+    bound: string;
+    case: ComplexityCase;
+    explanation: string;
+    /** Input/output storage explained separately when relevant. */
+    inputOutputNote?: string;
+  };
+  /** Line-linked derivation contributions. */
+  derivation: ComplexityContribution[];
+  /** Assumptions and preconditions the bounds rely on. */
+  assumptions: string[];
+  /** Tradeoffs versus relevant alternative implementations. */
+  tradeoffs?: string;
+  /** Observed-count definitions for the visual counters. */
+  counters?: OperationCounter[];
+  /**
+   * For lessons whose `code` uses fixed literal data: distinguishes the cost of
+   * this particular execution from the generalized algorithm's growth.
+   */
+  fixedDataNote?: string;
+  /** References supporting the complexity claims. */
+  references?: ReferenceRecord[];
+}
+
+/**
+ * Result of analysing a program's complexity. For lessons this is the authored
+ * explanation; for personal code it is either a conservative supported result
+ * or an explicit "not determined" state (plan §4 personal-code analysis).
+ */
+export interface ComplexityAnalysisResult {
+  /** How the result was produced. */
+  source: "authored" | "auto-supported" | "not-determined";
+  /** Present when source is "authored" or (partially) "auto-supported". */
+  explanation?: ComplexityExplanation;
+  /** True when tied to a specific lesson's exact unchanged source. */
+  boundToLessonId?: string;
+  /** Why a bound could not be established (source === "not-determined"). */
+  uncertaintyReason?: string;
+  /** Observed statistics for the supplied input (labelled, not a proof). */
+  observed?: {
+    label: string;
+    value: number;
+    definition: string;
+  }[];
 }
 
 /**
@@ -282,7 +397,14 @@ export interface LessonDefinition {
     commonMistakes: string;
     edgeCases: string;
   };
+  /** Summary complexity table (quick reference). */
   complexity: ComplexityClaim[];
+  /**
+   * Mandatory Time & Space panel for this lesson's code example (plan §4).
+   * Optional only for foundation lessons whose "code" is not an algorithm; even
+   * those should explain the cost of the shown operations where meaningful.
+   */
+  complexityExplanation?: ComplexityExplanation;
   /** The Python program the lesson executes and visualises. */
   code: string;
   /** Per-line explanations of `code`. */

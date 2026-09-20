@@ -70,6 +70,53 @@ A subtle but important consequence: two names can refer to the **same** object. 
     { operation: "list.append", best: "O(1)", average: "O(1)", worst: "O(n) (amortized O(1))", note: "Occasional resize copies elements; amortized cost is O(1)." },
   ],
 
+  complexityExplanation: {
+    variables: [
+      { symbol: "n", meaning: "the number of appends performed on a list (this example does 1)" },
+    ],
+    costModel:
+      "Binding a name to an existing object is constant work (it copies a reference, not the object). `list.append` is analysed with the amortized model: most appends are O(1), and the rare internal resize that copies all elements is spread across the cheap appends.",
+    time: {
+      bound: "O(1)",
+      case: "amortized",
+      explanation:
+        "Every statement here is a name binding or a single append. Binding (lines 2, 4, 6, 8, 10, 12, 13) is O(1) — it never copies the list. The one append (line 15) is amortized O(1): although a growing list occasionally reallocates and copies its elements (an O(n) event), those costs averaged over many appends come out to O(1) each.",
+      otherCases: [
+        {
+          case: "worst",
+          bound: "O(n)",
+          note: "A single append that triggers a resize copies all n current elements once; this is the rare worst case behind the amortized O(1).",
+        },
+      ],
+    },
+    space: {
+      bound: "O(1)",
+      case: "amortized",
+      explanation:
+        "One append adds one slot. Aliasing (`best = scores`) creates NO new storage — both names point at the same list — so no space grows with the number of names.",
+      inputOutputNote: "The list itself holds the elements you put in it; that is your data, not auxiliary space.",
+    },
+    derivation: [
+      { lines: [2, 4, 6, 8, 10], description: "Five name bindings to freshly created objects — each O(1).", cost: "O(1)", dimension: "time" },
+      { lines: [12], description: "Create a 3-element list literal — proportional to its fixed size, treated as O(1) here.", cost: "O(1)", dimension: "time" },
+      { lines: [13], description: "Alias: bind a second name to the same list. Copies only a reference.", cost: "O(1)", dimension: "time" },
+      { lines: [15], description: "Append one element — amortized O(1).", cost: "O(1)", dimension: "time" },
+      { lines: [13], description: "Aliasing adds no storage; both names share one object.", cost: "O(1)", dimension: "space" },
+    ],
+    assumptions: [
+      "Name binding copies a reference, not the referenced object.",
+      "CPython's list uses over-allocation so appends are amortized O(1).",
+      "`type()` and `print()` of small values are treated as constant work.",
+    ],
+    tradeoffs:
+      "If you needed the list to stay independent, `best = list(scores)` makes a copy — that copy is O(k) time and O(k) extra space for k elements, unlike the O(1) aliasing shown here.",
+    counters: [
+      { label: "append calls", definition: "executions of the append line (line 15)", countLines: [15] },
+    ],
+    fixedDataNote:
+      "This program uses fixed literal values and does exactly one append, so its total cost is constant for this run. The amortized O(1) claim describes what happens as you scale the number of appends up to n.",
+  },
+
   code,
 
   codeExplanations: [

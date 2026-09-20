@@ -65,6 +65,44 @@ Think of a scavenger hunt: each clue (node) tells you where the next clue is. Yo
     { operation: "Access k-th node", best: "O(1)", average: "O(k)", worst: "O(n)", note: "Must walk from the head; no random access." },
   ],
 
+  complexityExplanation: {
+    variables: [{ symbol: "n", meaning: "the number of nodes in the linked list" }],
+    costModel:
+      "We count each visit to a node as constant work: reading current.val and following current.next are O(1) because a node holds a direct reference to the next node.",
+    time: {
+      bound: "O(n)",
+      case: "worst",
+      explanation:
+        "The loop runs once per node — n times — and stops when current becomes None. Each iteration does a constant amount of work (print and one pointer move), so the total time grows in direct proportion to the number of nodes. Best, average, and worst are all O(n) because a full traversal always visits every node.",
+    },
+    space: {
+      bound: "O(1)",
+      case: "worst",
+      explanation:
+        "We keep a single pointer, `current`, no matter how long the list is. No new list or stack is created that grows with n, so the auxiliary space is constant.",
+      inputOutputNote:
+        "The list of n nodes is the input; it already exists and is not counted as auxiliary space.",
+    },
+    derivation: [
+      { lines: [11], description: "Set up one pointer at the head — a fixed cost done once.", cost: "O(1)", dimension: "time" },
+      { lines: [12, 13, 14], description: "The loop body runs once for each of the n nodes; each run is constant work (check, print, advance).", cost: "O(n)", dimension: "time" },
+      { lines: [11], description: "Only the single `current` pointer is stored; it does not grow with n.", cost: "O(1)", dimension: "space" },
+    ],
+    assumptions: [
+      "Following `current.next` is O(1) (a direct reference, not a search).",
+      "`print` of one value is treated as constant work.",
+      "The list is finite and acyclic, so the loop terminates after n steps.",
+    ],
+    tradeoffs:
+      "A Python list would also traverse in O(n), but additionally offers O(1) random access by index — which a linked list cannot. The linked list's advantage is O(1) splicing given a node reference, not traversal speed.",
+    counters: [
+      { label: "loop iterations", definition: "executions of the while-loop body (lines 12–14)", countLines: [12] },
+      { label: "nodes printed", definition: "executions of the print line (line 13)", countLines: [13] },
+    ],
+    fixedDataNote:
+      "This example uses a fixed 3-node list, so you will observe 3 iterations. The O(n) bound describes how that count would grow if the list had n nodes instead of 3.",
+  },
+
   code,
 
   codeExplanations: [
