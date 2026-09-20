@@ -49,7 +49,7 @@ New R2 tests were written and run against the unchanged engine/worker/tracer:
 release-blocking P-RUNNER-ORIGIN gate). `e2e/runner-lifecycle.spec.ts` targets
 the real browser worker path (run/stop) and is validated at T9.
 
-## Results after the fix (tested commit: HEAD of `repair/r2-worker-lifecycle`)
+## Results after the fix (tested commit: `6756a75`, PR #13 → `main`)
 
 | Check | Result |
 |---|---|
