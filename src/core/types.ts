@@ -138,6 +138,7 @@ export interface TraceEvent {
 /** Terminal status of a run. */
 export type RunStatus =
   | "completed"
+  | "exited" // program called sys.exit()/raised SystemExit (distinct from normal completion)
   | "error"
   | "timeout"
   | "event-limit"

@@ -24,12 +24,18 @@ The recorded trace is returned to JS as plain JSON-serialisable data.
 import sys
 import io
 import builtins
+import inspect
 
 # Limits are injected by the worker before exec via the module globals
 # _LIMIT_EVENTS and _LIMIT_TRACE_BYTES. Time is enforced on the JS side by
 # terminating the worker, but we also guard event count here.
 
 import types as _types
+import collections as _collections
+
+
+# Sentinel so `return None` is distinguishable from "no return value supplied".
+_MISSING = object()
 
 
 def _is_opaque(obj):
@@ -72,11 +78,17 @@ class _TraceRecorder:
 
     # -- stdin for input() -------------------------------------------------
     def readline(self):
+        """Return the next supplied line, or raise EOFError when exhausted.
+
+        A SUPPLIED blank line ("\\n") is real input and returns "" (after the
+        caller strips the newline). Running past the end of supplied input is
+        end-of-file: CPython's input() raises EOFError there, so we do too —
+        we do NOT invent an empty string (fixes R1-E)."""
         if self._stdin_pos < len(self._stdin):
             line = self._stdin[self._stdin_pos]
             self._stdin_pos += 1
             return line
-        return ""
+        raise EOFError("EOF when reading a line")
 
     # -- value inspection --------------------------------------------------
     def _oid(self, obj):
@@ -111,11 +123,11 @@ class _TraceRecorder:
             return {"kind": "str", "value": obj}
 
         # Opaque, non-data objects (modules, classes, functions, builtins) are
-        # shown inline as a short repr and NOT walked. Expanding a module would
-        # pull in __builtins__ and hundreds of type/function objects, bloating
-        # the trace and distracting from the data structures being taught.
+        # shown inline as a SAFE TYPE LABEL and NOT walked. We never call the
+        # value's __repr__ (it could run arbitrary learner code / have side
+        # effects); instead we describe it by type + identity.
         if _is_opaque(obj):
-            return {"kind": "unknown", "repr": self._safe_repr(obj)}
+            return {"kind": "unknown", "repr": self._safe_label(obj)}
 
         oid = self._oid(obj)
         # Register the object shell first so cycles resolve to a ref.
@@ -124,45 +136,73 @@ class _TraceRecorder:
             self._obj_table[oid] = self._encode_object(obj, oid, depth)
         return {"kind": "ref", "id": oid}
 
-    def _safe_repr(self, obj):
+    def _safe_label(self, obj):
+        """A side-effect-free description: type name (+ id for data objects).
+
+        Never calls the object's __repr__/__str__. Used for opaque values and as
+        the fallback when an object cannot be safely walked.
+        """
         try:
-            r = repr(obj)
-        except Exception as exc:  # never let inspection crash a run
-            return "<unrepresentable: %s>" % type(exc).__name__
-        if len(r) > 200:
-            r = r[:200] + "..."
-        return r
+            tname = type(obj).__name__
+        except Exception:
+            tname = "object"
+        return "<%s>" % tname
+
+    def _encode_key(self, k):
+        """Encode a dict key as (display, keyKind) WITHOUT invoking user code.
+
+        Preserves the key's type. Tuple keys are shown structurally. Custom
+        objects are labelled by type only (no __repr__/__hash__ side effects
+        beyond what dict membership already required)."""
+        if isinstance(k, bool):
+            return ("True" if k else "False"), "bool"
+        if isinstance(k, int):
+            return str(int(k)), "int"
+        if isinstance(k, float):
+            import math as _math
+            if _math.isinf(k):
+                return ("Infinity" if k > 0 else "-Infinity"), "float"
+            if _math.isnan(k):
+                return "NaN", "float"
+            return repr(float(k)), "float"
+        if isinstance(k, str):
+            return k, "str"
+        if k is None:
+            return "None", "none"
+        if isinstance(k, tuple):
+            # Show tuple keys structurally, e.g. (1, 2), without user code.
+            parts = []
+            for item in tuple.__iter__(k):
+                disp, _ = self._encode_key(item)
+                parts.append(disp)
+            return "(" + ", ".join(parts) + ")", "tuple"
+        return self._safe_label(k), "unknown"
 
     def _encode_object(self, obj, oid, depth):
-        tname = type(obj).__name__
-        # Guard against pathological depth
+        try:
+            tname = type(obj).__name__
+        except Exception:
+            tname = "object"
+        # Guard against pathological depth: label instead of walking, no repr.
         if depth > 12:
-            return {"id": oid, "type": tname, "repr": self._safe_repr(obj)}
+            return {"id": oid, "type": tname, "repr": self._safe_label(obj)}
 
-        # Known safe containers: walk without invoking user code.
+        # Known safe containers. We call the BUILTIN base-type methods directly
+        # (e.g. list.__iter__, dict.keys) so an overridden __iter__/items/keys on
+        # a subclass cannot run learner code during inspection.
         if isinstance(obj, (list, tuple)):
+            base = list if isinstance(obj, list) else tuple
             entries = [
                 {"key": str(i), "value": self._encode_value(v, depth + 1)}
-                for i, v in enumerate(obj)
+                for i, v in enumerate(base.__iter__(obj))
             ]
             return {"id": oid, "type": tname, "entries": entries}
         if isinstance(obj, dict):
             entries = []
-            for k, v in obj.items():
-                # Display key as a string but preserve its original type so an
-                # int key 1 is distinguishable from a str key "1".
-                if isinstance(k, str):
-                    key, key_kind = k, "str"
-                elif isinstance(k, bool):
-                    key, key_kind = ("True" if k else "False"), "bool"
-                elif isinstance(k, int):
-                    key, key_kind = str(k), "int"
-                elif isinstance(k, float):
-                    key, key_kind = repr(k), "float"
-                elif k is None:
-                    key, key_kind = "None", "none"
-                else:
-                    key, key_kind = self._safe_repr(k), "unknown"
+            # dict.keys / dict.__getitem__ on the base type avoid subclass overrides.
+            for k in dict.keys(obj):
+                v = dict.__getitem__(obj, k)
+                key, key_kind = self._encode_key(k)
                 entries.append(
                     {
                         "key": key,
@@ -172,24 +212,57 @@ class _TraceRecorder:
                 )
             return {"id": oid, "type": tname, "entries": entries}
         if isinstance(obj, (set, frozenset)):
+            base = set if isinstance(obj, set) else frozenset
             entries = [
                 {"key": str(i), "value": self._encode_value(v, depth + 1)}
-                for i, v in enumerate(obj)
+                for i, v in enumerate(base.__iter__(obj))
+            ]
+            return {"id": oid, "type": tname, "entries": entries}
+        if isinstance(obj, _collections.deque):
+            entries = [
+                {"key": str(i), "value": self._encode_value(v, depth + 1)}
+                for i, v in enumerate(_collections.deque.__iter__(obj))
             ]
             return {"id": oid, "type": tname, "entries": entries}
 
-        # Generic objects: expose ordinary instance attributes via __dict__
-        # WITHOUT triggering descriptors/properties (we read the raw dict).
-        d = getattr(obj, "__dict__", None)
-        if isinstance(d, dict) and d:
+        # Generic objects: expose ordinary instance attributes via a
+        # SIDE-EFFECT-FREE static read of __dict__. inspect.getattr_static and
+        # the base-type __dict__ descriptor do not trigger @property/descriptors.
+        raw = self._static_instance_dict(obj)
+        if isinstance(raw, dict) and raw:
             entries = [
                 {"key": str(k), "value": self._encode_value(v, depth + 1)}
-                for k, v in d.items()
+                for k, v in raw.items()
             ]
             return {"id": oid, "type": tname, "entries": entries}
 
-        # Fallback: opaque value shown by guarded repr.
-        return {"id": oid, "type": tname, "repr": self._safe_repr(obj)}
+        # Fallback: opaque value shown by a safe type label (never __repr__).
+        return {"id": oid, "type": tname, "repr": self._safe_label(obj)}
+
+    def _static_instance_dict(self, obj):
+        """Return the instance __dict__ without invoking descriptors/properties.
+
+        We look up the __dict__ DESCRIPTOR statically (never running user code).
+        Only the standard getset_descriptor (the normal instance-dict slot) is
+        read, via its __get__. If a class overrides __dict__ as a @property or
+        any non-standard descriptor, we DO NOT invoke it and return None so the
+        object is treated as opaque. Objects with __slots__ / C types also
+        return None."""
+        try:
+            desc = inspect.getattr_static(obj, "__dict__", None)
+        except Exception:
+            return None
+        # The normal instance-dict slot is a getset_descriptor whose __get__
+        # returns the real dict with no side effects.
+        if type(desc) is _types.GetSetDescriptorType:
+            try:
+                d = desc.__get__(obj, type(obj))
+            except Exception:
+                return None
+            return d if isinstance(d, dict) else None
+        # Anything else (property, custom descriptor, or a plain dict returned by
+        # a subclass shadowing) is NOT safe to invoke — treat as opaque.
+        return None
 
     def _encode_frames(self, frame):
         """Encode the frame stack innermost-last.
@@ -219,7 +292,14 @@ class _TraceRecorder:
         return out
 
     # -- event recording ---------------------------------------------------
-    def _record(self, kind, frame, **extra):
+    def _record(self, kind, frame, return_value=_MISSING, error=None):
+        """Record one immutable, self-contained snapshot.
+
+        The object table is reset FIRST, then everything referenced by this
+        event — frame locals AND the return value — is encoded into that same
+        fresh table. This is what makes each snapshot self-contained: a returned
+        object's ref always resolves within its own event (fixes R1-D, where the
+        return value was previously encoded before the table was reset)."""
         if self.stopped_reason is not None:
             return
         if len(self.events) >= self.limit_events:
@@ -227,7 +307,6 @@ class _TraceRecorder:
             raise _StopTracing()
         self._obj_table = {}
         frames = self._encode_frames(frame)
-        # objects gathered as a side-effect of encoding frames/extra values
         event = {
             "index": len(self.events),
             "kind": kind,
@@ -235,7 +314,11 @@ class _TraceRecorder:
             "frames": frames,
             "objects": self._obj_table,
         }
-        event.update(extra)
+        # Encode the return value INTO the same (already-reset) object table.
+        if return_value is not _MISSING:
+            event["returnValue"] = self._encode_value(return_value)
+        if error is not None:
+            event["error"] = error
         # rough size accounting to honour the trace-byte budget
         self.approx_bytes += _rough_size(event)
         if self.approx_bytes > self.limit_bytes:
@@ -269,12 +352,16 @@ def run_program(source, source_name, limit_events, limit_bytes, stdin_text):
     out_buf = io.StringIO()
     err_buf = io.StringIO()
 
-    # input() reads supplied stdin and echoes to stdout like a real prompt.
+    # input() reads supplied stdin and echoes the prompt like the real builtin.
+    # Raises EOFError past the end of supplied input (rec.readline does), matching
+    # CPython. Strips only the single trailing newline (not internal newlines).
     def _input(prompt=""):
         if prompt:
             out_buf.write(str(prompt))
         line = rec.readline()
-        return line.rstrip("\n")
+        if line.endswith("\n"):
+            line = line[:-1]
+        return line
 
     def _trace(frame, event, arg):
         # Only trace lines belonging to the user program (by filename).
@@ -286,9 +373,9 @@ def run_program(source, source_name, limit_events, limit_bytes, stdin_text):
             elif event == "line":
                 rec._record("line", frame)
             elif event == "return":
-                rec._record(
-                    "return", frame, returnValue=rec._encode_value(arg)
-                )
+                # Pass the raw value; it is encoded INSIDE _record after the
+                # object table is reset, so its refs resolve in this snapshot.
+                rec._record("return", frame, return_value=arg)
             elif event == "exception":
                 exc_type, exc_val, _tb = arg
                 rec._record(
@@ -316,16 +403,31 @@ def run_program(source, source_name, limit_events, limit_bytes, stdin_text):
     sys.stdout, sys.stderr = out_buf, err_buf
     builtins.input = _input
 
-    compiled = compile(source, source_name, "exec")
     prog_globals = {"__name__": "__main__", "__builtins__": builtins}
 
+    # ALL state-changing setup (compile + exec) is inside the try so the finally
+    # always restores streams/tracing/input — even on a SyntaxError (R1.4).
     try:
+        compiled = compile(source, source_name, "exec")
         sys.settrace(_trace)
         exec(compiled, prog_globals)
     except _StopTracing:
         pass
-    except SystemExit:
-        pass
+    except SyntaxError as exc:
+        # No execution events exist; still report a structured, located error.
+        result["error"] = {
+            "type": type(exc).__name__,
+            "message": str(getattr(exc, "msg", exc)),
+            "line": getattr(exc, "lineno", None),
+        }
+        result["status"] = "error"
+        import traceback as _tb2
+        err_buf.write("".join(_tb2.format_exception_only(type(exc), exc)))
+    except SystemExit as exc:
+        # Explicit program exit is NOT the same as normal completion (R1.4).
+        code = exc.code
+        result["status"] = "exited"
+        result["exitCode"] = code if isinstance(code, int) or code is None else str(code)
     except BaseException as exc:  # capture the program's own error
         import traceback
 
