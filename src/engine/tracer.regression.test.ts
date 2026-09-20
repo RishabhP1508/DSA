@@ -202,6 +202,30 @@ describe("R1 tracer — output and exceptions", () => {
   });
 });
 
+describe("R1 tracer — exit, syntax errors, opaque labels (R1.4/R1.5/R1.2)", () => {
+  it("represents SystemExit distinctly from normal completion", async () => {
+    const res = (await runProgram("print('a')\nimport sys\nsys.exit(2)\nprint('b')")) as Res & { exitCode?: unknown };
+    expect(res.status).toBe("exited");
+    expect(res.stdout).toBe("a\n"); // output before exit preserved; 'b' never runs
+  });
+
+  it("returns a located structured error for a syntax error (no events)", async () => {
+    const res = (await runProgram("def f(:\n    pass")) as Res;
+    expect(res.status).toBe("error");
+    expect(res.error?.type).toBe("SyntaxError");
+    expect(typeof res.error?.line).toBe("number");
+  });
+
+  it("shows an opaque object as a safe type label, not via its __repr__", async () => {
+    // A module is opaque; it must be labelled by type, never walked or repr'd.
+    const res = (await runProgram("import math\nm = math\nx = 1")) as Res;
+    const M = lastLocal(res, "m")!;
+    expect(M.v.kind).toBe("unknown");
+    expect(typeof M.v.repr).toBe("string");
+    expect(M.v.repr).toContain("module"); // "<module>"
+  });
+});
+
 describe("R1 tracer — differential: tracing does not change output", () => {
   // Run a supported program through the tracer and compare its stdout with the
   // same program run untraced in the same runtime.
