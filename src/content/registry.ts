@@ -146,6 +146,26 @@ import { backtrackingPattern } from "./patterns/backtracking";
 import { binarySearchOnAnswerPattern } from "./patterns/binary-search-on-answer";
 import { topKHeapPattern } from "./patterns/top-k-heap";
 import { monotonicStackPattern } from "./patterns/monotonic-stack";
+// Patterns (Phase 4.1 — full pattern coverage)
+import { mergeIntervalsPattern } from "./patterns/merge-intervals";
+import { cyclicSortPattern } from "./patterns/cyclic-sort";
+import { inPlaceLinkedListReversalPattern } from "./patterns/in-place-linkedlist-reversal";
+import { treeBfsPattern } from "./patterns/tree-bfs";
+import { treeDfsPattern } from "./patterns/tree-dfs";
+import { twoHeapsPattern } from "./patterns/two-heaps";
+import { modifiedBinarySearchPattern } from "./patterns/modified-binary-search";
+import { bitwiseXorPattern } from "./patterns/bitwise-xor";
+import { kWayMergePattern } from "./patterns/k-way-merge";
+import { knapsackPattern } from "./patterns/knapsack";
+import { topologicalSortPattern } from "./patterns/topological-sort";
+import { graphDfsComponentsPattern } from "./patterns/graph-dfs-components";
+import { unionFindPattern } from "./patterns/union-find";
+import { dijkstraPattern } from "./patterns/dijkstra";
+import { triePrefixPattern } from "./patterns/trie-prefix";
+import { dynamicProgrammingPattern } from "./patterns/dynamic-programming";
+import { divideAndConquerPattern } from "./patterns/divide-and-conquer";
+import { greedyIntervalSchedulingPattern } from "./patterns/greedy-interval-scheduling";
+import { matrixTraversalPattern } from "./patterns/matrix-traversal";
 
 export const lessons: LessonDefinition[] = [
   // Programming foundations
@@ -312,8 +332,35 @@ export const patterns: PatternDefinition[] = [
   binarySearchOnAnswerPattern,
   // Heaps & priority
   topKHeapPattern,
+  twoHeapsPattern,
+  kWayMergePattern,
   // Stacks & queues
   monotonicStackPattern,
+  // Intervals & greedy
+  mergeIntervalsPattern,
+  greedyIntervalSchedulingPattern,
+  // Arrays (more)
+  cyclicSortPattern,
+  matrixTraversalPattern,
+  // Linked lists (more)
+  inPlaceLinkedListReversalPattern,
+  // Trees & graphs (more)
+  treeBfsPattern,
+  treeDfsPattern,
+  graphDfsComponentsPattern,
+  topologicalSortPattern,
+  unionFindPattern,
+  dijkstraPattern,
+  triePrefixPattern,
+  // Searching (more)
+  modifiedBinarySearchPattern,
+  // Bit manipulation
+  bitwiseXorPattern,
+  // Dynamic programming
+  dynamicProgrammingPattern,
+  knapsackPattern,
+  // Sorting & divide-and-conquer
+  divideAndConquerPattern,
 ];
 
 export function getLesson(id: string): LessonDefinition | undefined {
