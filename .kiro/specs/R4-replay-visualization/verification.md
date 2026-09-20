@@ -181,7 +181,7 @@ first, then passing):
    the state *before* that line runs, so the current-cell overlay marks the cell
    about to be written.
 
-Amendment-2 verification (tested commit: <FILLED AT COMMIT>):
+Amendment-2 verification (tested commit: `6eb5620`, PR #16):
 `check:all` green — lint **0 errors / 9 warnings**; unit **150/150** (20 files);
 130 lessons + 29 patterns unchanged; 130 complexity; 27/27 visualizer shapes.
 `test:browser`: **9 passed / 5 skipped** (the 5 skips are the R2 P-RUNNER-ORIGIN
