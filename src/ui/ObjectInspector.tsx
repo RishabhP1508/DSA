@@ -13,7 +13,7 @@
  */
 
 import { useState } from "react";
-import type { ObjectId, TraceObject, TraceValue } from "../core/types";
+import type { KeyKind, ObjectId, TraceObject, TraceValue } from "../core/types";
 
 /** How many entries to show before a "show more" toggle. */
 const PAGE = 50;
@@ -38,7 +38,7 @@ function primitiveText(value: TraceValue): string | null {
 }
 
 /** Display a dict entry key honouring its recorded type (keyKind). */
-function keyText(key: string, keyKind?: TraceValue["kind"]): string {
+function keyText(key: string, keyKind?: KeyKind): string {
   if (keyKind === "str") return JSON.stringify(key); // quote string keys
   return key; // int/tuple/none/bool/float shown as recorded (e.g. 1, (1, 2))
 }
@@ -56,7 +56,7 @@ export function ObjectInspector({
   /** Optional name/key shown before the value (variable name or entry key). */
   label?: string;
   /** When `label` is a dict key, its recorded type for correct formatting. */
-  keyKind?: TraceValue["kind"];
+  keyKind?: KeyKind;
   defaultExpanded?: boolean;
   /** Object ids on the path to here, for cycle detection. */
   ancestors?: ReadonlySet<ObjectId>;
@@ -109,12 +109,20 @@ export function ObjectInspector({
   const entries = obj.entries ?? [];
   const summary = `${obj.type}${entries.length ? ` (${entries.length}${obj.truncated ? "+" : ""})` : obj.repr ? "" : " (empty)"}`;
 
-  // Opaque object with only a repr (e.g. a safe type label) — show inline.
+  // Opaque object with only a repr (e.g. a safe type label, or a depth-capped
+  // sentinel) — show inline. If it is `truncated`, tell the learner that deeper
+  // data was omitted at the inspection depth limit (R4 follow-up #5).
   if (!obj.entries && obj.repr) {
     return (
       <div className="oi-row">
         {labelNode}
         <span className="oi-value">{obj.repr}</span>
+        {obj.truncated && (
+          <span className="oi-truncated dim tiny">
+            {" "}
+            … deeper data omitted (max inspection depth)
+          </span>
+        )}
       </div>
     );
   }

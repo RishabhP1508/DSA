@@ -81,6 +81,16 @@ describe("ObjectInspector — expansion & drill-in", () => {
     expect(screen.getByText("42")).toBeInTheDocument();
   });
 
+  it("surfaces the truncation marker for a DEPTH-CAPPED object (repr-only, truncated)", () => {
+    // The tracer emits a depth-cap sentinel: a repr label, no entries, truncated.
+    // The inspector must tell the learner that deeper data was omitted.
+    const objects: Record<string, TraceObject> = {
+      deep: { id: "deep", type: "list", repr: "<list>", truncated: true },
+    };
+    render(<ObjectInspector value={{ kind: "ref", id: "deep" }} objects={objects} label="d" defaultExpanded />);
+    expect(screen.getByText(/omitted|truncat|max .*depth|deeper/i)).toBeInTheDocument();
+  });
+
   it("collapses and expands on toggle", async () => {
     const objects: Record<string, TraceObject> = {
       o1: { id: "o1", type: "list", entries: [{ key: "0", value: { kind: "int", value: 7 } }] },

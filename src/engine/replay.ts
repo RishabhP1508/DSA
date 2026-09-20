@@ -8,7 +8,6 @@
  */
 
 import type { RunResult, TraceEvent, TraceValue, TraceObject } from "../core/types";
-import { hash32 } from "./protocol";
 
 export class Replay {
   private index = 0;
@@ -168,8 +167,14 @@ export function isBreakpointStop(
 /**
  * True when `result`'s trace no longer matches the current editor source/stdin,
  * so the UI must stop presenting it as validated (R4.1). A falsy result is not
- * stale (nothing to invalidate). A result that predates the rev feature (no
- * `sourceRev` recorded) is treated as stale — we cannot prove it matches.
+ * stale (nothing to invalidate).
+ *
+ * Freshness uses an EXACT string comparison of the source/input the result was
+ * produced from — NOT the 32-bit `sourceRev`/`inputRev` hash, which can collide
+ * across distinct sources and make a stale trace look current. The hash is kept
+ * only for worker-message correlation. A result that predates the exact-string
+ * feature (no recorded `source`) is treated as stale — we cannot prove it
+ * matches the current editor.
  */
 export function isResultStale(
   result: RunResult | null | undefined,
@@ -177,8 +182,13 @@ export function isResultStale(
   stdin: string,
 ): boolean {
   if (!result) return false;
-  if (typeof result.sourceRev !== "number") return true;
-  if (result.sourceRev !== hash32(source)) return true;
-  if (typeof result.inputRev === "number" && result.inputRev !== hash32(stdin)) return true;
-  return false;
+  // Exact comparison is authoritative when the result recorded its source.
+  if (typeof result.source === "string") {
+    if (result.source !== source) return true;
+    // Compare stdin exactly when recorded; an unrecorded stdin defaults to "".
+    if ((result.stdin ?? "") !== stdin) return true;
+    return false;
+  }
+  // Legacy result without an exact source: cannot prove it matches → stale.
+  return true;
 }

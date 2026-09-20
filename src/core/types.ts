@@ -85,6 +85,14 @@ export type TraceEventKind =
 export type ObjectId = string;
 
 /**
+ * The recorded TYPE of a dict key, as emitted by the tracer's `_encode_key`.
+ * This is a superset of the scalar `TraceValue` kinds: dict keys can also be
+ * tuples (shown structurally) or otherwise-unrepresentable values ("unknown").
+ * Kept in sync with tracer.py `_encode_key` (R4 follow-up #4).
+ */
+export type KeyKind = "int" | "float" | "bool" | "str" | "none" | "tuple" | "unknown";
+
+/**
  * A value as observed by the tracer. Primitives are inlined; containers and
  * user objects are referenced by ObjectId so aliases and cycles are preserved
  * (never re-evaluated during inspection — see the plan's execution rules).
@@ -105,10 +113,12 @@ export interface TraceObject {
   /**
    * For containers: ordered/keyed children. For objects: attribute map.
    * `key` is always a display string; `keyKind` preserves the original key TYPE
-   * for dicts so an int key `1` is distinguishable from a str key `"1"`
-   * (the plan requires serializable values that preserve dictionary key types).
+   * for dicts so an int key `1` is distinguishable from a str key `"1"` and a
+   * tuple key `(1, 2)` from `('1', 2)` (the plan requires serializable values
+   * that preserve dictionary key types). `keyKind` is a `KeyKind` (a superset of
+   * the scalar value kinds that also includes `tuple`), matching the tracer.
    */
-  entries?: { key: string; keyKind?: TraceValue["kind"]; value: TraceValue }[];
+  entries?: { key: string; keyKind?: KeyKind; value: TraceValue }[];
   /** For scalars wrapped as objects or opaque types. */
   repr?: string;
   /**
@@ -184,13 +194,22 @@ export interface RunResult {
   /** For status === "exited": the SystemExit code. */
   exitCode?: number | string | null;
   /**
-   * 32-bit hash of the source this result was produced from (R4.1). The UI
-   * compares it against the current editor content to detect a stale trace after
-   * an edit and stop presenting it as validated.
+   * 32-bit hash of the source this result was produced from (R4.1). Used for
+   * WORKER MESSAGING / protocol correlation. NOT used for UI freshness — a
+   * 32-bit hash can collide across distinct sources, so freshness compares the
+   * EXACT `source`/`stdin` strings below.
    */
   sourceRev?: number;
   /** 32-bit hash of the stdin this result was produced from (R4.1). */
   inputRev?: number;
+  /**
+   * The EXACT source string this result was produced from. UI freshness
+   * (`isResultStale`) compares this against the current editor content, so a
+   * hash collision can never make a stale trace look current.
+   */
+  source?: string;
+  /** The EXACT stdin string this result was produced from (UI freshness). */
+  stdin?: string;
 }
 
 /**

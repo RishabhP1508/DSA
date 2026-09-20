@@ -232,6 +232,55 @@ lessons + 29 patterns unchanged; 130 complexity; 27/27 visualizer shapes.
 packaging gate, reported separately). No production code and no lesson
 `expectedOutput` changed.
 
+## Amendment 4 (functional follow-up: five inspection/visualization edge cases)
+
+Five older functional edge cases surfaced in a final review pass, fixed
+test-first (failing regression tests recorded first, then the fix). Confined to
+execution inspection and visualization; no lesson `expectedOutput` changed.
+
+1. **Source freshness under hash collisions.** `isResultStale` used the 32-bit
+   FNV-1a hash, and the sources `x = 1026739644\nprint(x)\n` and
+   `x = 2540207134\nprint(x)\n` collide — an edit between them left an old trace
+   looking current. Fix: the engine now stamps the EXACT `source`/`stdin` on the
+   result, and `isResultStale` compares those exact strings; `sourceRev`/
+   `inputRev` are retained only for worker-message correlation. Failing-before/
+   passing-after: `staleness.test.ts` (asserts the collision premise via
+   `hash32(A) === hash32(B)`, then that a result from A is stale against B).
+
+2. **Bit diagrams on real Python ints.** `BitsVisualizer` used JS 32-bit `>>`
+   and `asNumber`, so `2**32` rendered all-zero and string-encoded big ints
+   (> 2^53, e.g. `2**80`) could not render at all. Fix: read the int as a
+   `BigInt` (from number OR string) and extract bits with BigInt shifts; width is
+   BigInt-computed. Ordinary/`2**32`/`2**80`/`0`/negative all render; negatives
+   show the magnitude bits with a note that Python negatives act as an infinite
+   two's-complement sign extension. Test: `BitsVisualizer.test.tsx`.
+
+3. **"Visualize as…" field paths.** The string and bit renderers read only the
+   root variable, ignoring `binding.path`. Fix: added `resolveBindingValue`
+   (path-aware scalar resolver, snapshot-only) and used it in both renderers.
+   Test: `fieldpath.test.tsx` (an object with a nested string and int; select
+   each path and render the selected value).
+
+4. **Typed tuple dict keys.** The tracer's tuple-key formatter joined element
+   displays only, so `(1, 2)` and `('1', 2)` were identical. Fix: a type-aware
+   `_key_element_repr` quotes string elements (`'1'`), keeps ints bare, and
+   recurses nested tuples. The TS key-kind contract now has a dedicated `KeyKind`
+   (superset incl. `tuple`) matching the tracer, used by `TraceObject.entries`
+   and `ObjectInspector`. Test (real traced dict): `tracer.tuplekeys.test.ts`.
+
+5. **Depth-truncation marker.** At the inspection depth cap the tracer returned
+   an opaque label with no marker, so the inspector never told the learner data
+   was omitted. Fix: the depth-capped object now carries `truncated: true`, and
+   `ObjectInspector` shows "… deeper data omitted (max inspection depth)" for a
+   repr-only truncated object. Tests: `tracer.depth.test.ts` (real deeply nested
+   structure) + a new `ObjectInspector` case.
+
+Amendment-4 verification (tested commit: <FILLED AT COMMIT>):
+`check:all` green — lint 0 err / 9 warns; unit **161/161** (24 files); 130
+lessons + 29 patterns UNCHANGED; 130 complexity; 27/27 visualizer shapes.
+`test:browser`: **9 passed / 5 skipped** (the 5 skips are the R2 P-RUNNER-ORIGIN
+packaging gate, reported separately). No lesson `expectedOutput` changed.
+
 ## What was NOT proven / remaining
 - **Deque adapter was already fixed by R2** (evidence in the probe + the new
   `verify:visualizers` deque check); R4 closed the *verification* gap, not a live
