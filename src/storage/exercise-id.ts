@@ -22,6 +22,25 @@ export function exerciseUid(ownerKind: OwnerKind, ownerId: string, exerciseId: s
 }
 
 /**
+ * True when `key` has the well-formed composite shape produced by
+ * `exerciseUid`: `<ownerKind>:<ownerId>:<exerciseId>` where ownerKind is
+ * `lesson` or `pattern` and both ownerId and exerciseId are nonempty and
+ * contain no `:`.
+ *
+ * This is a STRUCTURAL check only. It intentionally does NOT require the id to
+ * exist in today's registry — a valid backup may reference an exercise that has
+ * since been renamed or removed from the curriculum, and rejecting those would
+ * break backups across curriculum changes (R3.1 requirement).
+ */
+export function isCompositeExerciseKey(key: string): boolean {
+  const parts = key.split(":");
+  if (parts.length !== 3) return false;
+  const [ownerKind, ownerId, exerciseId] = parts;
+  if (ownerKind !== "lesson" && ownerKind !== "pattern") return false;
+  return ownerId.length > 0 && exerciseId.length > 0;
+}
+
+/**
  * Map of bare exercise id → the composite uids that use it. Built once from the
  * real registry. A bare id used by more than one owner is AMBIGUOUS: a v1
  * progress record keyed on it cannot be attributed to a single exercise.

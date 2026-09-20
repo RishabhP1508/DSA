@@ -78,3 +78,93 @@ describe("validateBackup — does not execute stored source", () => {
     expect(r.ok).toBe(true);
   });
 });
+
+// ---------------------------------------------------------------------------
+// R3.1 follow-up: version-aware validation (a v2 file must not carry bare keys)
+// ---------------------------------------------------------------------------
+
+// A genuine v1 envelope: backupVersion 1, no schemaVersion, bare exercise keys.
+function v1envelope(exercises: Record<string, unknown>) {
+  return {
+    app: APP_MARKER,
+    backupVersion: 1,
+    exportedAt: "2026-01-01T00:00:00.000Z",
+    data: { lessons: {}, exercises, drafts: {}, preferences: {}, backupVersion: 1 },
+  };
+}
+
+describe("validateBackup — version-aware (v2 must use composite keys)", () => {
+  it("REJECTS a v2 backup with a bare exercise key (the reported bug)", () => {
+    const r = validateBackup(envelope(v2data({ exercises: { "ms-choose-1": { attempts: 1, solved: true } } })));
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toMatch(/composite|exercise key|lesson:|pattern:/i);
+  });
+
+  it("ACCEPTS a v2 backup with a valid composite key and preserves its data", () => {
+    const data = v2data({ exercises: { "lesson:matrix-search:ms-choose-1": { attempts: 4, solved: true } } });
+    const r = validateBackup(envelope(data));
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      const ex = r.envelope.data.exercises["lesson:matrix-search:ms-choose-1"];
+      expect(ex).toMatchObject({ attempts: 4, solved: true });
+    }
+  });
+
+  it("ACCEPTS a v2 backup whose composite key is UNKNOWN to today's registry (curriculum drift)", () => {
+    // Well-formed composite shape, but the ids need not exist now.
+    const data = v2data({ exercises: { "lesson:removed-lesson:old-ex-9": { attempts: 2, solved: true } } });
+    expect(validateBackup(envelope(data)).ok).toBe(true);
+  });
+
+  it("ACCEPTS bare keys in legacyExercises of a v2 backup (migration preserves ambiguous history)", () => {
+    const data = v2data({
+      exercises: {},
+      legacyExercises: { "ms-choose-1": { attempts: 1, solved: true, note: "ambiguous" } },
+    });
+    expect(validateBackup(envelope(data)).ok).toBe(true);
+  });
+
+  it("ACCEPTS a genuine v1 backup with bare keys (still migratable)", () => {
+    expect(validateBackup(v1envelope({ "ms-choose-1": { attempts: 1, solved: true } })).ok).toBe(true);
+  });
+
+  it("REJECTS an outer backupVersion 2 whose data.backupVersion is 1", () => {
+    const r = validateBackup(envelope(v2data({ backupVersion: 1 })));
+    expect(r.ok).toBe(false);
+  });
+
+  it("REJECTS an outer backupVersion 1 whose data claims schemaVersion 2", () => {
+    const env = {
+      app: APP_MARKER,
+      backupVersion: 1,
+      exportedAt: "2026-01-01T00:00:00.000Z",
+      data: { lessons: {}, exercises: {}, drafts: {}, preferences: {}, schemaVersion: 2, backupVersion: 1 },
+    };
+    expect(validateBackup(env).ok).toBe(false);
+  });
+
+  it("REJECTS a future schemaVersion this app cannot understand", () => {
+    const r = validateBackup(envelope(v2data({ schemaVersion: 3 }), { backupVersion: BACKUP_VERSION }));
+    expect(r.ok).toBe(false);
+  });
+
+  it("REJECTS a future backupVersion", () => {
+    const r = validateBackup(envelope(v2data(), { backupVersion: BACKUP_VERSION + 1 }));
+    expect(r.ok).toBe(false);
+  });
+});
+
+describe("validateMigratedRecord — strict v2 requires composite keys + schemaVersion 2", () => {
+  it("rejects a migrated record that still has a bare exercise key", () => {
+    const rec = { lessons: {}, exercises: { "ms-choose-1": { attempts: 1, solved: true } }, legacyExercises: {}, drafts: {}, preferences: {}, schemaVersion: 2, backupVersion: 2 };
+    expect(validateMigratedRecord(rec).ok).toBe(false);
+  });
+  it("accepts a migrated record with only composite keys", () => {
+    const rec = { lessons: {}, exercises: { "pattern:sliding-window:sw-1": { attempts: 1, solved: true } }, legacyExercises: {}, drafts: {}, preferences: {}, schemaVersion: 2, backupVersion: 2 };
+    expect(validateMigratedRecord(rec).ok).toBe(true);
+  });
+  it("rejects a wrong schemaVersion in the migrated record", () => {
+    const rec = { lessons: {}, exercises: {}, legacyExercises: {}, drafts: {}, preferences: {}, schemaVersion: 1, backupVersion: 2 };
+    expect(validateMigratedRecord(rec).ok).toBe(false);
+  });
+});
