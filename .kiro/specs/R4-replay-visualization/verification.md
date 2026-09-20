@@ -187,6 +187,51 @@ Amendment-2 verification (tested commit: `6eb5620`, PR #16):
 `test:browser`: **9 passed / 5 skipped** (the 5 skips are the R2 P-RUNNER-ORIGIN
 packaging gate, reported separately). No lesson `expectedOutput` changed.
 
+## Amendment 3 (test-only strengthening; no production code changed)
+
+A review asked for two tests to exercise real sequences/assertions rather than a
+mocked flag or a single step. Only two test files changed
+(`workspace-staleness.test.tsx`, `DPTableVisualizer.real.test.tsx`).
+
+1. **Full source-state sequence, both workspaces.**
+   `workspace-staleness.test.tsx` now drives the ACTUAL sequence with a
+   staleness-modeling fake engine (records the source that produced the trace;
+   `isStale(cur) = lastRunSource !== cur`) and REAL CodeMirror edits dispatched
+   through the editor view:
+   original run → edit → run edited → restore original (no rerun) → rerun original.
+   At each of the five states it asserts the stale warning presence, playback
+   availability (Play button enabled/disabled), and authored explanation
+   visibility — for **both** `LessonWorkspace` and `PatternWorkspace`. This proves
+   the trace-vs-editor vs editor-vs-authored separation end-to-end, including the
+   previously-regressing state D (restored original, last run edited → stale,
+   authored hidden, warning shown, playback disabled). It replaces the earlier
+   mocked-`stale`-flag cases.
+
+   Proven, per state (both workspaces):
+   | State | Stale warning | Trace/playback | Authored content |
+   |---|---|---|---|
+   | A original run | absent | enabled | shown |
+   | B edit, no rerun | shown | disabled | hidden |
+   | C run edited | shown (edited) | enabled | hidden |
+   | D restore original, no rerun | shown (stale) | disabled | hidden |
+   | E rerun original | absent | enabled | shown |
+
+2. **2D DP progress at two distinct steps, coordinate-checked.**
+   `DPTableVisualizer.real.test.tsx` (2D, `dp-grid-paths`, real bundled-Pyodide
+   trace) now selects two interior events with different `(i, j)`, renders each,
+   inverts the highlighted rect's `x`/`y` to recover the rendered `(row, col)`,
+   and asserts they equal the trace's `i`/`j` — and that the coordinates change
+   between the two steps. It no longer merely counts active cells at one step.
+   The 1D test (`dp-tabulation`) continues to assert the active cell equals `i` at
+   an early and a later transition.
+
+Amendment-3 verification (tested commit: <FILLED AT COMMIT>):
+`check:all` green — lint 0 err / 9 warns; unit **146/146** (20 files); 130
+lessons + 29 patterns unchanged; 130 complexity; 27/27 visualizer shapes.
+`test:browser`: **9 passed / 5 skipped** (the 5 skips are the R2 P-RUNNER-ORIGIN
+packaging gate, reported separately). No production code and no lesson
+`expectedOutput` changed.
+
 ## What was NOT proven / remaining
 - **Deque adapter was already fixed by R2** (evidence in the probe + the new
   `verify:visualizers` deque check); R4 closed the *verification* gap, not a live

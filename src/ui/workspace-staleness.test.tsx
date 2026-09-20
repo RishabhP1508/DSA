@@ -1,57 +1,98 @@
 /**
- * R4 amendment #2: separate "trace matches the editor" (stale) from "editor
- * matches the authored example" (edited) in LessonWorkspace and PatternWorkspace.
+ * R4 amendment #3 (test-only): exercise the ACTUAL source-state sequence in both
+ * LessonWorkspace and PatternWorkspace, rather than flipping a mocked `stale`
+ * flag. The sequence, per the review:
  *
- * The critical regression (edit → run edited → RESTORE original without rerun):
- *   edited === false, but the last run's trace is from the edited source, so it
- *   is STALE. The authored diagram/complexity must NOT be shown against that
- *   trace, and the stale warning must be visible.
+ *   original run → edit → run edited code → restore original (no rerun) → rerun original
  *
- * These use a MOCKED useEngine so the truth table can be driven deterministically
- * without the real Pyodide worker.
+ * At each state we assert (a) the stale warning, (b) trace/playback availability,
+ * and (c) authored explanation/diagram/complexity visibility.
+ *
+ * The fake engine models the REAL staleness rule: `run(src)` records the source
+ * that produced the trace, and `isStale(curSource)` is `lastRunSource !==
+ * curSource` (exactly what engine.ts stamps via sourceRev and replay.isStale
+ * compares). Edits are driven through the real CodeMirror view so the
+ * workspace's own `source` state advances like it does for a learner.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, cleanup } from "@testing-library/react";
+import { act, render, screen, cleanup } from "@testing-library/react";
 import type { TraceEvent, RunResult } from "../core/types";
 
-// --- controllable fake engine ---------------------------------------------
-type FakeEngine = {
-  ready: boolean; running: boolean; state: string;
-  result: RunResult | null; event: TraceEvent | undefined;
-  position: number; length: number; outputSoFar: string;
-  playing: boolean; speed: number; breakpoints: Set<number>;
-  stale: boolean; // drives isStale()
-  run: ReturnType<typeof vi.fn>; stop: ReturnType<typeof vi.fn>;
-  play: ReturnType<typeof vi.fn>; pause: ReturnType<typeof vi.fn>;
-  setSpeed: ReturnType<typeof vi.fn>; toggleBreakpoint: ReturnType<typeof vi.fn>;
-  seek: ReturnType<typeof vi.fn>; next: ReturnType<typeof vi.fn>;
-  prev: ReturnType<typeof vi.fn>; restart: ReturnType<typeof vi.fn>;
-  isStale: (s: string, i?: string) => boolean;
-};
+// --- a stateful fake engine that models real staleness --------------------
+type Listener = () => void;
+
+class FakeEngine {
+  ready = true;
+  running = false;
+  state = "idle";
+  result: RunResult | null = null;
+  event: TraceEvent | undefined = undefined;
+  position = 0;
+  length = 0;
+  outputSoFar = "";
+  playing = false;
+  speed = 1;
+  breakpoints = new Set<number>();
+
+  private lastRunSource: string | null = null;
+  private listeners = new Set<Listener>();
+
+  subscribeRerender(fn: Listener) {
+    this.listeners.add(fn);
+    return () => this.listeners.delete(fn);
+  }
+  private notify() {
+    for (const fn of this.listeners) fn();
+  }
+
+  // The workspace calls run(source, stdin). We record the source that produced
+  // the trace and synthesize a completed result/event so traceMatchesEditor
+  // becomes true for the CURRENT editor content.
+  run = vi.fn((source: string) => {
+    this.lastRunSource = source;
+    const ev: TraceEvent = {
+      index: 0,
+      kind: "line",
+      line: 5,
+      frames: [{ name: "<module>", line: 5, locals: [] }],
+      objects: {},
+    };
+    this.result = { runId: 1, status: "completed", events: [ev], stdout: "", stderr: "" };
+    this.event = ev;
+    this.length = 1;
+    this.position = 0;
+    this.notify();
+  });
+
+  stop = vi.fn();
+  play = vi.fn(() => { this.playing = true; this.notify(); });
+  pause = vi.fn(() => { this.playing = false; this.notify(); });
+  setSpeed = vi.fn();
+  toggleBreakpoint = vi.fn();
+  seek = vi.fn();
+  next = vi.fn();
+  prev = vi.fn();
+  restart = vi.fn();
+
+  isStale(source: string) {
+    if (this.result === null) return false;
+    return this.lastRunSource !== source;
+  }
+}
 
 let fake: FakeEngine;
 
-function makeFake(over: Partial<FakeEngine> = {}): FakeEngine {
-  const ev: TraceEvent = { index: 0, kind: "line", line: 5, frames: [{ name: "<module>", line: 5, locals: [] }], objects: {} };
-  const result: RunResult = { runId: 1, status: "completed", events: [ev], stdout: "", stderr: "", sourceRev: 1, inputRev: 0 };
-  return {
-    ready: true, running: false, state: "completed",
-    result, event: ev, position: 0, length: 1, outputSoFar: "",
-    playing: false, speed: 1, breakpoints: new Set(),
-    stale: false,
-    run: vi.fn(), stop: vi.fn(), play: vi.fn(), pause: vi.fn(),
-    setSpeed: vi.fn(), toggleBreakpoint: vi.fn(),
-    seek: vi.fn(), next: vi.fn(), prev: vi.fn(), restart: vi.fn(),
-    isStale() { return this.stale; },
-    ...over,
-  };
-}
-
 vi.mock("./useEngine", () => ({
   PLAYBACK_SPEEDS: [0.5, 1, 2, 4],
-  useEngine: () => fake,
+  // Re-render the consuming workspace whenever the fake notifies.
+  useEngine: () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const React = require("react") as typeof import("react");
+    const [, force] = React.useState(0);
+    React.useEffect(() => fake.subscribeRerender(() => force((n) => n + 1)), []);
+    return fake;
+  },
 }));
-// storage is called by LessonWorkspace (markLessonViewed); stub it.
 vi.mock("../storage/progress", () => ({ markLessonViewed: vi.fn() }));
 
 import { LessonWorkspace } from "./LessonWorkspace";
@@ -84,59 +125,115 @@ const pattern: PatternDefinition = {
   linkedLessons: [], exercises: [], references: [],
 };
 
-beforeEach(() => { fake = makeFake(); });
+// --- helpers to drive the real editor + Run button ------------------------
+import { EditorView } from "@codemirror/view";
+
+function editorView(container: HTMLElement): EditorView {
+  const host = container.querySelector(".code-editor") as HTMLElement;
+  // EditorView.findFromDOM walks up from the CM content node.
+  const content = host.querySelector(".cm-content") as HTMLElement;
+  const view = EditorView.findFromDOM(content);
+  if (!view) throw new Error("could not find the CodeMirror view");
+  return view;
+}
+
+function setEditorText(container: HTMLElement, text: string) {
+  const view = editorView(container);
+  act(() => {
+    view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: text } });
+  });
+}
+
+function clickRun(runLabel: RegExp = /^▶ Run$|Run$/) {
+  const btn = screen.getByRole("button", { name: runLabel });
+  act(() => {
+    btn.click();
+  });
+}
+
+const warning = () => screen.queryByRole("status");
+const playBtn = () => screen.getByRole("button", { name: /Play/ }) as HTMLButtonElement;
+
+beforeEach(() => {
+  fake = new FakeEngine();
+});
 afterEach(cleanup);
 
-describe("LessonWorkspace — trace-vs-editor separation", () => {
-  it("original code + fresh run: shows authored explanation, no stale warning", () => {
-    fake = makeFake({ stale: false });
-    render(<LessonWorkspace lesson={lesson} />);
-    expect(screen.getByText("AUTHORED-LINE-EXPLANATION")).toBeInTheDocument();
-    expect(screen.queryByRole("status")).not.toBeInTheDocument();
-  });
+describe("LessonWorkspace — full source-state sequence (original→edit→run edited→restore→rerun)", () => {
+  it("shows/hides the stale warning, trace panels and authored content correctly at each state", () => {
+    const { container } = render(<LessonWorkspace lesson={lesson} />);
 
-  it("RESTORED original but last run was edited (stale, not edited): stale warning shown, authored hidden", () => {
-    // Editor holds the ORIGINAL code (edited === false) but the recorded result
-    // is stale (from the edited run). This is the reported regression.
-    fake = makeFake({ stale: true });
-    render(<LessonWorkspace lesson={lesson} />);
-    // Stale warning must appear even though edited === false.
-    expect(screen.getByRole("status")).toBeInTheDocument();
-    // Authored line explanation must NOT be shown against the stale trace.
+    // State A — original code, fresh original run.
+    clickRun();
+    expect(warning()).not.toBeInTheDocument();
+    expect(screen.getByText("AUTHORED-LINE-EXPLANATION")).toBeInTheDocument(); // authored shown
+    expect(playBtn()).not.toBeDisabled(); // trace/playback available
+
+    // State B — edit the code (no rerun). Trace is now from the OLD original run
+    // → stale. Authored hidden; stale warning; playback disabled.
+    setEditorText(container, "x = 999\ny = 2\n");
+    expect(warning()).toBeInTheDocument();
     expect(screen.queryByText("AUTHORED-LINE-EXPLANATION")).not.toBeInTheDocument();
-  });
+    expect(playBtn()).toBeDisabled();
 
-  it("edited code (stale): stale warning shown, authored hidden", () => {
-    fake = makeFake({ stale: true });
-    const { container } = render(<LessonWorkspace lesson={{ ...lesson }} />);
-    // Simulate an edit by rendering with a different editor value is hard via
-    // mock; instead the stale flag already drives the guard. Authored hidden.
-    expect(screen.getByRole("status")).toBeInTheDocument();
-    void container;
+    // State C — run the EDITED code. Trace now matches the editor (not stale)
+    // but the editor differs from the authored source → edited.
+    clickRun();
+    // Trace/playback available again (fresh edited trace)...
+    expect(playBtn()).not.toBeDisabled();
+    // ...but authored explanation stays hidden (edited away from the lesson).
+    expect(screen.queryByText("AUTHORED-LINE-EXPLANATION")).not.toBeInTheDocument();
+    // The "edited, restore original" banner is shown (edited && !stale).
+    expect(warning()).toBeInTheDocument();
+
+    // State D — restore the ORIGINAL text WITHOUT rerunning. edited === false,
+    // but the last run was the edited one → stale. Authored must stay hidden and
+    // the stale warning must reappear (the reported regression).
+    setEditorText(container, lesson.code);
+    expect(warning()).toBeInTheDocument();
+    expect(screen.queryByText("AUTHORED-LINE-EXPLANATION")).not.toBeInTheDocument();
+    expect(playBtn()).toBeDisabled(); // stale → playback disabled
+
+    // State E — rerun the ORIGINAL code. Back to fully valid.
+    clickRun();
+    expect(warning()).not.toBeInTheDocument();
+    expect(screen.getByText("AUTHORED-LINE-EXPLANATION")).toBeInTheDocument();
+    expect(playBtn()).not.toBeDisabled();
   });
 });
 
-describe("PatternWorkspace — trace-vs-editor separation", () => {
-  it("original walkthrough + fresh run: shows authored explanation, no stale warning", () => {
-    fake = makeFake({ stale: false });
-    render(<PatternWorkspace pattern={pattern} />);
+describe("PatternWorkspace — full source-state sequence", () => {
+  it("shows/hides the stale warning, trace panels and authored content correctly at each state", () => {
+    const { container } = render(<PatternWorkspace pattern={pattern} />);
+
+    // A — original walkthrough, fresh run.
+    clickRun();
+    expect(warning()).not.toBeInTheDocument();
     expect(screen.getByText("AUTHORED-PATTERN-EXPLANATION")).toBeInTheDocument();
-    expect(screen.queryByRole("status")).not.toBeInTheDocument();
-  });
+    expect(playBtn()).not.toBeDisabled();
 
-  it("stale result (restored original after edited run): stale warning shown, authored hidden", () => {
-    fake = makeFake({ stale: true });
-    render(<PatternWorkspace pattern={pattern} />);
-    expect(screen.getByRole("status")).toBeInTheDocument();
+    // B — edit, no rerun → stale.
+    setEditorText(container, "a = 42\nb = 2\n");
+    expect(warning()).toBeInTheDocument();
     expect(screen.queryByText("AUTHORED-PATTERN-EXPLANATION")).not.toBeInTheDocument();
-  });
-});
+    expect(playBtn()).toBeDisabled();
 
-describe("stale trace panels are hidden until rerun (playback disabled)", () => {
-  it("disables Play/Prev/Next when the result is stale", () => {
-    fake = makeFake({ stale: true });
-    render(<LessonWorkspace lesson={lesson} />);
-    const play = screen.getByRole("button", { name: /Play/ });
-    expect(play).toBeDisabled();
+    // C — run edited → trace current, authored hidden (edited).
+    clickRun();
+    expect(playBtn()).not.toBeDisabled();
+    expect(screen.queryByText("AUTHORED-PATTERN-EXPLANATION")).not.toBeInTheDocument();
+    expect(warning()).toBeInTheDocument();
+
+    // D — restore original text, no rerun → stale, authored hidden, warning shown.
+    setEditorText(container, pattern.walkthroughCode);
+    expect(warning()).toBeInTheDocument();
+    expect(screen.queryByText("AUTHORED-PATTERN-EXPLANATION")).not.toBeInTheDocument();
+    expect(playBtn()).toBeDisabled();
+
+    // E — rerun original → fully valid.
+    clickRun();
+    expect(warning()).not.toBeInTheDocument();
+    expect(screen.getByText("AUTHORED-PATTERN-EXPLANATION")).toBeInTheDocument();
+    expect(playBtn()).not.toBeDisabled();
   });
 });

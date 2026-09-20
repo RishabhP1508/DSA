@@ -76,15 +76,51 @@ describe("DPTableVisualizer — 1D fill progress on a real lesson (dp-tabulation
   });
 });
 
+// The 2D DP renderer lays cells out in row-major order at
+//   x = PAD + c*(CELL+GAP),  y = TOP + r*(CELL+GAP)
+// with PAD=16, TOP=44, CELL=46, GAP=3 (see DPTableVisualizer). Invert the active
+// rect's coordinates to recover the highlighted (row, col).
+const PAD = 16, TOP = 44, CELL = 46, GAP = 3;
+function activeCellCoords(container: HTMLElement): { row: number; col: number } | null {
+  const rect = container.querySelector("rect.cell-active");
+  if (!rect) return null;
+  const x = Number(rect.getAttribute("x"));
+  const y = Number(rect.getAttribute("y"));
+  const col = Math.round((x - PAD) / (CELL + GAP));
+  const row = Math.round((y - TOP) / (CELL + GAP));
+  return { row, col };
+}
+
 describe("DPTableVisualizer — 2D fill progress on a real lesson (dp-grid-paths)", () => {
-  it("highlights the current cell dp[i][j] during the interior fill", () => {
+  it("highlights dp[i][j] at TWO distinct steps, coords matching the trace i/j and changing", () => {
     const binding = dpGridPaths.bindings.find((b) => b.model === "dp-table")!;
-    // The interior double loop defines both i and j.
+    // Interior double loop events define both i and j.
     const withIJ = eventsWithLocals(gridEvents, ["dp", "i", "j"]);
-    expect(withIJ.length).toBeGreaterThan(0);
-    const ev = withIJ[withIJ.length - 1];
-    const { container } = render(<DPTableVisualizer event={ev} binding={binding} />);
-    const active = container.querySelectorAll("rect.cell-active");
-    expect(active.length).toBe(1); // exactly the (i, j) cell
+    expect(withIJ.length).toBeGreaterThan(1);
+
+    // Pick two events whose (i, j) differ.
+    const first = withIJ[0];
+    const firstIJ = { i: localInt(first, "i")!, j: localInt(first, "j")! };
+    const second = withIJ.find(
+      (e) => localInt(e, "i") !== firstIJ.i || localInt(e, "j") !== firstIJ.j,
+    );
+    expect(second).toBeTruthy();
+    const secondIJ = { i: localInt(second!, "i")!, j: localInt(second!, "j")! };
+
+    // The two steps are genuinely distinct cells.
+    expect(`${secondIJ.i},${secondIJ.j}`).not.toBe(`${firstIJ.i},${firstIJ.j}`);
+
+    for (const [ev, ij] of [
+      [first, firstIJ],
+      [second!, secondIJ],
+    ] as const) {
+      const { container, unmount } = render(<DPTableVisualizer event={ev} binding={binding} />);
+      // Exactly one current cell.
+      expect(container.querySelectorAll("rect.cell-active").length).toBe(1);
+      // Its rendered row/col match the trace's i/j.
+      const coords = activeCellCoords(container);
+      expect(coords).toEqual({ row: ij.i, col: ij.j });
+      unmount();
+    }
   });
 });
