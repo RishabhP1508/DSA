@@ -75,6 +75,29 @@ export async function __closeDbForTests(): Promise<void> {
 // Migration (v1 → v2)
 // ---------------------------------------------------------------------------
 
+type ExEntry = { attempts: number; solved: boolean };
+
+/**
+ * COLLISION POLICY (R3.1 amendment). When two source records target the same
+ * destination key during migration — e.g. a composite key AND a unique bare id
+ * that resolves to the same uid, or a bare id that already exists in
+ * `legacyExercises` — they are MERGED, never overwritten:
+ *   - `attempts` = the SUM of both (each represents real attempts), and
+ *   - `solved`   = the logical OR (sticky: a solved exercise never becomes
+ *     unsolved).
+ * Both operations are commutative, so the result is DETERMINISTIC and
+ * independent of object-key iteration order. This guarantees no attempt is
+ * silently dropped and no completion is lost, regardless of how a
+ * hand-edited/merged backup happened to order its keys.
+ */
+function mergeExerciseEntry(existing: ExEntry | undefined, incoming: ExEntry): ExEntry {
+  if (!existing) return { attempts: incoming.attempts, solved: incoming.solved };
+  return {
+    attempts: existing.attempts + incoming.attempts,
+    solved: existing.solved || incoming.solved,
+  };
+}
+
 /**
  * Migrate a progress record to the current schema. Pure and IDEMPOTENT:
  * calling it on an already-v2 record returns an equivalent record.
@@ -86,6 +109,12 @@ export async function __closeDbForTests(): Promise<void> {
  *  - an UNKNOWN bare id (not in the current registry) → also kept in
  *    `legacyExercises` with a note (never silently dropped).
  * Lessons, drafts, preferences, and any existing legacyExercises are preserved.
+ *
+ * When a rewrite would land on a key that is ALREADY populated (a composite key
+ * plus its unique bare equivalent, or a bare id already present in
+ * `legacyExercises`), the records are MERGED per the collision policy in
+ * `mergeExerciseEntry` — deterministic and order-independent, never losing
+ * attempts or downgrading a solved exercise.
  */
 export function migrateProgress(rec: ProgressRecord): ProgressRecord {
   // Never downgrade a FUTURE schema version we don't understand; return it
@@ -107,11 +136,22 @@ export function migrateProgress(rec: ProgressRecord): ProgressRecord {
     ...(rec.legacyExercises ?? {}),
   };
 
+  const legacyNote = isCurrent
+    ? "Recovered from a record that stored this exercise id in a bare " +
+      "(non-composite) form; it is reused across lessons/patterns (or is " +
+      "no longer in the curriculum), so it cannot be attributed to one " +
+      "exercise and is preserved here."
+    : "Migrated from an older version where this exercise id was reused " +
+      "across lessons/patterns (or is no longer in the curriculum); it " +
+      "cannot be reliably attributed to one exercise, so it is preserved " +
+      "here rather than marking any current exercise solved.";
+
   for (const [key, entry] of Object.entries(rec.exercises ?? {})) {
     if (isCompositeExerciseKey(key)) {
       // Well-formed composite id: keep as-is (do not require it to exist in the
-      // registry — backups outlive curriculum changes).
-      exercises[key] = entry;
+      // registry — backups outlive curriculum changes). MERGE if a bare
+      // equivalent already resolved to this same uid (collision policy below).
+      exercises[key] = mergeExerciseEntry(exercises[key], entry);
       continue;
     }
     // A non-composite (bare) key. Resolve it if it maps to exactly one owner;
@@ -119,20 +159,17 @@ export function migrateProgress(rec: ProgressRecord): ProgressRecord {
     // attributing it to a twin and never discarding it.
     const uid = uniqueUidForBareId(key);
     if (uid) {
-      exercises[uid] = entry;
+      // MERGE with any existing entry at this uid (e.g. a composite key with the
+      // same target already present) rather than overwriting it.
+      exercises[uid] = mergeExerciseEntry(exercises[uid], entry);
     } else {
+      // MERGE with any existing legacy record for this bare id rather than
+      // clobbering an earlier one (e.g. one already in rec.legacyExercises).
+      const existing = legacyExercises[key];
       legacyExercises[key] = {
-        attempts: entry.attempts,
-        solved: entry.solved,
-        note: isCurrent
-          ? "Recovered from a record that stored this exercise id in a bare " +
-            "(non-composite) form; it is reused across lessons/patterns (or is " +
-            "no longer in the curriculum), so it cannot be attributed to one " +
-            "exercise and is preserved here."
-          : "Migrated from an older version where this exercise id was reused " +
-            "across lessons/patterns (or is no longer in the curriculum); it " +
-            "cannot be reliably attributed to one exercise, so it is preserved " +
-            "here rather than marking any current exercise solved.",
+        attempts: (existing?.attempts ?? 0) + entry.attempts,
+        solved: (existing?.solved ?? false) || entry.solved,
+        note: existing?.note ?? legacyNote,
       };
     }
   }

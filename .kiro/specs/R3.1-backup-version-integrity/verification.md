@@ -53,8 +53,8 @@ before and after.
 |---|---|
 | `npm run build` | ✅ pass |
 | `npm run lint` | ✅ 0 errors / 9 warnings (baseline) |
-| `npm run test:unit` | ✅ **104/104** (12 files; +15 version-integrity tests) |
-| storage tests (`src/storage/`) | ✅ 43/43 (schema 25, exercise-id 5, migration 5, atomic 8) |
+| `npm run test:unit` | ✅ **111/111** (12 files; +15 version-integrity, +7 collision) |
+| storage tests (`src/storage/`) | ✅ 50/50 (schema 25, exercise-id 5, migration 11, atomic 9) |
 | `npm run check:all` | ✅ green (RC 0) |
 | `verify:lessons` / `verify:patterns` | ✅ 130 / 29 — **unchanged** |
 | `npm run test:browser` | ✅ 6 passed / 5 skipped |
@@ -70,6 +70,30 @@ before and after.
 | R3.1-REQ-5 | schema outer-2/data-1, outer-1/schemaVersion-2, future schemaVersion, future backupVersion | ✅ |
 | R3.1-REQ-6 | atomic "saveProgress cannot mislabel a v1 bare record as v2" | ✅ |
 | R3.1-REQ-7 | migrateProgress recovery of bare keys on a v2 record; future-version no-downgrade | ✅ |
+
+## Amendment — migration collision policy (pre-merge)
+
+A follow-up review asked for the migration to handle two collision cases without
+silently losing data:
+1. a composite exercise key **plus** its unique bare equivalent both present (in
+   either key order); and
+2. an ambiguous bare key **already present** in `legacyExercises`.
+
+**Deterministic collision policy (documented in `progress.ts`
+`mergeExerciseEntry`):** when two source records target the same destination key
+during migration, MERGE them —
+- `attempts` = SUM of both (each represents real attempts), and
+- `solved`   = logical OR (sticky; a solved exercise never becomes unsolved).
+
+Both operations are commutative, so the outcome is **independent of object-key
+iteration order** — deterministic. This applies to both the composite-uid
+destination (`exercises[uid]`) and the `legacyExercises[bareId]` destination.
+
+**Test-first evidence:** 6 new migration tests failed on the overwrite behavior
+(composite+bare in both orders; never-downgrade-solved; order-independence;
+ambiguous-bare-already-in-legacy merge; no-downgrade in legacy), then pass after
+the merge policy. Updated counts: migration 11, atomic 9; storage suite 50/50;
+`check:all` unit 111/111. 130 lessons + 29 patterns still unchanged.
 
 ## What was NOT proven / remaining
 - File-picker export→import through the real browser is still not automated

@@ -95,3 +95,102 @@ function findUniqueBareId(): string {
   }
   throw new Error("no unique bare id found");
 }
+
+// ---------------------------------------------------------------------------
+// Collision policy (R3.1 amendment): when a bare id and its composite equivalent
+// both exist, or an ambiguous bare id is already in legacyExercises, migration
+// must MERGE without losing attempts or downgrading a solved exercise.
+//
+// Policy (deterministic, order-independent):
+//   attempts := sum of both attempts (both are real attempts)
+//   solved   := logical OR (sticky; never turn solved → unsolved)
+// ---------------------------------------------------------------------------
+
+function baseV1(exercises: Record<string, { attempts: number; solved: boolean }>): ProgressRecord {
+  return {
+    lessons: {},
+    exercises,
+    drafts: {},
+    preferences: {},
+    backupVersion: 1,
+  } as ProgressRecord;
+}
+
+describe("migrateProgress — collision: composite key + its unique bare equivalent", () => {
+  const bare = findUniqueBareId();
+  const uid = uniqueUidForBareId(bare)!;
+
+  it("merges when the composite key is listed BEFORE the bare key", () => {
+    const rec = baseV1({
+      [uid]: { attempts: 2, solved: false },
+      [bare]: { attempts: 3, solved: true },
+    });
+    const out = migrateProgress(rec);
+    // Exactly one destination entry, no bare key left behind.
+    expect(out.exercises[bare]).toBeUndefined();
+    expect(out.exercises[uid]).toMatchObject({ attempts: 5, solved: true });
+  });
+
+  it("merges when the bare key is listed BEFORE the composite key (same result)", () => {
+    const rec = baseV1({
+      [bare]: { attempts: 3, solved: true },
+      [uid]: { attempts: 2, solved: false },
+    });
+    const out = migrateProgress(rec);
+    expect(out.exercises[bare]).toBeUndefined();
+    expect(out.exercises[uid]).toMatchObject({ attempts: 5, solved: true });
+  });
+
+  it("never downgrades solved: composite solved=true, bare solved=false stays solved", () => {
+    const rec = baseV1({
+      [uid]: { attempts: 1, solved: true },
+      [bare]: { attempts: 1, solved: false },
+    });
+    const out = migrateProgress(rec);
+    expect(out.exercises[uid].solved).toBe(true);
+    expect(out.exercises[uid].attempts).toBe(2);
+  });
+
+  it("is order-independent (both orders yield identical results)", () => {
+    const a = migrateProgress(baseV1({ [uid]: { attempts: 2, solved: false }, [bare]: { attempts: 3, solved: true } }));
+    const b = migrateProgress(baseV1({ [bare]: { attempts: 3, solved: true }, [uid]: { attempts: 2, solved: false } }));
+    expect(a.exercises[uid]).toEqual(b.exercises[uid]);
+  });
+});
+
+describe("migrateProgress — collision: ambiguous bare key already in legacyExercises", () => {
+  it("merges the incoming ambiguous bare exercise with the existing legacy record", () => {
+    // `ms-choose-1` is ambiguous; it is present BOTH in exercises (v1 bare) and
+    // already in legacyExercises. Migration must merge, not overwrite.
+    const rec = {
+      lessons: {},
+      exercises: { "ms-choose-1": { attempts: 4, solved: false } },
+      legacyExercises: { "ms-choose-1": { attempts: 1, solved: true, note: "prior" } },
+      drafts: {},
+      preferences: {},
+      backupVersion: 1,
+    } as ProgressRecord;
+    const out = migrateProgress(rec);
+    expect(out.exercises["ms-choose-1"]).toBeUndefined();
+    const legacy = out.legacyExercises?.["ms-choose-1"];
+    expect(legacy).toBeTruthy();
+    // attempts summed, solved OR'd (the prior solved:true must survive).
+    expect(legacy?.attempts).toBe(5);
+    expect(legacy?.solved).toBe(true);
+    expect(typeof legacy?.note).toBe("string");
+  });
+
+  it("does not downgrade an existing solved legacy record when the incoming is unsolved", () => {
+    const rec = {
+      lessons: {},
+      exercises: { "bfs-choose-1": { attempts: 2, solved: false } },
+      legacyExercises: { "bfs-choose-1": { attempts: 0, solved: true, note: "prior" } },
+      drafts: {},
+      preferences: {},
+      backupVersion: 1,
+    } as ProgressRecord;
+    const out = migrateProgress(rec);
+    expect(out.legacyExercises?.["bfs-choose-1"]?.solved).toBe(true);
+    expect(out.legacyExercises?.["bfs-choose-1"]?.attempts).toBe(2);
+  });
+});
