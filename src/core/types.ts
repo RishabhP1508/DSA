@@ -438,6 +438,10 @@ export interface PatternExercise extends Exercise {
 export interface PatternDefinition {
   id: string;
   title: string;
+  /** Grouping heading for the Pattern Library, e.g. "Arrays & strings". */
+  category: string;
+  /** One-line description shown in the library list. */
+  summary: string;
   /** Signals in input, output, constraints, required operations. */
   clues: string[];
   /** A naive baseline solution and its bottleneck (markdown). */
@@ -452,8 +456,17 @@ export interface PatternDefinition {
   counterexamples: string[];
   /** A complete, visual Python walkthrough program. */
   walkthroughCode: string;
+  /**
+   * Exact stdout produced by walkthroughCode on the bundled Python 3.14,
+   * so the walkthrough can be verified the same way lessons are.
+   */
+  walkthroughExpectedOutput: string;
+  /** Optional stdin fed to input() during the walkthrough. */
+  walkthroughStdin?: string;
   codeExplanations: CodeLineExplanation[];
   bindings: VisualBinding[];
+  /** Complexity note for the walkthrough (plain English). */
+  complexityNote?: string;
   /** Lessons this pattern links to. */
   linkedLessons: string[];
   exercises: PatternExercise[];

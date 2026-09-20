@@ -135,6 +135,17 @@ import { dpNQueens } from "./lessons/dp-n-queens";
 import { fenwickTree } from "./lessons/fenwick-tree";
 import { segmentTree } from "./lessons/segment-tree";
 import { kmp } from "./lessons/kmp";
+// Patterns (Phase 4 — Pattern Library)
+import { slidingWindowPattern } from "./patterns/sliding-window";
+import { prefixSumsHashmapPattern } from "./patterns/prefix-sums-hashmap";
+import { kadanePattern } from "./patterns/kadane";
+import { twoPointersPattern } from "./patterns/two-pointers";
+import { fastSlowPointersPattern } from "./patterns/fast-slow-pointers";
+import { bfsShortestPathPattern } from "./patterns/bfs-shortest-path";
+import { backtrackingPattern } from "./patterns/backtracking";
+import { binarySearchOnAnswerPattern } from "./patterns/binary-search-on-answer";
+import { topKHeapPattern } from "./patterns/top-k-heap";
+import { monotonicStackPattern } from "./patterns/monotonic-stack";
 
 export const lessons: LessonDefinition[] = [
   // Programming foundations
@@ -285,8 +296,30 @@ export const lessons: LessonDefinition[] = [
   kmp,
 ];
 
-export const patterns: PatternDefinition[] = [];
+export const patterns: PatternDefinition[] = [
+  // Arrays & strings
+  slidingWindowPattern,
+  prefixSumsHashmapPattern,
+  kadanePattern,
+  twoPointersPattern,
+  // Linked lists & sequences
+  fastSlowPointersPattern,
+  // Graphs & trees
+  bfsShortestPathPattern,
+  // Recursion & search
+  backtrackingPattern,
+  // Searching
+  binarySearchOnAnswerPattern,
+  // Heaps & priority
+  topKHeapPattern,
+  // Stacks & queues
+  monotonicStackPattern,
+];
 
 export function getLesson(id: string): LessonDefinition | undefined {
   return lessons.find((l) => l.id === id);
+}
+
+export function getPattern(id: string): PatternDefinition | undefined {
+  return patterns.find((p) => p.id === id);
 }
