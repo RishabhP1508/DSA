@@ -69,6 +69,34 @@ export const graphDfsComponentsPattern: PatternDefinition = {
   complexityNote:
     "O(V + E) time — each node and edge is visited once. O(V) space for the visited set plus O(V) recursion stack in the worst case.",
 
+  complexityExplanation: {
+    variables: [
+      { symbol: "V", meaning: "the number of vertices (n)" },
+      { symbol: "E", meaning: "the number of edges" },
+    ],
+    costModel: "Build the adjacency list in O(V + E), then DFS-visit each vertex once, scanning each edge (both directions) once.",
+    time: {
+      bound: "O(V + E)",
+      case: "worst",
+      explanation: "Building adj (lines 5-8) is O(E). The outer loop (lines 16-19) starts a DFS from each unvisited vertex; dfs (lines 11-15) marks each vertex once and scans its adjacency list. Summed over all vertices the edge scans are O(E), so total O(V + E).",
+    },
+    space: {
+      bound: "O(V)",
+      case: "worst",
+      explanation: "The `seen` set holds <= V vertices; the recursion stack is up to V deep for a path-shaped component. The adjacency list is O(V + E) but derived from the input edges.",
+      inputOutputNote: "edges (O(E)) is the input; the answer is a single count.",
+    },
+    derivation: [
+      { lines: [5, 6, 7, 8], description: "Build the undirected adjacency list — O(E).", cost: "O(E)", dimension: "time" },
+      { lines: [12, 13, 14], description: "Each vertex visited once; each edge scanned once.", cost: "O(V + E)", dimension: "time" },
+      { lines: [9], description: "Visited set + recursion depth up to V.", cost: "O(V)", dimension: "space" },
+    ],
+    assumptions: ["The graph is undirected (edges added both ways).", "set membership/add is amortised O(1)."],
+    tradeoffs: "An iterative stack-based DFS or a union-find both count components in near-linear time; recursion risks a deep stack on long paths (Python's default recursion limit).",
+    counters: [{ label: "vertices visited", definition: "executions of seen.add in dfs (line 12)", countLines: [12] }],
+    fixedDataNote: "This 5-vertex graph visits all vertices across 2 components. The O(V + E) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: true, explanation: "Import defaultdict for the adjacency list." },
     { line: 2, executable: false, explanation: "Blank line." },

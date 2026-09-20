@@ -75,6 +75,37 @@ export const unionFindPattern: PatternDefinition = {
   complexityNote:
     "Nearly O(1) amortized per find/union — O(α(n)), inverse Ackermann — with path compression + union by rank. O(n) space for the parent and rank arrays.",
 
+  complexityExplanation: {
+    variables: [
+      { symbol: "n", meaning: "the number of elements" },
+      { symbol: "α(n)", meaning: "the inverse Ackermann function (≤ 4 for any practical n)" },
+    ],
+    costModel: "Disjoint-set with path compression (find) and union by rank. The two optimisations together give near-constant amortised cost per operation.",
+    time: {
+      bound: "O(α(n))",
+      case: "amortized",
+      explanation: "find (lines 6-10) walks to the root while halving the path (path compression); union (lines 11-20) attaches the shorter tree under the taller (union by rank). With both, any sequence of m operations runs in O(m·α(n)), so each find/union is O(α(n)) amortised — effectively constant.",
+      otherCases: [
+        { case: "worst", bound: "O(log n)", note: "A single operation without prior compression can be O(log n); the α(n) bound is amortised over a sequence." },
+      ],
+    },
+    space: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "Two arrays of size n: `parent` and `rank`.",
+      inputOutputNote: "The n elements' parent/rank arrays are the structure; queries return a boolean.",
+    },
+    derivation: [
+      { lines: [7, 8, 9], description: "find walks to the root with path compression.", cost: "O(α(n)) amortized", dimension: "time" },
+      { lines: [12, 15, 16, 17], description: "union by rank keeps trees shallow.", cost: "O(α(n)) amortized", dimension: "time" },
+      { lines: [4, 5], description: "parent and rank arrays.", cost: "O(n)", dimension: "space" },
+    ],
+    assumptions: ["Both path compression AND union by rank are used — either alone gives a weaker bound (O(log n)).", "Array indexing is O(1)."],
+    tradeoffs: "Without the optimisations, find/union degrade to O(n) (a linked chain). Union by rank alone gives O(log n); adding path compression gives the near-constant α(n).",
+    counters: [{ label: "unions attempted", definition: "executions of the find pair in union (line 12)", countLines: [12] }],
+    fixedDataNote: "Merging {0,1,2} and {3,4} then querying takes a handful of near-constant ops. The α(n) amortised bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: DSU for merge + same-group queries." },
     { line: 2, executable: true, explanation: "Define the DSU class." },

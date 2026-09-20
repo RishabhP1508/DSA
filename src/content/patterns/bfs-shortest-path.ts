@@ -66,6 +66,34 @@ export const bfsShortestPathPattern: PatternDefinition = {
   complexityNote:
     "O(V + E) time — each vertex is enqueued once and each edge examined once. O(V) space for the queue and the distance map.",
 
+  complexityExplanation: {
+    variables: [
+      { symbol: "V", meaning: "the number of vertices" },
+      { symbol: "E", meaning: "the number of edges" },
+    ],
+    costModel: "BFS enqueues each reachable vertex once; each vertex's adjacency list is scanned once when it is dequeued. deque.popleft/append are O(1).",
+    time: {
+      bound: "O(V + E)",
+      case: "worst",
+      explanation: "Each vertex is added to `dist` and the queue at most once (the `nb not in dist` guard, line 10). Dequeuing a vertex (line 8) scans its adjacency list (line 9); summed over all vertices that is O(E). So total O(V + E).",
+    },
+    space: {
+      bound: "O(V)",
+      case: "worst",
+      explanation: "The `dist` map and the queue each hold at most V entries. This is auxiliary to the input graph.",
+      inputOutputNote: "The adjacency structure (O(V + E)) is the input; `dist` (O(V)) is the returned result.",
+    },
+    derivation: [
+      { lines: [8], description: "Each vertex is dequeued once — O(V) total.", cost: "O(V)", dimension: "time" },
+      { lines: [9, 10, 11, 12], description: "Each edge is examined once across all scans — O(E) total.", cost: "O(E)", dimension: "time" },
+      { lines: [5, 6], description: "dist map and queue hold at most V entries.", cost: "O(V)", dimension: "space" },
+    ],
+    assumptions: ["Adjacency lookup adj[node] is O(1) plus O(degree) to iterate.", "The graph is unweighted so BFS layer order = shortest edge count.", "dict membership/insert is amortised O(1)."],
+    tradeoffs: "BFS gives fewest-EDGES shortest paths only for unweighted graphs; weighted graphs need Dijkstra (O((V+E) log V)).",
+    counters: [{ label: "vertices dequeued", definition: "executions of q.popleft (line 8)", countLines: [8] }],
+    fixedDataNote: "This 5-vertex graph dequeues each reachable vertex once. The O(V + E) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: true, explanation: "Import deque for an O(1) FIFO queue." },
     { line: 2, executable: false, explanation: "Blank line." },

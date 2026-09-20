@@ -63,6 +63,31 @@ export const backtrackingPattern: PatternDefinition = {
   complexityNote:
     "Subsets: O(n·2ⁿ) time (2ⁿ subsets, each up to O(n) to copy) and O(n) auxiliary space (recursion depth + current path), separate from the output.",
 
+  complexityExplanation: {
+    variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
+    costModel: "Each of the 2ⁿ subsets is generated once; recording it copies up to n elements. Recursion depth is at most n.",
+    time: {
+      bound: "O(n·2ⁿ)",
+      case: "worst",
+      explanation: "There are 2ⁿ subsets. The recursion visits each once (lines 6-9), and recording a subset copies up to n elements (line 5, path[:]). So total work is O(n·2ⁿ). This is output-bound: producing 2ⁿ subsets of size up to n cannot be cheaper.",
+    },
+    space: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "Auxiliary space is the recursion stack (depth <= n) plus the current `path` (length <= n). This EXCLUDES the result list.",
+      inputOutputNote: "The output `res` holds 2ⁿ subsets totalling O(n·2ⁿ) — that is output storage, separate from the O(n) auxiliary space.",
+    },
+    derivation: [
+      { lines: [5], description: "Copy the current path into the result — O(n) per subset.", cost: "O(n)", dimension: "time" },
+      { lines: [6, 7, 8, 9], description: "Choose/explore/un-choose over the 2ⁿ subset tree.", cost: "O(2ⁿ)", dimension: "time" },
+      { lines: [4, 7], description: "Recursion depth + current path, both <= n.", cost: "O(n)", dimension: "space" },
+    ],
+    assumptions: ["Appending/popping a list end is amortised O(1).", "Copying path[:] is O(len(path)) <= O(n)."],
+    tradeoffs: "Iterative bitmask enumeration also lists subsets in O(n·2ⁿ) but with O(1) recursion depth; backtracking generalises cleanly to permutations/combinations with pruning.",
+    counters: [{ label: "subsets recorded", definition: "executions of res.append (line 5)", countLines: [5] }],
+    fixedDataNote: "For [1,2,3] there are 2³ = 8 subsets; the recorded count is 8. The O(n·2ⁿ) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: enumerate subsets via choose/explore/un-choose." },
     { line: 2, executable: true, explanation: "Define subsets(nums)." },

@@ -92,7 +92,8 @@ There's an important alternative worth knowing: **Quickselect** (a partial quick
     { line: 8, executable: true, explanation: "If the heap exceeds k..." },
     { line: 9, executable: true, explanation: "...pop the smallest, keeping only the k largest." },
     { line: 10, executable: true, explanation: "The root is the smallest of the k largest = the kth largest." },
-    { line: 11, executable: true, explanation: "2nd largest of [3,2,1,5,6,4] is 5." },
+    { line: 11, executable: false, explanation: "Blank line." },
+    { line: 12, executable: true, explanation: "2nd largest of [3, 2, 1, 5, 6, 4] is 5." },
   ],
 
   bindings: [

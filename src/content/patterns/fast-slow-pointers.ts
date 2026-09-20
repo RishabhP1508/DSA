@@ -69,6 +69,31 @@ export const fastSlowPointersPattern: PatternDefinition = {
   complexityNote:
     "O(n) time (fast traverses at most ~n nodes before meeting or ending) and O(1) space (two pointers). The hash-set alternative is O(n) time but O(n) space.",
 
+  complexityExplanation: {
+    variables: [{ symbol: "n", meaning: "the number of nodes in the list" }],
+    costModel: "The slow pointer advances one node per iteration and the fast pointer two. If there is a cycle, fast catches slow within O(n) steps; otherwise fast reaches the end in O(n).",
+    time: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "The loop (lines 9-13) advances slow by 1 and fast by 2 each iteration. Without a cycle, fast reaches the end after ~n/2 iterations. With a cycle, once slow enters the loop, fast closes the gap by one node per step and they meet within the cycle length, so O(n) overall.",
+    },
+    space: {
+      bound: "O(1)",
+      case: "worst",
+      explanation: "Only two node references are kept; nothing grows with n.",
+      inputOutputNote: "The linked list is the input; the answer is a boolean.",
+    },
+    derivation: [
+      { lines: [9, 10, 11], description: "Each iteration advances slow by 1 and fast by 2; O(n) iterations.", cost: "O(n)", dimension: "time" },
+      { lines: [12], description: "Constant-time identity check per iteration.", cost: "O(1)", dimension: "time" },
+      { lines: [8], description: "Two pointers only.", cost: "O(1)", dimension: "space" },
+    ],
+    assumptions: ["`is` compares node identity, not value (so equal values don't false-positive).", "Following .next is O(1)."],
+    tradeoffs: "A visited hash-set also detects cycles in O(n) time but O(n) space; Floyd's two-pointer method achieves O(1) space.",
+    counters: [{ label: "steps", definition: "iterations of the fast/slow loop (line 9)", countLines: [9] }],
+    fixedDataNote: "This run tests a 3-node acyclic list (fast reaches the end) then a cyclic one (pointers meet). The O(n) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: Floyd's tortoise-and-hare cycle detection." },
     { line: 2, executable: true, explanation: "Define the linked-list Node class." },

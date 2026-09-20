@@ -98,8 +98,8 @@ It runs in **O(n)** time and **O(n)** space. Converting normal **infix** express
     { line: 12, executable: false, explanation: "Otherwise the token is a number." },
     { line: 13, executable: true, explanation: "Convert it to int and push it." },
     { line: 14, executable: true, explanation: "The single remaining value is the result." },
-    { line: 15, executable: false, explanation: "Comment: the meaning of the sample." },
-    { line: 16, executable: false, explanation: "Blank line." },
+    { line: 15, executable: false, explanation: "Blank line." },
+    { line: 16, executable: false, explanation: "Comment: the meaning of the sample." },
     { line: 17, executable: true, explanation: "Evaluate (2+1)*3 → 9." },
   ],
 

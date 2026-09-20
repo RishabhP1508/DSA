@@ -49,14 +49,24 @@ for (const area of areas) {
   const areaVerified = entries.filter((e) => e.status === "verified").length;
   lines.push(`## ${area} (${areaVerified}/${entries.length})`);
   lines.push("");
-  lines.push("| Subtopic | id | Status | Lesson |");
-  lines.push("|---|---|---|---|");
+  lines.push("| Subtopic | id | Status | Lesson | Ext. practice |");
+  lines.push("|---|---|---|---|---|");
   for (const e of entries) {
     const lesson = e.lessonId ? e.lessonId : "—";
-    lines.push(`| ${e.subtopic} | \`${e.id}\` | ${e.status} | ${lesson} |`);
+    const ext = e.externalPractice && e.externalPractice.length ? String(e.externalPractice.length) : "—";
+    lines.push(`| ${e.subtopic} | \`${e.id}\` | ${e.status} | ${lesson} | ${ext} |`);
   }
   lines.push("");
 }
+
+const extTotal = coverage.reduce((s, e) => s + (e.externalPractice?.length ?? 0), 0);
+const extEntries = coverage.filter((e) => e.externalPractice?.length).length;
+lines.push("---");
+lines.push("");
+lines.push(
+  `External practice (optional): ${extTotal} canonical LeetCode problems mapped across ${extEntries} subtopics (R5.6). Titles + links only; local lessons teach each technique regardless. The exact Notion-syllabus question list could not be enumerated in the build environment (client-rendered page) — this is a conservative canonical subset; see \`.kiro/specs/R5-curriculum/verification.md\` for the open reconciliation gap.`,
+);
+lines.push("");
 
 const out = lines.join("\n") + "\n";
 writeFileSync(path.join(root, "docs/coverage.md"), out, "utf8");

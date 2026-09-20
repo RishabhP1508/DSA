@@ -69,6 +69,35 @@ export const topologicalSortPattern: PatternDefinition = {
   complexityNote:
     "O(V + E) time — each node is enqueued once and each edge relaxes one in-degree. O(V + E) space for the adjacency list, in-degrees, and queue.",
 
+  complexityExplanation: {
+    variables: [
+      { symbol: "V", meaning: "the number of nodes (n)" },
+      { symbol: "E", meaning: "the number of edges" },
+    ],
+    costModel: "Kahn's algorithm: build in-degrees (O(V + E)), seed the queue with zero-in-degree nodes, then repeatedly dequeue a node and decrement its neighbours' in-degrees.",
+    time: {
+      bound: "O(V + E)",
+      case: "worst",
+      explanation: "Building adj and in-degrees (lines 7-9) is O(E). Each node is enqueued and dequeued once (lines 12-14): O(V). Each edge relaxes exactly one in-degree (lines 15-16) across the whole run: O(E). Total O(V + E).",
+    },
+    space: {
+      bound: "O(V + E)",
+      case: "worst",
+      explanation: "The adjacency list is O(V + E), the in-degree array O(V), and the queue O(V).",
+      inputOutputNote: "edges (O(E)) is the input; the order list is O(V) output.",
+    },
+    derivation: [
+      { lines: [7, 8, 9], description: "Build adjacency + in-degree counts.", cost: "O(E)", dimension: "time" },
+      { lines: [12, 13, 14], description: "Enqueue/dequeue each node once.", cost: "O(V)", dimension: "time" },
+      { lines: [15, 16, 17, 18], description: "Relax each edge's in-degree once.", cost: "O(E)", dimension: "time" },
+      { lines: [5, 6], description: "adjacency O(V+E) + in-degrees O(V).", cost: "O(V + E)", dimension: "space" },
+    ],
+    assumptions: ["The graph is a DAG for a full ordering; a returned order shorter than n signals a cycle.", "deque ops and list indexing are O(1)."],
+    tradeoffs: "A DFS-based topological sort is also O(V + E) but uses recursion (stack depth) and post-order reversal; Kahn's is iterative and detects cycles by a short output.",
+    counters: [{ label: "nodes ordered", definition: "executions of order.append (line 14)", countLines: [14] }],
+    fixedDataNote: "This 6-node DAG produces a valid ordering visiting all nodes. The O(V + E) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: true, explanation: "Import deque (queue) and defaultdict (adjacency)." },
     { line: 2, executable: false, explanation: "Blank line." },

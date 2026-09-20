@@ -61,6 +61,31 @@ export const mergeIntervalsPattern: PatternDefinition = {
   complexityNote:
     "O(n log n) time, dominated by the sort; the merge sweep is O(n). O(n) space for the output (O(1) extra beyond it).",
 
+  complexityExplanation: {
+    variables: [{ symbol: "n", meaning: "the number of intervals" }],
+    costModel: "Sort by start (O(n log n)), then a single sweep merging each interval into the last kept one or starting a new one.",
+    time: {
+      bound: "O(n log n)",
+      case: "worst",
+      explanation: "Sorting by start time (line 3) is O(n log n) and dominates. The merge sweep (lines 5-9) is a single O(n) pass. Total O(n log n).",
+    },
+    space: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "The `merged` output can hold up to n intervals (when none overlap). Beyond the output, only O(1) extra state is used.",
+      inputOutputNote: "intervals (n) is the input, sorted in place; the merged list is the O(n) output.",
+    },
+    derivation: [
+      { lines: [3], description: "Sort intervals by start time.", cost: "O(n log n)", dimension: "time" },
+      { lines: [5, 6, 7, 8, 9], description: "One sweep merging or appending each interval.", cost: "O(n)", dimension: "time" },
+      { lines: [4], description: "Output list up to n intervals.", cost: "O(n)", dimension: "space" },
+    ],
+    assumptions: ["Sorting by START is what lets a single left-to-right sweep detect all overlaps.", "Comparison sort is O(n log n)."],
+    tradeoffs: "Without sorting you'd compare all pairs at O(n²). Sorting first makes overlaps adjacent, so one linear sweep suffices; the sort is the bottleneck.",
+    counters: [{ label: "intervals kept", definition: "executions of the append branch (line 9)", countLines: [9] }],
+    fixedDataNote: "Merging [[1,3],[2,6],[8,10],[15,18]] yields [[1,6],[8,10],[15,18]]. The O(n log n) bound generalises via the sort.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: merge overlapping ranges after sorting." },
     { line: 2, executable: true, explanation: "Define merge_intervals(intervals)." },

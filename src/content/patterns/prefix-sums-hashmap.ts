@@ -63,6 +63,34 @@ export const prefixSumsHashmapPattern: PatternDefinition = {
   complexityNote:
     "O(n) time: one pass, each step an O(1) map lookup and update. O(n) space for the prefix-count map. Naive per-range summing is O(n²).",
 
+  complexityExplanation: {
+    variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
+    costModel: "One pass maintains a running prefix sum and a map from prefix value to how many times it has occurred; each step is an O(1) hashed lookup and update.",
+    time: {
+      bound: "O(n)",
+      case: "expected",
+      explanation: "A single loop over n elements (lines 9-12), each doing an O(1) map read (line 11) and O(1) map update (line 12). So O(n) expected, relying on average-case O(1) hashing. The naive 'sum every subarray' approach is O(n²).",
+      otherCases: [
+        { case: "worst", bound: "O(n²)", note: "Only under pathological hash collisions; Python dict is expected O(1) per op." },
+      ],
+    },
+    space: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "The `seen` map can hold up to n+1 distinct prefix sums.",
+      inputOutputNote: "nums (n) is the input; the answer is a single count.",
+    },
+    derivation: [
+      { lines: [10], description: "Maintain the running prefix sum.", cost: "O(1) per step", dimension: "time" },
+      { lines: [11, 12], description: "One map lookup + one update per element.", cost: "O(n)", dimension: "time" },
+      { lines: [7], description: "The prefix-count map holds up to n+1 entries.", cost: "O(n)", dimension: "space" },
+    ],
+    assumptions: ["dict lookup/insert are expected O(1).", "Works with NEGATIVE numbers (unlike a sliding window), because it counts prefix equalities rather than growing/shrinking a window."],
+    tradeoffs: "A sliding window is O(1) space but only valid for non-negative values; prefix-sums + hashmap handles negatives at O(n) space. Naive per-range summation is O(n²).",
+    counters: [{ label: "prefixes recorded", definition: "executions of seen[prefix] += 1 (line 12)", countLines: [12] }],
+    fixedDataNote: "For [1,-1,1,-1,1] with k=0 there are 6 zero-sum subarrays. The O(n) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: true, explanation: "Import defaultdict for a counting map with a 0 default." },
     { line: 2, executable: false, explanation: "Blank line." },

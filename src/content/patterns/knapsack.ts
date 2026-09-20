@@ -62,6 +62,34 @@ export const knapsackPattern: PatternDefinition = {
   complexityNote:
     "O(n·C) time where C is the target/capacity (pseudo-polynomial). O(C) space with the 1D rolling array (O(n·C) for the full 2D table).",
 
+  complexityExplanation: {
+    variables: [
+      { symbol: "n", meaning: "the number of items (values in nums)" },
+      { symbol: "C", meaning: "the target sum (total / 2)" },
+    ],
+    costModel: "0/1 subset-sum DP: for each item, sweep the capacity array from high to low so each item is used at most once. This is PSEUDO-polynomial — linear in the numeric value C, not in its bit-length.",
+    time: {
+      bound: "O(n·C)",
+      case: "worst",
+      explanation: "The outer loop runs n times (one per item, line 10); the inner loop (line 11) runs up to C times. Each inner step is an O(1) boolean OR (line 12). So O(n·C). This is pseudo-polynomial: it grows with the VALUE C, so large targets are expensive even for few items.",
+    },
+    space: {
+      bound: "O(C)",
+      case: "worst",
+      explanation: "The 1D rolling `dp` array has C+1 booleans. The full 2D table would be O(n·C); the rolling array collapses the item dimension.",
+      inputOutputNote: "nums (n) is the input; the answer is a boolean; dp (C+1) is auxiliary.",
+    },
+    derivation: [
+      { lines: [4], description: "Compute the total to derive the target.", cost: "O(n)", dimension: "time" },
+      { lines: [10, 11, 12], description: "For each item, sweep the capacity array once (downward).", cost: "O(n·C)", dimension: "time" },
+      { lines: [8], description: "The 1D dp array of C+1 booleans.", cost: "O(C)", dimension: "space" },
+    ],
+    assumptions: ["Values are non-negative integers (so C is a well-defined array index).", "The DOWNWARD inner sweep (line 11) is what enforces 0/1 (each item used once) rather than unbounded."],
+    tradeoffs: "The 2D table is O(n·C) space but easier to reason about; the 1D rolling array cuts space to O(C). Pseudo-polynomial: not efficient when C is huge relative to n.",
+    counters: [{ label: "dp updates", definition: "executions of the dp update (line 12)", countLines: [12] }],
+    fixedDataNote: "For [1,5,11,5] total=22, target=11; the DP finds 1+5+5=11. Cost ~n·C = 4·11. The O(n·C) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: 0/1 take-or-skip; here an equal-sum partition." },
     { line: 2, executable: false, explanation: "Comment continued." },

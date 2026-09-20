@@ -560,8 +560,20 @@ export interface PatternDefinition {
   walkthroughStdin?: string;
   codeExplanations: CodeLineExplanation[];
   bindings: VisualBinding[];
-  /** Complexity note for the walkthrough (plain English). */
+  /**
+   * Short complexity note for the walkthrough (plain English quick reference).
+   * NOTE: for a full supplied implementation this is INSUFFICIENT on its own
+   * (R5.1.2) — patterns that ship a complete `walkthroughCode` must also carry a
+   * structured `complexityExplanation` below.
+   */
   complexityNote?: string;
+  /**
+   * Mandatory structured Time & Space explanation for the walkthrough
+   * implementation (R5.1). Same shape lessons use, so the panel, derivation, and
+   * counters are verified the same way. A bare `complexityNote` does not satisfy
+   * the shared executable-example model for a full implementation.
+   */
+  complexityExplanation?: ComplexityExplanation;
   /** Lessons this pattern links to. */
   linkedLessons: string[];
   exercises: PatternExercise[];

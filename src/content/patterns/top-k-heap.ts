@@ -62,6 +62,35 @@ export const topKHeapPattern: PatternDefinition = {
   complexityNote:
     "O(n log k) time — n pushes/pops each O(log k). O(k) space for the heap. Sorting everything is O(n log n) time and O(n) space.",
 
+  complexityExplanation: {
+    variables: [
+      { symbol: "n", meaning: "the number of elements in nums" },
+      { symbol: "k", meaning: "how many largest elements to keep" },
+    ],
+    costModel: "A size-k MIN-heap holds the k largest seen so far. Each element is pushed (O(log k)); when the heap exceeds k, the smallest is popped (O(log k)).",
+    time: {
+      bound: "O(n log k)",
+      case: "worst",
+      explanation: "For each of the n elements: one heappush (line 7) at O(log k) and possibly one heappop (line 9) at O(log k), since the heap size is capped at k. So O(n log k). The final sort of k elements (line 10) is O(k log k), dominated by O(n log k) for k <= n.",
+    },
+    space: {
+      bound: "O(k)",
+      case: "worst",
+      explanation: "The heap never exceeds k+1 elements before popping back to k.",
+      inputOutputNote: "nums (n) is the input; the k-element sorted result is the output.",
+    },
+    derivation: [
+      { lines: [6, 7], description: "Push each of the n elements — O(log k) each.", cost: "O(n log k)", dimension: "time" },
+      { lines: [8, 9], description: "Pop the smallest whenever size exceeds k — O(log k) each.", cost: "O(n log k)", dimension: "time" },
+      { lines: [10], description: "Sort the final k elements.", cost: "O(k log k)", dimension: "time" },
+      { lines: [5], description: "Heap holds at most k+1 elements.", cost: "O(k)", dimension: "space" },
+    ],
+    assumptions: ["k <= n.", "Heap push/pop are O(log(size)) and size is capped at k."],
+    tradeoffs: "Sorting everything is O(n log n) time / O(n) space; heapq.nlargest is the same idea. A size-k heap wins when k << n (O(n log k) time, O(k) space). Quickselect gives O(n) average but unsorted output.",
+    counters: [{ label: "pushes", definition: "executions of heappush (line 7)", countLines: [7] }],
+    fixedDataNote: "For 6 elements with k=3 the heap stays size 3, yielding [12,11,5]. The O(n log k) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: true, explanation: "Import heapq (a binary MIN-heap)." },
     { line: 2, executable: false, explanation: "Blank line." },

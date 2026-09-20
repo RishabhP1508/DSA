@@ -76,6 +76,34 @@ export const treeBfsPattern: PatternDefinition = {
   complexityNote:
     "O(n) time — every node is enqueued and dequeued once. O(w) space where w is the widest level (up to ~n/2 for a full tree).",
 
+  complexityExplanation: {
+    variables: [
+      { symbol: "n", meaning: "the number of nodes in the tree" },
+      { symbol: "w", meaning: "the width of the widest level" },
+    ],
+    costModel: "A queue processes one level at a time; each node is enqueued once and dequeued once, doing O(1) work.",
+    time: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "Each node is enqueued once (lines 21, 23) and dequeued once (line 18), each O(1). The per-level snapshot (line 17) just counts the current queue size. So total O(n).",
+    },
+    space: {
+      bound: "O(w)",
+      case: "worst",
+      explanation: "The queue holds at most one full level at a time — O(w), where w can be up to ~n/2 for a complete tree's bottom level.",
+      inputOutputNote: "The tree (n nodes) is the input; the level lists total O(n) output.",
+    },
+    derivation: [
+      { lines: [17, 18], description: "Dequeue each node once, one level per outer iteration.", cost: "O(n)", dimension: "time" },
+      { lines: [20, 21, 22, 23], description: "Enqueue each child once.", cost: "O(n)", dimension: "time" },
+      { lines: [14], description: "Queue holds at most one level (width w).", cost: "O(w)", dimension: "space" },
+    ],
+    assumptions: ["deque.popleft/append are O(1).", "len(q) is captured before the inner loop so exactly one level is processed per outer pass."],
+    tradeoffs: "A recursive level-order using DFS with a depth index is also O(n) but uses O(h) stack; the queue makes the level boundaries explicit at O(w) space.",
+    counters: [{ label: "nodes visited", definition: "executions of level.append (line 19)", countLines: [19] }],
+    fixedDataNote: "This 5-node tree yields [[1],[2,3],[4,5]]. The O(n) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: true, explanation: "Import deque for an O(1) FIFO queue." },
     { line: 2, executable: false, explanation: "Blank line." },

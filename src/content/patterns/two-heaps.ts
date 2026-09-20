@@ -72,6 +72,32 @@ export const twoHeapsPattern: PatternDefinition = {
   complexityNote:
     "O(log n) per insertion (a few heap pushes/pops), O(1) per median query. Space O(n) to hold all elements across the two heaps.",
 
+  complexityExplanation: {
+    variables: [{ symbol: "n", meaning: "the number of elements inserted so far" }],
+    costModel: "Two balanced heaps (a max-heap for the lower half, a min-heap for the upper half). Each add does a constant number of heap pushes/pops; each median reads the roots.",
+    time: {
+      bound: "O(log n)",
+      case: "worst",
+      explanation: "Each add (lines 9-13) does a constant number of heappush/heappop operations, each O(log n) on heaps of size ~n/2. So add is O(log n). median (lines 14-17) reads the heap roots in O(1). Inserting all n elements is O(n log n).",
+    },
+    space: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "The two heaps together store all n elements.",
+      inputOutputNote: "The n inserted values are held across the heaps; each median query returns one number.",
+    },
+    derivation: [
+      { lines: [10, 11], description: "Push into small then move its max to large — O(log n).", cost: "O(log n)", dimension: "time" },
+      { lines: [12, 13], description: "Rebalance if large grew bigger — one more O(log n) move.", cost: "O(log n)", dimension: "time" },
+      { lines: [16, 17], description: "Read the median from the roots.", cost: "O(1)", dimension: "time" },
+      { lines: [7, 8], description: "Two heaps hold all n elements.", cost: "O(n)", dimension: "space" },
+    ],
+    assumptions: ["heapq's default functions are a min-heap, so the lower half stores NEGATED values to act as a max-heap (portable; Python 3.14 also has native *_max functions).", "Heap push/pop are O(log(size))."],
+    tradeoffs: "Re-sorting per query is O(n log n) per median; a balanced BST also gives O(log n) inserts. Two heaps give O(log n) add and O(1) median with simple code.",
+    counters: [{ label: "adds", definition: "executions of the small push (line 10)", countLines: [10] }],
+    fixedDataNote: "Adding [5,15,1,3] yields running medians [5.0,10.0,5.0,4.0]. The O(log n)-per-add bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: true, explanation: "Import heapq (a min-heap)." },
     { line: 2, executable: false, explanation: "Blank line." },

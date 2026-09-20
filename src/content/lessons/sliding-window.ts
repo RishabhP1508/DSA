@@ -7,15 +7,21 @@ import type { LessonDefinition } from "../../core/types";
 const code = `# Largest sum of exactly k consecutive elements.
 nums = [2, 1, 5, 1, 3, 2]
 k = 3
-# First window: the sum of the first k elements.
-window = sum(nums[:k])
-best = window
-# Slide: add the new right element, drop the old left one.
-for i in range(k, len(nums)):
-    window = window + nums[i] - nums[i - k]
-    if window > best:
-        best = window
-print(best)`;
+# Guard the invalid cases: no window exists unless 0 < k <= len(nums).
+if k <= 0 or k > len(nums):
+    print(None)
+else:
+    # First window: accumulate the first k elements explicitly (O(1) extra space).
+    window = 0
+    for j in range(k):
+        window = window + nums[j]
+    best = window
+    # Slide: add the entering right element, drop the leaving left one.
+    for i in range(k, len(nums)):
+        window = window + nums[i] - nums[i - k]
+        if window > best:
+            best = window
+    print(best)`;
 
 export const slidingWindow: LessonDefinition = {
   id: "sliding-window",
@@ -27,7 +33,9 @@ export const slidingWindow: LessonDefinition = {
 
 The naive way recomputes each window's sum with its own loop: for every starting position you add up k elements, giving **O(n·k)** work. The insight: consecutive windows overlap in k-1 elements. When the window slides one step right, only two things change — one element **enters** on the right and one **leaves** on the left. So \`window = window + nums[i] - nums[i-k]\` updates the sum in **O(1)**, making the whole scan **O(n)**.
 
-This is the **fixed-size** window (the width k never changes). A later variant is the **variable-size** window, where the two ends move independently to satisfy a condition. Recognising "contiguous block + a quantity you can update incrementally" is the cue for this pattern.`,
+Two details matter for correctness and cost. First, **guard the invalid widths**: there is no window unless \`0 < k <= len(nums)\`, so we check \`k <= 0 or k > n\` up front and return \`None\`. Second, build the first window by **explicit accumulation** rather than \`sum(nums[:k])\`: a slice \`nums[:k]\` allocates a fresh length-k list — an **O(k)** peak temporary that would count against auxiliary space. Accumulating into a running total keeps auxiliary space at a true **O(1)**. Initialising the window is **O(k)** time either way; the slide loop is **O(n−k)**, so total time is **O(k) + O(n−k) = O(n)**.
+
+This is the **fixed-size** window (the width k never changes). A later variant is the **variable-size** window, where the two ends move independently to satisfy a condition. **Prefix sums are a valid alternative** here — precompute cumulative sums and each window sum is a subtraction — with the same O(n) time but O(n) extra space for the prefix array; the sliding window is preferred only because it keeps O(1) auxiliary space, not because prefix sums are wrong. Recognising "contiguous block + a quantity you can update incrementally" is the cue for this pattern.`,
 
   vocabulary: [
     { term: "Window", definition: "A contiguous block of the array currently under consideration." },
@@ -41,8 +49,8 @@ This is the **fixed-size** window (the width k never changes). A later variant i
     operations: "Compute the first window; then slide, adding the entering element and subtracting the leaving one.",
     uses: "Max/min/average of k consecutive items, fixed-length substring problems, moving sums.",
     tradeoffs: "O(n) time vs the naive O(n·k), at O(1) extra space — but only works when the quantity can be updated incrementally.",
-    commonMistakes: "Recomputing the whole window each step (defeats the point); off-by-one in the entering/leaving indices (nums[i] enters, nums[i-k] leaves); using it when the block is not contiguous.",
-    edgeCases: "k equal to the array length: only one window. k larger than n: no valid window (guard it). Negative numbers are fine for sums.",
+    commonMistakes: "Recomputing the whole window each step (defeats the point); off-by-one in the entering/leaving indices (nums[i] enters, nums[i-k] leaves); building the first window with sum(nums[:k]), which allocates an O(k) slice and breaks an O(1) auxiliary-space claim; forgetting to guard k <= 0 and k > n; using it when the block is not contiguous.",
+    edgeCases: "k equal to the array length: only one window. k <= 0 or k > n: no valid window — the code guards these and returns None. Negative numbers are fine for sums.",
   },
 
   complexity: [
@@ -54,26 +62,27 @@ This is the **fixed-size** window (the width k never changes). A later variant i
       { symbol: "n", meaning: "the number of elements in nums" },
       { symbol: "k", meaning: "the fixed window width" },
     ],
-    costModel: "Each slide does a constant number of additions/subtractions and one comparison. The initial window sum touches k elements once.",
+    costModel: "Each slide does a constant number of additions/subtractions and one comparison. The initial window is accumulated element-by-element (no slice), touching k elements once.",
     time: {
       bound: "O(n)",
       case: "worst",
-      explanation: "Building the first window costs O(k). Then the loop slides n-k times, each an O(1) update. Total is O(k) + O(n-k) = O(n). The naive approach recomputes each of ~n windows in O(k), giving O(n·k) — the window's incremental update is what removes the factor of k.",
+      explanation: "Building the first window by accumulation costs O(k). Then the loop slides n-k times, each an O(1) update. Total is O(k) + O(n-k) = O(n). The naive approach recomputes each of ~n windows in O(k), giving O(n·k) — the window's incremental update is what removes the factor of k.",
     },
     space: {
       bound: "O(1)",
       case: "worst",
-      explanation: "Only the running `window`, `best`, and loop index are kept. Nothing grows with n.",
-      inputOutputNote: "nums[:k] creates a temporary length-k slice for the initial sum; it is O(k) transient, not part of the steady-state auxiliary space.",
+      explanation: "Only the running `window`, `best`, and loop indices are kept. The first window is accumulated in place — there is NO `nums[:k]` slice — so nothing grows with n or k. This is why the auxiliary space is a genuine O(1).",
+      inputOutputNote: "nums (n elements) is the input; there is no auxiliary array. Contrast the prefix-sum alternative, which needs an O(n) cumulative-sum array.",
     },
     derivation: [
-      { lines: [5], description: "Initial window sum touches k elements once.", cost: "O(1)", dimension: "time" },
-      { lines: [8, 9], description: "The slide loop runs n-k times, each an O(1) incremental update.", cost: "O(n)", dimension: "time" },
-      { lines: [6], description: "A fixed set of running scalars.", cost: "O(1)", dimension: "space" },
+      { lines: [5, 6], description: "Guard the invalid k (k <= 0 or k > n) — O(1).", cost: "O(1)", dimension: "time" },
+      { lines: [9, 10, 11], description: "Accumulate the first window over k elements (no slice allocated).", cost: "O(k)", dimension: "time" },
+      { lines: [14, 15], description: "The slide loop runs n-k times, each an O(1) incremental update.", cost: "O(n)", dimension: "time" },
+      { lines: [9, 12], description: "A fixed set of running scalars — no slice, no auxiliary array.", cost: "O(1)", dimension: "space" },
     ],
-    assumptions: ["Addition/subtraction are constant time.", "k <= n (otherwise there is no valid window and the code should guard it)."],
-    tradeoffs: "The naive per-window recomputation is O(n·k) time but also O(1) space; the sliding window keeps O(1) space and cuts time to O(n).",
-    counters: [{ label: "slides", definition: "executions of the slide update (line 9)", countLines: [9] }],
+    assumptions: ["Addition/subtraction are constant time.", "The invalid widths k <= 0 and k > n are guarded (they print None); otherwise 0 < k <= n."],
+    tradeoffs: "The naive per-window recomputation is O(n·k) time at O(1) space. Prefix sums are a valid alternative: O(n) time but O(n) auxiliary space for the cumulative array. The sliding window keeps O(1) auxiliary space AND O(n) time — preferred here for the space, not because prefix sums are incorrect.",
+    counters: [{ label: "slides", definition: "executions of the slide update (line 15)", countLines: [15] }],
     fixedDataNote: "This run has n=6, k=3, so 3 slides after the first window; the answer 9 is the window [5,1,3]. The O(n) bound generalises the slide count.",
   },
 
@@ -83,15 +92,21 @@ This is the **fixed-size** window (the width k never changes). A later variant i
     { line: 1, executable: false, explanation: "Comment: goal is the max sum of k consecutive elements." },
     { line: 2, executable: true, explanation: "Create nums = [2, 1, 5, 1, 3, 2]." },
     { line: 3, executable: true, explanation: "The window width k = 3." },
-    { line: 4, executable: false, explanation: "Comment: compute the first window." },
-    { line: 5, executable: true, explanation: "window = sum of nums[0:3] = 2+1+5 = 8. This one-time step is O(k)." },
-    { line: 6, executable: true, explanation: "Track the best sum seen so far, starting at the first window (8)." },
-    { line: 7, executable: false, explanation: "Comment: sliding adds the entering and removes the leaving element." },
-    { line: 8, executable: true, explanation: "Slide the window: i is the index of the element entering on the right (from k to n-1)." },
-    { line: 9, executable: true, explanation: "Update the sum in O(1): add nums[i] (enters) and subtract nums[i-k] (leaves)." },
-    { line: 10, executable: true, explanation: "If this window's sum beats best, record it." },
-    { line: 11, executable: true, explanation: "Update best." },
-    { line: 12, executable: true, explanation: "Print the largest window sum → 9 (from [5, 1, 3])." },
+    { line: 4, executable: false, explanation: "Comment: guard the invalid widths." },
+    { line: 5, executable: true, explanation: "If k <= 0 or k > len(nums), no window exists." },
+    { line: 6, executable: true, explanation: "For invalid k, print None and skip the scan." },
+    { line: 7, executable: true, explanation: "Otherwise (0 < k <= n) compute the answer." },
+    { line: 8, executable: false, explanation: "Comment: accumulate the first window explicitly (O(1) extra space, no slice)." },
+    { line: 9, executable: true, explanation: "Start the running window sum at 0." },
+    { line: 10, executable: true, explanation: "Loop over the first k indices j = 0..k-1." },
+    { line: 11, executable: true, explanation: "Add nums[j] into window — this accumulation is O(k) time but allocates nothing." },
+    { line: 12, executable: true, explanation: "Track the best sum seen so far, starting at the first window (2+1+5 = 8)." },
+    { line: 13, executable: false, explanation: "Comment: sliding adds the entering and removes the leaving element." },
+    { line: 14, executable: true, explanation: "Slide the window: i is the index of the element entering on the right (from k to n-1)." },
+    { line: 15, executable: true, explanation: "Update the sum in O(1): add nums[i] (enters) and subtract nums[i-k] (leaves)." },
+    { line: 16, executable: true, explanation: "If this window's sum beats best, record it." },
+    { line: 17, executable: true, explanation: "Update best." },
+    { line: 18, executable: true, explanation: "Print the largest window sum → 9 (from [5, 1, 3])." },
   ],
 
   bindings: [
@@ -109,7 +124,8 @@ This is the **fixed-size** window (the width k never changes). A later variant i
   experiments: [
     "Change k to 2 and predict the new best.",
     "Add a large value near the end and see best update as the window reaches it.",
-    "Replace the incremental update with sum(nums[i-k+1:i+1]) and note it still works but is O(n·k).",
+    "Replace the incremental update with sum(nums[i-k+1:i+1]) and note it still works but is O(n·k) time and allocates an O(k) slice each step.",
+    "Set k = 0 or k = len(nums) + 1 and confirm the guard prints None instead of crashing.",
   ],
 
   exercises: [

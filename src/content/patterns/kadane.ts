@@ -58,6 +58,31 @@ export const kadanePattern: PatternDefinition = {
   complexityNote:
     "O(n) time (single pass) and O(1) space (two rolling variables). The naive all-subarrays approaches are O(n²)–O(n³); divide-and-conquer is O(n log n).",
 
+  complexityExplanation: {
+    variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
+    costModel: "Two rolling scalars: `cur` (best subarray ending here) and `best` (best anywhere). Each element does a constant amount of work.",
+    time: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "A single pass over the remaining n-1 elements (lines 5-7), each doing two O(1) max operations. So O(n) for all inputs — no dependence on values.",
+    },
+    space: {
+      bound: "O(1)",
+      case: "worst",
+      explanation: "Only `cur` and `best` are kept; nothing grows with n.",
+      inputOutputNote: "nums (n) is the input; the answer is a single number. Note nums[1:] here allocates a transient O(n) slice — iterating with an index would make it strict O(1).",
+    },
+    derivation: [
+      { lines: [3, 4], description: "Initialise the two rolling variables.", cost: "O(1)", dimension: "time" },
+      { lines: [5, 6, 7], description: "One pass, constant work per element.", cost: "O(n)", dimension: "time" },
+      { lines: [3, 4], description: "Two scalar variables.", cost: "O(1)", dimension: "space" },
+    ],
+    assumptions: ["The array is non-empty (nums[0] seeds best/cur).", "Addition and comparison are O(1).", "Handles negatives — the max(x, cur+x) restart is what makes negatives work."],
+    tradeoffs: "Naive all-subarrays is O(n²)–O(n³); a divide-and-conquer max-subarray is O(n log n). Kadane is optimal at O(n) time and O(1) space.",
+    counters: [{ label: "elements scanned", definition: "iterations of the Kadane loop (line 6)", countLines: [6] }],
+    fixedDataNote: "For the 9-element sample the max subarray [4,-1,2,1] sums to 6. The O(n) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: max sum of any contiguous subarray, negatives allowed." },
     { line: 2, executable: true, explanation: "Define kadane(nums)." },

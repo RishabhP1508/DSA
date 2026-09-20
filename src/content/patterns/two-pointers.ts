@@ -62,6 +62,31 @@ export const twoPointersPattern: PatternDefinition = {
   complexityNote:
     "O(n) time and O(1) space on a sorted array — the two pointers together traverse it once. Sorting first (if needed) adds O(n log n).",
 
+  complexityExplanation: {
+    variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
+    costModel: "Two pointers start at the ends and move inward; each iteration moves exactly one pointer, so together they cover the array once.",
+    time: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "The loop (lines 4-11) moves `lo` up or `hi` down by one each iteration, so it runs at most n times before they cross. Each step is O(1). So O(n) on an ALREADY sorted array. Sorting first (if needed) would add O(n log n).",
+    },
+    space: {
+      bound: "O(1)",
+      case: "worst",
+      explanation: "Two index variables and a sum scalar; nothing grows with n.",
+      inputOutputNote: "nums (n) is the input; the answer is a pair of indices or None.",
+    },
+    derivation: [
+      { lines: [4, 5], description: "Each iteration reads the two ends in O(1).", cost: "O(1) per step", dimension: "time" },
+      { lines: [8, 9, 10, 11], description: "Exactly one pointer moves per step; total moves <= n.", cost: "O(n)", dimension: "time" },
+      { lines: [3], description: "Two index variables.", cost: "O(1)", dimension: "space" },
+    ],
+    assumptions: ["The array is SORTED (the correctness precondition — the monotone sum lets us discard one end each step).", "Indexing and addition are O(1)."],
+    tradeoffs: "A hash-set two-sum is O(n) time and O(n) space and works UNSORTED; two pointers use O(1) space but require sorted input. Brute-force pairs are O(n²).",
+    counters: [{ label: "pointer steps", definition: "iterations of the two-pointer loop (line 4)", countLines: [4] }],
+    fixedDataNote: "For the 6-element sorted sample the pointers meet the target 15 at indices (2,4). The O(n) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: two pointers on a sorted array for a target pair." },
     { line: 2, executable: true, explanation: "Define two_sum_sorted(nums, target)." },

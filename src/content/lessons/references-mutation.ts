@@ -99,9 +99,8 @@ So \`add_item\` changes \`shared\` (mutation of a shared object), but \`try_rebi
     { line: 12, executable: true, explanation: "Define try_rebind(n)." },
     { line: 13, executable: true, explanation: "n = n + 100 rebinds the LOCAL n to a new int; it does not change x." },
     { line: 14, executable: false, explanation: "Blank line." },
-    { line: 15, executable: false, explanation: "Comment separates the two calls (blank/omitted)." },
-    { line: 16, executable: true, explanation: "Call try_rebind(x). Inside, n becomes 105, but x is untouched." },
-    { line: 17, executable: true, explanation: "Print x → still 5." },
+    { line: 15, executable: true, explanation: "Call try_rebind(x). Inside, n becomes 105, but x is untouched." },
+    { line: 16, executable: true, explanation: "Print x → still 5." },
   ],
 
   bindings: [

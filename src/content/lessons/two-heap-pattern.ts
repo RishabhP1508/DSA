@@ -31,7 +31,7 @@ export const twoHeapPattern: LessonDefinition = {
 
 The mechanics are always the same three moves per insert: (1) push into one heap, (2) move that heap's boundary element to the other so the value lands on the correct side, (3) rebalance the sizes if they drift apart. The invariant "sizes differ by at most one" guarantees the boundary is always at the roots.
 
-This pattern powers more than medians: **IPO / maximize capital** (a max-heap of affordable projects fed by a min-heap ordered by cost), **sliding-window median**, and any "keep the middle / partition point cheap" problem. Recognizing it means spotting that you care about a *dividing value* in a mutable multiset, not full order. Since Python heaps are min-only, the lower half stores **negated** values to behave as a max-heap. Here, after inserting \`[10,20,30,40]\`, the halves are balanced at sizes 2 and 2 with boundary values \`20\` (lower max) and \`30\` (upper min).`,
+This pattern powers more than medians: **IPO / maximize capital** (a max-heap of affordable projects fed by a min-heap ordered by cost), **sliding-window median**, and any "keep the middle / partition point cheap" problem. Recognizing it means spotting that you care about a *dividing value* in a mutable multiset, not full order. Because \`heapq\`'s unqualified functions are a **min-heap**, the lower half stores **negated** values to behave as a max-heap — a portable technique (Python 3.14 also provides native \`heapq.*_max\` functions). Here, after inserting \`[10,20,30,40]\`, the halves are balanced at sizes 2 and 2 with boundary values \`20\` (lower max) and \`30\` (upper min).`,
 
   vocabulary: [
     { term: "Two-heap pattern", definition: "Two opposing heaps (max-heap lower half, min-heap upper half) tracking a partition point." },
@@ -134,7 +134,7 @@ This pattern powers more than medians: **IPO / maximize capital** (a max-heap of
     },
   ],
 
-  review: `The **two-heap pattern** keeps a **max-heap of the lower half** and a **min-heap of the upper half**, balanced by size, so the **partition/boundary sits at the two roots** — O(1) to read, O(log n) to insert. It generalizes the running median and powers problems like sliding-window median and maximize-capital. The recognition cue: you need the *dividing value* of a **changing** multiset, not full order. (Python heaps are min-only → negate the lower half.)`,
+  review: `The **two-heap pattern** keeps a **max-heap of the lower half** and a **min-heap of the upper half**, balanced by size, so the **partition/boundary sits at the two roots** — O(1) to read, O(log n) to insert. It generalizes the running median and powers problems like sliding-window median and maximize-capital. The recognition cue: you need the *dividing value* of a **changing** multiset, not full order. (\`heapq\` defaults to a min-heap → negate the lower half, or use the native \`*_max\` functions on Python 3.14+.)`,
 
   expectedOutput: "2 2\n20 30\n",
 
@@ -153,7 +153,7 @@ This pattern powers more than medians: **IPO / maximize capital** (a max-heap of
       title: "heapq — Heap queue algorithm — Python 3.14 documentation",
       section: "heappush / heappop; min-heap with negation",
       topic: "heaps/two-heap",
-      purpose: "Confirm the min-only heap and negation trick used for the lower-half max-heap, with O(log n) operations.",
+      purpose: "Confirm heapq's default min-heap and the negation trick used for the lower-half max-heap (native *_max functions available on 3.14+), with O(log n) operations.",
       verifiedClaims: ["heapq is a min-heap; negation yields a max-heap; push/pop are O(log n)"],
       accessDate: "2026-09-20",
     },

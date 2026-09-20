@@ -65,6 +65,35 @@ export const kWayMergePattern: PatternDefinition = {
   complexityNote:
     "O(N log k) time, where N is the total number of elements and k the number of lists (heap size ≤ k). O(k) heap space plus O(N) output.",
 
+  complexityExplanation: {
+    variables: [
+      { symbol: "N", meaning: "the total number of elements across all lists" },
+      { symbol: "k", meaning: "the number of sorted lists" },
+    ],
+    costModel: "A min-heap holds the current front of each list (at most k entries). Each of the N elements is popped once and pushed at most once, each O(log k).",
+    time: {
+      bound: "O(N log k)",
+      case: "worst",
+      explanation: "The heap starts with up to k fronts (lines 6-8). Then each of the N elements is popped exactly once (line 11) and its successor pushed at most once (line 14), each O(log k) since the heap size never exceeds k. So O(N log k).",
+    },
+    space: {
+      bound: "O(k)",
+      case: "worst",
+      explanation: "The heap holds at most k entries (one front per list). This is auxiliary to the O(N) output.",
+      inputOutputNote: "The k input lists total N elements; the merged output is O(N).",
+    },
+    derivation: [
+      { lines: [6, 7, 8], description: "Seed the heap with up to k list fronts.", cost: "O(k log k)", dimension: "time" },
+      { lines: [10, 11], description: "Pop each of the N elements once.", cost: "O(N log k)", dimension: "time" },
+      { lines: [13, 14], description: "Push each successor at most once.", cost: "O(N log k)", dimension: "time" },
+      { lines: [5], description: "Heap holds at most k fronts.", cost: "O(k)", dimension: "space" },
+    ],
+    assumptions: ["Each input list is already sorted ascending.", "The (value, list index, position) tuple breaks ties without comparing raw values ambiguously.", "Heap push/pop are O(log k)."],
+    tradeoffs: "Concatenate-then-sort is O(N log N); the heap merge is O(N log k), better when k << number of elements per list. It also streams output without materialising all inputs at once.",
+    counters: [{ label: "elements emitted", definition: "executions of out.append (line 12)", countLines: [12] }],
+    fixedDataNote: "Merging three sorted triples emits 9 elements. The O(N log k) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: true, explanation: "Import heapq for the min-heap." },
     { line: 2, executable: false, explanation: "Blank line." },

@@ -77,6 +77,34 @@ export const triePrefixPattern: PatternDefinition = {
   complexityNote:
     "O(L) per insert and per prefix/word query, where L is the string length — independent of the number of stored words. Space O(total characters across inserted words).",
 
+  complexityExplanation: {
+    variables: [
+      { symbol: "L", meaning: "the length of the word or prefix being processed" },
+      { symbol: "T", meaning: "the total number of characters across all inserted words" },
+    ],
+    costModel: "Each insert/query walks one node per character, doing an O(1) dictionary lookup at each step. Cost depends on the string length, NOT on how many words are stored.",
+    time: {
+      bound: "O(L)",
+      case: "worst",
+      explanation: "insert (lines 12-15) and starts_with (lines 19-22) each loop over the L characters of the input, doing one O(1) child-map lookup/insert per character. So O(L) per operation — independent of the number of stored words.",
+    },
+    space: {
+      bound: "O(T)",
+      case: "worst",
+      explanation: "In the worst case (no shared prefixes) the trie has one node per character inserted, so O(T) total across all words. A single insert adds at most O(L) new nodes.",
+      inputOutputNote: "The stored words define the trie size (O(T)); a query returns a boolean.",
+    },
+    derivation: [
+      { lines: [12, 13, 14, 15], description: "insert walks/creates one node per character.", cost: "O(L)", dimension: "time" },
+      { lines: [19, 20, 21, 22], description: "starts_with walks one node per prefix character.", cost: "O(L)", dimension: "time" },
+      { lines: [14], description: "Up to O(L) new nodes per insert; O(T) overall.", cost: "O(T)", dimension: "space" },
+    ],
+    assumptions: ["dict child lookup/insert are amortised O(1).", "Cost is per-string-length, independent of the number of stored words — the trie's key advantage."],
+    tradeoffs: "A hash set of words answers exact-membership in O(L) too but cannot answer PREFIX queries efficiently; the trie shares prefixes and supports prefix search at O(L).",
+    counters: [{ label: "characters walked", definition: "executions of the insert descent (line 15)", countLines: [15] }],
+    fixedDataNote: "Inserting 'apple' and 'app' shares the 'app' prefix; starts_with('app') walks 3 nodes. The O(L) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: a trie shares common prefixes." },
     { line: 2, executable: true, explanation: "Define the trie node." },

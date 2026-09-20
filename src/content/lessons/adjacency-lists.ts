@@ -96,8 +96,9 @@ The efficiency point that every graph algorithm's complexity rests on: iterating
     { line: 9, executable: false, explanation: "Comment: iterate a vertex's neighbours." },
     { line: 10, executable: true, explanation: "Unpack each (neighbour, weight) of vertex 0." },
     { line: 11, executable: true, explanation: "Print '1 4' then '2 1' — vertex 0's edges." },
-    { line: 12, executable: false, explanation: "Comment: out-degree." },
-    { line: 13, executable: true, explanation: "len(adj[2]) is vertex 2's out-degree → 2." },
+    { line: 12, executable: false, explanation: "Blank line." },
+    { line: 13, executable: false, explanation: "Comment: out-degree." },
+    { line: 14, executable: true, explanation: "len(adj[2]) is vertex 2's out-degree → 2." },
   ],
 
   bindings: [

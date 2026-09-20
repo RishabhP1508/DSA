@@ -67,6 +67,34 @@ export const modifiedBinarySearchPattern: PatternDefinition = {
   complexityNote:
     "O(log n) time — each step discards half the array. O(1) space. (Duplicates in a rotated array can degrade the worst case toward O(n).)",
 
+  complexityExplanation: {
+    variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
+    costModel: "Each iteration identifies which half is sorted and discards half the remaining range, so the search space halves every step.",
+    time: {
+      bound: "O(log n)",
+      case: "worst",
+      explanation: "The loop (lines 4-17) halves [lo, hi] each iteration by deciding which side is sorted (line 8) and whether the target lies in it. So O(log n) comparisons for DISTINCT values.",
+      otherCases: [
+        { case: "worst", bound: "O(n)", note: "With DUPLICATES the sorted-half test can become ambiguous (nums[lo]==nums[mid]), degrading toward O(n)." },
+      ],
+    },
+    space: {
+      bound: "O(1)",
+      case: "worst",
+      explanation: "Only lo, hi, mid indices are kept; nothing grows with n.",
+      inputOutputNote: "nums (n) is the input; the answer is a single index or -1.",
+    },
+    derivation: [
+      { lines: [4, 5], description: "Each iteration computes a midpoint and halves the range.", cost: "O(log n) iterations", dimension: "time" },
+      { lines: [8, 9, 14], description: "O(1) work per iteration to pick the sorted half and decide.", cost: "O(1) per step", dimension: "time" },
+      { lines: [3], description: "A constant number of index variables.", cost: "O(1)", dimension: "space" },
+    ],
+    assumptions: ["The array is a rotation of a sorted array with DISTINCT values (for the O(log n) bound).", "Indexing and comparison are O(1)."],
+    tradeoffs: "A linear scan is O(n) but always works (even with duplicates); the modified binary search is O(log n) for distinct values by exploiting the always-one-side-sorted property.",
+    counters: [{ label: "halving steps", definition: "iterations of the search loop (line 4)", countLines: [4] }],
+    fixedDataNote: "Searching 0 in [4,5,6,7,0,1,2] finds index 4 in ~log2(7) steps. The O(log n) bound generalises for distinct values.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: search a rotated sorted array." },
     { line: 2, executable: true, explanation: "Define search_rotated(nums, target)." },
