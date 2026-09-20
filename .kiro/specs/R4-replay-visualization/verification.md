@@ -281,6 +281,39 @@ lessons + 29 patterns UNCHANGED; 130 complexity; 27/27 visualizer shapes.
 `test:browser`: **9 passed / 5 skipped** (the 5 skips are the R2 P-RUNNER-ORIGIN
 packaging gate, reported separately). No lesson `expectedOutput` changed.
 
+## Amendment 5 (bounded bit rendering for huge integers)
+
+The amendment-4 `BitsVisualizer` iterated over and rendered the FULL bit width
+with no cap, so a huge Python int (e.g. `1 << 10000`, 10001 bits) built ~10001
+SVG cells and did per-bit work. Fixed test-first:
+
+- **Bound the render to the low `MAX_BITS` (256) bits.** For a value wider than
+  the cap, only the low 256 bits are materialized (via masking — O(256), never
+  O(width)), with a clear "higher bits (position ≥ 256) omitted" marker; the
+  retained cells keep accurate positions (LSB = 0). The full value stays in the
+  title/label (and the inspector).
+- **Estimate width without O(bits) work.** The true bit length is ESTIMATED from
+  the decimal digit count (`bits ≈ digits / log10(2)`); the exact per-bit count
+  is computed only when the value is already known to be small (≤ cap).
+- **"Too large to visualize" state.** Above ~100,000 bits the bit row is not
+  built at all — a compact message reports the approximate width and keeps the
+  full value visible.
+- **Preserved** the existing `2**32`, `2**80` (81 bits ≤ cap → still fully
+  rendered, no omission marker), `0`, and negative-value tests.
+
+Failing-before/passing-after: `BitsVisualizer.test.tsx` — the `1 << 10000` case
+previously rendered ~10001 cells in ~1.2 s; now the cell count is ≤ 256, the
+omission marker is shown, the LSB position is labelled, the low bits render, and
+construction is bounded (< 2 s guard). A separate case asserts `2**80` is NOT
+marked truncated.
+
+Amendment-5 verification (tested commit: <FILLED AT COMMIT>):
+`check:all` green — lint 0 err / 9 warns; unit **164/164** (24 files); 130
+lessons + 29 patterns UNCHANGED; 130 complexity; 27/27 visualizer shapes.
+`test:browser`: **9 passed / 5 skipped** (the 5 skips are the R2 P-RUNNER-ORIGIN
+packaging gate, reported separately). Only `BitsVisualizer.tsx` + its test
+changed; no lesson `expectedOutput` changed.
+
 ## What was NOT proven / remaining
 - **Deque adapter was already fixed by R2** (evidence in the probe + the new
   `verify:visualizers` deque check); R4 closed the *verification* gap, not a live

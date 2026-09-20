@@ -78,3 +78,48 @@ describe("BitsVisualizer — integer-safe bit extraction", () => {
     expect(bits.endsWith("00000101")).toBe(true);
   });
 });
+
+describe("BitsVisualizer — bounded rendering for huge integers", () => {
+  // 1 << 10000 has 10001 bits; the decimal string is ~3011 digits.
+  const oneShl10000 = (1n << 10000n).toString();
+
+  it("caps the rendered cell count for a 10001-bit integer and marks omitted bits", () => {
+    const start = Date.now();
+    const { container } = render(<BitsVisualizer event={intEvent("x", oneShl10000)} binding={binding} />);
+    // Bounded work: constructing the diagram must not take time proportional to
+    // 10000 bits. (Generous bound to avoid CI flakiness.)
+    expect(Date.now() - start).toBeLessThan(2000);
+
+    // Cell count is bounded well below the true bit width.
+    const cells = container.querySelectorAll("rect");
+    expect(cells.length).toBeGreaterThan(0);
+    expect(cells.length).toBeLessThanOrEqual(256);
+
+    // The diagram clearly indicates that higher bits were omitted.
+    expect(container.textContent ?? "").toMatch(/omitted|not shown|higher bits|truncat|too large/i);
+
+    // The full value remains available (shown in the title/label).
+    expect(container.textContent ?? "").toContain(oneShl10000.slice(0, 12));
+  });
+
+  it("shows accurate bit-position labels for the retained low bits", () => {
+    const { container } = render(<BitsVisualizer event={intEvent("x", oneShl10000)} binding={binding} />);
+    // The retained window is the LOW bits: position 0 (LSB) must be present and
+    // labelled, and 1 << 10000 has its low bits all zero.
+    const posLabels = Array.from(container.querySelectorAll("text.cell-index")).map((t) => t.textContent);
+    expect(posLabels).toContain("0"); // LSB position labelled
+    const bits = bitsOf(container);
+    // Low bits of 1<<10000 are all zero.
+    expect(/^0+$/.test(bits)).toBe(true);
+  });
+
+  it("does NOT truncate a merely-large but in-range value (2**80 keeps all 81 bits)", () => {
+    const { container } = render(
+      <BitsVisualizer event={intEvent("x", "1208925819614629174706176")} binding={binding} />,
+    );
+    // No omitted-bits marker for a value within the display cap.
+    expect(container.textContent ?? "").not.toMatch(/omitted|not shown|higher bits|too large/i);
+    const bits = bitsOf(container);
+    expect(bits.endsWith("1" + "0".repeat(80))).toBe(true);
+  });
+});
