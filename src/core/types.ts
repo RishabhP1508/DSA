@@ -183,6 +183,14 @@ export interface RunResult {
   limitHit?: "time" | "events" | "bytes";
   /** For status === "exited": the SystemExit code. */
   exitCode?: number | string | null;
+  /**
+   * 32-bit hash of the source this result was produced from (R4.1). The UI
+   * compares it against the current editor content to detect a stale trace after
+   * an edit and stop presenting it as validated.
+   */
+  sourceRev?: number;
+  /** 32-bit hash of the stdin this result was produced from (R4.1). */
+  inputRev?: number;
 }
 
 /**

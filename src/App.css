@@ -332,3 +332,96 @@ table.vars td { border-bottom: 1px solid var(--border); padding: 4px 6px; }
 
 /* Playground */
 .playground .workspace-right { min-height: 200px; }
+
+
+/* ------------------------------------------------------------------ */
+/* R4 — replay/inspection/visualize-as (functional styling only; the   */
+/* full visual pass is deferred to the UI milestone).                  */
+/* ------------------------------------------------------------------ */
+
+.stale-banner {
+  margin: 6px 0;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #4a3a12;
+  color: #ffd479;
+  font-size: 0.85rem;
+}
+
+.speed-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--dim, #9aa);
+}
+.speed-control select { font-size: 0.8rem; }
+
+/* Expandable object inspector */
+.vars-inspect { display: flex; flex-direction: column; gap: 2px; }
+.oi-row,
+.oi-node { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.82rem; }
+.oi-row { padding: 1px 0; }
+.oi-toggle {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 1px 0;
+  text-align: left;
+  font: inherit;
+}
+.oi-caret { width: 1em; display: inline-block; color: var(--dim, #9aa); }
+.oi-key { color: #7aa2ff; }
+.oi-value { color: #e6edf3; }
+.oi-summary { color: var(--dim, #9aa); }
+.oi-cycle { color: #ffab70; }
+.oi-children { margin-left: 14px; border-left: 1px solid #2a2f37; padding-left: 8px; }
+.oi-more {
+  background: none;
+  border: 1px solid #2a2f37;
+  color: var(--dim, #9aa);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 1px 6px;
+  margin-top: 2px;
+}
+.oi-truncated { margin-top: 2px; }
+
+.frame-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 1px 2px;
+  border-radius: 4px;
+}
+.frame-btn.active { background: #23324a; }
+
+/* Visualize as… control */
+.visualize-as {
+  border: 1px solid #2a2f37;
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+.visualize-as .va-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+.visualize-as label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75rem;
+  color: var(--dim, #9aa);
+  gap: 2px;
+}
+.visualize-as input,
+.visualize-as select { font-size: 0.8rem; }

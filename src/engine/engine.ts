@@ -248,6 +248,11 @@ export class ExecutionEngine {
   private settle(p: PendingRun, result: RunResult, _reason?: string): void {
     if (p.settled) return;
     p.settled = true;
+    // Stamp the source/input revisions this result was produced from, so the UI
+    // can detect a stale trace after an edit (R4.1). Applied centrally so EVERY
+    // terminal path (result/error/timeout/stop/supersede) carries them.
+    result.sourceRev = p.sourceRev;
+    result.inputRev = p.inputRev;
     if (p.initTimer) clearTimeout(p.initTimer);
     if (p.execTimer) clearTimeout(p.execTimer);
     // Detach handlers before terminating so a late message can't re-enter.

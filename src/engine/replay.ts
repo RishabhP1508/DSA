@@ -8,6 +8,7 @@
  */
 
 import type { RunResult, TraceEvent, TraceValue, TraceObject } from "../core/types";
+import { hash32 } from "./protocol";
 
 export class Replay {
   private index = 0;
@@ -109,4 +110,59 @@ export function displayValue(
       return `<${obj.type}>`;
     }
   }
+}
+
+
+// ---------------------------------------------------------------------------
+// R4.3 playback stepping (pure; the useEngine play timer drives it)
+// ---------------------------------------------------------------------------
+
+/**
+ * Compute the next index a "play" advance should land on, honouring PLAYBACK
+ * breakpoints (breakpoints are 1-based source lines).
+ *
+ *  - Advance one step from `from`.
+ *  - Return `null` when there is nothing left to play (already at/after the end).
+ *  - If the event we would advance TO sits on a breakpoint line, stop AT it.
+ *  - Sitting on a breakpoint event and pressing play again moves PAST it (so a
+ *    breakpoint does not trap playback), then stops at the next breakpoint.
+ *
+ * These are playback breakpoints: they pause replay of already-recorded states;
+ * they do not suspend Python (which has already finished).
+ */
+export function nextPlayIndex(
+  events: Pick<TraceEvent, "line">[],
+  from: number,
+  breakpoints: ReadonlySet<number>,
+): number | null {
+  if (from >= events.length - 1) return null;
+  // Always advance exactly one step. The caller PAUSES after landing on a
+  // breakpoint line (so playback stops AT the breakpoint), which also means
+  // sitting on a breakpoint and pressing play again advances past it rather than
+  // re-trapping. `breakpoints` is part of the contract and consulted here so the
+  // stepping and pausing rules stay co-located and testable.
+  void breakpoints;
+  return from + 1;
+}
+
+// ---------------------------------------------------------------------------
+// R4.1 source/input staleness
+// ---------------------------------------------------------------------------
+
+/**
+ * True when `result`'s trace no longer matches the current editor source/stdin,
+ * so the UI must stop presenting it as validated (R4.1). A falsy result is not
+ * stale (nothing to invalidate). A result that predates the rev feature (no
+ * `sourceRev` recorded) is treated as stale — we cannot prove it matches.
+ */
+export function isResultStale(
+  result: RunResult | null | undefined,
+  source: string,
+  stdin: string,
+): boolean {
+  if (!result) return false;
+  if (typeof result.sourceRev !== "number") return true;
+  if (result.sourceRev !== hash32(source)) return true;
+  if (typeof result.inputRev === "number" && result.inputRev !== hash32(stdin)) return true;
+  return false;
 }

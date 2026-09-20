@@ -130,5 +130,110 @@ root.children["a"].is_end = True
   check("trie: child 'a' is terminal", childA?.entries?.find((e) => e.key === "is_end")?.value?.value === true, JSON.stringify(childA));
 }
 
+// --- deque (R4.5: proves the R2 tracer fix; deque must expose ordered entries) ---
+{
+  const res = await run(`from collections import deque
+dq = deque()
+dq.append(1)
+dq.appendleft(0)
+dq.append(2)
+`);
+  const ev = res.events.at(-1);
+  const dq = obj(ev, localsOf(ev).dq);
+  check("deque: type is deque with entries (not a repr-only blob)", dq?.type === "deque" && Array.isArray(dq?.entries), JSON.stringify(dq));
+  check(
+    "deque: entries are in order [0,1,2] after appendleft/append",
+    dq?.entries?.map((e) => e.value.value).join(",") === "0,1,2",
+    JSON.stringify(dq?.entries?.map((e) => e.value.value)),
+  );
+}
+
+// --- stack (list; top = last element) ---
+{
+  const res = await run(`stack = []
+stack.append(10)
+stack.append(20)
+stack.append(30)
+`);
+  const ev = res.events.at(-1);
+  const s = obj(ev, localsOf(ev).stack);
+  check("stack: is a list with 3 entries", s?.type === "list" && s?.entries?.length === 3, JSON.stringify(s?.entries?.length));
+  check("stack: top (last) entry is 30", s?.entries?.at(-1)?.value?.value === 30, JSON.stringify(s?.entries?.at(-1)));
+}
+
+// --- queue (list; front = index 0, rear = last) ---
+{
+  const res = await run(`q = []
+q.append("a")
+q.append("b")
+q.append("c")
+`);
+  const ev = res.events.at(-1);
+  const q = obj(ev, localsOf(ev).q);
+  check("queue: front (index 0) is 'a'", q?.entries?.[0]?.value?.value === "a", JSON.stringify(q?.entries?.[0]));
+  check("queue: rear (last) is 'c'", q?.entries?.at(-1)?.value?.value === "c", JSON.stringify(q?.entries?.at(-1)));
+}
+
+// --- set (members present; order-agnostic) ---
+{
+  const res = await run(`s = set()
+s.add(1)
+s.add(2)
+s.add(3)
+`);
+  const ev = res.events.at(-1);
+  const s = obj(ev, localsOf(ev).s);
+  const members = (s?.entries ?? []).map((e) => e.value.value).sort();
+  check("set: type is set", s?.type === "set", JSON.stringify(s?.type));
+  check("set: members are {1,2,3}", members.join(",") === "1,2,3", JSON.stringify(members));
+}
+
+// --- matrix (list of rows; grid[r][c] addressable) ---
+{
+  const res = await run(`grid = [[1,2,3],[4,5,6]]
+`);
+  const ev = res.events.at(-1);
+  const grid = obj(ev, localsOf(ev).grid);
+  const row1 = obj(ev, grid?.entries?.[1]?.value);
+  check("matrix: 2 rows", grid?.entries?.length === 2, JSON.stringify(grid?.entries?.length));
+  check("matrix: grid[1][2] == 6", row1?.entries?.[2]?.value?.value === 6, JSON.stringify(row1?.entries?.[2]));
+}
+
+// --- string (str value present) ---
+{
+  const res = await run(`text = "hello"
+`);
+  const ev = res.events.at(-1);
+  const t = localsOf(ev).text;
+  check("string: text is the str 'hello'", t?.kind === "str" && t?.value === "hello", JSON.stringify(t));
+}
+
+// --- caveat: directed vs undirected is a BINDING concern, not inferred ---
+{
+  // A graph stored with reverse edges present must NOT be assumed directed by
+  // the trace shape: adjacency is just a dict; direction comes from the binding.
+  const res = await run(`g = {0:[1], 1:[0]}
+`);
+  const ev = res.events.at(-1);
+  const g = obj(ev, localsOf(ev).g);
+  check("graph caveat: adjacency stays a plain dict (direction not inferred)", g?.type === "dict", JSON.stringify(g?.type));
+}
+
+// --- caveat: DP cells are VALUES; "computed" is authored metadata, not non-None ---
+{
+  const res = await run(`dp = [0, 0, 0]
+dp[0] = 1
+`);
+  const ev = res.events.at(-1);
+  const dp = obj(ev, localsOf(ev).dp);
+  // dp[1] and dp[2] are 0 (a real value), NOT a "computed" marker; the shape is
+  // just ints. The visualizer must not treat every non-None cell as computed.
+  check(
+    "dp caveat: cells are plain int values (no 'computed' flag in the trace)",
+    dp?.entries?.every((e) => e.value.kind === "int"),
+    JSON.stringify(dp?.entries?.map((e) => e.value.kind)),
+  );
+}
+
 console.log(failures === 0 ? "\nALL VISUALIZER SHAPES OK" : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);
