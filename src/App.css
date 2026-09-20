@@ -190,3 +190,23 @@ table.vars td { border-bottom: 1px solid var(--border); padding: 4px 6px; }
 .frame-name { fill: var(--ink); font-size: 12px; font-family: ui-monospace, monospace; }
 .frame-args { fill: var(--dim); font-size: 11px; font-family: ui-monospace, monospace; }
 .var-name-svg { fill: var(--accent); font-size: 12px; font-family: ui-monospace, monospace; }
+
+
+/* ---- Complexity panel (plan §4) ---- */
+.complexity-panel h5 { margin: 10px 0 4px; color: var(--accent); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.cx-vars { margin: 0; padding-left: 18px; }
+.cx-vars code, .cx-derivation code, .cx-bound code { font-family: ui-monospace, monospace; }
+.cx-bounds { display: flex; gap: 12px; flex-wrap: wrap; }
+.cx-bound { flex: 1; min-width: 160px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; }
+.cx-tag { display: block; font-size: 0.72rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.05em; }
+.cx-big { font-size: 1.15rem; color: var(--accent-2); }
+.cx-case { font-size: 0.72rem; color: var(--dim); margin-left: 6px; }
+.cx-bound p { margin: 4px 0 0; font-size: 0.85rem; }
+.cx-derivation { list-style: none; padding: 0; margin: 0; }
+.cx-derivation li { padding: 5px 6px; border-radius: 6px; font-size: 0.85rem; cursor: default; }
+.cx-derivation li:hover { background: var(--panel); }
+.cx-dim-tag { display: inline-block; min-width: 40px; font-size: 0.68rem; text-transform: uppercase; padding: 1px 5px; border-radius: 4px; margin-right: 6px; }
+.cx-time { background: #24304f; color: var(--accent); }
+.cx-space { background: #23482f; color: #7ee787; }
+.cx-lines { color: var(--dim); font-size: 0.78rem; }
+.cx-observed .cx-caveat { font-size: 0.76rem; font-style: italic; }

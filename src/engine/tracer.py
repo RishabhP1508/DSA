@@ -99,6 +99,13 @@ class _TraceRecorder:
                 return {"kind": "int", "value": obj}
             return {"kind": "int", "value": str(obj)}
         if isinstance(obj, float):
+            # JS JSON.parse rejects Infinity/NaN, so encode non-finite floats
+            # as strings; the JS side maps them back for display.
+            import math as _math
+            if _math.isinf(obj):
+                return {"kind": "float", "value": "Infinity" if obj > 0 else "-Infinity"}
+            if _math.isnan(obj):
+                return {"kind": "float", "value": "NaN"}
             return {"kind": "float", "value": obj}
         if isinstance(obj, str):
             return {"kind": "str", "value": obj}
