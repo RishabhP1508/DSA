@@ -13,7 +13,7 @@
 import type { CoverageEntry } from "../core/types";
 import { NOTION_PRACTICE } from "./notion-practice";
 
-export const COVERAGE_VERSION = 15;
+export const COVERAGE_VERSION = 16;
 
 function e(
   area: string,
@@ -206,20 +206,23 @@ export const coverage: CoverageEntry[] = [
  * Cloudflare-blocked access attempts are preserved in
  * .kiro/specs/R5-curriculum/external-practice-manifest.md.
  *
- * Here we DERIVE each coverage entry's `externalPractice` from that manifest:
- * a Notion problem is attached to a coverage subtopic when the subtopic's
- * `lessonId` (or one of its `patternIds`) is among the problem's `mappedIds`.
- * So the coverage doc reflects the real Notion set — no hand-maintained subset,
- * no invented links. Titles + canonical links only; external practice stays
- * optional (the local lesson teaches the technique regardless).
+ * Here we DERIVE each coverage entry's `externalPractice` STRICTLY from each
+ * occurrence's declared `coverageIds` — NOT by "any mapped lesson/pattern id
+ * matches this entry". The old id-match projection leaked questions across main
+ * topics because some patterns (sliding-window, two-pointers, prefix-sums-hashmap,
+ * matrix-traversal, …) are shared by coverage entries in different areas. Each
+ * occurrence names its own in-topic coverage entry (validated by
+ * notion-projection.test.ts), so a Strings sliding-window question can never
+ * surface under an Arrays entry. Cross-topic duplicates carry two occurrences
+ * that each target their own topic's entry. Only `status: "mapped"` occurrences
+ * surface (unresolved ones are recorded in the manifest, not shown as practice).
  */
 for (const entry of coverage) {
-  const ids = new Set<string>([entry.lessonId, ...(entry.patternIds ?? [])].filter(Boolean) as string[]);
   const seen = new Set<string>();
   const mapped: { name: string; url: string }[] = [];
   for (const row of NOTION_PRACTICE) {
     if (row.status !== "mapped") continue;
-    if (row.mappedIds.some((id) => ids.has(id)) && !seen.has(row.url)) {
+    if (row.coverageIds.includes(entry.id) && !seen.has(row.url)) {
       seen.add(row.url);
       mapped.push({ name: row.title, url: row.url });
     }

@@ -56,13 +56,17 @@ lines.push(
   `**Human semantic review (R5.3): ${semanticReviewed} / ${stats.total} coverage entries complete; ${stats.total - semanticReviewed} pending.**`,
 );
 lines.push("");
+const totalExamples = registry.lessons.length + registry.patterns.length;
+const reviewedExamples =
+  registry.lessons.filter((l) => l.evidence?.semanticReview).length +
+  registry.patterns.filter((p) => p.evidence?.semanticReview).length;
 lines.push(
-  "> Two count families, kept separate: (a) **EXAMPLES** — 131 lessons + 29 patterns = 160 executable examples, of which 37 are semantically reviewed and 123 are pending; (b) **COVERAGE ENTRIES** — the " +
-    `${stats.total} rows in this inventory, of which ${semanticReviewed} are semantically reviewed and ${stats.total - semanticReviewed} pending. Do not mix the 37/123 example counts with the ${semanticReviewed}/${stats.total - semanticReviewed} coverage-entry counts.`,
+  `> Two count families, kept SEPARATE (do not mix them): (a) **EXAMPLES** — ${registry.lessons.length} lessons + ${registry.patterns.length} patterns = ${totalExamples} executable examples, of which ${reviewedExamples} are semantically reviewed and ${totalExamples - reviewedExamples} pending; ` +
+    `(b) **COVERAGE ENTRIES** — the ${stats.total} rows in this inventory, of which ${semanticReviewed} are semantically reviewed and ${stats.total - semanticReviewed} pending.`,
 );
 lines.push("");
 lines.push(
-  "Two layers: *evidence-verified* means the item passes all machine checks (output, line explanations, complexity panel, example-model contract, references) with a current content-hash tie (see `verify:coverage-evidence`). *Semantic-reviewed* means a person read the teaching claim/definition/reasoning (`evidence.semanticReview: true`). Items pending semantic review are structurally verified but NOT claimed as fully reviewed — see `.kiro/specs/R5-curriculum/batch-review.md`.",
+  "Two layers: *evidence-verified* means the item passes all machine checks (output, line explanations, complexity panel, example-model contract, references) with a current content-hash tie (see `verify:coverage-evidence`). *Semantic-reviewed* means a person read the teaching claim/definition/reasoning (`evidence.semanticReview: true`). Any item still pending semantic review is structurally verified but NOT claimed as fully reviewed. The six-batch review log is `.kiro/specs/R5-curriculum/batch-review.md`.",
 );
 lines.push("");
 lines.push("Status legend: planned · in-progress · authored · verified. Reviewed column: ✅ = semantic review done, ⏳ = pending.");
@@ -94,7 +98,7 @@ lines.push(
     `mapped occurrences: **${NOTION_PRACTICE.filter((r) => r.status === "mapped").length}**; ` +
     `unresolved occurrences: **${NOTION_PRACTICE.filter((r) => r.status === "unresolved").length}**; ` +
     `additional optional problems (not in the export): **${ADDITIONAL_PRACTICE.length}**. ` +
-    `Each coverage entry's practice column is DERIVED from \`src/content/notion-practice.ts\` (a Notion problem attaches to a subtopic when the subtopic's lesson/pattern id is among the problem's mapped ids); ${extTotal} occurrences surface across ${extEntries} subtopics. Titles + canonical links only; local lessons teach each technique regardless. The historical Cloudflare-blocked access attempts are preserved in \`.kiro/specs/R5-curriculum/external-practice-manifest.md\`.`,
+    `Each coverage entry's practice column is DERIVED from \`src/content/notion-practice.ts\` via each occurrence's EXPLICIT in-topic \`coverageIds\` (never by shared-pattern id matching, which leaked questions across topics); ${extTotal} occurrences surface across ${extEntries} subtopics. Titles + canonical links only; local lessons teach each technique regardless. The 2 unresolved occurrences (Task Scheduler, Meeting Rooms II) have a documented content gap and are NOT surfaced. The historical Cloudflare-blocked access attempts are preserved in \`.kiro/specs/R5-curriculum/external-practice-manifest.md\`.`,
 );
 lines.push("");
 

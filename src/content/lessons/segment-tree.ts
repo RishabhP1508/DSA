@@ -255,10 +255,11 @@ In the example the range \`[0,4)\` sums to **10**, \`[1,5)\` to **12**, and afte
     },
   ],
   evidence: {
-    inventoryVersion: 15,
+    inventoryVersion: 16,
     contentHash: "ee5b47b2e99e861b",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
+    reviewBatch: 5,
   },
 };

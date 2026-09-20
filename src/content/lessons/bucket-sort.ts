@@ -161,7 +161,7 @@ It generalizes counting sort (which is bucket sort with one bucket per value) an
     },
   ],
   evidence: {
-    inventoryVersion: 15,
+    inventoryVersion: 16,
     contentHash: "9d5aec9eb66f0fb1",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

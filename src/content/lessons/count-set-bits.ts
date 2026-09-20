@@ -153,7 +153,7 @@ Python also gives you the answer for free: \`bin(x).count("1")\` (and \`int.bit_
     },
   ],
   evidence: {
-    inventoryVersion: 15,
+    inventoryVersion: 16,
     contentHash: "cbfb2fabe716eaf5",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

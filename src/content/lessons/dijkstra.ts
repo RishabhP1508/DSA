@@ -172,10 +172,11 @@ In the example, the direct edge 0→1 costs 4, but 0→2→1 costs 1+2=3, so \`d
     },
   ],
   evidence: {
-    inventoryVersion: 15,
+    inventoryVersion: 16,
     contentHash: "534df50f3fbf9e3a",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
+    reviewBatch: 5,
   },
 };

@@ -191,10 +191,11 @@ export const bfsShortestPathPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 15,
+    inventoryVersion: 16,
     contentHash: "f79d0531bb1f4b01",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
+    reviewBatch: 5,
   },
 };

@@ -152,10 +152,11 @@ The mechanics are exactly "cache what you've seen": before computing, check the 
     },
   ],
   evidence: {
-    inventoryVersion: 15,
+    inventoryVersion: 16,
     contentHash: "7b9396e6dadbd2e8",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
+    reviewBatch: 2,
   },
 };

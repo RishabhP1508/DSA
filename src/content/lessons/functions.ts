@@ -134,10 +134,11 @@ Watching the call stack in the visualization makes this concrete: a frame appear
     },
   ],
   evidence: {
-    inventoryVersion: 15,
+    inventoryVersion: 16,
     contentHash: "0e766baa4c95ae32",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
+    reviewBatch: 1,
   },
 };

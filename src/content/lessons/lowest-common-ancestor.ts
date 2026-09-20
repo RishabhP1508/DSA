@@ -178,10 +178,11 @@ Because it follows one root-to-leaf path, LCA-in-a-BST is **O(h)** time (O(log n
     },
   ],
   evidence: {
-    inventoryVersion: 15,
+    inventoryVersion: 16,
     contentHash: "991ba4eb3b3707ad",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
+    reviewBatch: 5,
   },
 };

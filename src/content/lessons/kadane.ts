@@ -152,7 +152,7 @@ This is different from the fixed-size window (which fixes a width k) and from ta
     },
   ],
   evidence: {
-    inventoryVersion: 15,
+    inventoryVersion: 16,
     contentHash: "4d62e40c44c33ae4",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

@@ -110,6 +110,11 @@ describe("R5.6 Notion manifest — exact set", () => {
     expect(EXPORT.length).toBe(79);
   });
 
+  it("has 77 mapped and 2 unresolved occurrences (content-audit result)", () => {
+    expect(NOTION_PRACTICE.filter((r) => r.status === "mapped").length).toBe(77);
+    expect(NOTION_PRACTICE.filter((r) => r.status === "unresolved").length).toBe(2);
+  });
+
   it("has exactly 75 unique canonical URLs", () => {
     expect(NOTION_UNIQUE_URL_COUNT).toBe(75);
     expect(new Set(EXPORT.map((e) => e[2])).size).toBe(75);
@@ -166,9 +171,10 @@ describe("R5.6 Notion manifest — exact set", () => {
   });
 });
 
-describe("R5.6 — the previously-absent questions are present AND mapped to a technique-teaching item", () => {
-  // The 22 the amendment flagged, with the technique-teaching id each MUST map to.
-  const flagged: [string, string][] = [
+describe("R5.6 — previously-absent questions: present AND mapped to a technique-teaching item (content-audited)", () => {
+  // The flagged questions that survive the content audit as genuinely mapped,
+  // with the technique-teaching id each MUST include.
+  const mappedFlagged: [string, string][] = [
     ["Best Time to Buy and Sell Stock", "kadane"],
     ["Product of Array Except Self", "prefix-sums"],
     ["Longest Repeating Character Replacement", "string-sliding-window"],
@@ -183,23 +189,43 @@ describe("R5.6 — the previously-absent questions are present AND mapped to a t
     ["Pacific Atlantic Water Flow", "multi-source-bfs"],
     ["Word Ladder", "graph-bfs"],
     ["K Closest Points to Origin", "top-k"],
-    ["Task Scheduler", "top-k"],
     ["Longest Consecutive Sequence", "maps-sets"],
     ["Reverse Bits", "bit-shifts"],
     ["Sum of Two Integers", "bit-logical-ops"],
-    ["Meeting Rooms II", "interval-sorting"],
     ["Find Minimum in Rotated Sorted Array", "rotated-array-search"],
     ["Find First and Last Position of Element in Sorted Array", "bounds"],
     ["Combination Sum", "dp-combinations"],
   ];
 
-  for (const [title, expectedId] of flagged) {
+  for (const [title, expectedId] of mappedFlagged) {
     it(`${title} → mapped, includes technique-teaching "${expectedId}"`, () => {
       const rows = NOTION_PRACTICE.filter((r) => r.title === title);
       expect(rows.length, `${title} not present`).toBeGreaterThan(0);
       for (const r of rows) expect(r.status).toBe("mapped");
       expect(rows.some((r) => r.mappedIds.includes(expectedId)), `${title} must map to ${expectedId}`).toBe(true);
       expect(known(expectedId)).toBe(true);
+    });
+  }
+
+  // The content audit found NO lesson teaches these techniques (only a
+  // prerequisite), so they are honestly UNRESOLVED with a concrete gap — NOT
+  // falsely mapped to the prerequisite.
+  const unresolvedFlagged: [string, RegExp][] = [
+    ["Task Scheduler", /cooldown|idle-slot/i],
+    ["Meeting Rooms II", /concurrent-overlap|room-count|min-heap of end/i],
+  ];
+
+  for (const [title, gapPattern] of unresolvedFlagged) {
+    it(`${title} → unresolved with a concrete content gap (not falsely mapped to a prerequisite)`, () => {
+      const rows = NOTION_PRACTICE.filter((r) => r.title === title);
+      expect(rows.length, `${title} not present`).toBeGreaterThan(0);
+      for (const r of rows) {
+        expect(r.status, `${title} must be unresolved after the content audit`).toBe("unresolved");
+        expect(r.mappedIds.length, `${title} unresolved: must not imply a mapped teaching item`).toBe(0);
+        expect(r.coverageIds.length, `${title} unresolved: must not surface on a coverage entry`).toBe(0);
+        expect(r.rationale, `${title} gap not described`).toMatch(gapPattern);
+        expect(r.rationale).toMatch(/prerequisite/i);
+      }
     });
   }
 });

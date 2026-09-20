@@ -295,3 +295,93 @@ supersedes the earlier Cloudflare-blocked state. R5.6 is now **reconciled**.
 - 97 coverage entries / 123 examples await deep semantic review (structurally verified).
 - No lesson `expectedOutput` changed in this reconciliation.
 - **R6 has NOT started; PR #17 is NOT merged.**
+
+
+
+---
+
+# R5 AMENDMENT 4 (topic projection, mapping audit, full R5.3 review)
+
+Follow-up to the R5.6 reconciliation. The exact 79/75 source manifest and the 4
+cross-topic duplicates are unchanged; this fixes projection leakage, audits the
+mapping claims, and completes the R5.3 review.
+
+## Item 1 — topic/subtopic projection fixed (test-first)
+- Each Notion occurrence now declares explicit in-topic `coverageIds`; `coverage.ts`
+  attaches a question to a subtopic ONLY through those ids (no more "any mapped
+  lesson/pattern id matches", which leaked via shared patterns).
+  `NOTION_TOPIC_TO_AREA` maps each main topic to its coverage `area`.
+- **Test-first:** `src/content/notion-projection.test.ts` failed first (8/9 — the
+  leakage cases were red), now passes (9/9). It proves every `coverageId` is in
+  the occurrence's own area, the concrete leaks are gone (Longest Substring /
+  Longest Repeating Char Replacement no longer under Arrays; 3Sum / Container /
+  Product of Array Except Self no longer under Strings/Hashing), and the 4
+  cross-topic duplicates still surface under BOTH declared topics, and no coverage
+  entry shows an out-of-area question.
+- Effect: coverage external-practice went from 76 leaky subtopics to **64**
+  correctly-scoped subtopics; **73 unique mapped problems** surface (75 unique − 2
+  unresolved), 0 missing.
+
+## Item 2 — mapping content audit (7 named problems, against real content)
+Audited each against the actual lesson/pattern:
+- **Mapped with a recorded BRIDGE** (lesson teaches the core; the specific
+  adaptation + key condition is written in `docs/references.md` "Notion practice
+  bridges" and in the occurrence rationale): Product of Array Except Self
+  (prefix→suffix, operator swap), Longest Palindromic Substring (expand from all
+  2n−1 centers), Largest Rectangle in Histogram (width-on-pop + sentinel),
+  Combination Sum (reuse same index + target pruning), Sum of Two Integers
+  (XOR-sum / AND-carry loop + 32-bit mask), plus Best Time to Buy/Sell and Longest
+  Consecutive Sequence.
+- **Re-classified UNRESOLVED with a concrete content gap** (only a prerequisite is
+  taught, so NOT implied to be covered): **Task Scheduler** (greedy cooldown /
+  idle-slot scheduling; top-k gives only the max-heap-of-counts prerequisite) and
+  **Meeting Rooms II** (concurrent-overlap room counting; interval-sorting gives
+  only sorting + earliest-end greedy). Both have empty `coverageIds`/`mappedIds`
+  and do not surface as practice.
+- Manifest is now **77 mapped + 2 unresolved** occurrences. Tests enforce the
+  resulting mapping/status per problem (not just id existence), including that the
+  2 unresolved rows carry the gap wording and are not surfaced.
+
+## Item 3 — R5.3 six-batch review COMPLETE
+- Read all 160 examples (131 lessons + 29 patterns) against the R5.3 checklist;
+  each now has `evidence.semanticReview: true` + `reviewBatch`. Findings in
+  `batch-review.md`: **no new defects** in the previously-pending 123 items
+  (definitions, invariants, prerequisites, complexity reasoning, edge cases all
+  content-accurate); the 7 `verify:semantic-consistency` advisory notes are
+  confirmed correct scope distinctions. Structural verification is kept distinct
+  from semantic review (both now complete for all 160).
+
+## Item 4 — additional practice
+The exact 79/75 manifest and the 25 clearly-labelled `ADDITIONAL_PRACTICE`
+problems are preserved. Their intended presentation (a separate "Additional
+practice (beyond the syllabus)" group, visually distinct from the Notion set) is
+recorded in the `ADDITIONAL_PRACTICE` doc comment for the later UI/learning-path
+work; there is intentionally no learner-facing consumer yet (data-only, test-
+validated). No UI work in this amendment.
+
+## Counts (reported separately)
+- **Notion occurrences: 79** (unchanged). **Unique problems: 75** (unchanged).
+- **Mapped occurrences: 77. Unresolved occurrences: 2** (Task Scheduler, Meeting
+  Rooms II — documented content gaps).
+- **Additional optional problems: 25** (not counted as Notion results).
+- **Coverage entries carrying (correctly-scoped) external practice: 64.**
+- **EXAMPLES semantic-reviewed: 160 / 160** (0 pending).
+- **COVERAGE ENTRIES semantic-reviewed: 131 / 131** (0 pending).
+- COVERAGE_VERSION 15 → 16; evidence regenerated to inventoryVersion 16.
+
+## Full suite (tested commit = amendment-4 tip)
+- `check:all`: green — build; lint 0 err / 9 warn; unit **385 / 385** (30 files);
+  pipeline; visualizers; 131 lessons; 29 patterns; 131 complexity; line
+  explanations 131 + 29; example model 131 + 29; coverage evidence 131; semantic
+  consistency (0 failures / 7 advisory); runnable exercises.
+- `test:browser`: 9 passed / 5 skipped (`P-RUNNER-ORIGIN` unchanged).
+
+## Remaining unresolved / carried forward
+- **2 external-practice mappings UNRESOLVED** (Task Scheduler, Meeting Rooms II) —
+  curriculum-extension gaps (no lesson yet teaches cooldown scheduling / room-count
+  sweep); recorded, not hidden.
+- `P-RUNNER-ORIGIN` remains a release-blocking packaging gate.
+- Big-O CLAIM correctness beyond structural consistency is R7 (the audit found the
+  authored claims sound).
+- No lesson `expectedOutput` changed in this amendment.
+- **R6 has NOT started; PR #17 is NOT merged.**

@@ -210,10 +210,11 @@ Why is this in a DP unit? Because subsequence *structure* is the backbone of maj
     },
   ],
   evidence: {
-    inventoryVersion: 15,
+    inventoryVersion: 16,
     contentHash: "39d7a6bda0e1dcce",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
+    reviewBatch: 6,
   },
 };

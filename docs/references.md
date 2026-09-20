@@ -155,3 +155,50 @@ authored in later phases. Consult the tables above plus these hints:
 - **advanced graphs (union-find, Dijkstra, Bellman–Ford, Floyd–Warshall, Prim, Kruskal)** → CP-Algorithms, Princeton.
 - **DP** → MIT 6.006, CP-Algorithms.
 - **Fenwick/segment trees, bit manipulation, KMP** → CP-Algorithms.
+
+
+---
+
+## R5.6 — Notion practice bridges (content-audited mappings)
+
+Some Notion practice problems reuse a lesson's technique with a small, specific
+ADAPTATION the lesson does not spell out. Rather than imply the lesson already
+covers the problem, each bridge below states the missing step and its key
+condition. Content-audited against the actual lesson/pattern on 2026-09-20; the
+per-occurrence rationale in `src/content/notion-practice.ts` points here. Two
+problems had NO teaching (only a prerequisite) and are recorded as `unresolved`
+in the manifest instead: **Task Scheduler** (greedy cooldown / idle-slot
+scheduling — top-k only gives the max-heap-of-counts prerequisite) and
+**Meeting Rooms II** (concurrent-overlap room counting via a min-heap of end
+times — interval-sorting only gives sorting + earliest-end greedy).
+
+- **Best Time to Buy and Sell Stock → `kadane`.** Bridge: track the running
+  minimum price seen so far and the best `price − min` profit in one pass. Key
+  condition: you may only sell after buying, so the minimum must be a strictly
+  earlier index — equivalent to Kadane over the day-to-day price deltas.
+- **Product of Array Except Self → `prefix-sums`.** Bridge: run the prefix
+  accumulation twice — a left-to-right prefix product and a right-to-left suffix
+  product — and multiply them per index. Key condition: exclude the current
+  element (the answer at i is prefixLeft[i] × prefixRight[i]); no division.
+- **Longest Palindromic Substring → `palindromes`.** Bridge: use the lesson's
+  two-pointer "is this a palindrome" check as an expand-from-center test, run
+  from all 2n−1 centers (each index, and each gap between indices), keeping the
+  longest. Key condition: handle both odd (single center) and even (gap) centers.
+- **Largest Rectangle in Histogram → `monotonic-stack`.** Bridge: keep a
+  monotonic INCREASING stack of bar indices; when a shorter bar arrives, pop and
+  compute `height[popped] × width`, where width spans from the new stack top+1 to
+  the current index. Key condition: flush the stack at the end with a sentinel
+  (height 0) so every bar's rectangle is measured.
+- **Combination Sum → `dp-combinations`.** Bridge: same choose/explore/un-choose
+  backtracking, but recurse with the SAME index (`bt(i, ...)`) to allow reuse and
+  subtract from a running target, pruning when it goes negative. Key condition:
+  reuse is allowed and there is a target sum (unlike LC 77 Combinations — fixed k,
+  no reuse — which is in `ADDITIONAL_PRACTICE`).
+- **Sum of Two Integers → `bit-logical-ops`.** Bridge: `sum = a ^ b` (add without
+  carry), `carry = (a & b) << 1`, loop until carry is 0. Key condition: in Python
+  (arbitrary-precision ints) mask to 32 bits each step and reinterpret the sign,
+  since there is no native fixed-width overflow.
+- **Longest Consecutive Sequence → `maps-sets`.** Bridge: put all numbers in a
+  set, then only start counting a run from `x` when `x−1` is absent, walking
+  `x+1, x+2, …`. Key condition: the start-of-run guard is what keeps it O(n)
+  overall (each number is visited at most twice).

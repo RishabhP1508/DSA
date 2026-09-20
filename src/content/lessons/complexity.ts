@@ -153,10 +153,11 @@ We summarise growth with **Big-O**: \`O(n)\` ("linear") means the work grows in 
     },
   ],
   evidence: {
-    inventoryVersion: 15,
+    inventoryVersion: 16,
     contentHash: "50e10e1d92aadd78",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
+    reviewBatch: 1,
   },
 };

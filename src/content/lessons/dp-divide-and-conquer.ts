@@ -225,10 +225,11 @@ The cost follows the classic recurrence **T(n) = 2·T(n/2) + O(n)**: two half-si
     },
   ],
   evidence: {
-    inventoryVersion: 15,
+    inventoryVersion: 16,
     contentHash: "e8b2d9cafcb7dca8",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
+    reviewBatch: 6,
   },
 };

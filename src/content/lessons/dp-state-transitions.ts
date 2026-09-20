@@ -207,10 +207,11 @@ This is DP with the table compressed to a **constant number of rolling variables
     },
   ],
   evidence: {
-    inventoryVersion: 15,
+    inventoryVersion: 16,
     contentHash: "8fd679f8b75c72c4",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
+    reviewBatch: 6,
   },
 };

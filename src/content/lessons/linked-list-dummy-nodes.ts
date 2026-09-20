@@ -255,10 +255,11 @@ The dummy costs **O(1)** extra space (one node) and does not change the algorith
     },
   ],
   evidence: {
-    inventoryVersion: 15,
+    inventoryVersion: 16,
     contentHash: "a62e9f7e0860fd45",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
+    reviewBatch: 4,
   },
 };

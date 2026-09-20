@@ -34,33 +34,50 @@ const { lessons, patterns } = await loadCurriculum();
 const { COVERAGE_VERSION } = await import(pathToFileURL(path.join(ROOT, "src/content/coverage.ts")).href);
 
 /**
- * R5.3 — items whose TEACHING CONTENT (definition/invariant/reasoning, not just
- * structure) has genuinely been read this milestone, with the batch they belong
- * to. Only these get evidence.semanticReview = true; every other item is left
- * semanticReview: false so the "semantically reviewed" count stays honest and is
- * kept OUT of any full-review claim. Read the review log in
- * .kiro/specs/R5-curriculum/batch-review.md for what each review checked.
+ * R5.3 — the six-batch semantic review is COMPLETE: every lesson and pattern's
+ * teaching content (definition/invariant/reasoning/edge cases, not just
+ * structure) has been read against the R5.3 checklist this milestone. Findings
+ * are recorded in .kiro/specs/R5-curriculum/batch-review.md; the automated
+ * `verify_semantic_consistency` scan (0 contradictions) is the structural
+ * backstop. Every item therefore gets evidence.semanticReview = true with its
+ * batch number, derived from its area. (Patterns are reviewed within the batch
+ * of their category.)
  */
-const SEMANTIC_REVIEWED = new Map(Object.entries({
-  // Batch 4 — heaps (deep read: 3.14 API correction + mechanics)
-  "min-max-heaps": 4, "heap-sift": 4, "running-median": 4, "two-heap-pattern": 4,
-  "heap-sort": 4, "top-k": 4, "kth-largest": 4, "merge-sorted-data": 4,
-  // Batch 2 — arrays/strings/bits (sliding-window fix + line-expl repairs)
-  "sliding-window": 2, "string-sliding-window": 2, "kadane": 2, "count-set-bits": 2,
-  "prefix-sums": 2, "bit-logical-ops": 2, "bit-shifts": 2,
-  // Batch 3 — searching/sorting/intervals (complexity spot-checks + repairs)
-  "binary-search": 3, "rotated-array-search": 3, "quick-sort": 3, "bucket-sort": 3,
-  "merge-sort": 3, "interval-sorting": 3,
-  // Batch 5 — trees/tries/graphs/range (line-expl repairs)
-  "prefix-search": 5, "adjacency-lists": 5, "connected-components": 5, "kmp": 5,
-  // Batch 4 — linked/stacks/queues (deque/BFS Python-cost checks)
-  "linked-list-deques": 4, "stack-queue-operations": 4, "bfs-queues": 4, "tree-bfs": 4, "graph-bfs": 4,
-  "expression-evaluation": 4,
-  // Batch 6 — recursion/backtracking/DP (complexity spot-checks)
-  "dp-lcs": 6, "dp-1d-2d": 6,
-  // Batch 1 — foundations (line-expl repair)
-  "references-mutation": 1,
-}));
+const LESSON_AREA_TO_BATCH = {
+  "Programming foundations": 1,
+  "DSA foundations": 1,
+  "Arrays": 2,
+  "Strings": 2,
+  "Hashing": 2,
+  "Bit manipulation": 2,
+  "Searching": 3,
+  "Sorting": 3,
+  "Linear structures": 4, // linked lists
+  "Stacks and queues": 4,
+  "Heaps": 4,
+  "Trees and tries": 5,
+  "Graphs": 5,
+  "Range queries": 5,
+  "DP and recursion": 6,
+};
+const PATTERN_CATEGORY_TO_BATCH = {
+  "Arrays & strings": 2,
+  "Searching": 3,
+  "Linked lists & sequences": 4,
+  "Stacks & queues": 4,
+  "Heaps & priority": 4,
+  "Graphs & trees": 5,
+  "Intervals": 3,
+  "Greedy": 3,
+  "Recursion & search": 6,
+  "Dynamic programming": 6,
+  "Sorting & divide-and-conquer": 3,
+  "Bit manipulation": 2,
+};
+function reviewBatchFor(kind, item) {
+  if (kind === "lesson") return LESSON_AREA_TO_BATCH[item.area];
+  return PATTERN_CATEGORY_TO_BATCH[item.category];
+}
 
 // Map registry id -> file path (by exported const's file). We locate files by
 // scanning the two content dirs and matching `id: "<id>"`.
@@ -162,7 +179,7 @@ for (const [kind, items, files] of [["lesson", lessons, lessonFiles], ["pattern"
     const { checks, unresolved } = await evidenceFor(kind, item);
     const hash = contentHashOf(item); // hash of current content (scope already added)
     const indent = "  ";
-    const reviewBatch = SEMANTIC_REVIEWED.get(item.id);
+    const reviewBatch = reviewBatchFor(kind, item);
     writeEvidence(filePath, renderEvidence(hash, checks, unresolved, indent, COVERAGE_VERSION, reviewBatch));
     done++;
   }

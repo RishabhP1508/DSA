@@ -154,10 +154,11 @@ The other common form is the **fast/slow** or **same-direction** two pointers (e
     },
   ],
   evidence: {
-    inventoryVersion: 15,
+    inventoryVersion: 16,
     contentHash: "1dead73f4da1f0a9",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
+    reviewBatch: 2,
   },
 };

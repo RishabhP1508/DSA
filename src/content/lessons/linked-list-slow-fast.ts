@@ -230,10 +230,11 @@ The loop condition is the subtle part: \`while fast is not None and fast.next is
     },
   ],
   evidence: {
-    inventoryVersion: 15,
+    inventoryVersion: 16,
     contentHash: "fb3a58773e4d4110",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
+    reviewBatch: 4,
   },
 };

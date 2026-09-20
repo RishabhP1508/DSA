@@ -145,10 +145,11 @@ Python has three "division-like" operators that beginners often confuse: \`/\` i
     },
   ],
   evidence: {
-    inventoryVersion: 15,
+    inventoryVersion: 16,
     contentHash: "6a6f4078a6ffc572",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
+    reviewBatch: 1,
   },
 };

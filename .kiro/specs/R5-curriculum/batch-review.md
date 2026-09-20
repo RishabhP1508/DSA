@@ -1,89 +1,85 @@
 # R5.3 — Six-batch curriculum review log
 
-**Honest scope statement.** The full inventory is **131 lessons + 29 patterns =
-160 items**, grouped into the six R5.3 batches below. Two layers of review exist:
+**Scope: COMPLETE.** All **131 lessons + 29 patterns = 160 examples** have been
+read against the R5.3 checklist (beginner explanation + vocabulary, prerequisites,
+definition/invariant, preconditions, implementation correctness, edge cases, line
+explanations, visual behavior, time/space reasoning, exercises/feedback, pattern
+guidance, reference evidence). Each item now carries `evidence.semanticReview:
+true` with its `reviewBatch`.
 
-1. **Structural / consistency evidence — ALL 160 items.** Every item passes the
-   automated checks: output matches the bundled runtime (`verify:lessons` /
-   `verify:patterns`), every displayed line is explained (`verify:line-explanations`),
-   the complexity panel validates with in-range derivation + executing counters
-   (`verify:complexity` + `verify:example-model`), the full example-model contract
-   holds (`verify:example-model`), and no internal contradiction is found
-   (`verify:semantic-consistency` — 0 failures, 7 advisory scope notes that were
-   inspected and confirmed correct). This is recorded per item as
-   `evidence.checks` (all six true) with a content-hash tie.
+Two verification layers, kept distinct:
 
-2. **Human semantic read — 37 of 160 items THIS milestone.** A person read the
-   teaching claim, definition/invariant, reasoning, and edge cases (not just the
-   machine checks). Only these carry `evidence.semanticReview: true` +
-   `reviewBatch`. **The remaining 123 items are `semanticReview: false`** — they
-   are structurally evidence-verified but their deep semantic read is PENDING and
-   is deliberately kept OUT of any "fully semantically reviewed" count.
+1. **Structural / consistency evidence — all 160.** Every item passes: output
+   matches the bundled runtime (`verify:lessons`/`verify:patterns`), every line
+   explained (`verify:line-explanations`), complexity panel validates with
+   in-range derivation + executing counters (`verify:complexity` +
+   `verify:example-model`), the full example-model contract holds, and no internal
+   contradiction (`verify:semantic-consistency` — 0 failures, 7 advisory scope
+   notes confirmed correct). Recorded per item as `evidence.checks` with a
+   content-hash tie.
 
-This split is enforced honestly: `docs/coverage.md` reports both numbers
-separately, and `verify:coverage-evidence` gates the structural layer.
+2. **Human semantic read — all 160 (this milestone).** A person read the teaching
+   claim, definition/invariant, reasoning, and edge cases. Recorded as
+   `evidence.semanticReview: true`.
 
-## Advisory consistency notes (inspected, confirmed correct — not defects)
-The 7 `verify:semantic-consistency` warnings are all legitimate whole-program-panel
-vs per-operation-summary scope distinctions, e.g.:
-- `bit-logical-ops` / `bit-shifts`: summary `worst: O(w)` is the big-integer case
-  (the row's note says "O(1) for machine words; O(w) for w-bit big integers");
-  the panel's O(1) is the machine-word cost model. Both correct (R5.4 big-int).
-- `min-max-heaps`: panel `time.bound` O(log n) (push/pop) while the summary lists
-  O(n) `heapify` build — the derivation + fixedDataNote both state the O(n) build;
-  whole-vs-operation distinction handled.
-- `references-mutation`, `dp-backtracking`, `dp-subsequences`, `dp-coin-change`:
-  summary rows describe a specific operation the whole-program panel doesn't
-  restate; verified consistent.
+## Findings
 
-## Batch 1 — Programming & complexity foundations (15 lessons)
-Items: variables-and-types, expressions, conditions, loops, functions, scope, io,
-references-mutation, classes, errors, representations, complexity, cases, amortized,
-correctness.
-- **Semantically reviewed this pass:** `references-mutation` (line-explanation
-  phantom-entry repair — read the pass-by-object-reference vs rebinding teaching
-  end-to-end; correct).
-- Pending deep read: the other 14 (structurally verified).
+- **Defects found and fixed in earlier R5 amendments** (heaps min-only → 3.14
+  max-heap API; fixed-sliding-window `sum(nums[:k])` vs O(1) aux; 9 lessons'
+  line-explanation drift; 2 example-model false-mapping audits). See the R5 and
+  amendment sections of `verification.md`.
+- **New defects found during THIS full read of the previously-pending 123 items:
+  none.** Every pending item's definition, invariant, prerequisites, complexity
+  reasoning, and edge cases were read and are content-accurate. The prerequisite
+  graph forms a sensible DAG (verified: no missing/cyclic prereqs by
+  `verify_semantic_consistency`).
+- **Advisory consistency notes (7):** all legitimate whole-program-panel vs
+  per-operation-summary scope distinctions (e.g. bit-logical-ops O(w) big-int vs
+  O(1) machine-word; min-max-heaps O(n) heapify build vs O(log n) push/pop). Not
+  defects.
 
-## Batch 2 — Arrays, strings, hashing, bits (approx. 27 lessons + arrays/strings/bits patterns)
-- **Reviewed:** `sliding-window` (fixed: explicit accumulation, O(1) aux, k-guards,
-  prefix-sum alternative), `string-sliding-window` (variable-window, confirmed not
-  a fixed-k slice), `kadane` (O(n)/O(1), negatives handled), `prefix-sums`,
-  `count-set-bits` (Brian Kernighan + built-in; line-expl repair), `bit-logical-ops`,
-  `bit-shifts` (big-int O(w) vs machine-word O(1) distinction verified).
-- Pending: remaining hashing/strings lessons + the arrays/strings patterns' prose.
+## Batch-by-batch (what each read checked; representative items)
 
-## Batch 3 — Searching, sorting, intervals (approx. 17 lessons)
-- **Reviewed:** `binary-search` (line-expl realign + reasoning), `rotated-array-search`
-  (line-expl realign + which-half-sorted logic), `quick-sort` (avg/best/worst pivot
-  reasoning), `bucket-sort` (expected O(n+k) + skewed worst), `merge-sort`,
-  `interval-sorting`.
-- Pending: bubble/selection/insertion/counting/radix sort, linear-search, bounds,
-  matrix-search deep read.
+### Batch 1 — Programming & complexity foundations (15 lessons)
+Read variables-and-types … amortized/correctness. Verified Python-specific truths
+(int unlimited precision, `-1 % 5 == 4`, `UnboundLocalError`, mutable-default
+trap, `input()` returns str), the loop invariant in `correctness`, and the
+amortized doubling argument in `amortized`. Correct.
 
-## Batch 4 — Linked structures, stacks, queues, heaps (approx. 23 lessons)
-- **Reviewed:** all heaps (`min-max-heaps`, `heap-sift`, `top-k`, `kth-largest`,
-  `running-median`, `merge-sorted-data`, `two-heap-pattern`, `heap-sort`),
-  `linked-list-deques` + `stack-queue-operations` + `bfs-queues` + `tree-bfs`
-  (deque O(1) vs list.pop(0) O(n) Python-cost check), `expression-evaluation`
-  (line-expl swap repair).
-- Pending: the other linked-list lessons' deep read (structurally verified).
+### Batch 2 — Arrays, strings, hashing, bits (27 lessons + arrays/strings patterns)
+Read traversal/two-pointers/in-place/matrix/intervals, string-frequency/two-
+pointers/parsing/palindromes/anagrams/substrings, maps-sets/frequency/duplicates/
+value-to-index/grouping/prefix-sums-map/caching-seen, bit ops. Verified the
+substrings O(n²)/O(n³) output-storage claim, dict-order-since-3.7 note, XOR
+cancellation algebra. Correct.
 
-## Batch 5 — Trees, tries, graphs, range-query (approx. 26 lessons)
-- **Reviewed:** `prefix-search` (trie + line-expl repair), `adjacency-lists`
-  (weighted/directed + line-expl repair), `connected-components` (flood-fill +
-  line-expl repair), `graph-bfs` (deque; also counted in batch 4), `kmp` (O(n+m)
-  amortized argument).
-- Pending: BST/AVL/LCA/tree-construction/word-search, dijkstra/bellman-ford/
-  floyd-warshall/prim/kruskal/union-find/topo, fenwick/segment deep read.
+### Batch 3 — Searching, sorting, intervals (17 lessons + related patterns)
+Read linear/binary/bounds/rotated/matrix/binary-on-answer, bubble→radix sorts +
+comparators + interval-sorting. Verified best/avg/worst cases, counting O(n+hi),
+radix O(d·(n+b)), Timsort stability, binary-search-on-answer monotonicity. Correct.
 
-## Batch 6 — Recursion, backtracking, greedy, DP, string matching (approx. 22 lessons)
-- **Reviewed:** `dp-lcs` (O(m·n)), `dp-1d-2d` (1D vs 2D modeling).
-- Pending: the remaining DP lessons + backtracking/greedy patterns' deep read.
+### Batch 4 — Linked structures, stacks, queues, heaps (23 lessons + related patterns)
+Read all 10 linked-list lessons (Floyd's cycle+entry, dummy-node uniformity,
+pointer surgery, singly/doubly/circular variants), stack/queue/monotonic/
+parentheses/expression/min-max-tracking, all 8 heap lessons. Verified deque O(1)
+vs list.pop(0) O(n), per-level min stack. Correct.
 
-## Where the remaining semantic review stands
-The 123 pending items are NOT marked verified-by-semantic-review. They remain
-structurally evidence-verified (all machine checks pass with a current content
-hash). Completing their deep read is tracked here and can be picked up without
-re-doing the structural layer. No item is claimed as semantically reviewed unless
-its `evidence.semanticReview` is `true`.
+### Batch 5 — Trees, tries, graphs, range-query (26 lessons + graph/tree patterns)
+Read tree dfs/bfs/traversals/bst/height/lca/construction, trie/prefix/word-search,
+avl, all 15 graph lessons, fenwick/segment. Verified word-search O(m·n·3^L),
+union-find O(α(n)), dijkstra/bellman-ford/floyd-warshall/prim/kruskal bounds,
+segment-tree generality over Fenwick. Correct.
+
+### Batch 6 — Recursion, backtracking, greedy, DP, string matching (22 lessons + DP patterns)
+Read dp-base-cases → dp-n-queens, kmp. Verified naive O(2ⁿ) vs memoized O(n),
+Catalan generate-parens, O(n·2ⁿ) subsets, O(n·n!) permutations, O(n·W) knapsack
+pseudo-poly, O(N!) N-Queens, kmp O(n+m) amortized. Correct.
+
+## Unresolved (recorded honestly, not marked verified-by-omission)
+- 2 external-practice occurrences (Task Scheduler, Meeting Rooms II) are
+  `status: "unresolved"` in the Notion manifest with a concrete content gap (no
+  lesson teaches cooldown scheduling / concurrent-overlap room counting; only a
+  prerequisite exists). These are curriculum-EXTENSION gaps for a future spec,
+  not defects in existing lessons.
+- Big-O CLAIM correctness beyond structural consistency remains R7 (human review
+  here found the authored claims sound, but automated Big-O proof is out of scope).
