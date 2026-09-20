@@ -25,8 +25,10 @@ the *delivered* application is fully offline.
   (`public/pyodide/`). This is verifiable: `pyodide-lock.json` records
   `"python": "3.14.2"`.
 - **All "supported API" and language-semantics claims must be validated against
-  CPython 3.14**, not against your memory or an older Python. A matching
-  interpreter (3.14.x) is available locally via `pyenv` for validation.
+  CPython 3.14**, not against your memory or an older Python. The authoritative
+  validator is the **bundled Pyodide runtime** the app ships (used by the
+  `npm run test:*` checks, no extra setup). A matching standalone interpreter
+  (3.14.x, e.g. via `pyenv`) may be used for quick probing but is optional.
 - Supported stdlib for lesson/personal code: builtins, `collections`, `heapq`,
   `bisect`, `math`, `functools`. Out of scope: third-party packages, multi-file
   projects, native filesystem/network access, concurrency.
@@ -128,19 +130,26 @@ Rules:
 
 ## How to validate your work (repeatable checks)
 
-```bash
-# load node (nvm) and the matching python (pyenv) first:
-export NVM_DIR="$HOME/.nvm"; . "$NVM_DIR/nvm.sh"
-eval "$(pyenv init -)"; pyenv shell 3.14.4
+These run on **Windows, macOS, and Linux with only Node installed** — the bundled
+Pyodide provides Python, so no `pyenv`/`nvm`/system-Python setup is required.
 
-npm run build                      # typecheck + production build must pass
-python scripts/test_tracer.py      # tracer unit checks on local CPython 3.14
-node   scripts/verify_pipeline.mjs # end-to-end trace against the bundled Pyodide
+```bash
+npm run check:all        # aggregate gate (build + all content/verification layers)
+# or individually:
+npm run test:python      # bundled-Pyodide tracer + pipeline checks
+npm run test:curriculum  # lessons + patterns load and their outputs match
+npm run test:exercises   # coding-exercise model solutions pass; mistakes rejected
+npm run test:unit        # TS logic / component tests
+npm run test:browser     # Playwright real-browser integration
 ```
 
-`verify_pipeline.mjs` loads the *same* `public/pyodide` runtime and the *same*
-`tracer.py` the browser worker uses, so a green run here means the browser path
-works too. Add analogous execution checks for each new lesson's code.
+**What these checks do and do NOT prove.** The Node/Pyodide checks load the same
+`public/pyodide` runtime and `tracer.py` the browser worker uses, which is strong
+evidence for the Python path — but it is **not** proof that the in-browser worker,
+the visualizations, the complexity claims, or the UI are correct. Those require
+`test:browser` (Playwright) and human review. A passing build or a matching
+sample output is never, by itself, evidence that a lesson is correct. Add real
+execution checks (with a regression test) for each new or changed example.
 
 ## Definition of done for a topic
 
