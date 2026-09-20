@@ -138,6 +138,8 @@ The point of this worked example is to see the full DP pipeline on something int
         "def climb(n):\n    a, b = 1, 1\n    for _ in range(n):\n        # TODO: roll the two counts forward\n        pass\n    return a",
       expected:
         "def climb(n):\n    a, b = 1, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a",
+      tests:
+        "assert climb(0) == 1, 'n=0 -> 1'\nassert climb(1) == 1, 'n=1 -> 1'\nassert climb(2) == 2, 'n=2 -> 2'\nassert climb(3) == 3, 'n=3 -> 3'\nassert climb(5) == 8, 'n=5 -> 8'\nprint('OK')",
       hints: [
         "Each count is the sum of the previous two.",
         "Update both at once with a tuple assignment.",

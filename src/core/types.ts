@@ -245,6 +245,13 @@ export interface Exercise {
   starterCode?: string;
   /** Reference/expected solution or expected output. */
   expected?: string;
+  /**
+   * Optional Python test snippet appended after the learner's code and run on
+   * the real engine. Use `assert` for property checks and `print` to surface a
+   * failing input. When present, the exercise becomes runnable ("Run tests")
+   * with pass/fail feedback instead of self-assessment.
+   */
+  tests?: string;
   /** Progressive hints, revealed one at a time. */
   hints: string[];
 }

@@ -154,6 +154,8 @@ Think of a scavenger hunt: each clue (node) tells you where the next clue is. Yo
         "def length(head):\n    count = 0\n    current = head\n    while current is not None:\n        # TODO: increment count and advance\n        pass\n    return count",
       expected:
         "def length(head):\n    count = 0\n    current = head\n    while current is not None:\n        count += 1\n        current = current.next\n    return count",
+      tests:
+        "class Node:\n    def __init__(self, val, nxt=None):\n        self.val = val\n        self.next = nxt\n\nassert length(None) == 0, 'empty list should be 0'\nassert length(Node(1)) == 1, 'single node should be 1'\nassert length(Node(1, Node(2, Node(3)))) == 3, 'three nodes should be 3'\nprint('OK')",
       hints: [
         "Each loop iteration corresponds to one node.",
         "Increase count by 1, then move current forward.",

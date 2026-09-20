@@ -177,6 +177,8 @@ This is **O(n)** time (each node is visited once) and **O(1)** space (three poin
         "def reverse(head):\n    prev = None\n    curr = head\n    while curr is not None:\n        # TODO: save, flip, advance prev, advance curr\n        pass\n    return prev",
       expected:
         "def reverse(head):\n    prev = None\n    curr = head\n    while curr is not None:\n        nxt = curr.next\n        curr.next = prev\n        prev = curr\n        curr = nxt\n    return prev",
+      tests:
+        "class Node:\n    def __init__(self, val, nxt=None):\n        self.val = val\n        self.next = nxt\n\ndef to_list(h):\n    out = []\n    while h is not None:\n        out.append(h.val)\n        h = h.next\n    return out\n\nassert to_list(reverse(None)) == [], 'empty reverses to empty'\nassert to_list(reverse(Node(1))) == [1], 'single node unchanged'\nassert to_list(reverse(Node(1, Node(2, Node(3, Node(4, Node(5))))))) == [5, 4, 3, 2, 1], 'reverses order'\nprint('OK')",
       hints: [
         "Save curr.next before you overwrite it.",
         "Flip curr.next to prev, then move both pointers forward.",
