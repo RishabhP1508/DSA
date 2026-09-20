@@ -1,27 +1,49 @@
 /**
- * Local persistence via IndexedDB (idb) + versioned JSON backup/restore.
+ * Local persistence via IndexedDB (idb) + versioned JSON backup/restore (R3).
  *
- * Stores completion, exercise progress, drafts and preferences locally so the
- * app is fully offline and survives restarts. Backup/restore serialises the
- * whole record as versioned JSON and VALIDATES an import before it replaces the
- * live data (plan §7: "validation before replacing local data"). Progress
- * belongs to the current browser profile; backups move it between browsers or
- * machines.
+ * R3 fixes:
+ *  - Progress is keyed on the GLOBALLY UNIQUE exercise id
+ *    `<ownerKind>:<ownerId>:<exerciseId>` (see exercise-id.ts), so exercises
+ *    that share a bare id across owners no longer share progress (R3-A).
+ *  - A v1 → v2 migration rewrites old bare-id records: unambiguous ids move to
+ *    their composite uid; the ambiguous ones (reused across owners) and any
+ *    unknown ids move to a legacy-ambiguity section, preserved but never
+ *    attributed to a twin or discarded (R3.2).
+ *  - Backups are validated with a complete Zod schema before replacing live
+ *    data (R3.3), and restore is transactional with a recoverable pre-restore
+ *    snapshot; any failure leaves live data intact (R3.4).
+ *  - All mutations go through a single read/write transaction, so concurrent
+ *    updates cannot lose an attempt (R3.4).
  */
 
 import { openDB, type IDBPDatabase } from "idb";
 import type { ProgressRecord } from "../core/types";
+import { uniqueUidForBareId } from "./exercise-id";
+import {
+  validateBackup,
+  validateMigratedRecord,
+  APP_MARKER,
+  BACKUP_VERSION as SCHEMA_BACKUP_VERSION,
+} from "./schema";
 
 const DB_NAME = "dsa-visual-lab";
+const DB_VERSION = 2;
 const STORE = "progress";
 const KEY = "singleton";
-export const BACKUP_VERSION = 1;
+const PRE_RESTORE_KEY = "pre-restore";
+
+/** Current progress-record schema version (migration target). */
+export const PROGRESS_SCHEMA_VERSION = 2;
+/** Current backup envelope version. */
+export const BACKUP_VERSION = SCHEMA_BACKUP_VERSION; // 2
 
 const empty: ProgressRecord = {
   lessons: {},
   exercises: {},
+  legacyExercises: {},
   drafts: {},
   preferences: {},
+  schemaVersion: PROGRESS_SCHEMA_VERSION,
   backupVersion: BACKUP_VERSION,
 };
 
@@ -29,7 +51,7 @@ let dbPromise: Promise<IDBPDatabase> | null = null;
 
 function db(): Promise<IDBPDatabase> {
   if (!dbPromise) {
-    dbPromise = openDB(DB_NAME, 1, {
+    dbPromise = openDB(DB_NAME, DB_VERSION, {
       upgrade(database) {
         if (!database.objectStoreNames.contains(STORE)) {
           database.createObjectStore(STORE);
@@ -40,51 +62,160 @@ function db(): Promise<IDBPDatabase> {
   return dbPromise;
 }
 
+/** Test-only: close and forget the cached connection so a DB can be deleted. */
+export async function __closeDbForTests(): Promise<void> {
+  if (dbPromise) {
+    const d = await dbPromise;
+    d.close();
+    dbPromise = null;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Migration (v1 → v2)
+// ---------------------------------------------------------------------------
+
+/**
+ * Migrate a progress record to the current schema. Pure and IDEMPOTENT:
+ * calling it on an already-v2 record returns an equivalent record.
+ *
+ * v1 records key exercises on the BARE exercise id. We rewrite them:
+ *  - a bare id that resolves to exactly one owner → moved to its composite uid;
+ *  - an AMBIGUOUS bare id (reused across owners) → moved to `legacyExercises`
+ *    with a note, NOT copied to either twin and NOT discarded;
+ *  - an UNKNOWN bare id (not in the current registry) → also kept in
+ *    `legacyExercises` with a note (never silently dropped).
+ * Lessons, drafts, preferences, and any existing legacyExercises are preserved.
+ */
+export function migrateProgress(rec: ProgressRecord): ProgressRecord {
+  if (rec.schemaVersion === PROGRESS_SCHEMA_VERSION) {
+    // Already current: normalise optional fields but change nothing meaningful.
+    return {
+      ...empty,
+      ...rec,
+      legacyExercises: rec.legacyExercises ?? {},
+      schemaVersion: PROGRESS_SCHEMA_VERSION,
+      backupVersion: BACKUP_VERSION,
+    };
+  }
+
+  const exercises: ProgressRecord["exercises"] = {};
+  const legacyExercises: NonNullable<ProgressRecord["legacyExercises"]> = {
+    ...(rec.legacyExercises ?? {}),
+  };
+
+  for (const [bareOrUid, entry] of Object.entries(rec.exercises ?? {})) {
+    // If the key already looks like a composite uid, keep it as-is.
+    if (bareOrUid.includes(":")) {
+      exercises[bareOrUid] = entry;
+      continue;
+    }
+    const uid = uniqueUidForBareId(bareOrUid);
+    if (uid) {
+      exercises[uid] = entry;
+    } else {
+      // Ambiguous or unknown bare id: cannot attribute to a single exercise.
+      legacyExercises[bareOrUid] = {
+        attempts: entry.attempts,
+        solved: entry.solved,
+        note:
+          "Migrated from an older version where this exercise id was reused " +
+          "across lessons/patterns (or is no longer in the curriculum); it " +
+          "cannot be reliably attributed to one exercise, so it is preserved " +
+          "here rather than marking any current exercise solved.",
+      };
+    }
+  }
+
+  return {
+    ...empty,
+    lessons: rec.lessons ?? {},
+    exercises,
+    legacyExercises,
+    drafts: rec.drafts ?? {},
+    preferences: rec.preferences ?? {},
+    schemaVersion: PROGRESS_SCHEMA_VERSION,
+    backupVersion: BACKUP_VERSION,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Read / transactional write
+// ---------------------------------------------------------------------------
+
 export async function loadProgress(): Promise<ProgressRecord> {
   const d = await db();
   const rec = (await d.get(STORE, KEY)) as ProgressRecord | undefined;
-  // Merge with the empty shape so older/partial records gain new fields.
-  return rec ? { ...empty, ...rec } : { ...empty };
+  if (!rec) return { ...empty };
+  // Migrate on read so any v1 record is upgraded in memory; the next write
+  // persists the v2 shape. Pass the RAW record (do NOT pre-seed schemaVersion,
+  // or migration would think a v1 record is already current).
+  return migrateProgress(rec);
+}
+
+/**
+ * Atomically read-modify-write the singleton progress record in ONE
+ * transaction, so concurrent updates cannot lose an attempt (R3.4). The mutator
+ * receives the current (migrated) record and returns the next one.
+ */
+async function updateProgress(
+  mutate: (rec: ProgressRecord) => ProgressRecord,
+): Promise<ProgressRecord> {
+  const d = await db();
+  const tx = d.transaction(STORE, "readwrite");
+  const store = tx.objectStore(STORE);
+  const current = (await store.get(KEY)) as ProgressRecord | undefined;
+  const base = current ? migrateProgress(current) : { ...empty };
+  const next = mutate(base);
+  await store.put(next, KEY);
+  await tx.done;
+  return next;
 }
 
 export async function saveProgress(rec: ProgressRecord): Promise<void> {
-  const d = await db();
-  await d.put(STORE, rec, KEY);
+  await updateProgress(() => ({ ...rec, schemaVersion: PROGRESS_SCHEMA_VERSION, backupVersion: BACKUP_VERSION }));
 }
 
 export async function markLessonViewed(id: string): Promise<void> {
-  const rec = await loadProgress();
-  rec.lessons[id] = {
-    completed: rec.lessons[id]?.completed ?? false,
-    lastViewedAt: new Date().toISOString(),
-  };
-  await saveProgress(rec);
+  await updateProgress((rec) => {
+    rec.lessons[id] = {
+      completed: rec.lessons[id]?.completed ?? false,
+      lastViewedAt: new Date().toISOString(),
+    };
+    return rec;
+  });
 }
 
 export async function markLessonCompleted(id: string): Promise<void> {
-  const rec = await loadProgress();
-  rec.lessons[id] = { completed: true, lastViewedAt: new Date().toISOString() };
-  await saveProgress(rec);
+  await updateProgress((rec) => {
+    rec.lessons[id] = { completed: true, lastViewedAt: new Date().toISOString() };
+    return rec;
+  });
 }
 
-/** Record an attempt at an exercise; `solved` marks it complete (sticky). */
-export async function recordExerciseAttempt(id: string, solved: boolean): Promise<void> {
-  const rec = await loadProgress();
-  const prev = rec.exercises[id] ?? { attempts: 0, solved: false };
-  rec.exercises[id] = {
-    attempts: prev.attempts + 1,
-    solved: prev.solved || solved,
-  };
-  await saveProgress(rec);
+/**
+ * Record an attempt at an exercise; `solved` marks it complete (sticky).
+ * `uid` MUST be the globally unique composite id from `exerciseUid(...)`.
+ */
+export async function recordExerciseAttempt(uid: string, solved: boolean): Promise<void> {
+  await updateProgress((rec) => {
+    const prev = rec.exercises[uid] ?? { attempts: 0, solved: false };
+    rec.exercises[uid] = {
+      attempts: prev.attempts + 1,
+      solved: prev.solved || solved,
+    };
+    return rec;
+  });
 }
 
 export type Draft = { source: string; savedAt: string };
 
 export async function saveDraft(slot: string, source: string): Promise<Draft> {
-  const rec = await loadProgress();
   const draft: Draft = { source, savedAt: new Date().toISOString() };
-  rec.drafts[slot] = draft;
-  await saveProgress(rec);
+  await updateProgress((rec) => {
+    rec.drafts[slot] = draft;
+    return rec;
+  });
   return draft;
 }
 
@@ -94,9 +225,10 @@ export async function loadDraft(slot: string): Promise<Draft | undefined> {
 }
 
 export async function setPreference(key: string, value: unknown): Promise<void> {
-  const rec = await loadProgress();
-  rec.preferences[key] = value;
-  await saveProgress(rec);
+  await updateProgress((rec) => {
+    rec.preferences[key] = value;
+    return rec;
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -105,80 +237,74 @@ export async function setPreference(key: string, value: unknown): Promise<void> 
 
 /** The envelope written to a backup file. */
 export interface BackupEnvelope {
-  app: "dsa-visual-lab";
+  app: typeof APP_MARKER;
   backupVersion: number;
   exportedAt: string;
   data: ProgressRecord;
 }
 
 export async function exportBackup(): Promise<BackupEnvelope> {
-  const data = await loadProgress();
+  const data = await loadProgress(); // already migrated to v2
   return {
-    app: "dsa-visual-lab",
+    app: APP_MARKER,
     backupVersion: BACKUP_VERSION,
     exportedAt: new Date().toISOString(),
     data,
   };
 }
 
-export type ValidationResult =
+export type ImportResult =
   | { ok: true; envelope: BackupEnvelope }
   | { ok: false; error: string };
 
-/**
- * Validate a parsed object as a backup envelope WITHOUT touching local data.
- * Restore only proceeds when this returns ok, so a malformed or foreign file
- * can never overwrite the learner's progress.
- */
-export function validateBackup(parsed: unknown): ValidationResult {
-  if (typeof parsed !== "object" || parsed === null) {
-    return { ok: false, error: "Not a JSON object." };
-  }
-  const o = parsed as Record<string, unknown>;
-  if (o.app !== "dsa-visual-lab") {
-    return { ok: false, error: "Not a DSA Visual Lab backup (missing app marker)." };
-  }
-  if (typeof o.backupVersion !== "number") {
-    return { ok: false, error: "Missing or invalid backupVersion." };
-  }
-  if (o.backupVersion > BACKUP_VERSION) {
-    return {
-      ok: false,
-      error: `Backup version ${o.backupVersion} is newer than this app supports (${BACKUP_VERSION}). Update the app first.`,
-    };
-  }
-  const data = o.data as Record<string, unknown> | undefined;
-  if (typeof data !== "object" || data === null) {
-    return { ok: false, error: "Missing progress data." };
-  }
-  for (const field of ["lessons", "exercises", "drafts", "preferences"]) {
-    if (typeof data[field] !== "object" || data[field] === null) {
-      return { ok: false, error: `Progress data is missing the '${field}' section.` };
-    }
-  }
-  return { ok: true, envelope: o as unknown as BackupEnvelope };
+/** The most recent pre-restore snapshot, if any (recovery aid). */
+export async function loadPreRestoreSnapshot(): Promise<ProgressRecord | undefined> {
+  const d = await db();
+  return (await d.get(STORE, PRE_RESTORE_KEY)) as ProgressRecord | undefined;
 }
 
-/** Parse text, validate, and only then replace local data. Returns a result. */
-export async function importBackup(text: string): Promise<ValidationResult> {
+/**
+ * Parse, deeply validate, migrate, re-validate, snapshot, and only then replace
+ * local data — transactionally. Any failure before the replace leaves the
+ * existing live data intact (R3.4). Never executes stored source.
+ */
+export async function importBackup(text: string): Promise<ImportResult> {
   let parsed: unknown;
   try {
     parsed = JSON.parse(text);
   } catch {
     return { ok: false, error: "File is not valid JSON." };
   }
-  const result = validateBackup(parsed);
-  if (!result.ok) return result;
 
-  // Normalise through the empty shape so a valid-but-old backup gains any new
-  // fields, and bump the stored version to the current one.
-  const restored: ProgressRecord = {
-    ...empty,
-    ...result.envelope.data,
-    backupVersion: BACKUP_VERSION,
+  // 1. Validate the envelope (version-tolerant: accepts v1 and v2).
+  const validated = validateBackup(parsed);
+  if (!validated.ok) {
+    return { ok: false, error: validated.error };
+  }
+
+  // 2. Migrate the record in memory to the current schema. Pass the RAW record
+  // (do NOT pre-seed schemaVersion) so a v1 backup is actually migrated.
+  const migrated = migrateProgress(validated.envelope.data as ProgressRecord);
+
+  // 3. Re-validate the migrated result against the strict v2 schema.
+  const strict = validateMigratedRecord(migrated);
+  if (!strict.ok) {
+    return { ok: false, error: `Migrated backup failed validation: ${strict.error}` };
+  }
+
+  // 4-6. Snapshot the current live data, then replace it — all transactionally.
+  const d = await db();
+  const tx = d.transaction(STORE, "readwrite");
+  const store = tx.objectStore(STORE);
+  const current = (await store.get(KEY)) as ProgressRecord | undefined;
+  if (current) await store.put(current, PRE_RESTORE_KEY);
+  await store.put(migrated, KEY);
+  await tx.done;
+
+  return {
+    ok: true,
+    envelope: { ...validated.envelope, data: migrated } as BackupEnvelope,
   };
-  await saveProgress(restored);
-  return result;
 }
 
 /** Summary counts for the progress dashboard. */

@@ -17,6 +17,8 @@ type Row = {
   exercise: Exercise | PatternExercise;
   sourceLabel: string;
   patternMode: boolean;
+  ownerKind: "lesson" | "pattern";
+  ownerId: string;
 };
 
 const FILTERS: { key: string; label: string; match: (r: Row) => boolean }[] = [
@@ -35,12 +37,12 @@ export function Practice() {
     const out: Row[] = [];
     for (const l of lessons) {
       for (const ex of l.exercises) {
-        out.push({ exercise: ex, sourceLabel: l.title, patternMode: false });
+        out.push({ exercise: ex, sourceLabel: l.title, patternMode: false, ownerKind: "lesson", ownerId: l.id });
       }
     }
     for (const p of patterns) {
       for (const ex of p.exercises) {
-        out.push({ exercise: ex, sourceLabel: p.title, patternMode: true });
+        out.push({ exercise: ex, sourceLabel: p.title, patternMode: true, ownerKind: "pattern", ownerId: p.id });
       }
     }
     return out;
@@ -79,9 +81,14 @@ export function Practice() {
             <p className="dim">No exercises of this kind yet.</p>
           ) : (
             shown.map((r, i) => (
-              <div key={`${r.exercise.id}-${i}`} className="practice-item">
+              <div key={`${r.ownerKind}:${r.ownerId}:${r.exercise.id}-${i}`} className="practice-item">
                 {!hideSource && <div className="dim tiny">from: {r.sourceLabel}</div>}
-                <ExercisePanel exercise={r.exercise} patternMode={r.patternMode} />
+                <ExercisePanel
+                  exercise={r.exercise}
+                  patternMode={r.patternMode}
+                  ownerKind={r.ownerKind}
+                  ownerId={r.ownerId}
+                />
               </div>
             ))
           )}

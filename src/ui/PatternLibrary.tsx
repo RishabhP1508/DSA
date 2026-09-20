@@ -84,7 +84,13 @@ function PatternDetail({ pattern }: { pattern: PatternDefinition }) {
           example to a full explanation.
         </p>
         {pattern.exercises.map((ex) => (
-          <ExercisePanel key={ex.id} exercise={ex} patternMode />
+          <ExercisePanel
+            key={`pattern:${pattern.id}:${ex.id}`}
+            exercise={ex}
+            patternMode
+            ownerKind="pattern"
+            ownerId={pattern.id}
+          />
         ))}
       </section>
 

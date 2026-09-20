@@ -16,6 +16,7 @@
 import { useEffect, useState } from "react";
 import type { Exercise, PatternExercise } from "../core/types";
 import { recordExerciseAttempt } from "../storage/progress";
+import { exerciseUid, type OwnerKind } from "../storage/exercise-id";
 import { CodeEditor } from "./CodeEditor";
 import { useExerciseRunner } from "./useExerciseRunner";
 
@@ -31,10 +32,15 @@ const KIND_LABEL: Record<Exercise["kind"], string> = {
 export function ExercisePanel({
   exercise,
   patternMode,
+  ownerKind,
+  ownerId,
 }: {
   exercise: Exercise | PatternExercise;
   /** In the Pattern Library, choose-approach exercises are recognition drills. */
   patternMode?: boolean;
+  /** The lesson/pattern that owns this exercise (for the globally unique id). */
+  ownerKind: OwnerKind;
+  ownerId: string;
 }) {
   const runnable = Boolean(exercise.tests);
   const [answer, setAnswer] = useState("");
@@ -44,7 +50,10 @@ export function ExercisePanel({
   const [selfResult, setSelfResult] = useState<"correct" | "close" | "revisit" | null>(null);
   const runner = useExerciseRunner();
 
-  const record = (solved: boolean) => void recordExerciseAttempt(exercise.id, solved);
+  // Globally unique identity for storage/attempts (R3-A): two exercises that
+  // share a bare id across owners no longer collide.
+  const uid = exerciseUid(ownerKind, ownerId, exercise.id);
+  const record = (solved: boolean) => void recordExerciseAttempt(uid, solved);
   const revealNext = () => setRevealed((r) => Math.min(r + 1, exercise.hints.length));
 
   const reveal = () => {
@@ -67,8 +76,8 @@ export function ExercisePanel({
   // a non-solving attempt. Runs are recorded when an outcome lands.
   useEffect(() => {
     if (!runnable || !outcome) return;
-    void recordExerciseAttempt(exercise.id, outcome.status === "pass");
-  }, [outcome, runnable, exercise.id]);
+    void recordExerciseAttempt(uid, outcome.status === "pass");
+  }, [outcome, runnable, uid]);
 
   return (
     <div className="exercise-panel">
