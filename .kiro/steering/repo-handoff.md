@@ -35,9 +35,23 @@ current as things change.
   `scripts/verify_exercise_tests.mjs` (model answers pass their own tests).
   UI is verified via `npx tsc -b` + `npm run build` (no server smoke test in the
   sandbox — the production build succeeding is the proxy).
-- Remaining roadmap: extend the Pattern Library with more patterns as needed,
-  then **Phase 5** (offline Windows package: Start.cmd launcher, portable Node,
-  bundled runtimes, ZIP delivery).
+- **Phase 4.1** expanded the Pattern Library to **29 verified patterns** (branch
+  `phase-4.1`, PR into `main`): added merge-intervals, cyclic-sort, in-place
+  linked-list reversal, tree-bfs, tree-dfs, two-heaps, modified-binary-search,
+  bitwise-xor, k-way-merge, knapsack (0/1 / subset-sum), topological-sort,
+  graph-dfs-components, union-find, dijkstra, trie-prefix, dynamic-programming,
+  divide-and-conquer, greedy-interval-scheduling, and matrix-traversal — on top
+  of the original 10. This matches the canonical Grokking-16 + common 20–28
+  pattern taxonomies. `COVERAGE_VERSION` bumped to 12; `patternIds` linked into
+  ~45 coverage entries. Probe: `scripts/probe_patterns_2.py`.
+- **Pattern authoring recipe** (for adding more later): write the walkthrough in
+  `scripts/probe_patterns*.py`, run on py3.14 to capture exact stdout, author a
+  `PatternDefinition` in `src/content/patterns/<id>.ts` (set
+  `walkthroughExpectedOutput` to that stdout, `category` groups it in the UI),
+  register in `registry.ts` `patterns[]`, then `node scripts/verify_patterns.mjs`
+  + `npx tsc -b` + `npm run build` must all pass.
+- Remaining roadmap: **Phase 5** (offline Windows package: Start.cmd launcher,
+  portable Node, bundled runtimes, ZIP delivery).
 
 ## How to verify content (repeatable — all must pass)
 
