@@ -47,7 +47,7 @@ before and after.
   - `importBackup` validates version+keys before migration/write (unchanged
     transactional snapshot+replace).
 
-## Results after the fix (tested commit: <FILLED AT COMMIT>)
+## Results after the fix (tested commit: `000d934`, PR #15 → `main`)
 
 | Check | Result |
 |---|---|
