@@ -60,6 +60,9 @@ interface PendingRun {
   owner: string;
   sourceRev: number;
   inputRev: number;
+  /** Exact source/input this run was produced from (for UI freshness). */
+  source: string;
+  stdin: string;
   worker: Worker;
   resolve: (r: RunResult) => void;
   /** Events assembled from streamed trace-batch messages (before the tail). */
@@ -141,6 +144,8 @@ export class ExecutionEngine {
         owner,
         sourceRev,
         inputRev,
+        source,
+        stdin,
         worker,
         resolve,
         streamed: [],
@@ -248,6 +253,15 @@ export class ExecutionEngine {
   private settle(p: PendingRun, result: RunResult, _reason?: string): void {
     if (p.settled) return;
     p.settled = true;
+    // Stamp the source/input this result was produced from, so the UI can detect
+    // a stale trace after an edit (R4.1). Applied centrally so EVERY terminal
+    // path (result/error/timeout/stop/supersede) carries them. The exact
+    // strings drive UI freshness (hash collisions can't fool it); the hashes are
+    // retained for worker-message correlation.
+    result.sourceRev = p.sourceRev;
+    result.inputRev = p.inputRev;
+    result.source = p.source;
+    result.stdin = p.stdin;
     if (p.initTimer) clearTimeout(p.initTimer);
     if (p.execTimer) clearTimeout(p.execTimer);
     // Detach handlers before terminating so a late message can't re-enter.

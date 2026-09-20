@@ -114,7 +114,14 @@ Tabulation vs memoization is a real design choice. **Memoization** is easy to wr
     { line: 12, executable: true, explanation: "Print fib(10) = 55." },
   ],
 
-  bindings: [{ variable: "dp", model: "dp-table" }],
+  bindings: [
+    {
+      variable: "dp",
+      model: "dp-table",
+      // Current-cell overlay driven by the ACTUAL loop index `i` in the trace.
+      overlays: [{ role: "pointer", label: "i", source: "i" }],
+    },
+  ],
 
   prediction: [
     {

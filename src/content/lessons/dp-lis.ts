@@ -112,7 +112,14 @@ This is **O(n²)** time (each \`i\` scans all earlier \`j\`) and **O(n)** space.
     { line: 12, executable: true, explanation: "For the sample the answer is 4." },
   ],
 
-  bindings: [{ variable: "dp", model: "dp-table" }],
+  bindings: [
+    {
+      variable: "dp",
+      model: "dp-table",
+      // Outer loop index `i` is the cell being filled (LIS ending at i).
+      overlays: [{ role: "pointer", label: "i", source: "i" }],
+    },
+  ],
 
   prediction: [
     {

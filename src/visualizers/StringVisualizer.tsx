@@ -5,7 +5,7 @@
  */
 
 import type { TraceEvent, VisualBinding } from "../core/types";
-import { resolveVariable, asString, resolveOverlays, indexOverlays, overlayColor } from "./helpers";
+import { resolveBindingValue, asString, resolveOverlays, indexOverlays, overlayColor } from "./helpers";
 
 const CELL = 40;
 const GAP = 4;
@@ -19,10 +19,11 @@ export function StringVisualizer({
   event: TraceEvent;
   binding: VisualBinding;
 }) {
-  const value = resolveVariable(event, binding.variable);
+  const value = resolveBindingValue(event, binding);
   const str = asString(value);
   if (str === undefined) {
-    return <p className="viz-empty">No string “{binding.variable}” in scope yet.</p>;
+    const label = binding.path ? `${binding.variable}.${binding.path}` : binding.variable;
+    return <p className="viz-empty">No string “{label}” in scope yet.</p>;
   }
 
   const chars = [...str];

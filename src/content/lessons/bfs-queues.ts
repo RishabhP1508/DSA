@@ -111,7 +111,7 @@ BFS visits every node once and looks at every edge once, so on a graph with **V*
   ],
 
   bindings: [
-    { variable: "g", model: "graph", overlays: [{ role: "visited", label: "visited", source: "visited" }] },
+    { variable: "g", model: "graph", directed: false, overlays: [{ role: "visited", label: "visited", source: "visited" }] },
     { variable: "order", model: "array" },
   ],
 

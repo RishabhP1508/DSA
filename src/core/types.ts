@@ -85,6 +85,14 @@ export type TraceEventKind =
 export type ObjectId = string;
 
 /**
+ * The recorded TYPE of a dict key, as emitted by the tracer's `_encode_key`.
+ * This is a superset of the scalar `TraceValue` kinds: dict keys can also be
+ * tuples (shown structurally) or otherwise-unrepresentable values ("unknown").
+ * Kept in sync with tracer.py `_encode_key` (R4 follow-up #4).
+ */
+export type KeyKind = "int" | "float" | "bool" | "str" | "none" | "tuple" | "unknown";
+
+/**
  * A value as observed by the tracer. Primitives are inlined; containers and
  * user objects are referenced by ObjectId so aliases and cycles are preserved
  * (never re-evaluated during inspection — see the plan's execution rules).
@@ -105,10 +113,12 @@ export interface TraceObject {
   /**
    * For containers: ordered/keyed children. For objects: attribute map.
    * `key` is always a display string; `keyKind` preserves the original key TYPE
-   * for dicts so an int key `1` is distinguishable from a str key `"1"`
-   * (the plan requires serializable values that preserve dictionary key types).
+   * for dicts so an int key `1` is distinguishable from a str key `"1"` and a
+   * tuple key `(1, 2)` from `('1', 2)` (the plan requires serializable values
+   * that preserve dictionary key types). `keyKind` is a `KeyKind` (a superset of
+   * the scalar value kinds that also includes `tuple`), matching the tracer.
    */
-  entries?: { key: string; keyKind?: TraceValue["kind"]; value: TraceValue }[];
+  entries?: { key: string; keyKind?: KeyKind; value: TraceValue }[];
   /** For scalars wrapped as objects or opaque types. */
   repr?: string;
   /**
@@ -183,6 +193,23 @@ export interface RunResult {
   limitHit?: "time" | "events" | "bytes";
   /** For status === "exited": the SystemExit code. */
   exitCode?: number | string | null;
+  /**
+   * 32-bit hash of the source this result was produced from (R4.1). Used for
+   * WORKER MESSAGING / protocol correlation. NOT used for UI freshness — a
+   * 32-bit hash can collide across distinct sources, so freshness compares the
+   * EXACT `source`/`stdin` strings below.
+   */
+  sourceRev?: number;
+  /** 32-bit hash of the stdin this result was produced from (R4.1). */
+  inputRev?: number;
+  /**
+   * The EXACT source string this result was produced from. UI freshness
+   * (`isResultStale`) compares this against the current editor content, so a
+   * hash collision can never make a stale trace look current.
+   */
+  source?: string;
+  /** The EXACT stdin string this result was produced from (UI freshness). */
+  stdin?: string;
 }
 
 /**
@@ -236,6 +263,22 @@ export interface VisualBinding {
   /** Optional dotted path into an object's fields, e.g. "root.left". */
   path?: string;
   model: VisualModel;
+  /**
+   * For `model: "graph"` — whether edges are DIRECTED. This is stated
+   * EXPLICITLY by the binding; the renderer must NOT infer directedness from
+   * whether a reverse edge happens to be present (a reciprocal pair `u→v` and
+   * `v→u` in a directed graph is two arcs, not one undirected edge). Defaults to
+   * undirected when omitted.
+   */
+  directed?: boolean;
+  /**
+   * For `model: "dp-table"` — the name of a variable holding the indices that
+   * have actually been COMPUTED (a set/list of ints for 1D, or of `[i, j]`
+   * pairs / an authored marker for 2D). "computed" styling is shown ONLY from
+   * this authored/observed state — never inferred from a cell merely being
+   * non-None (a zero-initialised table is not "computed").
+   */
+  computedSource?: string;
   /** Optional overlays keyed by role; value is the variable holding the index/state. */
   overlays?: {
     role: "pointer" | "window" | "total" | "visited" | "boundary" | "highlight";

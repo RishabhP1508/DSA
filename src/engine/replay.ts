@@ -110,3 +110,85 @@ export function displayValue(
     }
   }
 }
+
+
+// ---------------------------------------------------------------------------
+// R4.3 playback stepping (pure; the useEngine play timer drives it)
+// ---------------------------------------------------------------------------
+
+/**
+ * Compute the next index a "play" advance should land on, honouring PLAYBACK
+ * breakpoints (breakpoints are 1-based source lines).
+ *
+ *  - Advance one step from `from`.
+ *  - Return `null` when there is nothing left to play (already at/after the end).
+ *  - If the event we would advance TO sits on a breakpoint line, stop AT it.
+ *  - Sitting on a breakpoint event and pressing play again moves PAST it (so a
+ *    breakpoint does not trap playback), then stops at the next breakpoint.
+ *
+ * These are playback breakpoints: they pause replay of already-recorded states;
+ * they do not suspend Python (which has already finished).
+ */
+export function nextPlayIndex(
+  events: Pick<TraceEvent, "line">[],
+  from: number,
+  breakpoints: ReadonlySet<number>,
+): number | null {
+  if (from >= events.length - 1) return null;
+  // Always advance exactly one step. The caller decides whether to PAUSE after
+  // landing (see `isBreakpointStop`), so a breakpoint stops playback AT the
+  // intended event, and sitting on a breakpoint and pressing play again
+  // advances past it rather than re-trapping. `breakpoints` is part of the
+  // contract so the stepping/pausing rules stay co-located.
+  void breakpoints;
+  return from + 1;
+}
+
+/**
+ * Whether playback should PAUSE at `event` for a breakpoint. A line breakpoint
+ * targets the EXECUTABLE `line` event for that source line — the moment the
+ * line is about to run — NOT a `call`/`return`/`exception`/`output` event that
+ * merely reports the same line number. This keeps a breakpoint on line N from
+ * spuriously trapping the function-entry `call` or the `return` reported at N.
+ */
+export function isBreakpointStop(
+  event: Pick<TraceEvent, "kind" | "line"> | undefined,
+  breakpoints: ReadonlySet<number>,
+): boolean {
+  if (!event) return false;
+  if (event.kind !== "line") return false;
+  return breakpoints.has(event.line);
+}
+
+// ---------------------------------------------------------------------------
+// R4.1 source/input staleness
+// ---------------------------------------------------------------------------
+
+/**
+ * True when `result`'s trace no longer matches the current editor source/stdin,
+ * so the UI must stop presenting it as validated (R4.1). A falsy result is not
+ * stale (nothing to invalidate).
+ *
+ * Freshness uses an EXACT string comparison of the source/input the result was
+ * produced from — NOT the 32-bit `sourceRev`/`inputRev` hash, which can collide
+ * across distinct sources and make a stale trace look current. The hash is kept
+ * only for worker-message correlation. A result that predates the exact-string
+ * feature (no recorded `source`) is treated as stale — we cannot prove it
+ * matches the current editor.
+ */
+export function isResultStale(
+  result: RunResult | null | undefined,
+  source: string,
+  stdin: string,
+): boolean {
+  if (!result) return false;
+  // Exact comparison is authoritative when the result recorded its source.
+  if (typeof result.source === "string") {
+    if (result.source !== source) return true;
+    // Compare stdin exactly when recorded; an unrecorded stdin defaults to "".
+    if ((result.stdin ?? "") !== stdin) return true;
+    return false;
+  }
+  // Legacy result without an exact source: cannot prove it matches → stale.
+  return true;
+}

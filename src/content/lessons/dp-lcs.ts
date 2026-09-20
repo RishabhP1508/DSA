@@ -117,7 +117,17 @@ This is **O(m·n)** time and space — one fill of an (m+1)×(n+1) grid. Two tak
     { line: 13, executable: true, explanation: "LCS of 'abcde' and 'ace' is 'ace', length 3." },
   ],
 
-  bindings: [{ variable: "dp", model: "dp-table" }],
+  bindings: [
+    {
+      variable: "dp",
+      model: "dp-table",
+      // 2D current cell (i, j) over the prefixes a[:i], b[:j].
+      overlays: [
+        { role: "pointer", label: "i", source: "i" },
+        { role: "pointer", label: "j", source: "j" },
+      ],
+    },
+  ],
 
   prediction: [
     {

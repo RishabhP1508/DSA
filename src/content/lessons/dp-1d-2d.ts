@@ -113,7 +113,17 @@ This is **O(m·n)** time (fill every cell once) and **O(m·n)** space for the gr
     { line: 10, executable: true, explanation: "Print the 6 unique paths across a 3×3 grid." },
   ],
 
-  bindings: [{ variable: "dp", model: "dp-table" }],
+  bindings: [
+    {
+      variable: "dp",
+      model: "dp-table",
+      // 2D current cell (i, j) from the interior double loop.
+      overlays: [
+        { role: "pointer", label: "i", source: "i" },
+        { role: "pointer", label: "j", source: "j" },
+      ],
+    },
+  ],
 
   prediction: [
     {

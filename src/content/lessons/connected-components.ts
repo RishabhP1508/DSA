@@ -121,7 +121,7 @@ The whole thing is **O(V + E)** time even though it launches multiple traversals
   ],
 
   bindings: [
-    { variable: "adj", model: "graph", overlays: [{ role: "visited", label: "seen", source: "seen" }] },
+    { variable: "adj", model: "graph", directed: false, overlays: [{ role: "visited", label: "seen", source: "seen" }] },
   ],
 
   prediction: [

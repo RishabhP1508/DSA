@@ -80,7 +80,14 @@ export const knapsackPattern: PatternDefinition = {
     { line: 15, executable: true, explanation: "[1,5,11,5] splits as 11 vs 1+5+5 -> True." },
   ],
 
-  bindings: [{ variable: "dp", model: "dp-table" }],
+  bindings: [
+    {
+      variable: "dp",
+      model: "dp-table",
+      // 1D reachability table; the current cell is the capacity `s` being set.
+      overlays: [{ role: "pointer", label: "i", source: "s" }],
+    },
+  ],
 
   linkedLessons: ["dp-knapsack", "dp-subsequences", "dp-1d-2d"],
 

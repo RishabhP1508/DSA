@@ -177,22 +177,51 @@ class _TraceRecorder:
         if k is None:
             return "None", "none"
         if isinstance(k, tuple):
-            # Show tuple keys structurally, e.g. (1, 2), without user code.
-            parts = []
-            for item in tuple.__iter__(k):
-                disp, _ = self._encode_key(item)
-                parts.append(disp)
+            # Show tuple keys structurally AND type-aware, so (1, 2) and
+            # ('1', 2) render distinctly. Each element is formatted by
+            # `_key_element_repr`, which quotes strings ('1'), keeps ints bare
+            # (1), and recurses into nested tuples — without invoking user code.
+            parts = [self._key_element_repr(item) for item in tuple.__iter__(k)]
             return "(" + ", ".join(parts) + ")", "tuple"
         return self._safe_label(k), "unknown"
+
+    def _key_element_repr(self, k):
+        """A type-aware, side-effect-free display of ONE tuple-key element.
+
+        Unlike `_encode_key`'s display (which is bare for scalars), this keeps
+        each element's type visible so structurally-similar tuple keys with
+        different element types are distinguishable: a str element is quoted
+        ('1'), an int is bare (1), a nested tuple recurses."""
+        if isinstance(k, bool):
+            return "True" if k else "False"
+        if isinstance(k, int):
+            return str(int(k))
+        if isinstance(k, float):
+            import math as _math
+            if _math.isinf(k):
+                return "inf" if k > 0 else "-inf"
+            if _math.isnan(k):
+                return "nan"
+            return repr(float(k))
+        if isinstance(k, str):
+            # Quote so 'a' is visibly a string, distinct from a bare identifier.
+            return "'" + k.replace("\\", "\\\\").replace("'", "\\'") + "'"
+        if k is None:
+            return "None"
+        if isinstance(k, tuple):
+            return "(" + ", ".join(self._key_element_repr(i) for i in tuple.__iter__(k)) + ")"
+        return self._safe_label(k)
 
     def _encode_object(self, obj, oid, depth):
         try:
             tname = type(obj).__name__
         except Exception:
             tname = "object"
-        # Guard against pathological depth: label instead of walking, no repr.
+        # Guard against pathological depth: label instead of walking. Mark it
+        # `truncated` so the inspector can tell the learner that deeper data was
+        # omitted at the inspection depth limit (R4 follow-up #5).
         if depth > 12:
-            return {"id": oid, "type": tname, "repr": self._safe_label(obj)}
+            return {"id": oid, "type": tname, "repr": self._safe_label(obj), "truncated": True}
 
         # Known safe containers. We call the BUILTIN base-type methods directly
         # (e.g. list.__iter__, dict.keys) so an overridden __iter__/items/keys on

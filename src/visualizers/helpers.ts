@@ -59,6 +59,28 @@ export function resolveBindingObject(
   return { value, object: deref(event, value) };
 }
 
+/**
+ * Resolve a binding to a SCALAR TraceValue, honouring an optional dotted
+ * `path` into object fields (e.g. "obj.count"). Used by the scalar renderers
+ * (string, bits) so a "Visualize as…" field path selects the nested value from
+ * the recorded snapshot rather than only the root variable. Reads snapshots
+ * only; never evaluates code.
+ */
+export function resolveBindingValue(
+  event: TraceEvent,
+  binding: Pick<VisualBinding, "variable" | "path">,
+): TraceValue | undefined {
+  let value = resolveVariable(event, binding.variable);
+  if (binding.path) {
+    for (const seg of binding.path.split(".").filter(Boolean)) {
+      const obj = deref(event, value);
+      if (!obj || !obj.entries) return undefined;
+      value = obj.entries.find((e) => e.key === seg)?.value;
+    }
+  }
+  return value;
+}
+
 /** Read a numeric value (int/float) if the variable currently holds one. */
 export function asNumber(v: TraceValue | undefined): number | undefined {
   if (!v) return undefined;

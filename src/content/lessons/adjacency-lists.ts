@@ -101,7 +101,7 @@ The efficiency point that every graph algorithm's complexity rests on: iterating
   ],
 
   bindings: [
-    { variable: "adj", model: "graph" },
+    { variable: "adj", model: "graph", directed: false },
   ],
 
   prediction: [

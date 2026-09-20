@@ -113,7 +113,7 @@ An **adjacency matrix** is a V×V grid where \`mat[u][v] = 1\` marks an edge. It
   ],
 
   bindings: [
-    { variable: "adj", model: "graph" },
+    { variable: "adj", model: "graph", directed: false },
     { variable: "mat", model: "matrix" },
   ],
 
