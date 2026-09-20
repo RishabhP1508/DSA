@@ -568,12 +568,26 @@ export interface CoverageEntry {
 export interface ProgressRecord {
   /** Lesson id -> completion state. */
   lessons: Record<string, { completed: boolean; lastViewedAt: string }>;
-  /** Exercise id -> attempts and completion. */
+  /**
+   * Exercise progress keyed by the GLOBALLY UNIQUE composite id
+   * `<ownerKind>:<ownerId>:<exerciseId>` (see storage/exercise-id.ts). Under
+   * schema v1 this was keyed on the bare exercise id; migration rewrites it.
+   */
   exercises: Record<string, { attempts: number; solved: boolean }>;
+  /**
+   * Legacy exercise records that used an AMBIGUOUS bare id (one reused across
+   * owners) under schema v1, or a bare id unknown to the current registry. These
+   * cannot be reliably attributed to a single exercise, so they are preserved
+   * here verbatim (with a note) rather than copied to both twins or discarded
+   * (R3.2). Kept in backups.
+   */
+  legacyExercises?: Record<string, { attempts: number; solved: boolean; note: string }>;
   /** Saved code drafts, keyed by an arbitrary slot name. */
   drafts: Record<string, { source: string; savedAt: string }>;
   /** User preferences (theme, reduced motion, playback speed, etc). */
   preferences: Record<string, unknown>;
+  /** Progress record schema version (migration target; current: 2). */
+  schemaVersion?: number;
   /** Backup schema version for JSON export/import. */
   backupVersion: number;
 }

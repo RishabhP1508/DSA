@@ -103,7 +103,12 @@ function LessonContent({ lesson }: { lesson: LessonDefinition }) {
       <section>
         <h3>Practice</h3>
         {lesson.exercises.map((ex) => (
-          <ExercisePanel key={ex.id} exercise={ex} />
+          <ExercisePanel
+            key={`lesson:${lesson.id}:${ex.id}`}
+            exercise={ex}
+            ownerKind="lesson"
+            ownerId={lesson.id}
+          />
         ))}
       </section>
 
