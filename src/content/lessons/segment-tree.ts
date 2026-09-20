@@ -255,7 +255,7 @@ In the example the range \`[0,4)\` sums to **10**, \`[1,5)\` to **12**, and afte
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "ee5b47b2e99e861b",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

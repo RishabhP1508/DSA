@@ -150,7 +150,7 @@ In real code you would call Python's built-in \`sorted\` (O(n log n)). Bubble so
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "0145f4fd78880b7c",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

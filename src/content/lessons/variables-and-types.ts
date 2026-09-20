@@ -256,7 +256,7 @@ A subtle but important consequence: two names can refer to the **same** object. 
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "b724c8e0c4bb416f",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

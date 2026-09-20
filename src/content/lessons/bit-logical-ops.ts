@@ -136,7 +136,7 @@ Each operation is **O(1)** on machine-word integers (a fixed number of hardware 
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "17416ddf6adb13d3",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

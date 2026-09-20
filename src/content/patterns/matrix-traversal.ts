@@ -202,7 +202,7 @@ export const matrixTraversalPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "e2f8bb00b09db54d",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

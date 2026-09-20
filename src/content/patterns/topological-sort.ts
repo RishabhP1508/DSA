@@ -202,7 +202,7 @@ export const topologicalSortPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "85d596709b8dc0ec",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

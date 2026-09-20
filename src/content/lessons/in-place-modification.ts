@@ -164,7 +164,7 @@ The subtlety is correctness: because \`insert <= i\` always, we never overwrite 
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "6912d1eb8a5270e9",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

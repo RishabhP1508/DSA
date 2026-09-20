@@ -165,7 +165,7 @@ export const bitwiseXorPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "b99acc227c28d772",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

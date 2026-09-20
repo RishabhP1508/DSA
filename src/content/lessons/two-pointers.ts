@@ -154,7 +154,7 @@ The other common form is the **fast/slow** or **same-direction** two pointers (e
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "1dead73f4da1f0a9",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

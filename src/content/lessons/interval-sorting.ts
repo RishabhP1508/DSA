@@ -135,7 +135,7 @@ The cost is dominated by the sort, **O(n log n)**, using \`sorted(..., key=lambd
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "af761c01ebacc937",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

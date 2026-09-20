@@ -199,7 +199,7 @@ This example sharpens two DP habits. First, **derive the transition from the con
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "302b974dd62bea02",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

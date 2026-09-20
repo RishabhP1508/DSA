@@ -147,7 +147,7 @@ This is the archetype of the broader **"caching seen values"** pattern (next les
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "15f08cc9c42c8f83",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

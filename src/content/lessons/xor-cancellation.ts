@@ -147,7 +147,7 @@ XOR cancellation also solves "find the missing number" (XOR the indices with the
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "fbae27685167bd40",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

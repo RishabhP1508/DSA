@@ -234,3 +234,64 @@ R7 deferral are UNCHANGED (no new defect found). Tested commit = the tip of
   user-provided export / paste / confirmation.
 - No lesson `expectedOutput` changed in this amendment. (The only R5 output change
   remains the original `min-max-heaps` fix, already recorded above.)
+
+
+
+---
+
+# R5.6 RECONCILIATION (from the supplied Notion export)
+
+The user supplied the authoritative Notion syllabus as a pasted export, which
+supersedes the earlier Cloudflare-blocked state. R5.6 is now **reconciled**.
+
+## What was built
+- `src/content/notion-practice.ts` — the authoritative manifest. `NOTION_PRACTICE`
+  holds **79 occurrences** (one row per occurrence, `source: "notion-export"`,
+  main topic, exact title, canonical URL, mapped lesson/pattern ids, status,
+  rationale); **75 unique URLs** (4 cross-topic duplicates preserved).
+  `ADDITIONAL_PRACTICE` holds **25** canonical extras NOT in the export
+  (`source: "additional"`), explicitly excluded from Notion counts.
+- `src/content/coverage.ts` now DERIVES each entry's `externalPractice` from the
+  manifest (a problem attaches to a subtopic when the subtopic's lesson/pattern id
+  is in the problem's mapped ids). The old hand-maintained `EXTERNAL_PRACTICE`
+  subset is removed; all 75 unique Notion problems now surface via a coverage
+  subtopic (0 missing — including all 22 previously-absent questions).
+
+## Test-first evidence
+- `src/content/notion-practice.test.ts` (32 cases): 79 occurrences; 75 unique
+  URLs; occurrence-for-occurrence match to the transcribed export (duplicates
+  included); the 4 cross-topic duplicates present under both topics; nothing
+  dropped; every mapped id exists in the registry; every unresolved row has a
+  reason (there are none); the **22 previously-absent questions each present AND
+  mapped to a named technique-teaching item**; and no `ADDITIONAL_PRACTICE` URL is
+  falsely attributed to the export.
+- Drift proven: dropping one occurrence → 5 failures; breaking one mapped id → 2
+  failures; reverted → 32 pass.
+
+## Counts (reported separately)
+- **Notion occurrences: 79.**
+- **Unique Notion problems: 75.**
+- **Mapped occurrences: 79. Unresolved occurrences: 0.**
+- **Additional optional problems (not in the export): 25.**
+- Coverage entries carrying derived external practice: 76 / 131 (123 occurrences).
+
+## Semantic-review counts (kept separate — do not mix)
+- **Examples:** 131 lessons + 29 patterns = **160**; semantic-reviewed **37**;
+  pending **123**.
+- **Coverage entries:** **131**; semantic-reviewed **34**; pending **97**.
+
+## Full suite (tested commit = reconciliation tip)
+- `check:all`: green — build; lint 0 err / 9 warn; unit **375 / 375** (29 files);
+  pipeline; visualizers; 131 lessons; 29 patterns; 131 complexity; line
+  explanations 131 + 29; example model 131 + 29; coverage evidence 131; semantic
+  consistency (0 failures / 7 advisory); runnable exercises.
+- `test:browser`: 9 passed / 5 skipped (`P-RUNNER-ORIGIN` unchanged).
+- COVERAGE_VERSION 14 → 15 (external-practice source changed to the manifest);
+  all evidence regenerated to inventoryVersion 15.
+
+## Carried forward (unchanged)
+- `P-RUNNER-ORIGIN` remains a release-blocking packaging gate.
+- Big-O CLAIM correctness is human-reviewed, not machine-proven (R7).
+- 97 coverage entries / 123 examples await deep semantic review (structurally verified).
+- No lesson `expectedOutput` changed in this reconciliation.
+- **R6 has NOT started; PR #17 is NOT merged.**

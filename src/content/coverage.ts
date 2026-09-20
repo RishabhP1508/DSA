@@ -11,8 +11,9 @@
  */
 
 import type { CoverageEntry } from "../core/types";
+import { NOTION_PRACTICE } from "./notion-practice";
 
-export const COVERAGE_VERSION = 14;
+export const COVERAGE_VERSION = 15;
 
 function e(
   area: string,
@@ -199,231 +200,31 @@ export const coverage: CoverageEntry[] = [
 /**
  * R5.6 — External practice mappings (optional further practice).
  *
- * The Notion syllabus (the required source) is a client-rendered page whose
- * question list could NOT be programmatically enumerated in this environment,
- * and LeetCode blocks automated destination checks (HTTP 403). So rather than
- * fabricate a question list or unverifiable links, this maps a CONSERVATIVE set
- * of CANONICAL, widely-known LeetCode problems whose URL slugs are stable and
- * unambiguous, to the coverage subtopic whose TECHNIQUE they exercise. Titles +
- * links only (no third-party problem statements are copied). External practice
- * is OPTIONAL — the local lessons/exercises teach the technique regardless.
+ * RECONCILED FROM THE SUPPLIED NOTION EXPORT. The authoritative question list
+ * now lives in `src/content/notion-practice.ts` (`NOTION_PRACTICE`, 79 rows /
+ * 75 unique URLs) with per-occurrence lesson/pattern mappings; the earlier
+ * Cloudflare-blocked access attempts are preserved in
+ * .kiro/specs/R5-curriculum/external-practice-manifest.md.
  *
- * OPEN GAP — reconciliation with the Notion list is BLOCKED. The live Notion
- * page is gated by a Cloudflare "Verify you are human" CAPTCHA, so it could not
- * be enumerated by web_fetch, a headless browser, or the Notion API (HTTP 429)
- * on 2026-09-20. This subset is therefore NOT claimed to equal the Notion list;
- * it is a conservative, technique-aligned set of canonical problems. The exact
- * access attempts, what is/ isn't mapped, and the ask to the user are recorded in
- * .kiro/specs/R5-curriculum/external-practice-manifest.md. No link below is a
- * guess — each is a canonical, long-standing LeetCode problem slug.
+ * Here we DERIVE each coverage entry's `externalPractice` from that manifest:
+ * a Notion problem is attached to a coverage subtopic when the subtopic's
+ * `lessonId` (or one of its `patternIds`) is among the problem's `mappedIds`.
+ * So the coverage doc reflects the real Notion set — no hand-maintained subset,
+ * no invented links. Titles + canonical links only; external practice stays
+ * optional (the local lesson teaches the technique regardless).
  */
-const EXTERNAL_PRACTICE: Record<string, { name: string; url: string }[]> = {
-  "arrays/two-pointers": [
-    { name: "LeetCode 167 — Two Sum II (Input Array Is Sorted)", url: "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/" },
-    { name: "LeetCode 15 — 3Sum", url: "https://leetcode.com/problems/3sum/" },
-    { name: "LeetCode 11 — Container With Most Water", url: "https://leetcode.com/problems/container-with-most-water/" },
-  ],
-  "arrays/sliding-window": [
-    { name: "LeetCode 643 — Maximum Average Subarray I", url: "https://leetcode.com/problems/maximum-average-subarray-i/" },
-    { name: "LeetCode 209 — Minimum Size Subarray Sum", url: "https://leetcode.com/problems/minimum-size-subarray-sum/" },
-  ],
-  "arrays/prefix-sums": [
-    { name: "LeetCode 560 — Subarray Sum Equals K", url: "https://leetcode.com/problems/subarray-sum-equals-k/" },
-    { name: "LeetCode 303 — Range Sum Query - Immutable", url: "https://leetcode.com/problems/range-sum-query-immutable/" },
-  ],
-  "arrays/kadane": [
-    { name: "LeetCode 53 — Maximum Subarray", url: "https://leetcode.com/problems/maximum-subarray/" },
-  ],
-  "arrays/in-place": [
-    { name: "LeetCode 448 — Find All Numbers Disappeared in an Array", url: "https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/" },
-    { name: "LeetCode 26 — Remove Duplicates from Sorted Array", url: "https://leetcode.com/problems/remove-duplicates-from-sorted-array/" },
-  ],
-  "arrays/matrix-traversal": [
-    { name: "LeetCode 54 — Spiral Matrix", url: "https://leetcode.com/problems/spiral-matrix/" },
-    { name: "LeetCode 48 — Rotate Image", url: "https://leetcode.com/problems/rotate-image/" },
-  ],
-  "arrays/intervals": [
-    { name: "LeetCode 56 — Merge Intervals", url: "https://leetcode.com/problems/merge-intervals/" },
-    { name: "LeetCode 57 — Insert Interval", url: "https://leetcode.com/problems/insert-interval/" },
-  ],
-  "strings/frequency": [
-    { name: "LeetCode 242 — Valid Anagram", url: "https://leetcode.com/problems/valid-anagram/" },
-    { name: "LeetCode 387 — First Unique Character in a String", url: "https://leetcode.com/problems/first-unique-character-in-a-string/" },
-  ],
-  "strings/sliding-window": [
-    { name: "LeetCode 3 — Longest Substring Without Repeating Characters", url: "https://leetcode.com/problems/longest-substring-without-repeating-characters/" },
-    { name: "LeetCode 76 — Minimum Window Substring", url: "https://leetcode.com/problems/minimum-window-substring/" },
-  ],
-  "strings/palindromes": [
-    { name: "LeetCode 125 — Valid Palindrome", url: "https://leetcode.com/problems/valid-palindrome/" },
-    { name: "LeetCode 5 — Longest Palindromic Substring", url: "https://leetcode.com/problems/longest-palindromic-substring/" },
-  ],
-  "strings/anagrams": [
-    { name: "LeetCode 49 — Group Anagrams", url: "https://leetcode.com/problems/group-anagrams/" },
-  ],
-  "strings/kmp": [
-    { name: "LeetCode 28 — Find the Index of the First Occurrence in a String", url: "https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/" },
-  ],
-  "linked-lists/reversal": [
-    { name: "LeetCode 206 — Reverse Linked List", url: "https://leetcode.com/problems/reverse-linked-list/" },
-    { name: "LeetCode 92 — Reverse Linked List II", url: "https://leetcode.com/problems/reverse-linked-list-ii/" },
-  ],
-  "linked-lists/cycle-detection": [
-    { name: "LeetCode 141 — Linked List Cycle", url: "https://leetcode.com/problems/linked-list-cycle/" },
-    { name: "LeetCode 142 — Linked List Cycle II", url: "https://leetcode.com/problems/linked-list-cycle-ii/" },
-  ],
-  "linked-lists/merging": [
-    { name: "LeetCode 21 — Merge Two Sorted Lists", url: "https://leetcode.com/problems/merge-two-sorted-lists/" },
-  ],
-  "linked-lists/middle": [
-    { name: "LeetCode 876 — Middle of the Linked List", url: "https://leetcode.com/problems/middle-of-the-linked-list/" },
-  ],
-  "trees/dfs": [
-    { name: "LeetCode 104 — Maximum Depth of Binary Tree", url: "https://leetcode.com/problems/maximum-depth-of-binary-tree/" },
-    { name: "LeetCode 112 — Path Sum", url: "https://leetcode.com/problems/path-sum/" },
-  ],
-  "trees/bfs-level-order": [
-    { name: "LeetCode 102 — Binary Tree Level Order Traversal", url: "https://leetcode.com/problems/binary-tree-level-order-traversal/" },
-  ],
-  "trees/bst": [
-    { name: "LeetCode 700 — Search in a Binary Search Tree", url: "https://leetcode.com/problems/search-in-a-binary-search-tree/" },
-    { name: "LeetCode 98 — Validate Binary Search Tree", url: "https://leetcode.com/problems/validate-binary-search-tree/" },
-  ],
-  "trees/lca": [
-    { name: "LeetCode 236 — Lowest Common Ancestor of a Binary Tree", url: "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/" },
-  ],
-  "trees/prefix-search": [
-    { name: "LeetCode 208 — Implement Trie (Prefix Tree)", url: "https://leetcode.com/problems/implement-trie-prefix-tree/" },
-  ],
-  "trees/word-search": [
-    { name: "LeetCode 212 — Word Search II", url: "https://leetcode.com/problems/word-search-ii/" },
-  ],
-  "stacks/operations": [
-    { name: "LeetCode 232 — Implement Queue using Stacks", url: "https://leetcode.com/problems/implement-queue-using-stacks/" },
-  ],
-  "stacks/monotonic": [
-    { name: "LeetCode 739 — Daily Temperatures", url: "https://leetcode.com/problems/daily-temperatures/" },
-    { name: "LeetCode 496 — Next Greater Element I", url: "https://leetcode.com/problems/next-greater-element-i/" },
-  ],
-  "stacks/parentheses": [
-    { name: "LeetCode 20 — Valid Parentheses", url: "https://leetcode.com/problems/valid-parentheses/" },
-  ],
-  "stacks/expression-eval": [
-    { name: "LeetCode 150 — Evaluate Reverse Polish Notation", url: "https://leetcode.com/problems/evaluate-reverse-polish-notation/" },
-  ],
-  "graphs/bfs": [
-    { name: "LeetCode 1926 — Nearest Exit from Entrance in Maze", url: "https://leetcode.com/problems/nearest-exit-from-entrance-in-maze/" },
-  ],
-  "graphs/dfs": [
-    { name: "LeetCode 200 — Number of Islands", url: "https://leetcode.com/problems/number-of-islands/" },
-  ],
-  "graphs/components": [
-    { name: "LeetCode 547 — Number of Provinces", url: "https://leetcode.com/problems/number-of-provinces/" },
-  ],
-  "graphs/topo-sort": [
-    { name: "LeetCode 207 — Course Schedule", url: "https://leetcode.com/problems/course-schedule/" },
-    { name: "LeetCode 210 — Course Schedule II", url: "https://leetcode.com/problems/course-schedule-ii/" },
-  ],
-  "graphs/union-find": [
-    { name: "LeetCode 684 — Redundant Connection", url: "https://leetcode.com/problems/redundant-connection/" },
-  ],
-  "graphs/dijkstra": [
-    { name: "LeetCode 743 — Network Delay Time", url: "https://leetcode.com/problems/network-delay-time/" },
-  ],
-  "graphs/multi-source-bfs": [
-    { name: "LeetCode 994 — Rotting Oranges", url: "https://leetcode.com/problems/rotting-oranges/" },
-  ],
-  "dp/climbing-stairs": [
-    { name: "LeetCode 70 — Climbing Stairs", url: "https://leetcode.com/problems/climbing-stairs/" },
-  ],
-  "dp/house-robber": [
-    { name: "LeetCode 198 — House Robber", url: "https://leetcode.com/problems/house-robber/" },
-  ],
-  "dp/coin-change": [
-    { name: "LeetCode 322 — Coin Change", url: "https://leetcode.com/problems/coin-change/" },
-  ],
-  "dp/lis": [
-    { name: "LeetCode 300 — Longest Increasing Subsequence", url: "https://leetcode.com/problems/longest-increasing-subsequence/" },
-  ],
-  "dp/lcs": [
-    { name: "LeetCode 1143 — Longest Common Subsequence", url: "https://leetcode.com/problems/longest-common-subsequence/" },
-  ],
-  "dp/grid-paths": [
-    { name: "LeetCode 62 — Unique Paths", url: "https://leetcode.com/problems/unique-paths/" },
-  ],
-  "dp/knapsack": [
-    { name: "LeetCode 416 — Partition Equal Subset Sum", url: "https://leetcode.com/problems/partition-equal-subset-sum/" },
-  ],
-  "dp/subsets": [
-    { name: "LeetCode 78 — Subsets", url: "https://leetcode.com/problems/subsets/" },
-  ],
-  "dp/permutations": [
-    { name: "LeetCode 46 — Permutations", url: "https://leetcode.com/problems/permutations/" },
-  ],
-  "dp/combinations": [
-    { name: "LeetCode 77 — Combinations", url: "https://leetcode.com/problems/combinations/" },
-  ],
-  "dp/n-queens": [
-    { name: "LeetCode 51 — N-Queens", url: "https://leetcode.com/problems/n-queens/" },
-  ],
-  "heaps/top-k": [
-    { name: "LeetCode 347 — Top K Frequent Elements", url: "https://leetcode.com/problems/top-k-frequent-elements/" },
-  ],
-  "heaps/kth": [
-    { name: "LeetCode 215 — Kth Largest Element in an Array", url: "https://leetcode.com/problems/kth-largest-element-in-an-array/" },
-  ],
-  "heaps/running-median": [
-    { name: "LeetCode 295 — Find Median from Data Stream", url: "https://leetcode.com/problems/find-median-from-data-stream/" },
-  ],
-  "heaps/merge-sorted": [
-    { name: "LeetCode 23 — Merge k Sorted Lists", url: "https://leetcode.com/problems/merge-k-sorted-lists/" },
-  ],
-  "hashing/maps-sets": [
-    { name: "LeetCode 1 — Two Sum", url: "https://leetcode.com/problems/two-sum/" },
-  ],
-  "hashing/duplicates": [
-    { name: "LeetCode 217 — Contains Duplicate", url: "https://leetcode.com/problems/contains-duplicate/" },
-  ],
-  "hashing/grouping": [
-    { name: "LeetCode 49 — Group Anagrams", url: "https://leetcode.com/problems/group-anagrams/" },
-  ],
-  "bits/logical-ops": [
-    { name: "LeetCode 136 — Single Number", url: "https://leetcode.com/problems/single-number/" },
-  ],
-  "bits/count-set-bits": [
-    { name: "LeetCode 191 — Number of 1 Bits", url: "https://leetcode.com/problems/number-of-1-bits/" },
-    { name: "LeetCode 338 — Counting Bits", url: "https://leetcode.com/problems/counting-bits/" },
-  ],
-  "bits/xor-cancellation": [
-    { name: "LeetCode 268 — Missing Number", url: "https://leetcode.com/problems/missing-number/" },
-  ],
-  "sorting/merge": [
-    { name: "LeetCode 912 — Sort an Array", url: "https://leetcode.com/problems/sort-an-array/" },
-  ],
-  "sorting/comparators": [
-    { name: "LeetCode 179 — Largest Number", url: "https://leetcode.com/problems/largest-number/" },
-  ],
-  "sorting/intervals": [
-    { name: "LeetCode 435 — Non-overlapping Intervals", url: "https://leetcode.com/problems/non-overlapping-intervals/" },
-  ],
-  "searching/binary": [
-    { name: "LeetCode 704 — Binary Search", url: "https://leetcode.com/problems/binary-search/" },
-  ],
-  "searching/binary-on-answer": [
-    { name: "LeetCode 875 — Koko Eating Bananas", url: "https://leetcode.com/problems/koko-eating-bananas/" },
-    { name: "LeetCode 1011 — Capacity To Ship Packages Within D Days", url: "https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/" },
-  ],
-  "searching/rotated": [
-    { name: "LeetCode 33 — Search in Rotated Sorted Array", url: "https://leetcode.com/problems/search-in-rotated-sorted-array/" },
-  ],
-  "searching/matrix": [
-    { name: "LeetCode 74 — Search a 2D Matrix", url: "https://leetcode.com/problems/search-a-2d-matrix/" },
-  ],
-};
-
 for (const entry of coverage) {
-  const ext = EXTERNAL_PRACTICE[entry.id];
-  if (ext) entry.externalPractice = ext;
+  const ids = new Set<string>([entry.lessonId, ...(entry.patternIds ?? [])].filter(Boolean) as string[]);
+  const seen = new Set<string>();
+  const mapped: { name: string; url: string }[] = [];
+  for (const row of NOTION_PRACTICE) {
+    if (row.status !== "mapped") continue;
+    if (row.mappedIds.some((id) => ids.has(id)) && !seen.has(row.url)) {
+      seen.add(row.url);
+      mapped.push({ name: row.title, url: row.url });
+    }
+  }
+  if (mapped.length) entry.externalPractice = mapped;
 }
 
 /** Quick coverage stats for docs and the (future) Learning Path progress view. */

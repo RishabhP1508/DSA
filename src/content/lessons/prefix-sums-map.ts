@@ -157,7 +157,7 @@ This is a crucial pattern-recognition contrast from the Arrays topic: **fixed-si
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "4eb7ab2d4b9c4ce8",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

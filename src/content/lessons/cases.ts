@@ -150,7 +150,7 @@ Reporting a bound **without saying which case** is ambiguous, so always state it
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "ebef74822fbaf2cc",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

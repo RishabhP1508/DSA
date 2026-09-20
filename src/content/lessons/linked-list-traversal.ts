@@ -229,7 +229,7 @@ Think of a scavenger hunt: each clue (node) tells you where the next clue is. Yo
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "c26eb710624938cf",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

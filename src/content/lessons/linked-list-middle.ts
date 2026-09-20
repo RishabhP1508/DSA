@@ -258,7 +258,7 @@ Both share the even-length **convention**: with \`fast\`/\`slow\` starting at th
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "458d935e3cb832ea",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

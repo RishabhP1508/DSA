@@ -215,7 +215,7 @@ The complexity split is worth internalizing: **existence** of a prefix is O(P), 
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "f79cc9762f37c96b",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

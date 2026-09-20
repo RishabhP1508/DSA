@@ -176,7 +176,7 @@ Prim resembles Dijkstra structurally (heap of frontier candidates) but optimizes
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "455b88cd89e3d504",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

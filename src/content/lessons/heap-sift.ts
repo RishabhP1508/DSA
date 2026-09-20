@@ -254,7 +254,7 @@ A binary heap is a **complete binary tree stored in a flat array** using **0-bas
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "67a928d94536008a",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

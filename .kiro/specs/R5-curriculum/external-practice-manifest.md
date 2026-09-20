@@ -1,66 +1,65 @@
 # R5.6 — External practice reconciliation manifest
 
-**Status: BLOCKED on reconciling against the live Notion syllabus.** The mapped
-set below is a *conservative canonical subset*, not a verified 1:1 copy of the
-Notion list. This manifest records exactly what was attempted and what remains
-unresolved so the gap is honest and auditable.
+**Status: RECONCILED FROM THE SUPPLIED NOTION EXPORT (2026-09-20).** The user
+supplied the authoritative Notion syllabus as a pasted export; it is now the
+source of truth for R5.6. The earlier Cloudflare-blocked state is superseded and
+preserved below as history.
 
-## The required source and why it is inaccessible here
+## Authoritative source
 
-Required source (from the plan): the Notion syllabus
-`https://chocolate-candy-c79.notion.site/DSA-Topics-Patterns-and-LeetCode-Questions-3d2d8c33330f80dc9623f6b1dce29e03`
+- **Notion export (pasted by the user, 2026-09-20)** — 12 main topics,
+  **79 question occurrences**, **75 unique canonical URLs** (four problems appear
+  under two topics each: Two Sum, Valid Anagram, Group Anagrams, Subarray Sum
+  Equals K). Encoded in `src/content/notion-practice.ts` (`NOTION_PRACTICE`), one
+  row per occurrence with `source: "notion-export"`, main topic, exact title,
+  canonical URL, mapped lesson/pattern ids, status, and rationale.
 
-### Access attempts (all on 2026-09-20)
+## Reconciliation result
 
-1. **`web_fetch` (server HTML)** — returned a near-empty client-render shell; no
-   question text extractable. (Recorded in the original R5 verification.md.)
-2. **Headless browser (`agent-browser`, Chromium)** — navigated the live URL and
-   waited/scrolled for client render. The page renders a **Cloudflare
-   "Verify you are human" challenge** (accessibility snapshot showed
-   `Iframe "Widget containing a Cloudflare security challenge"` with a
-   `checkbox "Verify you are human"`; screenshot saved at
-   `.kiro/artifacts/screenshots/notion-check.png`). The page body is empty
-   behind the challenge — the syllabus content never loads.
-3. **Notion public API** (`/api/v3/loadCachedPageChunkV2`) — returns the same
-   Cloudflare challenge HTML and **HTTP 429**.
+- **Mapped occurrences: 79 / 79.** Every occurrence maps to a lesson/pattern that
+  actually teaches its technique (verified by `src/content/notion-practice.test.ts`,
+  which also checks the 22 previously-absent questions map to a real
+  technique-teaching item, not a broad-topic match).
+- **Unresolved occurrences: 0.**
+- **Unique Notion problems: 75.** All 75 surface in `docs/coverage.md` via a
+  coverage subtopic (0 missing).
+- **Additional optional problems: 25** — canonical problems NOT in the Notion
+  export, kept in `ADDITIONAL_PRACTICE` (separate `source: "additional"`), NOT
+  counted as Notion results.
+- `coverage.ts` now DERIVES each entry's `externalPractice` from the manifest, so
+  the coverage doc reflects the real Notion set (no hand-maintained subset).
 
-**Conclusion:** the Notion page is gated by a Cloudflare anti-bot CAPTCHA in this
-environment. It cannot be enumerated by fetch, headless browser, or the Notion
-API. A CAPTCHA is a deliberate access control and was **not** bypassed.
+### The 22 previously-absent questions (now mapped, technique-verified)
+Best Time to Buy and Sell Stock → kadane · Product of Array Except Self →
+prefix-sums · Longest Repeating Character Replacement → string-sliding-window ·
+Remove Nth Node From End of List → linked-list-slow-fast · Reorder List →
+linked-list-middle · Invert Binary Tree → tree-dfs · LCA of a BST →
+lowest-common-ancestor · Diameter of Binary Tree → tree-height-depth · Min Stack →
+min-max-tracking · Largest Rectangle in Histogram → monotonic-stack · Clone Graph
+→ graph-dfs · Pacific Atlantic Water Flow → multi-source-bfs · Word Ladder →
+graph-bfs · K Closest Points to Origin → top-k · Task Scheduler → top-k · Longest
+Consecutive Sequence → maps-sets · Reverse Bits → bit-shifts · Sum of Two Integers
+→ bit-logical-ops · Meeting Rooms II → interval-sorting · Find Minimum in Rotated
+Sorted Array → rotated-array-search · Find First and Last Position → bounds ·
+Combination Sum → dp-combinations. (Each also carries pattern ids where relevant.)
 
-## What IS mapped (and why it is honest)
+## History — access attempts BEFORE the export was supplied (preserved)
 
-`src/content/coverage.ts` → `EXTERNAL_PRACTICE`: **79 canonical LeetCode
-problems across 61 of the 132 coverage subtopics.** Every entry is:
+Before the user pasted the export, the live Notion page was unreachable:
+1. **`web_fetch`** — near-empty client shell; no question text.
+2. **Headless browser (`agent-browser`, Chromium)** — rendered a Cloudflare
+   "Verify you are human" challenge (an iframe with a `Verify you are human`
+   checkbox); the syllabus never loaded. The CAPTCHA was NOT bypassed.
+3. **Notion public API** (`/api/v3/loadCachedPageChunkV2`) — same challenge HTML +
+   HTTP 429.
 
-- a long-standing, unambiguous LeetCode problem whose `/problems/<slug>/` URL is
-  canonical and stable (no invented/guessed links);
-- mapped to the coverage subtopic whose **technique** it exercises (so the local
-  lesson teaches the technique regardless);
-- validated by `src/content/coverage.test.ts` (canonical URL shape + the mapped
-  subtopic has a local lesson).
+That is why an earlier commit shipped a conservative canonical subset; it is now
+replaced by the exact export reconciliation above.
 
-This subset is **not** claimed to equal the Notion list. It is a defensible,
-technique-aligned starting set for the covered topics.
-
-## What remains UNRESOLVED (explicit)
-
-- The **exact set of questions listed on the Notion page** is unknown here, so:
-  - Notion questions that are NOT in this subset are **unmapped** (unknown count).
-  - Whether any mapped problem is **absent** from the Notion list is unverified.
-  - Per-destination liveness of each LeetCode URL was **not** auto-checked
-    (LeetCode returns HTTP 403 to automated requests); the slugs are canonical
-    but not fetch-verified in this environment.
-
-## Ask to the user (to close the gap)
-
-To reconcile precisely without guessing, please provide ONE of:
-
-1. A **Notion export** of the page (Markdown/CSV/HTML), or
-2. The **pasted list** of the syllabus's practice questions (titles + links), or
-3. Confirmation that the current canonical subset is acceptable as the
-   external-practice mapping for this milestone.
-
-On receiving any of these, the reconciliation will map every listed question to a
-lesson/pattern or record it here as unresolved with a reason — with no invented
-links.
+## Regression protection
+`src/content/notion-practice.test.ts` (exact-set) enforces: 79 occurrences; 75
+unique URLs; the 4 cross-topic duplicates retained under both topics; every export
+row present (nothing dropped); every mapped id exists in the registry; the 22
+flagged questions mapped to their technique-teaching item; every unresolved row
+carries a reason; and no `ADDITIONAL_PRACTICE` URL is falsely attributed to the
+Notion export.

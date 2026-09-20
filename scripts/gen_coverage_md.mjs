@@ -19,6 +19,9 @@ const { coverage, COVERAGE_VERSION, coverageStats } = await import(
   pathToFileURL(path.join(root, "src/content/coverage.ts")).href
 );
 const registry = await import(pathToFileURL(path.join(root, "src/content/registry.ts")).href);
+const { NOTION_PRACTICE, ADDITIONAL_PRACTICE, NOTION_UNIQUE_URL_COUNT } = await import(
+  pathToFileURL(path.join(root, "src/content/notion-practice.ts")).href
+);
 const lessonById = new Map(registry.lessons.map((l) => [l.id, l]));
 
 const stats = coverageStats(coverage);
@@ -50,7 +53,12 @@ lines.push(
 lines.push("");
 lines.push(`**Evidence-verified (structural): ${stats.verified} / ${stats.total}.**`);
 lines.push(
-  `**Human semantic review (R5.3): ${semanticReviewed} / ${stats.total} complete; ${stats.total - semanticReviewed} pending.**`,
+  `**Human semantic review (R5.3): ${semanticReviewed} / ${stats.total} coverage entries complete; ${stats.total - semanticReviewed} pending.**`,
+);
+lines.push("");
+lines.push(
+  "> Two count families, kept separate: (a) **EXAMPLES** — 131 lessons + 29 patterns = 160 executable examples, of which 37 are semantically reviewed and 123 are pending; (b) **COVERAGE ENTRIES** — the " +
+    `${stats.total} rows in this inventory, of which ${semanticReviewed} are semantically reviewed and ${stats.total - semanticReviewed} pending. Do not mix the 37/123 example counts with the ${semanticReviewed}/${stats.total - semanticReviewed} coverage-entry counts.`,
 );
 lines.push("");
 lines.push(
@@ -81,7 +89,12 @@ const extEntries = coverage.filter((e) => e.externalPractice?.length).length;
 lines.push("---");
 lines.push("");
 lines.push(
-  `External practice (optional): ${extTotal} canonical LeetCode problems mapped across ${extEntries} subtopics (R5.6). Titles + links only; local lessons teach each technique regardless. **Reconciliation with the Notion syllabus is BLOCKED** — the live page is behind a Cloudflare CAPTCHA (unreachable via fetch, headless browser, or the Notion API), so this is a conservative canonical subset, NOT a verified copy of the Notion list. Access attempts and the ask to the user are recorded in \`.kiro/specs/R5-curriculum/external-practice-manifest.md\`.`,
+  `External practice (optional): **RECONCILED from the supplied Notion export** (R5.6). ` +
+    `Notion occurrences: **${NOTION_PRACTICE.length}**; unique Notion problems: **${NOTION_UNIQUE_URL_COUNT}**; ` +
+    `mapped occurrences: **${NOTION_PRACTICE.filter((r) => r.status === "mapped").length}**; ` +
+    `unresolved occurrences: **${NOTION_PRACTICE.filter((r) => r.status === "unresolved").length}**; ` +
+    `additional optional problems (not in the export): **${ADDITIONAL_PRACTICE.length}**. ` +
+    `Each coverage entry's practice column is DERIVED from \`src/content/notion-practice.ts\` (a Notion problem attaches to a subtopic when the subtopic's lesson/pattern id is among the problem's mapped ids); ${extTotal} occurrences surface across ${extEntries} subtopics. Titles + canonical links only; local lessons teach each technique regardless. The historical Cloudflare-blocked access attempts are preserved in \`.kiro/specs/R5-curriculum/external-practice-manifest.md\`.`,
 );
 lines.push("");
 

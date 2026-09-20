@@ -154,7 +154,7 @@ DFS visits every reachable vertex once and scans every edge once, so it is **O(V
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "d06a35b5aad0360f",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

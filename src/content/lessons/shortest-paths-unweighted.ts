@@ -172,7 +172,7 @@ It runs in **O(V + E)** time and **O(V)** space — the same as plain BFS. The c
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "64565f14ba20f580",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

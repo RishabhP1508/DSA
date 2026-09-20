@@ -175,7 +175,7 @@ Here we find the minimum ship capacity to deliver all packages within \`days\`. 
     },
   ],
   evidence: {
-    inventoryVersion: 14,
+    inventoryVersion: 15,
     contentHash: "c17805f04b0614be",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
