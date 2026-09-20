@@ -4,8 +4,10 @@
  * Reads an adjacency list held as a dict {node: [neighbours...]} (the shape the
  * curriculum uses) OR a dict {node: {neighbour: weight}} for weighted graphs.
  * Nodes are laid out on a circle so positions are stable and deterministic
- * across steps. Edges are drawn once; if both u->v and v->u are present the
- * edge is treated as undirected (no arrowhead), otherwise directed.
+ * across steps. Edge DIRECTION is stated explicitly by the binding
+ * (`directed: true|false`), never inferred from whether a reverse edge is
+ * present: a directed graph draws a reciprocal pair (u->v and v->u) as two
+ * arrowheaded arcs; an undirected graph draws each pair once with no arrowhead.
  *
  * A `visited` set overlay shades visited nodes; a `frontier`/`queue`/`stack`
  * overlay (a list/set) outlines nodes currently on the frontier. A `current`
@@ -55,15 +57,18 @@ export function GraphVisualizer({ event, binding }: { event: TraceEvent; binding
     }
   }
 
-  // Deduplicate undirected pairs.
+  // Direction is EXPLICIT (binding.directed), never inferred from the presence
+  // of a reverse edge. In a directed graph a reciprocal pair (u→v and v→u) is
+  // TWO arcs; only exact duplicate arcs are collapsed. In an undirected graph
+  // each unordered pair is drawn once with no arrowhead.
+  const directed = binding.directed === true;
   const seenPair = new Set<string>();
   const edges: Edge[] = [];
   for (const { u, v, weight } of rawEdges) {
-    const back = rawEdges.some((r) => r.u === v && r.v === u);
-    const key = back ? [u, v].sort().join("~") : `${u}->${v}`;
+    const key = directed ? `${u}->${v}` : [u, v].sort().join("~");
     if (seenPair.has(key)) continue;
     seenPair.add(key);
-    edges.push({ u, v, directed: !back, weight });
+    edges.push({ u, v, directed, weight });
   }
 
   const visited = collectMembers(event, resolveVariable(event, findOverlaySource(binding, ["visited", "seen"])));

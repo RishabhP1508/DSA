@@ -244,6 +244,22 @@ export interface VisualBinding {
   /** Optional dotted path into an object's fields, e.g. "root.left". */
   path?: string;
   model: VisualModel;
+  /**
+   * For `model: "graph"` — whether edges are DIRECTED. This is stated
+   * EXPLICITLY by the binding; the renderer must NOT infer directedness from
+   * whether a reverse edge happens to be present (a reciprocal pair `u→v` and
+   * `v→u` in a directed graph is two arcs, not one undirected edge). Defaults to
+   * undirected when omitted.
+   */
+  directed?: boolean;
+  /**
+   * For `model: "dp-table"` — the name of a variable holding the indices that
+   * have actually been COMPUTED (a set/list of ints for 1D, or of `[i, j]`
+   * pairs / an authored marker for 2D). "computed" styling is shown ONLY from
+   * this authored/observed state — never inferred from a cell merely being
+   * non-None (a zero-initialised table is not "computed").
+   */
+  computedSource?: string;
   /** Optional overlays keyed by role; value is the variable holding the index/state. */
   overlays?: {
     role: "pointer" | "window" | "total" | "visited" | "boundary" | "highlight";

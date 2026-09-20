@@ -125,7 +125,7 @@ For an **undirected** graph, the check is: during DFS, if you reach a neighbour 
   ],
 
   bindings: [
-    { variable: "adj", model: "graph", overlays: [{ role: "visited", label: "seen", source: "seen" }] },
+    { variable: "adj", model: "graph", directed: false, overlays: [{ role: "visited", label: "seen", source: "seen" }] },
   ],
 
   prediction: [

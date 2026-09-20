@@ -64,9 +64,10 @@ export function Playground() {
   };
 
   // While stale, stop highlighting the old trace's line (it no longer maps to
-  // the edited source).
+  // the edited source), but keep the recorded trace, output and error visible —
+  // this is the learner's own program.
   const currentLine = stale ? null : engine.event?.line ?? null;
-  const err = stale ? undefined : engine.result?.error;
+  const err = engine.result?.error;
 
   return (
     <div className="app-body">
@@ -122,8 +123,8 @@ export function Playground() {
               </div>
               {stale && engine.result && (
                 <div className="stale-banner" role="status">
-                  ⚠ Source or input changed — this trace and its panels are outdated. Run again to
-                  refresh.
+                  ⚠ Source or input changed since this run — the trace below is outdated (it predates
+                  your edit). Run again to refresh it.
                 </div>
               )}
 
@@ -175,12 +176,15 @@ export function Playground() {
 
             <div className="workspace-right">
               <VisualizeAs event={engine.event} binding={vizBinding} onChange={setVizBinding} />
-              {vizBinding && engine.event && !stale && (
+              {vizBinding && engine.event && (
                 <div className="viz-slot">
                   <Visualizer event={engine.event} binding={vizBinding} />
                 </div>
               )}
-              <VariablesPanel event={stale ? undefined : engine.event} output={stale ? "" : engine.outputSoFar} />
+              {/* Playground code is the learner's own — no authored artifacts to
+                  disable. The recorded trace stays available after an edit; the
+                  banner just notes it predates the edit until re-run. */}
+              <VariablesPanel event={engine.event} output={engine.outputSoFar} />
             </div>
           </div>
         </div>

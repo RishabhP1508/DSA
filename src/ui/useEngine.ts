@@ -12,7 +12,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getSharedEngine } from "../engine/engine";
-import { Replay, nextPlayIndex, isResultStale } from "../engine/replay";
+import { Replay, nextPlayIndex, isBreakpointStop, isResultStale } from "../engine/replay";
 import type { RunResult, TraceEvent, EngineState } from "../core/types";
 
 /** Playback speeds in steps per second. */
@@ -128,11 +128,10 @@ export function useEngine(owner = "workspace") {
       }
       r.seek(target);
       setPosition(r.position);
-      // Pause when we've landed on a breakpoint line (but not the one we just
-      // stepped off), or reached the end.
-      const landedLine = events[target]?.line;
+      // Pause at the end, or when we've landed on the executable line event for
+      // a breakpoint (not a call/return that merely reports that line).
       if (r.position >= events.length - 1) setPlaying(false);
-      else if (landedLine !== undefined && breakpoints.has(landedLine)) setPlaying(false);
+      else if (isBreakpointStop(events[target], breakpoints)) setPlaying(false);
     }, intervalMs);
     return () => clearInterval(id);
   }, [playing, speed, breakpoints, result]);

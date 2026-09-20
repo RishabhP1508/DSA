@@ -45,11 +45,33 @@ test("editing the source shows a stale banner until re-run", async ({ page }) =>
 
 test("Play advances the timeline and the object inspector expands", async ({ page }) => {
   await runStarter(page);
-  // Restart to step 1, then Play; the step counter should advance past 1.
+  const timelineLabel = page.getByText(/step \d+ \/ \d+/);
+  const stepOf = async () => {
+    const t = (await timelineLabel.textContent()) ?? "";
+    const m = t.match(/step (\d+) \/ (\d+)/);
+    return m ? { pos: Number(m[1]), total: Number(m[2]) } : null;
+  };
+
+  // Restart to step 1, capture the starting position and total.
   await page.getByRole("button", { name: "⏮ Restart" }).click();
+  const start = await stepOf();
+  expect(start).not.toBeNull();
+  expect(start!.pos).toBe(1);
+  expect(start!.total).toBeGreaterThan(1); // the starter produces multiple steps
+
+  // Play; the timeline must ADVANCE beyond the starting step.
   await page.getByRole("button", { name: "▶ Play" }).click();
-  // After playing, we reach the end; the timeline reflects the final step.
-  await expect(page.getByText(/step \d+ \/ \d+/)).toBeVisible({ timeout: 20_000 });
+  await expect
+    .poll(async () => (await stepOf())?.pos ?? 0, { timeout: 20_000 })
+    .toBeGreaterThan(start!.pos);
+  // And it reaches the final step (playback runs to the end).
+  await expect
+    .poll(async () => {
+      const s = await stepOf();
+      return s ? s.pos === s.total : false;
+    }, { timeout: 20_000 })
+    .toBe(true);
+
   // The inspector shows expandable rows (a toggle caret) once state exists.
   await expect(page.locator(".oi-toggle, .oi-row").first()).toBeVisible();
 });

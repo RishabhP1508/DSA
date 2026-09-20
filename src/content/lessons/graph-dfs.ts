@@ -96,7 +96,7 @@ DFS visits every reachable vertex once and scans every edge once, so it is **O(V
   ],
 
   bindings: [
-    { variable: "g", model: "graph", overlays: [{ role: "visited", label: "seen", source: "seen" }] },
+    { variable: "g", model: "graph", directed: false, overlays: [{ role: "visited", label: "seen", source: "seen" }] },
     { variable: "order", model: "array" },
   ],
 

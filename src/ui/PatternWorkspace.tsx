@@ -17,13 +17,17 @@ export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
   const engine = useEngine("pattern:" + pattern.id);
   const [source, setSource] = useState(pattern.walkthroughCode);
 
+  // Edited away from the original walkthrough: authored explanations/bindings/
+  // complexity are keyed to the original source and disabled until it's restored
+  // (R4 amendment). The recorded trace stays usable.
+  const edited = source !== pattern.walkthroughCode;
   const stale = engine.isStale(source, pattern.walkthroughStdin ?? "");
   const currentLine = stale ? null : engine.event?.line ?? null;
 
   const lineExplanation = useMemo(() => {
-    if (!currentLine) return null;
+    if (edited || !currentLine) return null;
     return pattern.codeExplanations.find((c) => c.line === currentLine) ?? null;
-  }, [currentLine, pattern]);
+  }, [edited, currentLine, pattern]);
 
   return (
     <div className="workspace">
@@ -59,10 +63,11 @@ export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
           </button>
         </div>
 
-        {stale && engine.result && (
+        {edited && (
           <div className="stale-banner" role="status">
-            ⚠ You edited the walkthrough — this trace and visualization are outdated. Run again to
-            refresh.
+            ⚠ You edited the walkthrough — the authored line explanations, diagram bindings and
+            complexity note are hidden until you restore the original source. The trace and
+            variables still work.
           </div>
         )}
 
@@ -89,7 +94,12 @@ export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
 
         <div className="explanation-box">
           <h4>What this line does</h4>
-          {lineExplanation ? (
+          {edited ? (
+            <p className="dim">
+              Authored line explanations are hidden while the walkthrough differs from the original.
+              Restore the original source to see them again.
+            </p>
+          ) : lineExplanation ? (
             <p>
               <span className="line-badge">line {lineExplanation.line}</span>{" "}
               {lineExplanation.executable ? "" : <em>(comment) </em>}
@@ -100,7 +110,7 @@ export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
           )}
         </div>
 
-        {pattern.complexityNote && (
+        {pattern.complexityNote && !edited && (
           <div className="explanation-box">
             <h4>Time &amp; space</h4>
             <p>{pattern.complexityNote}</p>
@@ -112,8 +122,15 @@ export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
         <div className="diagram">
           <h4>Visualization</h4>
           {(() => {
-            const ev = stale ? undefined : engine.event;
+            const ev = engine.event;
             if (!ev) return <p className="dim">Run the walkthrough to see the visualization.</p>;
+            if (edited)
+              return (
+                <p className="dim">
+                  The pattern's authored diagram bindings are hidden while the walkthrough is edited.
+                  Restore the original source to see them.
+                </p>
+              );
             if (pattern.bindings.length === 0)
               return <p className="dim">This pattern has no visual bindings.</p>;
             return pattern.bindings.map((b, i) => (
@@ -123,7 +140,7 @@ export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
             ));
           })()}
         </div>
-        <VariablesPanel event={stale ? undefined : engine.event} output={stale ? "" : engine.outputSoFar} />
+        <VariablesPanel event={engine.event} output={engine.outputSoFar} />
       </div>
     </div>
   );

@@ -89,6 +89,44 @@ New R4 tests (all passing after the fix):
   reads snapshots; never reruns) — covered by `replay.test.ts`.
 - R1–R3 behavior untouched; full prior suite green.
 
+## Amendment (pre-merge review follow-up)
+
+A review of PR #16 asked for stronger rendered-output tests and tighter
+semantics. All added test-first (failing on the prior code, then passing):
+
+- **Rendered-output tests** (inspect the produced SVG, not just trace shape):
+  `src/visualizers/GraphVisualizer.test.tsx` and
+  `src/visualizers/DPTableVisualizer.test.tsx`.
+- **Graph direction is explicit, not inferred.** `VisualBinding.directed`
+  added; `GraphVisualizer` draws a reciprocal pair (u→v and v→u) as TWO
+  arrowheaded arcs when `directed:true`, one undirected edge when `false` —
+  never inferring from the presence of a reverse edge. The 8 existing (all
+  undirected) graph lesson bindings now set `directed: false` explicitly.
+- **DP "computed" styling only from state/metadata.** `VisualBinding.computedSource`
+  added; `DPTableVisualizer` shades a cell "computed" ONLY when it is listed by
+  the authored `computedSource` (a set/list of indices / `[i,j]` pairs) — a
+  zero-initialised table shows NO computed cells. The current cell still
+  highlights from the `i`/`j` overlays (actual state).
+- **Edited lesson/pattern code keeps the fresh trace but disables authored
+  artifacts.** `edited = source !== original` gates the authored line
+  explanations, diagram bindings, and complexity panel/note (hidden until the
+  original source is restored); the recorded trace, variables, output and
+  playback stay usable. **Staleness overrides a lingering complexity-hover
+  highlight** (the `cxHighlight` no longer drives the editor highlight while
+  edited/stale). The Playground (learner's own code, no authored artifacts)
+  keeps its trace visible with an "outdated, re-run to refresh" banner.
+- **Playback tested against a realistic call/line/return sequence.**
+  `isBreakpointStop` pauses ONLY at the executable `line` event for a breakpoint
+  line — never on a `call`/`return` that merely reports that line; `replay.test.ts`
+  covers this with a real 7-event sequence and a play-loop simulation. `useEngine`'s
+  play timer uses `isBreakpointStop`.
+- **Browser Play test asserts the timeline actually advances** (captures the
+  starting step, then polls that the position increases and reaches the total).
+
+Amendment verification: `check:all` green (lint 0/9; unit **138/138**; 130
+lessons + 29 patterns unchanged; 130 complexity; 27/27 visualizer shapes);
+`test:browser` **9 passed / 5 skipped**.
+
 ## What was NOT proven / remaining
 - **Deque adapter was already fixed by R2** (evidence in the probe + the new
   `verify:visualizers` deque check); R4 closed the *verification* gap, not a live

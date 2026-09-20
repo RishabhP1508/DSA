@@ -114,7 +114,7 @@ It runs in **O(V + E)** time and **O(V)** space — the same as plain BFS. The c
   ],
 
   bindings: [
-    { variable: "g", model: "graph" },
+    { variable: "g", model: "graph", directed: false },
     { variable: "dist", model: "dict" },
   ],
 

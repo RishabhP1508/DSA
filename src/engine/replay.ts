@@ -136,13 +136,29 @@ export function nextPlayIndex(
   breakpoints: ReadonlySet<number>,
 ): number | null {
   if (from >= events.length - 1) return null;
-  // Always advance exactly one step. The caller PAUSES after landing on a
-  // breakpoint line (so playback stops AT the breakpoint), which also means
-  // sitting on a breakpoint and pressing play again advances past it rather than
-  // re-trapping. `breakpoints` is part of the contract and consulted here so the
-  // stepping and pausing rules stay co-located and testable.
+  // Always advance exactly one step. The caller decides whether to PAUSE after
+  // landing (see `isBreakpointStop`), so a breakpoint stops playback AT the
+  // intended event, and sitting on a breakpoint and pressing play again
+  // advances past it rather than re-trapping. `breakpoints` is part of the
+  // contract so the stepping/pausing rules stay co-located.
   void breakpoints;
   return from + 1;
+}
+
+/**
+ * Whether playback should PAUSE at `event` for a breakpoint. A line breakpoint
+ * targets the EXECUTABLE `line` event for that source line — the moment the
+ * line is about to run — NOT a `call`/`return`/`exception`/`output` event that
+ * merely reports the same line number. This keeps a breakpoint on line N from
+ * spuriously trapping the function-entry `call` or the `return` reported at N.
+ */
+export function isBreakpointStop(
+  event: Pick<TraceEvent, "kind" | "line"> | undefined,
+  breakpoints: ReadonlySet<number>,
+): boolean {
+  if (!event) return false;
+  if (event.kind !== "line") return false;
+  return breakpoints.has(event.line);
 }
 
 // ---------------------------------------------------------------------------

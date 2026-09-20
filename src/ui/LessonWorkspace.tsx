@@ -30,19 +30,28 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
     void markLessonViewed(lesson.id);
   }, [lesson.id]);
 
-  // R4.1: once the source no longer matches the recorded trace, treat the trace,
-  // highlight, visualization, and complexity panel as outdated.
+  // The learner has edited away from the ORIGINAL lesson source. The authored
+  // artifacts (line explanations, bindings, complexity claims) are keyed to the
+  // original source and are only valid for it, so they are disabled until the
+  // original source is restored (R4 amendment). The recorded TRACE itself stays
+  // usable — a fresh run of the edited code produces real, inspectable states.
+  const edited = source !== lesson.code;
+  // The trace no longer matches the current editor content (edited but not
+  // re-run): the trace-driven line highlight no longer maps to the source.
   const stale = engine.isStale(source, lesson.stdin ?? "");
 
-  // The code editor highlights a single line; when the complexity panel is
-  // hovering a multi-line contribution we highlight its first line. While stale
-  // we drop the trace-driven highlight (it no longer maps to the edited source).
-  const currentLine = cxHighlight?.[0] ?? (stale ? null : engine.event?.line ?? null);
+  // Editor line highlight: the complexity-hover highlight applies ONLY when the
+  // authored complexity is valid (i.e. not edited/stale) — staleness overrides a
+  // lingering hover highlight. Otherwise use the trace line unless it is stale.
+  const cxHover = !edited && !stale ? cxHighlight?.[0] : null;
+  const currentLine = cxHover ?? (stale ? null : engine.event?.line ?? null);
 
+  // Authored line explanations are keyed to the ORIGINAL source; only show them
+  // when the source is unedited.
   const lineExplanation = useMemo(() => {
-    if (!currentLine) return null;
+    if (edited || !currentLine) return null;
     return lesson.codeExplanations.find((c) => c.line === currentLine) ?? null;
-  }, [currentLine, lesson]);
+  }, [edited, currentLine, lesson]);
 
   return (
     <div className="workspace">
@@ -75,10 +84,11 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
           </button>
         </div>
 
-        {stale && engine.result && (
+        {edited && (
           <div className="stale-banner" role="status">
-            ⚠ You edited the code — this trace, visualization and complexity panel are outdated. Run
-            again to refresh.
+            ⚠ You edited the lesson code — the authored line explanations, diagram bindings and
+            complexity claims are hidden until you restore the original source. Run to inspect your
+            edited program; its trace and variables still work.
           </div>
         )}
 
@@ -105,7 +115,12 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
 
         <div className="explanation-box">
           <h4>What this line does</h4>
-          {lineExplanation ? (
+          {edited ? (
+            <p className="dim">
+              Authored line explanations are hidden while the code differs from the original lesson.
+              Restore the original source to see them again.
+            </p>
+          ) : lineExplanation ? (
             <p>
               <span className="line-badge">line {lineExplanation.line}</span>{" "}
               {lineExplanation.executable ? "" : <em>(comment) </em>}
@@ -121,8 +136,17 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
         <div className="diagram">
           <h4>Visualization</h4>
           {(() => {
-            const ev = stale ? undefined : engine.event;
+            const ev = engine.event;
             if (!ev) return <p className="dim">Run the program to see the visualization.</p>;
+            // Authored bindings are keyed to the original source; disable them
+            // while edited. The trace/variables below still reflect the run.
+            if (edited)
+              return (
+                <p className="dim">
+                  The lesson's authored diagram bindings are hidden while the code is edited.
+                  Restore the original source to see them.
+                </p>
+              );
             if (lesson.bindings.length === 0)
               return <p className="dim">This lesson has no visual bindings.</p>;
             return lesson.bindings.map((b, i) => (
@@ -132,8 +156,8 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
             ));
           })()}
         </div>
-        <VariablesPanel event={stale ? undefined : engine.event} output={stale ? "" : engine.outputSoFar} />
-        {lesson.complexityExplanation && !stale && (
+        <VariablesPanel event={engine.event} output={engine.outputSoFar} />
+        {lesson.complexityExplanation && !edited && (
           <ComplexityPanel
             explanation={lesson.complexityExplanation}
             result={engine.result}

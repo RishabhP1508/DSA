@@ -108,7 +108,7 @@ BFS visits every reachable vertex once and scans every incident edge once, so it
   ],
 
   bindings: [
-    { variable: "g", model: "graph", overlays: [{ role: "visited", label: "seen", source: "seen" }] },
+    { variable: "g", model: "graph", directed: false, overlays: [{ role: "visited", label: "seen", source: "seen" }] },
     { variable: "order", model: "array" },
   ],
 

@@ -5,19 +5,51 @@
  * grid. A `current` pointer overlay (or `i`/`j` overlays) highlights the cell
  * being filled; already-filled cells are shaded so the fill order is visible.
  *
- * "Filled" is inferred as cells that are not the table's initial sentinel; since
- * we cannot know the sentinel generically, we treat any non-None cell as filled
- * and highlight the current index from overlays.
+ * "Computed" shading comes ONLY from authored/observed state (a `computedSource`
+ * variable listing the computed indices) — never inferred from a cell being
+ * non-None, because a zero-initialised table is not "computed". The current
+ * cell is highlighted from the `i`/`j` overlays (actual state).
  */
 
-import type { TraceEvent, VisualBinding } from "../core/types";
+import type { TraceEvent, TraceValue, VisualBinding } from "../core/types";
 import { displayValue } from "../engine/replay";
-import { resolveBindingObject, deref, resolveOverlays } from "./helpers";
+import { resolveBindingObject, deref, resolveOverlays, resolveVariable } from "./helpers";
 
 const CELL = 46;
 const GAP = 3;
 const PAD = 16;
 const TOP = 44;
+
+/**
+ * The set of indices/cells that have actually been COMPUTED, taken ONLY from
+ * the authored `computedSource` variable (a set/list). Returns null when no such
+ * metadata is bound — in which case NO cell is styled "computed" (a non-None
+ * value alone, e.g. a zero-initialised table, is not evidence of computation).
+ *
+ * 1D: members are ints (the computed indices).
+ * 2D: members are "[i, j]"/"(i, j)" pairs, or "i,j" — matched by string form.
+ */
+function computedSet(event: TraceEvent, binding: VisualBinding): Set<string> | null {
+  if (!binding.computedSource) return null;
+  const obj = deref(event, resolveVariable(event, binding.computedSource));
+  if (!obj?.entries) return new Set();
+  const out = new Set<string>();
+  for (const e of obj.entries) {
+    // set/list → member is the value; normalise to a compact string key.
+    out.add(cellKeyOf(event, e.value));
+  }
+  return out;
+}
+
+function cellKeyOf(event: TraceEvent, v: TraceValue): string {
+  if (v.kind === "int" || v.kind === "str") return String(v.value);
+  if (v.kind === "ref") {
+    // a tuple/list [i, j] → "i,j"
+    const o = event.objects[v.id];
+    if (o?.entries) return o.entries.map((e) => displayValue(e.value, event.objects)).join(",");
+  }
+  return displayValue(v, event.objects);
+}
 
 export function DPTableVisualizer({ event, binding }: { event: TraceEvent; binding: VisualBinding }) {
   const { object: obj } = resolveBindingObject(event, binding);
@@ -28,6 +60,8 @@ export function DPTableVisualizer({ event, binding }: { event: TraceEvent; bindi
   const overlays = resolveOverlays(event, binding);
   const iMark = overlays.find((o) => /^i$|row|\bi\b/i.test(o.label))?.index;
   const jMark = overlays.find((o) => /^j$|col|\bj\b/i.test(o.label))?.index;
+  // "computed" styling comes ONLY from authored/observed metadata (R4 amendment).
+  const computed = computedSet(event, binding);
 
   if (!is2D) {
     const cells = obj.entries;
@@ -38,7 +72,7 @@ export function DPTableVisualizer({ event, binding }: { event: TraceEvent; bindi
       <svg className="array-viz" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`DP table ${binding.variable}, ${cells.length} cells`}>
         <text x={PAD} y={22} className="viz-title">{binding.variable} (dp[{cells.length}])</text>
         {cells.map((c, i) => {
-          const filled = c.value.kind !== "none";
+          const filled = computed?.has(String(i)) ?? false;
           const active = iMark === i;
           return (
             <g key={i}>
@@ -67,7 +101,7 @@ export function DPTableVisualizer({ event, binding }: { event: TraceEvent; bindi
         Array.from({ length: cols }).map((_, c) => {
           const cell = row[c];
           const active = iMark === r && jMark === c;
-          const filled = cell && cell.value.kind !== "none";
+          const filled = computed?.has(`${r},${c}`) ?? false;
           return (
             <g key={`${r}-${c}`}>
               <rect x={x(c)} y={y(r)} width={CELL} height={CELL} rx={4} className={active ? "cell cell-active" : filled ? "cell cell-filled" : "cell"} />
