@@ -18,7 +18,7 @@
 
 import { openDB, type IDBPDatabase } from "idb";
 import type { ProgressRecord } from "../core/types";
-import { uniqueUidForBareId } from "./exercise-id";
+import { uniqueUidForBareId, isCompositeExerciseKey } from "./exercise-id";
 import {
   validateBackup,
   validateMigratedRecord,
@@ -75,6 +75,29 @@ export async function __closeDbForTests(): Promise<void> {
 // Migration (v1 → v2)
 // ---------------------------------------------------------------------------
 
+type ExEntry = { attempts: number; solved: boolean };
+
+/**
+ * COLLISION POLICY (R3.1 amendment). When two source records target the same
+ * destination key during migration — e.g. a composite key AND a unique bare id
+ * that resolves to the same uid, or a bare id that already exists in
+ * `legacyExercises` — they are MERGED, never overwritten:
+ *   - `attempts` = the SUM of both (each represents real attempts), and
+ *   - `solved`   = the logical OR (sticky: a solved exercise never becomes
+ *     unsolved).
+ * Both operations are commutative, so the result is DETERMINISTIC and
+ * independent of object-key iteration order. This guarantees no attempt is
+ * silently dropped and no completion is lost, regardless of how a
+ * hand-edited/merged backup happened to order its keys.
+ */
+function mergeExerciseEntry(existing: ExEntry | undefined, incoming: ExEntry): ExEntry {
+  if (!existing) return { attempts: incoming.attempts, solved: incoming.solved };
+  return {
+    attempts: existing.attempts + incoming.attempts,
+    solved: existing.solved || incoming.solved,
+  };
+}
+
 /**
  * Migrate a progress record to the current schema. Pure and IDEMPOTENT:
  * calling it on an already-v2 record returns an equivalent record.
@@ -86,43 +109,67 @@ export async function __closeDbForTests(): Promise<void> {
  *  - an UNKNOWN bare id (not in the current registry) → also kept in
  *    `legacyExercises` with a note (never silently dropped).
  * Lessons, drafts, preferences, and any existing legacyExercises are preserved.
+ *
+ * When a rewrite would land on a key that is ALREADY populated (a composite key
+ * plus its unique bare equivalent, or a bare id already present in
+ * `legacyExercises`), the records are MERGED per the collision policy in
+ * `mergeExerciseEntry` — deterministic and order-independent, never losing
+ * attempts or downgrading a solved exercise.
  */
 export function migrateProgress(rec: ProgressRecord): ProgressRecord {
-  if (rec.schemaVersion === PROGRESS_SCHEMA_VERSION) {
-    // Already current: normalise optional fields but change nothing meaningful.
-    return {
-      ...empty,
-      ...rec,
-      legacyExercises: rec.legacyExercises ?? {},
-      schemaVersion: PROGRESS_SCHEMA_VERSION,
-      backupVersion: BACKUP_VERSION,
-    };
+  // Never downgrade a FUTURE schema version we don't understand; return it
+  // untouched so a newer app can still read it (and so we don't corrupt it).
+  if (typeof rec.schemaVersion === "number" && rec.schemaVersion > PROGRESS_SCHEMA_VERSION) {
+    return rec;
   }
+
+  // A record claiming to be current (schemaVersion === 2) is normalised, but we
+  // STILL relocate any non-composite exercise key defensively: the R3.1 bug
+  // could have persisted a "v2 with bare keys" record locally, and such a key
+  // would otherwise never be repaired (its progress would be invisible under
+  // the composite lookup). Genuinely composite keys are left untouched, so this
+  // is a no-op for correct v2 records (idempotent).
+  const isCurrent = rec.schemaVersion === PROGRESS_SCHEMA_VERSION;
 
   const exercises: ProgressRecord["exercises"] = {};
   const legacyExercises: NonNullable<ProgressRecord["legacyExercises"]> = {
     ...(rec.legacyExercises ?? {}),
   };
 
-  for (const [bareOrUid, entry] of Object.entries(rec.exercises ?? {})) {
-    // If the key already looks like a composite uid, keep it as-is.
-    if (bareOrUid.includes(":")) {
-      exercises[bareOrUid] = entry;
+  const legacyNote = isCurrent
+    ? "Recovered from a record that stored this exercise id in a bare " +
+      "(non-composite) form; it is reused across lessons/patterns (or is " +
+      "no longer in the curriculum), so it cannot be attributed to one " +
+      "exercise and is preserved here."
+    : "Migrated from an older version where this exercise id was reused " +
+      "across lessons/patterns (or is no longer in the curriculum); it " +
+      "cannot be reliably attributed to one exercise, so it is preserved " +
+      "here rather than marking any current exercise solved.";
+
+  for (const [key, entry] of Object.entries(rec.exercises ?? {})) {
+    if (isCompositeExerciseKey(key)) {
+      // Well-formed composite id: keep as-is (do not require it to exist in the
+      // registry — backups outlive curriculum changes). MERGE if a bare
+      // equivalent already resolved to this same uid (collision policy below).
+      exercises[key] = mergeExerciseEntry(exercises[key], entry);
       continue;
     }
-    const uid = uniqueUidForBareId(bareOrUid);
+    // A non-composite (bare) key. Resolve it if it maps to exactly one owner;
+    // otherwise preserve it in legacyExercises (ambiguous/unknown), never
+    // attributing it to a twin and never discarding it.
+    const uid = uniqueUidForBareId(key);
     if (uid) {
-      exercises[uid] = entry;
+      // MERGE with any existing entry at this uid (e.g. a composite key with the
+      // same target already present) rather than overwriting it.
+      exercises[uid] = mergeExerciseEntry(exercises[uid], entry);
     } else {
-      // Ambiguous or unknown bare id: cannot attribute to a single exercise.
-      legacyExercises[bareOrUid] = {
-        attempts: entry.attempts,
-        solved: entry.solved,
-        note:
-          "Migrated from an older version where this exercise id was reused " +
-          "across lessons/patterns (or is no longer in the curriculum); it " +
-          "cannot be reliably attributed to one exercise, so it is preserved " +
-          "here rather than marking any current exercise solved.",
+      // MERGE with any existing legacy record for this bare id rather than
+      // clobbering an earlier one (e.g. one already in rec.legacyExercises).
+      const existing = legacyExercises[key];
+      legacyExercises[key] = {
+        attempts: (existing?.attempts ?? 0) + entry.attempts,
+        solved: (existing?.solved ?? false) || entry.solved,
+        note: existing?.note ?? legacyNote,
       };
     }
   }
@@ -173,7 +220,11 @@ async function updateProgress(
 }
 
 export async function saveProgress(rec: ProgressRecord): Promise<void> {
-  await updateProgress(() => ({ ...rec, schemaVersion: PROGRESS_SCHEMA_VERSION, backupVersion: BACKUP_VERSION }));
+  // Migrate the supplied record to the current schema rather than blindly
+  // stamping it v2: a v1-shaped record (bare exercise keys, no schemaVersion)
+  // must be converted (bare ids resolved/moved to legacyExercises), never
+  // persisted as a mislabeled "v2 with bare keys" record (R3.1 follow-up).
+  await updateProgress(() => migrateProgress(rec));
 }
 
 export async function markLessonViewed(id: string): Promise<void> {
@@ -276,17 +327,22 @@ export async function importBackup(text: string): Promise<ImportResult> {
     return { ok: false, error: "File is not valid JSON." };
   }
 
-  // 1. Validate the envelope (version-tolerant: accepts v1 and v2).
+  // 1. Validate the envelope, VERSION-AWARE (R3.1 follow-up): a v2 file with a
+  // bare exercise key, or an inconsistent version combination, is rejected here
+  // — before any migration or IndexedDB write.
   const validated = validateBackup(parsed);
   if (!validated.ok) {
     return { ok: false, error: validated.error };
   }
 
-  // 2. Migrate the record in memory to the current schema. Pass the RAW record
-  // (do NOT pre-seed schemaVersion) so a v1 backup is actually migrated.
+  // 2. Migrate the record in memory to the current schema. A genuine v1 record
+  // is migrated (bare ids resolved/moved to legacy); a genuine v2 record (whose
+  // keys were already checked to be composite) is normalised idempotently. Pass
+  // the RAW record (do NOT pre-seed schemaVersion) so a v1 backup is migrated.
   const migrated = migrateProgress(validated.envelope.data as ProgressRecord);
 
-  // 3. Re-validate the migrated result against the strict v2 schema.
+  // 3. Re-validate the migrated result against the strict v2 schema (composite
+  // keys, schemaVersion/backupVersion === 2).
   const strict = validateMigratedRecord(migrated);
   if (!strict.ok) {
     return { ok: false, error: `Migrated backup failed validation: ${strict.error}` };
