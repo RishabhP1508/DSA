@@ -48,6 +48,7 @@ The cost is linear in the total number of characters: \`split\` scans the whole 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "L", meaning: "the total number of characters in the input line" },
       { symbol: "t", meaning: "the number of tokens produced by split" },
@@ -145,4 +146,11 @@ The cost is linear in the total number of characters: \`split\` scans the whole 
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "3cb54e5b8f07fb79",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

@@ -52,6 +52,7 @@ The rule of thumb: assigning to a name inside a function makes it local (unless 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "—", meaning: "no input size; constant work per call" }],
     costModel: "Each assignment and addition is one constant-time step; one call frame is constant space.",
     time: { bound: "O(1)", case: "worst", explanation: "bump does two assignments and one addition, then returns — a fixed amount of work with no loop or recursion." },
@@ -127,4 +128,11 @@ The rule of thumb: assigning to a name inside a function makes it local (unless 
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "a4073f80b86f8f1f",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

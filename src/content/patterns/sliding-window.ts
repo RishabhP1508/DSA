@@ -60,6 +60,7 @@ export const slidingWindowPattern: PatternDefinition = {
     "O(n) time: the first window costs O(k) once, then each of the remaining n−k slides is O(1). O(1) auxiliary space for the running sum. The naive per-window recompute is O(n·k).",
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of elements in nums" },
       { symbol: "k", meaning: "the fixed window width" },
@@ -182,4 +183,12 @@ export const slidingWindowPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "d7f53d112061c1d0",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

@@ -88,6 +88,7 @@ In the example the range \`[0,4)\` sums to **10**, \`[1,5)\` to **12**, and afte
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements (leaves) in the tree" }],
     costModel:
       "Each combine is O(1). Update and query move up the tree, halving the index each step, so they take a number of steps equal to the tree height.",
@@ -253,4 +254,11 @@ In the example the range \`[0,4)\` sums to **10**, \`[1,5)\` to **12**, and afte
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "ee5b47b2e99e861b",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

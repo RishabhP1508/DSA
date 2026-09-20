@@ -64,6 +64,7 @@ export const prefixSumsHashmapPattern: PatternDefinition = {
     "O(n) time: one pass, each step an O(1) map lookup and update. O(n) space for the prefix-count map. Naive per-range summing is O(n²).",
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel: "One pass maintains a running prefix sum and a map from prefix value to how many times it has occurred; each step is an O(1) hashed lookup and update.",
     time: {
@@ -190,4 +191,11 @@ export const prefixSumsHashmapPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "53524978abbc3993",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

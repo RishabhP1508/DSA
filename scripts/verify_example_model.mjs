@@ -1,29 +1,29 @@
 /**
- * R5.1 verification — the shared executable-example model.
+ * R5.1 verification — the shared executable-example model (FULL contract).
  *
  * Every lesson that ships an executable `code` example, and every pattern that
  * ships a full `walkthroughCode` implementation, must carry a COMPLETE authored
- * example model, not just a one-line note. Specifically each executable example
- * must have:
- *   - a structured `complexityExplanation` with input-size variables, a time
- *     bound + explanation, a space bound + explanation, a non-empty line-linked
- *     derivation, and non-empty assumptions;   [R5.1.1, R5.1.2]
- *   - every derivation line and counter line within the code's line range, and
- *     (for patterns) counters that actually execute on the walkthrough input;
- *   - at least one reference with a real URL and an accessDate.   [R5.5]
+ * example model. This validates, via scripts/lib/example-model.mjs:
+ *   - source code + (optional) supported input;
+ *   - expected output (non-empty);
+ *   - an explanation for EVERY displayed source line (no gaps / out-of-range);
+ *   - visual bindings OR a documented bindingsRationale for their absence;
+ *   - analysis scope + input-size variables;
+ *   - time and space explanations (no placeholder text);
+ *   - preconditions (complexityExplanation.assumptions) and edge cases;
+ *   - references with url + accessDate + >=1 verifiedClaim;
+ *   - verification evidence (evidence.contentHash) tied to the CURRENT content
+ *     revision — STALE evidence (hash mismatch) fails.
  *
- * A standalone `complexityNote` is INSUFFICIENT for a full supplied
- * implementation (R5.1.2): patterns must graduate to a `complexityExplanation`.
+ * It rejects empty arrays, placeholder text, missing expected output, and stale
+ * evidence. It does NOT prove the Big-O CLAIM itself (human review / R7).
  *
  * Loads the REAL registry (no silent skip). Wired into `npm run test:curriculum`.
  * Run: node --experimental-strip-types --import ./scripts/lib/ts-register.mjs scripts/verify_example_model.mjs
- *
- * This checks the example model is STRUCTURALLY COMPLETE and internally
- * consistent (lines in range, counters execute). It does NOT prove the Big-O
- * claim is correct — that is human review / R7.
  */
 import { loadCurriculum } from "./lib/load-curriculum.mjs";
 import { runProgram } from "./lib/pyodide-harness.mjs";
+import { validateExample } from "./lib/example-model.mjs";
 
 const { lessons, patterns, errors } = await loadCurriculum();
 
@@ -36,65 +36,60 @@ function executedLines(res) {
   return set;
 }
 
-function checkComplexity(kind, id, code, cx, executed) {
-  const lineCount = code.split("\n").length;
-  const problems = [];
-  if (!cx) { problems.push("no complexityExplanation (a bare note is insufficient for a full implementation)"); return problems; }
-  if (!cx.variables || cx.variables.length === 0) problems.push("no input-size variables");
-  if (!cx.time?.bound) problems.push("no time.bound");
-  if (!cx.time?.explanation) problems.push("no time.explanation");
-  if (!cx.space?.bound) problems.push("no space.bound");
-  if (!cx.space?.explanation) problems.push("no space.explanation");
-  if (!cx.derivation || cx.derivation.length === 0) problems.push("empty derivation");
-  if (!cx.assumptions || cx.assumptions.length === 0) problems.push("no assumptions");
-  for (const d of cx.derivation ?? []) {
-    for (const ln of d.lines ?? []) {
-      if (ln < 1 || ln > lineCount) problems.push(`derivation line ${ln} out of range (1..${lineCount})`);
-    }
-  }
-  for (const c of cx.counters ?? []) {
-    for (const ln of c.countLines ?? []) {
-      if (ln < 1 || ln > lineCount) problems.push(`counter "${c.label}" line ${ln} out of range`);
-    }
-    if (executed) {
-      const anyExecuted = (c.countLines ?? []).some((ln) => executed.has(ln));
-      if (!anyExecuted) problems.push(`counter "${c.label}" countLines [${c.countLines}] never executed`);
-    }
-  }
-  return problems;
+/** Normalize a lesson into the example view the validator expects. */
+function lessonExample(l) {
+  return {
+    id: l.id,
+    kind: "lesson",
+    code: l.code,
+    stdin: l.stdin,
+    expectedOutput: l.expectedOutput,
+    codeExplanations: l.codeExplanations,
+    bindings: l.bindings,
+    bindingsRationale: l.bindingsRationale,
+    complexityExplanation: l.complexityExplanation,
+    references: l.references,
+    edgeCases: l.concepts?.edgeCases,
+    item: l,
+  };
 }
 
-function checkReferences(refs) {
-  if (!Array.isArray(refs) || refs.length === 0) return ["no references"];
-  const problems = [];
-  for (const r of refs) {
-    if (!r.url || !/^https?:\/\//.test(r.url)) problems.push(`reference missing/invalid url: ${JSON.stringify(r.url)}`);
-    if (!r.accessDate) problems.push(`reference ${r.url} missing accessDate`);
-  }
-  return problems;
+/** Normalize a pattern into the example view the validator expects. */
+function patternExample(p) {
+  return {
+    id: p.id,
+    kind: "pattern",
+    code: p.walkthroughCode,
+    stdin: p.walkthroughStdin,
+    expectedOutput: p.walkthroughExpectedOutput,
+    codeExplanations: p.codeExplanations,
+    bindings: p.bindings,
+    bindingsRationale: p.bindingsRationale,
+    complexityExplanation: p.complexityExplanation,
+    references: p.references,
+    // A pattern's edge-case coverage lives in its counterexamples + conditions.
+    edgeCases: [...(p.counterexamples ?? []), ...(p.conditions ?? [])],
+    item: p,
+  };
 }
 
-// --- Lessons: executable code example must carry the full model. ---
-for (const l of lessons) {
-  const problems = [];
-  const res = await runProgram(l.code, l.stdin ?? "");
+async function run(example) {
+  const res = await runProgram(example.code, example.stdin ?? "");
   const executed = res.status === "completed" ? executedLines(res) : null;
-  problems.push(...checkComplexity("lesson", l.id, l.code, l.complexityExplanation, executed));
-  problems.push(...checkReferences(l.references));
-  if (problems.length) { failures += problems.length; console.log(`  ✗ lesson ${l.id}: ${problems.join("; ")}`); }
+  const problems = validateExample(example, executed);
+  if (res.status !== "completed") problems.unshift(`${example.kind} ${example.id}: program did not complete (${res.status})`);
+  return problems;
+}
+
+for (const l of lessons) {
+  const problems = await run(lessonExample(l));
+  if (problems.length) { failures += problems.length; for (const p of problems) console.log(`  ✗ ${p}`); }
   else console.log(`  ✓ lesson ${l.id} — full example model`);
 }
 
-// --- Patterns: a full walkthrough implementation must carry a structured
-//     complexityExplanation (R5.1.2), not just complexityNote. ---
 for (const p of patterns) {
-  const problems = [];
-  const res = await runProgram(p.walkthroughCode, p.walkthroughStdin ?? "");
-  const executed = res.status === "completed" ? executedLines(res) : null;
-  if (res.status !== "completed") problems.push(`walkthrough did not complete (${res.status})`);
-  problems.push(...checkComplexity("pattern", p.id, p.walkthroughCode, p.complexityExplanation, executed));
-  problems.push(...checkReferences(p.references));
-  if (problems.length) { failures += problems.length; console.log(`  ✗ pattern ${p.id}: ${problems.join("; ")}`); }
+  const problems = await run(patternExample(p));
+  if (problems.length) { failures += problems.length; for (const pr of problems) console.log(`  ✗ ${pr}`); }
   else console.log(`  ✓ pattern ${p.id} — full example model`);
 }
 

@@ -130,3 +130,107 @@ panels; 3 runnable exercises). `npm run test:browser` = 9 passed / 5 skipped (th
   entries, 381 exercises unchanged in count).
 - The only `expectedOutput` changed was `min-max-heaps` (old teaching was factually wrong; new output
   captured from the runtime, evidence recorded). All other lesson outputs are byte-identical.
+
+
+
+---
+
+# R5 AMENDMENT (follow-up to PR #17) — verification
+
+This amendment strengthens the R5 evidence to match the R5 requirements and stops
+reporting incomplete evidence as fully verified. The corrected heap/sliding-window
+teaching, the line-explanation repairs, the structured pattern complexity, and the
+R7 deferral are UNCHANGED (no new defect found). Tested commit = the tip of
+`repair/r5-curriculum` after this amendment.
+
+## Item 1 — R5.1 full example-model contract (test-first)
+- New shared validator `scripts/lib/example-model.mjs` checks the FULL contract per
+  executable example: source + optional input; non-empty expected output; a
+  per-line explanation for every displayed line (no gaps / out-of-range);
+  bindings OR a documented `bindingsRationale`; `complexityExplanation.scope`
+  (program/function/operation); input-size variables; time + space explanations
+  (placeholder text rejected); assumptions/preconditions; edge cases (lesson
+  `concepts.edgeCases` or pattern `counterexamples`+`conditions`); references with
+  url + accessDate + ≥1 verifiedClaim; and `evidence.contentHash` tied to the LIVE
+  content (stale hash fails).
+- New `scripts/lib/content-hash.mjs` — deterministic SHA-256 over a canonical
+  projection (code, stdin, expected output, line explanations, bindings, concept/
+  clue fields, exercises, prediction, complexity, references).
+- Types: `ComplexityExplanation.scope` (required); `ExampleEvidence`; `evidence?`
+  and `bindingsRationale?` on `LessonDefinition`/`PatternDefinition`.
+- **Test-first evidence:** `src/content/example-model.contract.test.ts` (22 cases)
+  invalidates each required field and proves rejection — passes. The CLI verifier
+  **failed first on unchanged content** (318 failures: missing scope + evidence),
+  then passes after the codemods. Stale-detection proven on real content (editing
+  a `kadane` code explanation flipped the hash → STALE failure; revert → clean).
+- `verify:example-model`: EXAMPLE MODEL OK (131 lessons, 29 patterns).
+
+## Item 2 — genuine sift-up/sift-down mechanics
+- New lesson `heap-sift` ("Heap Mechanics: Sift-Up and Sift-Down"): explicit
+  `sift_up`/`sift_down`, 0-based parent `(i-1)//2` / children `2i+1`,`2i+2`,
+  concrete start array `[1,3,2,7,4,5]`, insert 0 → 2 sift-up swaps →
+  `[0,3,1,7,4,5,2]`, remove-min → move last to root → 1 sift-down swap →
+  `[1,3,2,7,4,5]`. Output verified on the bundled runtime. Registered; coverage
+  entry `heaps/sift-mechanics`. Counts now **131 lessons / 29 patterns**.
+- The old word-search "sift" test was REPLACED by real mechanics tests, including a
+  TS re-derivation of sift-up/sift-down that asserts equality with the lesson's
+  exact `expectedOutput` state sequence. Plus a predict-next-swap exercise.
+
+## Item 3 — evidence-based coverage
+- New `scripts/verify_coverage_evidence.mjs` (in `test:curriculum`): a `verified`
+  coverage entry MUST map to a lesson (+patterns) whose evidence is current
+  (hash == live), `inventoryVersion == COVERAGE_VERSION`, all six checks true, no
+  unresolved. Result: 131 verified entries backed by current evidence.
+- `src/content/coverage-evidence.test.ts` (135 cases): per-entry current-evidence +
+  three falsely-verified-prevention tests (mutating code / a code explanation /
+  references flips the hash → not verifiable).
+- `evidence.inventoryVersion` is a LITERAL number (14), so a future version bump
+  flags entries for re-review rather than silently staying "verified".
+- COVERAGE_VERSION 13 → 14.
+
+## Item 4 — Notion reconciliation: BLOCKED (documented, not faked)
+- Browser inspection via headless Chromium hit a **Cloudflare "Verify you are
+  human" CAPTCHA**; the Notion API returned the same challenge + HTTP 429; server
+  fetch returned an empty client shell. The CAPTCHA was NOT bypassed.
+- All attempts, what is/ isn't mapped, and the ask to the user are recorded in
+  `.kiro/specs/R5-curriculum/external-practice-manifest.md`. The 79 canonical
+  LeetCode mappings are kept (no invented links) but are now labelled a
+  conservative subset NOT reconciled to the Notion list, in `coverage.ts`,
+  `docs/coverage.md`, and the manifest.
+
+## Item 5 — six-batch review, honestly scoped
+- New `scripts/verify_semantic_consistency.mjs` (in `test:curriculum`): 0 failures,
+  7 advisory warnings — all inspected and confirmed to be legitimate
+  whole-program-panel vs per-operation-summary scope distinctions (recorded in
+  `batch-review.md`), not defects.
+- `evidence.semanticReview` is set true for the **37 items** whose teaching content
+  was genuinely read this milestone (with `reviewBatch`); the other **123** are
+  `semanticReview: false` and kept OUT of the reviewed count. `batch-review.md`
+  logs the six batches and what each review checked.
+
+## Final counts (reported separately, per the amendment)
+- **Fully evidence-verified (structural, machine-checked with current hash):
+  131 / 131 lessons + all 29 patterns.** (All six `checks` true; output, line
+  explanations, complexity panel, example-model contract, references.)
+- **Human semantic review complete (R5.3): 34 / 131 coverage entries
+  (≈37 lesson/pattern items); 97 coverage entries pending.** Pending items are
+  structurally verified but NOT claimed as semantically reviewed.
+- **External-practice mappings: 79 canonical LeetCode problems across 61 subtopics;
+  reconciliation with the Notion syllabus UNRESOLVED (Cloudflare-blocked).**
+
+## Full suite (tested commit = amendment tip)
+- `npm run check:all`: green — build; lint 0 err / 9 pre-existing warn; unit
+  **343 / 343** across 28 files; pipeline; visualizers; 131 lessons; 29 patterns;
+  131 complexity panels; line explanations 131 + 29; example model 131 + 29;
+  coverage evidence 131; semantic consistency (0 failures / 7 advisory);
+  runnable exercises.
+- `npm run test:browser`: 9 passed / 5 skipped (P-RUNNER-ORIGIN unchanged).
+
+## Still NOT proven / carried forward
+- `P-RUNNER-ORIGIN` remains a release-blocking packaging gate (5 skipped e2e).
+- Big-O CLAIM correctness is human-reviewed, not machine-proven (R7).
+- 97 coverage entries await deep semantic review (structurally verified only).
+- The Notion external-practice list is unresolved (Cloudflare CAPTCHA) — needs a
+  user-provided export / paste / confirmation.
+- No lesson `expectedOutput` changed in this amendment. (The only R5 output change
+  remains the original `min-max-heaps` fix, already recorded above.)

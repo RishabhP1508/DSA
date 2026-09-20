@@ -74,6 +74,7 @@ export const treeDfsPattern: PatternDefinition = {
     "O(n) time (each node visited once). O(h) auxiliary space for the recursion stack (h = tree height), plus the current path; the collected paths are output.",
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of nodes in the tree" },
       { symbol: "h", meaning: "the height of the tree" },
@@ -202,4 +203,11 @@ export const treeDfsPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "629e4355203d62bd",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

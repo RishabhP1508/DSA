@@ -70,6 +70,7 @@ export const graphDfsComponentsPattern: PatternDefinition = {
     "O(V + E) time — each node and edge is visited once. O(V) space for the visited set plus O(V) recursion stack in the worst case.",
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "V", meaning: "the number of vertices (n)" },
       { symbol: "E", meaning: "the number of edges" },
@@ -198,4 +199,11 @@ export const graphDfsComponentsPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "3f63e17e00381788",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

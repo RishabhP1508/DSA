@@ -65,6 +65,7 @@ Reading the median is **O(1)**: if the counts are equal it's the average of the 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of values inserted so far" }],
     costModel: "Each heappush/heappop is O(log n); reading a root is O(1). add does a constant number of heap operations.",
     time: {
@@ -176,4 +177,12 @@ Reading the median is **O(1)**: if the counts are equal it's the average of the 
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "c8fedb5d21b3ffce",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

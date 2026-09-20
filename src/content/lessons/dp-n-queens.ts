@@ -71,6 +71,7 @@ Those diagonal keys are the clever bit worth remembering: encoding a constraint 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "N", meaning: "the board size and number of queens" }],
     costModel:
       "Each conflict check is an O(1) set lookup. Each node tries up to N columns; the pruned tree explores on the order of N! leaves in the worst case.",
@@ -223,4 +224,11 @@ Those diagonal keys are the clever bit worth remembering: encoding a constraint 
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "99977c48dac52925",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

@@ -51,6 +51,7 @@ We summarise growth with **Big-O**: \`O(n)\` ("linear") means the work grows in 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel: "Each comparison (x > best) and each assignment is one constant-time step. Reading a list element by iteration is O(1).",
     time: {
@@ -151,4 +152,11 @@ We summarise growth with **Big-O**: \`O(n)\` ("linear") means the work grows in 
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "50e10e1d92aadd78",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

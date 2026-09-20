@@ -58,6 +58,7 @@ The trade: it only works on data with a **digit/place structure** (integers, fix
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of integers to sort" },
       { symbol: "d", meaning: "the number of digits in the largest value" },
@@ -165,4 +166,11 @@ The trade: it only works on data with a **digit/place structure** (integers, fix
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "87f9e278d146f8c0",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

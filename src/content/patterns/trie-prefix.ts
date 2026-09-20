@@ -78,6 +78,7 @@ export const triePrefixPattern: PatternDefinition = {
     "O(L) per insert and per prefix/word query, where L is the string length — independent of the number of stored words. Space O(total characters across inserted words).",
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "L", meaning: "the length of the word or prefix being processed" },
       { symbol: "T", meaning: "the total number of characters across all inserted words" },
@@ -210,4 +211,11 @@ export const triePrefixPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "9983296620feaab2",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

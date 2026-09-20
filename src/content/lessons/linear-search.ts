@@ -50,6 +50,7 @@ When the data is **sorted**, binary search does far better (O(log n)); when you 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel: "Each comparison and index read is O(1). The loop may exit early on a match.",
     time: {
@@ -154,4 +155,11 @@ When the data is **sorted**, binary search does far better (O(log n)); when you 
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "198b645988fcfedb",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

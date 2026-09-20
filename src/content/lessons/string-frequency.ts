@@ -46,6 +46,7 @@ This "one pass building a map" shape is everywhere: it turns "how many / does it
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of characters in the string" },
       { symbol: "k", meaning: "the number of distinct characters (map size)" },
@@ -141,4 +142,11 @@ This "one pass building a map" shape is everywhere: it turns "how many / does it
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "16033a74703248b4",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

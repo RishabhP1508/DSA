@@ -57,6 +57,7 @@ The same "middle as root, recurse on halves" idea appears when **rebuilding a tr
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of elements / nodes" },
       { symbol: "h", meaning: "the resulting height (~log n, balanced by construction)" },
@@ -165,4 +166,11 @@ The same "middle as root, recurse on halves" idea appears when **rebuilding a tr
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "cb3324a091fe081b",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

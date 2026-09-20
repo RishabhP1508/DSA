@@ -92,6 +92,7 @@ The search then walks the text once with two pointers \`i\` (text) and \`j\` (pa
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the length of the text" },
       { symbol: "m", meaning: "the length of the pattern" },
@@ -272,4 +273,12 @@ The search then walks the text once with two pointers \`i\` (text) and \`j\` (pa
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "97ad89709f2aa696",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

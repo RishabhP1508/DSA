@@ -63,6 +63,7 @@ Backtracking's structure is always the same three beats — **choose, explore, u
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of pairs of parentheses" },
       { symbol: "C", meaning: "the number of valid strings produced (the nth Catalan number)" },
@@ -212,4 +213,11 @@ Backtracking's structure is always the same three beats — **choose, explore, u
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "cae07aaa65b872e8",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

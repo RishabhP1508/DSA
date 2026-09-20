@@ -62,6 +62,7 @@ Two costs matter and they are **different**. **Time** is the **total number of c
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the Fibonacci index requested" }],
     costModel:
       "Each call does O(1) work besides its recursive calls. Time counts the number of calls; stack space counts the maximum simultaneously active calls.",
@@ -199,4 +200,11 @@ Two costs matter and they are **different**. **Time** is the **total number of c
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "dca8645c1ac7385d",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

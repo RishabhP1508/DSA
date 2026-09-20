@@ -53,6 +53,7 @@ The subtlety is correctness: because \`insert <= i\` always, we never overwrite 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel: "Each element read, comparison, and write is O(1).",
     time: {
@@ -162,4 +163,11 @@ The subtlety is correctness: because \`insert <= i\` always, we never overwrite 
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "6912d1eb8a5270e9",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

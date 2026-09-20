@@ -70,6 +70,7 @@ export const dijkstraPattern: PatternDefinition = {
     "O((V + E) log V) with a binary heap — each edge may push once, each node is popped once. O(V + E) space for distances, the graph, and the heap.",
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "V", meaning: "the number of vertices" },
       { symbol: "E", meaning: "the number of edges" },
@@ -196,4 +197,11 @@ export const dijkstraPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "db513ddc58461a3a",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

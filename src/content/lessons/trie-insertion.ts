@@ -71,6 +71,7 @@ Each operation touches one node per character, so insert and search are **O(L)**
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "L", meaning: "the length of the word being inserted or searched" },
       { symbol: "N", meaning: "the total number of characters across all inserted words" },
@@ -190,4 +191,11 @@ Each operation touches one node per character, so insert and search are **O(L)**
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "4d7a50762e146a0f",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

@@ -44,6 +44,7 @@ Each shift is **O(1)** on machine words (**O(w)** for w-bit big integers, since 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "w", meaning: "the number of bits in the integer" }],
     costModel: "A shift on a machine word is one hardware instruction (O(1)); on a w-bit big integer it moves w bits (O(w)).",
     time: {
@@ -118,4 +119,12 @@ Each shift is **O(1)** on machine words (**O(w)** for w-bit big integers, since 
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "df87def0ec35b710",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

@@ -46,6 +46,7 @@ So appending n items is **O(n) total**, or **O(1) amortized each** — even thou
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of appends performed (5 in this run)" }],
     costModel: "A non-resizing append is O(1). A resizing append copies the current k elements: O(k). Capacity grows geometrically, so resizes are rare.",
     time: {
@@ -145,4 +146,11 @@ So appending n items is **O(n) total**, or **O(1) amortized each** — even thou
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "460244b9571dbf68",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

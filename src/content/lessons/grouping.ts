@@ -48,6 +48,7 @@ The cost is **O(n · L log L)** for n words of length up to L (the sort dominate
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of items (words)" },
       { symbol: "L", meaning: "the maximum length of an item (word)" },
@@ -147,4 +148,11 @@ The cost is **O(n · L log L)** for n words of length up to L (the sort dominate
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "736c9d532e2aea03",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

@@ -45,6 +45,7 @@ Which to use? The slice is perfect for clarity and small strings; the two-pointe
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the length of the string" }],
     costModel: "Building s[::-1] copies n characters (O(n) time and space). Comparing two strings is O(n).",
     time: {
@@ -131,4 +132,11 @@ Which to use? The slice is perfect for clarity and small strings; the two-pointe
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "eef7d30784cafc85",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

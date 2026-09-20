@@ -62,6 +62,7 @@ This is binary search adapted to a broken-but-structured order. The same "which 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in the array" }],
     costModel: "Each iteration does a constant number of comparisons and discards half the range.",
     time: {
@@ -180,4 +181,12 @@ This is binary search adapted to a broken-but-structured order. The same "which 
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "78bb072dc7f96d0a",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 3,
+  },
 };

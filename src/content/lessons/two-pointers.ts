@@ -50,6 +50,7 @@ The other common form is the **fast/slow** or **same-direction** two pointers (e
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in arr" }],
     costModel: "Each swap and each pointer move is O(1). One list index write is O(1).",
     time: {
@@ -152,4 +153,11 @@ The other common form is the **fast/slow** or **same-direction** two pointers (e
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "1dead73f4da1f0a9",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

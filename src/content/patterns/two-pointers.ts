@@ -63,6 +63,7 @@ export const twoPointersPattern: PatternDefinition = {
     "O(n) time and O(1) space on a sorted array — the two pointers together traverse it once. Sorting first (if needed) adds O(n log n).",
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel: "Two pointers start at the ends and move inward; each iteration moves exactly one pointer, so together they cover the array once.",
     time: {
@@ -187,4 +188,11 @@ export const twoPointersPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "0c4d3064ec970968",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

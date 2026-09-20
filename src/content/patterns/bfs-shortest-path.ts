@@ -67,6 +67,7 @@ export const bfsShortestPathPattern: PatternDefinition = {
     "O(V + E) time — each vertex is enqueued once and each edge examined once. O(V) space for the queue and the distance map.",
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "V", meaning: "the number of vertices" },
       { symbol: "E", meaning: "the number of edges" },
@@ -189,4 +190,11 @@ export const bfsShortestPathPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "f79d0531bb1f4b01",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

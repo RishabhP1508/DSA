@@ -58,6 +58,7 @@ export const bitwiseXorPattern: PatternDefinition = {
     "O(n) time (one pass XOR-ing each element) and O(1) space (a single accumulator). No hash map or sort needed.",
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel: "A single accumulator is XOR-ed with each element once. XOR on machine-word-sized ints is O(1).",
     time: {
@@ -163,4 +164,11 @@ export const bitwiseXorPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "b99acc227c28d772",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

@@ -51,6 +51,7 @@ Frequency maps are the engine behind anagrams, "majority element", "top-K freque
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of items counted" },
       { symbol: "k", meaning: "the number of distinct items" },
@@ -140,4 +141,11 @@ Frequency maps are the engine behind anagrams, "majority element", "top-K freque
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "c54ebd74dbb32ec5",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

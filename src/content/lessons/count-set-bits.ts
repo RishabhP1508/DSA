@@ -51,6 +51,7 @@ Python also gives you the answer for free: \`bin(x).count("1")\` (and \`int.bit_
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "s", meaning: "the number of set (1) bits in n" },
       { symbol: "w", meaning: "the total number of bits in n" },
@@ -151,4 +152,12 @@ Python also gives you the answer for free: \`bin(x).count("1")\` (and \`int.bit_
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "cbfb2fabe716eaf5",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

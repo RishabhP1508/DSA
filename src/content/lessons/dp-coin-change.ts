@@ -60,6 +60,7 @@ Note the **unbounded** flavor: because coins can repeat, the transition freely r
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "A", meaning: "the target amount" },
       { symbol: "k", meaning: "the number of coin denominations" },
@@ -206,4 +207,11 @@ Note the **unbounded** flavor: because coins can repeat, the transition freely r
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "42b69c7113756cd5",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

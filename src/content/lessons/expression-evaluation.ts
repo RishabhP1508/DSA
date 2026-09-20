@@ -57,6 +57,7 @@ It runs in **O(n)** time and **O(n)** space. Converting normal **infix** express
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of tokens in the expression" }],
     costModel: "Each token is one O(1) push, or one operator step (two pops, one arithmetic op, one push) — all O(1).",
     time: {
@@ -157,4 +158,12 @@ It runs in **O(n)** time and **O(n)** space. Converting normal **infix** express
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "e7aef030e1474251",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

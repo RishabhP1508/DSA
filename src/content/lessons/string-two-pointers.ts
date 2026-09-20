@@ -51,6 +51,7 @@ The early \`break\` gives a good best case (a mismatch at the very first pair is
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the length of the string" }],
     costModel: "Each character comparison and pointer move is O(1). String indexing s[i] is O(1).",
     time: {
@@ -149,4 +150,11 @@ The early \`break\` gives a good best case (a mismatch at the very first pair is
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "b9a06147caff3f92",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

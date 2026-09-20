@@ -20,8 +20,10 @@ describe("exercise-id — global uniqueness", () => {
     expect(unique.size).toBe(ids.length); // no collisions
   });
 
-  it("matches the known count (381 exercises)", () => {
-    expect(allComposite().length).toBe(381);
+  it("matches the known count (383 exercises)", () => {
+    // 381 at the R5 baseline + 2 added by the R5 amendment's heap-sift lesson
+    // (sift-predict-1, sift-choose-1).
+    expect(allComposite().length).toBe(383);
   });
 
   it("flags exactly the four known ambiguous bare ids", () => {

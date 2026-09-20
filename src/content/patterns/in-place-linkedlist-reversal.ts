@@ -82,6 +82,7 @@ export const inPlaceLinkedListReversalPattern: PatternDefinition = {
     "O(n) time (each node in the reversed section is relinked once) and O(1) extra space (a handful of pointers; nodes are reused).",
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of nodes in the list" },
       { symbol: "q", meaning: "the end position of the reversed section (1-based)" },
@@ -227,4 +228,11 @@ export const inPlaceLinkedListReversalPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "b74287905f753e30",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

@@ -48,6 +48,7 @@ This is different from the fixed-size window (which fixes a width k) and from ta
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel: "Each step does one max, one addition, and one comparison — all O(1).",
     time: {
@@ -150,4 +151,12 @@ This is different from the fixed-size window (which fixes a width k) and from ta
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "4d62e40c44c33ae4",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

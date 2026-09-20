@@ -82,6 +82,7 @@ The dummy costs **O(1)** extra space (one node) and does not change the algorith
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of nodes in the list" }],
     costModel:
       "Comparing a value and reassigning a `next` reference are O(1). Each loop iteration processes one node.",
@@ -253,4 +254,11 @@ The dummy costs **O(1)** extra space (one node) and does not change the algorith
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "a62e9f7e0860fd45",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

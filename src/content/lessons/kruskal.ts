@@ -58,6 +58,7 @@ The cost is dominated by **sorting the edges: O(E log E)** (equivalently O(E log
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "V", meaning: "the number of vertices" },
       { symbol: "E", meaning: "the number of edges" },
@@ -165,4 +166,11 @@ The cost is dominated by **sorting the edges: O(E log E)** (equivalently O(E log
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "c1d789035ba87ef0",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

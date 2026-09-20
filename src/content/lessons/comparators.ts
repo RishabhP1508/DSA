@@ -47,6 +47,7 @@ For **multi-level** ordering, return a **tuple** key: \`key=lambda p: (p.age, p.
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of items being sorted" }],
     costModel: "Timsort does O(n log n) comparisons; the key function is called once per element (n calls), each assumed O(1) here.",
     time: {
@@ -143,4 +144,11 @@ For **multi-level** ordering, return a **tuple** key: \`key=lambda p: (p.age, p.
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "35b6b2f40b2ebc6d",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

@@ -56,6 +56,7 @@ Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 â†’ 11 â
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "k", meaning: "the number of increment() calls made" }],
     costModel: "Creating an instance and each method call are constant-time; one attribute update is O(1).",
     time: {
@@ -146,4 +147,11 @@ Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 â†’ 11 â
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "43d1740b72390045",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

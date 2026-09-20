@@ -58,6 +58,7 @@ BFS visits every node once and looks at every edge once, so on a graph with **V*
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "V", meaning: "the number of vertices (nodes)" },
       { symbol: "E", meaning: "the number of edges" },
@@ -167,4 +168,12 @@ BFS visits every node once and looks at every edge once, so on a graph with **V*
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "7fd361c9b18c7b55",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

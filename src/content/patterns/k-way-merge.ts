@@ -66,6 +66,7 @@ export const kWayMergePattern: PatternDefinition = {
     "O(N log k) time, where N is the total number of elements and k the number of lists (heap size ≤ k). O(k) heap space plus O(N) output.",
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "N", meaning: "the total number of elements across all lists" },
       { symbol: "k", meaning: "the number of sorted lists" },
@@ -187,4 +188,11 @@ export const kWayMergePattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "3adc7684c1924cc7",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

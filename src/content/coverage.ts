@@ -12,7 +12,7 @@
 
 import type { CoverageEntry } from "../core/types";
 
-export const COVERAGE_VERSION = 13;
+export const COVERAGE_VERSION = 14;
 
 function e(
   area: string,
@@ -146,6 +146,7 @@ export const coverage: CoverageEntry[] = [
 
   // --- Heaps ---
   e("Heaps", "Min/max heaps", "heaps/min-max", { lessonId: "min-max-heaps", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Heaps", "Sift-up / sift-down mechanics", "heaps/sift-mechanics", { lessonId: "heap-sift", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Heaps", "Top-K elements", "heaps/top-k", { patternIds: ["top-k-heap"], lessonId: "top-k", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Heaps", "Kth largest/smallest", "heaps/kth", { patternIds: ["top-k-heap"], lessonId: "kth-largest", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Heaps", "Running median", "heaps/running-median", { patternIds: ["two-heaps"], lessonId: "running-median", hasVisualExample: true, hasExercise: true, status: "verified" }),
@@ -207,9 +208,13 @@ export const coverage: CoverageEntry[] = [
  * links only (no third-party problem statements are copied). External practice
  * is OPTIONAL — the local lessons/exercises teach the technique regardless.
  *
- * OPEN GAP (recorded for the user, see .kiro/specs/R5-curriculum/verification.md):
- * the exact Notion-listed set is unverified here; this subset should be
- * reconciled against the live Notion page during review. No link below is a
+ * OPEN GAP — reconciliation with the Notion list is BLOCKED. The live Notion
+ * page is gated by a Cloudflare "Verify you are human" CAPTCHA, so it could not
+ * be enumerated by web_fetch, a headless browser, or the Notion API (HTTP 429)
+ * on 2026-09-20. This subset is therefore NOT claimed to equal the Notion list;
+ * it is a conservative, technique-aligned set of canonical problems. The exact
+ * access attempts, what is/ isn't mapped, and the ask to the user are recorded in
+ * .kiro/specs/R5-curriculum/external-practice-manifest.md. No link below is a
  * guess — each is a canonical, long-standing LeetCode problem slug.
  */
 const EXTERNAL_PRACTICE: Record<string, { name: string; url: string }[]> = {

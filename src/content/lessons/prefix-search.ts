@@ -83,6 +83,7 @@ The complexity split is worth internalizing: **existence** of a prefix is O(P), 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "P", meaning: "the length of the prefix" },
       { symbol: "S", meaning: "the total size of the prefix's subtree (nodes/chars in matching words)" },
@@ -213,4 +214,12 @@ The complexity split is worth internalizing: **existence** of a prefix is O(P), 
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "f79cc9762f37c96b",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

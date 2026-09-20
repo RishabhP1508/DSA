@@ -71,6 +71,7 @@ A subtle but important consequence: two names can refer to the **same** object. 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of appends performed on a list (this example does 1)" },
     ],
@@ -254,4 +255,11 @@ A subtle but important consequence: two names can refer to the **same** object. 
       accessDate: "2026-09-19",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "b724c8e0c4bb416f",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

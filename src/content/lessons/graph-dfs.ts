@@ -51,6 +51,7 @@ DFS visits every reachable vertex once and scans every edge once, so it is **O(V
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "V", meaning: "the number of vertices" },
       { symbol: "E", meaning: "the number of edges" },
@@ -152,4 +153,11 @@ DFS visits every reachable vertex once and scans every edge once, so it is **O(V
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "d06a35b5aad0360f",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

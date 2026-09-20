@@ -53,6 +53,7 @@ It is **stable** and uses **O(1)** extra space. Among the three quadratic sorts,
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements" }],
     costModel: "Each comparison and shift is O(1). The number of shifts depends on how out-of-order the input is.",
     time: {
@@ -165,4 +166,11 @@ It is **stable** and uses **O(1)** extra space. Among the three quadratic sorts,
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "3a5e11f5acdc307e",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

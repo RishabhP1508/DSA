@@ -57,6 +57,7 @@ So \`add_item\` changes \`shared\` (mutation of a shared object), but \`try_rebi
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in the list (this run uses a small fixed list)" }],
     costModel: "append is amortized O(1); passing an argument copies only a reference (O(1)), never the object.",
     time: {
@@ -159,4 +160,12 @@ So \`add_item\` changes \`shared\` (mutation of a shared object), but \`try_rebi
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "f529ab8ed64c3528",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 1,
+  },
 };

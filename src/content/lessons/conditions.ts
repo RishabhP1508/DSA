@@ -50,6 +50,7 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "—", meaning: "no input size; a fixed chain of comparisons" }],
     costModel: "Each comparison of two numbers is one constant-time step.",
     time: {
@@ -136,4 +137,11 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "5f9953611ad82a02",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

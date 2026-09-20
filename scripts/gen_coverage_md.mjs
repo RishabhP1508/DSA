@@ -18,8 +18,17 @@ const root = path.join(HERE, "..");
 const { coverage, COVERAGE_VERSION, coverageStats } = await import(
   pathToFileURL(path.join(root, "src/content/coverage.ts")).href
 );
+const registry = await import(pathToFileURL(path.join(root, "src/content/registry.ts")).href);
+const lessonById = new Map(registry.lessons.map((l) => [l.id, l]));
 
 const stats = coverageStats(coverage);
+
+/** Whether the entry's lesson carries a completed human semantic review (R5.3). */
+function isSemanticallyReviewed(entry) {
+  const l = entry.lessonId ? lessonById.get(entry.lessonId) : undefined;
+  return Boolean(l?.evidence?.semanticReview);
+}
+const semanticReviewed = coverage.filter(isSemanticallyReviewed).length;
 
 // Preserve the first-seen order of areas.
 const areas = [];
@@ -39,9 +48,16 @@ lines.push(
   `Coverage version: ${COVERAGE_VERSION}. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: \`src/content/coverage.ts\`.`,
 );
 lines.push("");
-lines.push(`**Progress: ${stats.verified} / ${stats.total} verified.**`);
+lines.push(`**Evidence-verified (structural): ${stats.verified} / ${stats.total}.**`);
+lines.push(
+  `**Human semantic review (R5.3): ${semanticReviewed} / ${stats.total} complete; ${stats.total - semanticReviewed} pending.**`,
+);
 lines.push("");
-lines.push("Status legend: planned · in-progress · authored · verified");
+lines.push(
+  "Two layers: *evidence-verified* means the item passes all machine checks (output, line explanations, complexity panel, example-model contract, references) with a current content-hash tie (see `verify:coverage-evidence`). *Semantic-reviewed* means a person read the teaching claim/definition/reasoning (`evidence.semanticReview: true`). Items pending semantic review are structurally verified but NOT claimed as fully reviewed — see `.kiro/specs/R5-curriculum/batch-review.md`.",
+);
+lines.push("");
+lines.push("Status legend: planned · in-progress · authored · verified. Reviewed column: ✅ = semantic review done, ⏳ = pending.");
 lines.push("");
 
 for (const area of areas) {
@@ -49,12 +65,13 @@ for (const area of areas) {
   const areaVerified = entries.filter((e) => e.status === "verified").length;
   lines.push(`## ${area} (${areaVerified}/${entries.length})`);
   lines.push("");
-  lines.push("| Subtopic | id | Status | Lesson | Ext. practice |");
-  lines.push("|---|---|---|---|---|");
+  lines.push("| Subtopic | id | Status | Reviewed | Lesson | Ext. practice |");
+  lines.push("|---|---|---|---|---|---|");
   for (const e of entries) {
     const lesson = e.lessonId ? e.lessonId : "—";
     const ext = e.externalPractice && e.externalPractice.length ? String(e.externalPractice.length) : "—";
-    lines.push(`| ${e.subtopic} | \`${e.id}\` | ${e.status} | ${lesson} | ${ext} |`);
+    const reviewed = isSemanticallyReviewed(e) ? "✅" : "⏳";
+    lines.push(`| ${e.subtopic} | \`${e.id}\` | ${e.status} | ${reviewed} | ${lesson} | ${ext} |`);
   }
   lines.push("");
 }
@@ -64,12 +81,12 @@ const extEntries = coverage.filter((e) => e.externalPractice?.length).length;
 lines.push("---");
 lines.push("");
 lines.push(
-  `External practice (optional): ${extTotal} canonical LeetCode problems mapped across ${extEntries} subtopics (R5.6). Titles + links only; local lessons teach each technique regardless. The exact Notion-syllabus question list could not be enumerated in the build environment (client-rendered page) — this is a conservative canonical subset; see \`.kiro/specs/R5-curriculum/verification.md\` for the open reconciliation gap.`,
+  `External practice (optional): ${extTotal} canonical LeetCode problems mapped across ${extEntries} subtopics (R5.6). Titles + links only; local lessons teach each technique regardless. **Reconciliation with the Notion syllabus is BLOCKED** — the live page is behind a Cloudflare CAPTCHA (unreachable via fetch, headless browser, or the Notion API), so this is a conservative canonical subset, NOT a verified copy of the Notion list. Access attempts and the ask to the user are recorded in \`.kiro/specs/R5-curriculum/external-practice-manifest.md\`.`,
 );
 lines.push("");
 
 const out = lines.join("\n") + "\n";
 writeFileSync(path.join(root, "docs/coverage.md"), out, "utf8");
 console.log(
-  `Wrote docs/coverage.md — ${stats.verified}/${stats.total} verified (version ${COVERAGE_VERSION}).`,
+  `Wrote docs/coverage.md — ${stats.verified}/${stats.total} evidence-verified, ${semanticReviewed}/${stats.total} semantically reviewed (version ${COVERAGE_VERSION}).`,
 );

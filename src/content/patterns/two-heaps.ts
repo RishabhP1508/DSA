@@ -73,6 +73,7 @@ export const twoHeapsPattern: PatternDefinition = {
     "O(log n) per insertion (a few heap pushes/pops), O(1) per median query. Space O(n) to hold all elements across the two heaps.",
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements inserted so far" }],
     costModel: "Two balanced heaps (a max-heap for the lower half, a min-heap for the upper half). Each add does a constant number of heap pushes/pops; each median reads the roots.",
     time: {
@@ -201,4 +202,11 @@ export const twoHeapsPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "6d4f1af9d4031137",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

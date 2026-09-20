@@ -61,6 +61,7 @@ Because \`log(m·n) = log m + log n\`, this is far faster than searching each ro
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "m", meaning: "the number of rows" },
       { symbol: "n", meaning: "the number of columns" },
@@ -172,4 +173,11 @@ Because \`log(m·n) = log m + log n\`, this is far faster than searching each ro
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "3c1e2c700ac96d1e",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

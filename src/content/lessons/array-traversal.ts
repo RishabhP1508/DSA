@@ -45,6 +45,7 @@ Because a Python list is backed by a contiguous array, reading \`nums[i]\` is **
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel: "Reading nums[i] by index is O(1) (contiguous storage). Each loop pass does O(1) work.",
     time: {
@@ -137,4 +138,11 @@ Because a Python list is backed by a contiguous array, reading \`nums[i]\` is **
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "cc644aac7c93555f",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

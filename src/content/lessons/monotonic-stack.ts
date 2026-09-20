@@ -53,6 +53,7 @@ The magic of the O(n) bound: although there is a \`while\` inside the \`for\`, *
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel: "Each push and each pop is O(1). The total number of stack operations bounds the work.",
     time: {
@@ -160,4 +161,11 @@ The magic of the O(n) bound: although there is a \`while\` inside the \`for\`, *
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "fe8cd7a372d9dcf6",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

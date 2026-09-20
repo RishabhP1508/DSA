@@ -77,6 +77,7 @@ export const treeBfsPattern: PatternDefinition = {
     "O(n) time — every node is enqueued and dequeued once. O(w) space where w is the widest level (up to ~n/2 for a full tree).",
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of nodes in the tree" },
       { symbol: "w", meaning: "the width of the widest level" },
@@ -208,4 +209,12 @@ export const treeBfsPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "3538c59c056d49d4",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

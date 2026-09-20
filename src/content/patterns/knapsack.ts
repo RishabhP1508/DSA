@@ -63,6 +63,7 @@ export const knapsackPattern: PatternDefinition = {
     "O(n·C) time where C is the target/capacity (pseudo-polynomial). O(C) space with the 1D rolling array (O(n·C) for the full 2D table).",
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of items (values in nums)" },
       { symbol: "C", meaning: "the target sum (total / 2)" },
@@ -190,4 +191,11 @@ export const knapsackPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "1cd0f98dc39e7147",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

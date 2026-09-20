@@ -59,6 +59,7 @@ export const kadanePattern: PatternDefinition = {
     "O(n) time (single pass) and O(1) space (two rolling variables). The naive all-subarrays approaches are O(n²)–O(n³); divide-and-conquer is O(n log n).",
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel: "Two rolling scalars: `cur` (best subarray ending here) and `best` (best anywhere). Each element does a constant amount of work.",
     time: {
@@ -177,4 +178,12 @@ export const kadanePattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "dbd534e6e0928ef9",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

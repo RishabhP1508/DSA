@@ -48,6 +48,7 @@ The lesson's takeaway: **choose the representation to match your operations.** L
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of items stored in the structure" }],
     costModel: "List indexing by position is O(1). Dict lookup by key is expected O(1) using hashing, with an O(n) worst case under pathological collisions.",
     time: {
@@ -140,4 +141,11 @@ The lesson's takeaway: **choose the representation to match your operations.** L
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "7b423c420919e8f5",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

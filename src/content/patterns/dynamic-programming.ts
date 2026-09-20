@@ -63,6 +63,7 @@ export const dynamicProgrammingPattern: PatternDefinition = {
     "O(number of distinct states × work per state). Here O(n) time (each fib(k) computed once) and O(n) space for the memo plus recursion stack; naive recursion is O(2ⁿ).",
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the Fibonacci index requested" }],
     costModel: "Memoized top-down DP: total time = (number of distinct states) × (work per state). Here there are n+1 states fib(0..n), each computed once with O(1) work, then cached.",
     time: {
@@ -177,4 +178,11 @@ export const dynamicProgrammingPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "1da57384b6925e7b",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

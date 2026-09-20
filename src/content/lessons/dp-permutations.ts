@@ -68,6 +68,7 @@ The output for \`[1,2,3]\` is all 6 orderings in depth-first order: \`[[1,2,3],[
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel:
       "Each complete permutation costs O(n) to copy into the results; there are n! of them. Per-node work is O(1) besides recursion.",
@@ -216,4 +217,11 @@ The output for \`[1,2,3]\` is all 6 orderings in depth-first order: \`[[1,2,3],[
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "73505332604728e4",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

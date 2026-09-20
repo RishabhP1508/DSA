@@ -70,6 +70,7 @@ The loop condition is the subtle part: \`while fast is not None and fast.next is
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of nodes in the list" }],
     costModel:
       "Advancing a pointer along `next` is O(1). Each loop iteration does a constant number of pointer moves and comparisons.",
@@ -228,4 +229,11 @@ The loop condition is the subtle part: \`while fast is not None and fast.next is
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "fb3a58773e4d4110",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

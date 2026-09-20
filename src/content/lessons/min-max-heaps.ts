@@ -69,6 +69,7 @@ Before 3.14 (and still, if you want code that runs on 3.11–3.13) the classic w
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in the heap" }],
     costModel: "The heap is a complete binary tree of height ~log2(n). push/pop sift an element along one root-to-leaf path (O(log n)). heapify/heapify_max sift down all nodes but the total is O(n) by the standard bottom-up analysis.",
     time: {
@@ -188,4 +189,12 @@ Before 3.14 (and still, if you want code that runs on 3.11–3.13) the classic w
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "61cd5c3b9fa56435",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

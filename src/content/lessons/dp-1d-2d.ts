@@ -59,6 +59,7 @@ This is **O(m·n)** time (fill every cell once) and **O(m·n)** space for the gr
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "m", meaning: "the number of rows in the grid" },
       { symbol: "n", meaning: "the number of columns in the grid" },
@@ -208,4 +209,12 @@ This is **O(m·n)** time (fill every cell once) and **O(m·n)** space for the gr
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "e810efcfd028df72",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 6,
+  },
 };

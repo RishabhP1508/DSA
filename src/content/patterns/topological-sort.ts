@@ -70,6 +70,7 @@ export const topologicalSortPattern: PatternDefinition = {
     "O(V + E) time — each node is enqueued once and each edge relaxes one in-degree. O(V + E) space for the adjacency list, in-degrees, and queue.",
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "V", meaning: "the number of nodes (n)" },
       { symbol: "E", meaning: "the number of edges" },
@@ -200,4 +201,11 @@ export const topologicalSortPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "85d596709b8dc0ec",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

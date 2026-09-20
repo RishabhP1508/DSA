@@ -57,6 +57,7 @@ The point of this worked example is to see the full DP pipeline on something int
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of stairs to climb" }],
     costModel: "Each loop iteration does O(1) work (one addition and a paired assignment).",
     time: {
@@ -199,4 +200,11 @@ The point of this worked example is to see the full DP pipeline on something int
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "668382c2d1667956",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

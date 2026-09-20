@@ -73,6 +73,7 @@ export const matrixTraversalPattern: PatternDefinition = {
     "O(m·n) time — each of the m·n cells is visited exactly once. O(1) auxiliary space (just the four boundaries), excluding the output list.",
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "m", meaning: "the number of rows" },
       { symbol: "n", meaning: "the number of columns" },
@@ -200,4 +201,11 @@ export const matrixTraversalPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "e2f8bb00b09db54d",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

@@ -55,6 +55,7 @@ The efficiency point that every graph algorithm's complexity rests on: iterating
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "V", meaning: "the number of vertices" },
       { symbol: "E", meaning: "the number of edges" },
@@ -157,4 +158,12 @@ The efficiency point that every graph algorithm's complexity rests on: iterating
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "0f1306c786054256",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

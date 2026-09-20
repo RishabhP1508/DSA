@@ -56,6 +56,7 @@ This pattern powers more than medians: **IPO / maximize capital** (a max-heap of
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements inserted so far" }],
     costModel: "Each heappush/heappop is O(log n); reading a root is O(1). Each insert does a constant number of heap operations.",
     time: {
@@ -158,4 +159,12 @@ This pattern powers more than medians: **IPO / maximize capital** (a max-heap of
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "159513a76195b3ae",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

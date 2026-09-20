@@ -76,6 +76,7 @@ export const unionFindPattern: PatternDefinition = {
     "Nearly O(1) amortized per find/union — O(α(n)), inverse Ackermann — with path compression + union by rank. O(n) space for the parent and rank arrays.",
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of elements" },
       { symbol: "α(n)", meaning: "the inverse Ackermann function (≤ 4 for any practical n)" },
@@ -209,4 +210,11 @@ export const unionFindPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "8885f8baffe3ce64",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

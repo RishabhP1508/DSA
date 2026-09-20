@@ -70,6 +70,7 @@ export const binarySearchOnAnswerPattern: PatternDefinition = {
     "O(n · log(sum − max)) time: each feasibility check is an O(n) pass, run O(log(range)) times. O(1) extra space.",
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of weights" },
       { symbol: "R", meaning: "the size of the capacity search range (sum(weights) − max(weights))" },
@@ -203,4 +204,11 @@ export const binarySearchOnAnswerPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "f949bd7e4b22bd6e",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

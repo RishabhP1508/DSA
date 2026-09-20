@@ -51,6 +51,7 @@ The version shown is a clear, teaching-friendly form using list comprehensions (
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements to sort" }],
     costModel: "Partitioning an array of size m scans its m elements — O(m). The total cost is the sum of partition sizes across all recursion levels.",
     time: {
@@ -150,4 +151,12 @@ The version shown is a clear, teaching-friendly form using list comprehensions (
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "e1e141fb37c3b72c",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 3,
+  },
 };

@@ -66,6 +66,7 @@ For an **undirected** graph, the check is: during DFS, if you reach a neighbour 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "V", meaning: "the number of vertices" },
       { symbol: "E", meaning: "the number of edges" },
@@ -180,4 +181,11 @@ For an **undirected** graph, the check is: during DFS, if you reach a neighbour 
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "263f8bbee400f3ba",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

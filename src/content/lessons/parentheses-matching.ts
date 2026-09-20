@@ -54,6 +54,7 @@ This runs in **O(n)** time with **O(n)** worst-case stack space (a string of all
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of characters in the string" }],
     costModel: "Each character triggers one O(1) push or one O(1) pop-and-compare (dict lookup is expected O(1)).",
     time: {
@@ -155,4 +156,11 @@ This runs in **O(n)** time with **O(n)** worst-case stack space (a string of all
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "029b8453395baef9",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

@@ -54,6 +54,7 @@ Crucially, \`start\` only ever moves **forward**, and \`i\` moves forward once p
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the length of the string" },
       { symbol: "k", meaning: "the number of distinct characters (map size)" },
@@ -167,4 +168,12 @@ Crucially, \`start\` only ever moves **forward**, and \`i\` moves forward once p
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "06e387c1a8f733a6",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

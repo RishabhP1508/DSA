@@ -63,6 +63,7 @@ export const topKHeapPattern: PatternDefinition = {
     "O(n log k) time — n pushes/pops each O(log k). O(k) space for the heap. Sorting everything is O(n log n) time and O(n) space.",
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of elements in nums" },
       { symbol: "k", meaning: "how many largest elements to keep" },
@@ -179,4 +180,11 @@ export const topKHeapPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "4a809679462c01ae",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

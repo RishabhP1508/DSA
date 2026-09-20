@@ -57,6 +57,7 @@ Here \`fact(n)\` computes n·(n−1)·…·1. The base case is \`n <= 1 → retu
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the input to factorial" }],
     costModel:
       "Each call does O(1) work (a comparison and a multiplication) plus one recursive call. Treat one multiplication as constant (ignoring big-integer growth).",
@@ -194,4 +195,11 @@ Here \`fact(n)\` computes n·(n−1)·…·1. The base case is \`n <= 1 → retu
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "b26aa4db65d27403",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

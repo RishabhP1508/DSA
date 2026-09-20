@@ -68,6 +68,7 @@ export const divideAndConquerPattern: PatternDefinition = {
     "Merge sort: T(n) = 2T(n/2) + O(n) = O(n log n) time. O(n) auxiliary space for the merge buffers, O(log n) recursion depth.",
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements to sort" }],
     costModel: "Divide into two halves, recurse, then merge in linear time: T(n) = 2T(n/2) + O(n). By the master theorem this is O(n log n).",
     time: {
@@ -190,4 +191,11 @@ export const divideAndConquerPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "671ecf973c39e918",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

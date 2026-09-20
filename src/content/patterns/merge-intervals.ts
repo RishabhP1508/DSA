@@ -62,6 +62,7 @@ export const mergeIntervalsPattern: PatternDefinition = {
     "O(n log n) time, dominated by the sort; the merge sweep is O(n). O(n) space for the output (O(1) extra beyond it).",
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of intervals" }],
     costModel: "Sort by start (O(n log n)), then a single sweep merging each interval into the last kept one or starting a new one.",
     time: {
@@ -173,4 +174,11 @@ export const mergeIntervalsPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "b338311febd76e5d",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

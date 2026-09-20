@@ -61,6 +61,7 @@ It runs in **O(V + E)** — each vertex is queued once and each edge relaxes one
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "V", meaning: "the number of vertices (tasks)" },
       { symbol: "E", meaning: "the number of edges (dependencies)" },
@@ -172,4 +173,11 @@ It runs in **O(V + E)** — each vertex is queued once and each edge relaxes one
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "153b5c1ed4d17631",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

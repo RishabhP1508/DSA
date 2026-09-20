@@ -65,6 +65,7 @@ export const cyclicSortPattern: PatternDefinition = {
     "O(n) time — each value is placed with at most one swap, so total swaps are bounded by n. O(1) extra space (in-place).",
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel: "The while loop either swaps a value into its home index or advances i. Each successful swap places one value permanently, so swaps are bounded by n; i advances at most n times.",
     time: {
@@ -183,4 +184,11 @@ export const cyclicSortPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "2d3914c6401f1656",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

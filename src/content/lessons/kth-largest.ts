@@ -51,6 +51,7 @@ There's an important alternative worth knowing: **Quickselect** (a partial quick
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of elements" },
       { symbol: "k", meaning: "the rank to find (kth largest)" },
@@ -157,4 +158,12 @@ There's an important alternative worth knowing: **Quickselect** (a partial quick
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "62efe0e48349aaa1",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

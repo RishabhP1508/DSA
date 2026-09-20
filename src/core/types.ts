@@ -36,6 +36,51 @@ export interface ReferenceRecord {
   accessDate: string;
 }
 
+/**
+ * R5.1 / R5.7 — verification evidence for one executable example, tied to the
+ * CURRENT content revision. Separates inventory version, content revision, and
+ * the per-aspect verification status so a topic can never be "verified" against
+ * stale content.
+ *
+ * `contentHash` is a deterministic hash of the source, expected output, line
+ * explanations, bindings, exercises, references, and complexity explanation
+ * (see scripts/lib/content-hash.mjs). If the live content no longer hashes to
+ * this value, the evidence is STALE and the example is no longer verified.
+ */
+export interface ExampleEvidence {
+  /** Required curriculum inventory version at verification time (COVERAGE_VERSION). */
+  inventoryVersion: number;
+  /** Content hash of the lesson/pattern at verification time. */
+  contentHash: string;
+  /** ISO date/time the evidence was recorded. */
+  verifiedAt: string;
+  /**
+   * Per-aspect checks that were satisfied. These are MACHINE-verifiable: content
+   * (line explanations + output), implementation (runs + output matches),
+   * visualization (binding/rationale present), exercise (present), complexity
+   * (structured panel validates), references (url + accessDate + verifiedClaims).
+   */
+  checks: {
+    content: boolean;
+    implementation: boolean;
+    visualization: boolean;
+    exercise: boolean;
+    complexity: boolean;
+    references: boolean;
+  };
+  /**
+   * Whether a HUMAN semantic batch-review (R5.3) has been completed for this item
+   * — i.e. a person read the teaching claim, definitions, and reasoning, not just
+   * the machine checks. Kept separate so `checks` passing (structural) is never
+   * mistaken for a full semantic review. `undefined`/false = not yet reviewed.
+   */
+  semanticReview?: boolean;
+  /** Which of the 6 review batches this item belongs to (R5.3), when reviewed. */
+  reviewBatch?: number;
+  /** Unresolved issues, if any (keeps status honest instead of a bare boolean). */
+  unresolved?: string[];
+}
+
 // ---------------------------------------------------------------------------
 // Execution engine: RunRequest and TraceEvent
 // ---------------------------------------------------------------------------
@@ -410,6 +455,12 @@ export interface OperationCounter {
  * have one of these (plan §4).
  */
 export interface ComplexityExplanation {
+  /**
+   * Analysis scope (R5.1): whether the bounds describe the WHOLE program run,
+   * one FUNCTION, or a single OPERATION. Required so a claim can't be read at
+   * the wrong granularity (a whole example's cost vs one operation's cost).
+   */
+  scope: "program" | "function" | "operation";
   /** Input-size variables referenced by the bounds. */
   variables: ComplexityVariable[];
   /** A short statement of the operation-cost model / assumptions used. */
@@ -432,7 +483,11 @@ export interface ComplexityExplanation {
   };
   /** Line-linked derivation contributions. */
   derivation: ComplexityContribution[];
-  /** Assumptions and preconditions the bounds rely on. */
+  /**
+   * Assumptions AND preconditions the bounds/example rely on, e.g. "comparisons
+   * are O(1)", "the array is sorted", "0 < k <= len(nums)", "edge weights are
+   * non-negative". Required and non-empty for the R5.1 example-model contract.
+   */
   assumptions: string[];
   /** Tradeoffs versus relevant alternative implementations. */
   tradeoffs?: string;
@@ -508,6 +563,12 @@ export interface LessonDefinition {
   stdin?: string;
   /** Suggested visual bindings for this lesson's code. */
   bindings: VisualBinding[];
+  /**
+   * If `bindings` is empty, an explicit documented reason why a visual binding
+   * does not apply (R5.1). A pure-text/foundations example may legitimately have
+   * no diagram — but the absence must be justified, not silent.
+   */
+  bindingsRationale?: string;
   prediction: PredictionStep[];
   /** Free experimentation prompt(s). */
   experiments: string[];
@@ -518,6 +579,8 @@ export interface LessonDefinition {
   expectedOutput: string;
   /** Research provenance for this lesson. */
   references: ReferenceRecord[];
+  /** R5.1/R5.7 verification evidence tied to the current content revision. */
+  evidence?: ExampleEvidence;
 }
 
 // ---------------------------------------------------------------------------
@@ -560,6 +623,8 @@ export interface PatternDefinition {
   walkthroughStdin?: string;
   codeExplanations: CodeLineExplanation[];
   bindings: VisualBinding[];
+  /** If `bindings` is empty, a documented reason why (R5.1); see LessonDefinition. */
+  bindingsRationale?: string;
   /**
    * Short complexity note for the walkthrough (plain English quick reference).
    * NOTE: for a full supplied implementation this is INSUFFICIENT on its own
@@ -578,6 +643,8 @@ export interface PatternDefinition {
   linkedLessons: string[];
   exercises: PatternExercise[];
   references: ReferenceRecord[];
+  /** R5.1/R5.7 verification evidence tied to the current content revision. */
+  evidence?: ExampleEvidence;
 }
 
 // ---------------------------------------------------------------------------

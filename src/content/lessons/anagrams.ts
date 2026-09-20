@@ -46,6 +46,7 @@ So both are correct, but they sit at different complexities: **O(n log n)** (sor
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the length of each string" },
       { symbol: "k", meaning: "the number of distinct characters (for the counting method)" },
@@ -139,4 +140,11 @@ So both are correct, but they sit at different complexities: **O(n log n)** (sor
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "4aea28e731d0d4d1",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

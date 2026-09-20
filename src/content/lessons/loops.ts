@@ -52,6 +52,7 @@ The key mental model: a for loop runs **once per item** (n items → n iteration
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of items in the sequence being looped over" }],
     costModel: "Each loop iteration does a constant amount of work (one addition, or one print and one increment).",
     time: {
@@ -156,4 +157,11 @@ The key mental model: a for loop runs **once per item** (n items → n iteration
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "6bdf366e50e0e7ed",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };

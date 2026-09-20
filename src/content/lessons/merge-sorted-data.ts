@@ -48,6 +48,7 @@ Python's \`heapq.merge(*iterables)\` implements this and returns a **lazy iterat
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "N", meaning: "the total number of items across all sequences" },
       { symbol: "k", meaning: "the number of sorted sequences being merged" },
@@ -145,4 +146,12 @@ Python's \`heapq.merge(*iterables)\` implements this and returns a **lazy iterat
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "cb8dc9fa556d0db5",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

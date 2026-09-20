@@ -47,6 +47,7 @@ Each operation is **O(1)** on machine-word integers (a fixed number of hardware 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "w", meaning: "the number of bits in the integers involved" }],
     costModel: "A bitwise operation on machine-word integers is one hardware instruction (O(1)); on arbitrary-precision integers it processes w bits (O(w)).",
     time: {
@@ -134,4 +135,12 @@ Each operation is **O(1)** on machine-word integers (a fixed number of hardware 
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "17416ddf6adb13d3",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

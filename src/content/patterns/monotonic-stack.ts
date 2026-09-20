@@ -61,6 +61,7 @@ export const monotonicStackPattern: PatternDefinition = {
     "O(n) time — each index is pushed and popped at most once, so the inner while-loop is amortized O(1). O(n) space for the stack and result.",
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel: "A stack holds indices with decreasing values. Each index is pushed exactly once and popped at most once, so the inner while-loop's total pops over the whole run are bounded by n (amortised analysis).",
     time: {
@@ -180,4 +181,11 @@ export const monotonicStackPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 14,
+    contentHash: "e5a36f13b9b59bc6",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: false,
+  },
 };
