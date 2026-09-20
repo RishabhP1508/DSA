@@ -98,8 +98,13 @@ describe("BitsVisualizer — bounded rendering for huge integers", () => {
     // The diagram clearly indicates that higher bits were omitted.
     expect(container.textContent ?? "").toMatch(/omitted|not shown|higher bits|truncat|too large/i);
 
-    // The full value remains available (shown in the title/label).
-    expect(container.textContent ?? "").toContain(oneShl10000.slice(0, 12));
+    // The diagram must NOT embed the full ~3011-digit decimal string; it shows a
+    // BOUNDED preview instead (the full value stays in the inspector).
+    const text = container.textContent ?? "";
+    expect(text).not.toContain(oneShl10000);
+    expect(text.length).toBeLessThan(4000); // bounded text, not ~3011 digits inline
+    // A short prefix preview and the digit count are acceptable.
+    expect(text).toMatch(/\d{4}…|…\d{4}|\d+ digits/);
   });
 
   it("shows accurate bit-position labels for the retained low bits", () => {
@@ -121,5 +126,53 @@ describe("BitsVisualizer — bounded rendering for huge integers", () => {
     expect(container.textContent ?? "").not.toMatch(/omitted|not shown|higher bits|too large/i);
     const bits = bitsOf(container);
     expect(bits.endsWith("1" + "0".repeat(80))).toBe(true);
+  });
+});
+
+describe("BitsVisualizer — exact width at the 256-bit boundary", () => {
+  it("(1<<256)-1 (EXACTLY 256 bits) shows all 256 cells with NO omitted-bits warning", () => {
+    const value = ((1n << 256n) - 1n).toString();
+    const { container } = render(<BitsVisualizer event={intEvent("x", value)} binding={binding} />);
+    expect(container.querySelectorAll("rect").length).toBe(256);
+    expect(container.textContent ?? "").not.toMatch(/omitted|not shown|higher bits|too large/i);
+    // All 256 bits are set for (2^256 - 1).
+    const bits = bitsOf(container);
+    expect(bits.length).toBe(256);
+    expect(/^1+$/.test(bits)).toBe(true);
+  });
+
+  it("1<<256 (257 bits) omits the 257th bit and shows the warning", () => {
+    const value = (1n << 256n).toString();
+    const { container } = render(<BitsVisualizer event={intEvent("x", value)} binding={binding} />);
+    // Capped to the low 256 bits, which are all zero for 2^256.
+    expect(container.querySelectorAll("rect").length).toBeLessThanOrEqual(256);
+    expect(container.textContent ?? "").toMatch(/omitted|not shown|higher bits/i);
+    const bits = bitsOf(container);
+    expect(/^0+$/.test(bits)).toBe(true); // the single set bit (position 256) is omitted
+  });
+});
+
+describe("BitsVisualizer — above the 100,000-bit threshold stays bounded", () => {
+  // A value well above the threshold, encoded as a string. ~40,000 digits ≈
+  // ~132,877 bits (> 100,000). Determined too-large from the STRING LENGTH,
+  // without parsing the whole thing to a BigInt or embedding it in the DOM.
+  const hugeDigits = "9".repeat(40000);
+
+  it("builds no bit row and keeps rendered text/attributes bounded", () => {
+    const start = Date.now();
+    const { container } = render(<BitsVisualizer event={intEvent("x", hugeDigits)} binding={binding} />);
+    expect(Date.now() - start).toBeLessThan(2000);
+    // No bit cells rendered at all.
+    expect(container.querySelectorAll("rect").length).toBe(0);
+    // "too large" state present.
+    expect(container.textContent ?? "").toMatch(/too large/i);
+    // The full 40,000-digit string is NOT embedded anywhere in the DOM.
+    const text = container.textContent ?? "";
+    expect(text).not.toContain(hugeDigits);
+    expect(text.length).toBeLessThan(4000);
+    // No attribute (e.g. aria-label) embeds the full string either.
+    expect(container.innerHTML.includes(hugeDigits)).toBe(false);
+    // The digit count is reported.
+    expect(text).toMatch(/40000|40,000|digits/);
   });
 });

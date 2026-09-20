@@ -29,14 +29,16 @@ const MAX_BITS = 256;
 
 /**
  * Above this many bits we don't even try to render a bit row — the number is
- * "too large to visualize as bits"; we only report its width and keep the full
- * value in the label/inspector. (We never do work proportional to the full bit
- * count: the true width is ESTIMATED from the decimal digit count, and only the
- * low MAX_BITS bits are ever materialized via masking.)
+ * "too large to visualize as bits"; we only report an approximate width plus a
+ * bounded digit preview, and the full value stays in the inspector.
  */
 const TOO_LARGE_BITS = 100_000;
 
 const LOG10_2 = Math.log10(2);
+/** A decimal string longer than this certainly encodes more than TOO_LARGE_BITS bits. */
+const TOO_LARGE_DIGITS = Math.floor(TOO_LARGE_BITS * LOG10_2); // ≈ 30102 digits
+/** How many leading digits to show in a bounded preview of a huge value. */
+const PREVIEW_DIGITS = 12;
 
 /** Read an integer TraceValue as a BigInt (number or string-encoded big int). */
 function asBigInt(v: TraceValue | undefined): bigint | null {
@@ -48,61 +50,108 @@ function asBigInt(v: TraceValue | undefined): bigint | null {
   }
 }
 
+/** How close the estimate must be to the cap before we compute the EXACT width
+ *  (the decimal→bits estimate is ±1–2 bits, so a small margin is ample). */
+const BOUNDARY_MARGIN = 8;
+
 /**
- * Cheaply ESTIMATE the bit length of a nonnegative BigInt from its decimal digit
- * count — O(digits), never O(bits) beyond that. `bits ≈ digits / log10(2)`. The
- * estimate can be off by ±1–2 bits, which is fine: it is used only to decide
- * whether to cap, and the capped view shows exact low-bit positions regardless.
+ * Estimate the bit length of a nonnegative BigInt from its decimal string
+ * length — `bits ≈ digits / log10(2)`. O(digits), never a per-bit scan.
  */
 function estimateBitLength(magnitude: bigint): number {
   if (magnitude === 0n) return 1;
-  const digits = magnitude.toString().length; // decimal digits
-  return Math.max(1, Math.ceil(digits / LOG10_2));
+  return Math.max(1, Math.ceil(magnitude.toString().length / LOG10_2));
 }
 
-/** Exact bit length; only call when the value is known to be small. */
+/**
+ * Exact bit length via a per-bit scan. Called ONLY when the estimate is within
+ * BOUNDARY_MARGIN of MAX_BITS (so the value is ~256 bits) — bounded work — so a
+ * huge value like `1 << 10000` never triggers a 10 000-iteration scan.
+ */
 function exactBitLength(magnitude: bigint): number {
   let n = 0;
   for (let m = magnitude; m > 0n; m >>= 1n) n++;
   return Math.max(1, n);
 }
 
+/** A bounded preview of a big decimal string: "1234567890…  (N digits)". */
+function digitPreview(decimal: string): { preview: string; digits: number } {
+  const neg = decimal.startsWith("-");
+  const mag = neg ? decimal.slice(1) : decimal;
+  const digits = mag.length;
+  if (digits <= PREVIEW_DIGITS) return { preview: decimal, digits };
+  return { preview: (neg ? "-" : "") + mag.slice(0, PREVIEW_DIGITS) + "…", digits };
+}
+
 export function BitsVisualizer({ event, binding }: { event: TraceEvent; binding: VisualBinding }) {
   const value = resolveBindingValue(event, binding);
-  const n = asBigInt(value);
   const label = binding.path ? `${binding.variable}.${binding.path}` : binding.variable;
+
+  // First-cut type/size check WITHOUT parsing a possibly-enormous integer:
+  // decide "too large" from the raw decimal STRING LENGTH so we never BigInt-parse
+  // (nor embed) a value with tens of thousands of digits. Cost here is O(digits)
+  // to read the string length — not proportional to the bit count.
+  const raw = value && value.kind === "int" ? value.value : undefined;
+  if (typeof raw === "string") {
+    const magDigits = raw.startsWith("-") ? raw.length - 1 : raw.length;
+    if (magDigits > TOO_LARGE_DIGITS) {
+      const { preview, digits } = digitPreview(raw);
+      const approxBits = Math.round(digits / LOG10_2);
+      return (
+        <div className="viz-empty">
+          <div>
+            <code>{label}</code> = {preview}
+          </div>
+          <div className="viz-note">
+            {digits.toLocaleString()} digits (≈{approxBits.toLocaleString()} bits) — too large to
+            visualize as a bit row. The full value is available in the inspector.
+          </div>
+        </div>
+      );
+    }
+  }
+
+  const n = asBigInt(value);
   if (n === null) {
     return <p className="viz-empty">No integer “{label}” in scope yet.</p>;
   }
 
   const negative = n < 0n;
   const magnitude = negative ? -n : n;
-  const full = n.toString(); // the complete value stays available in the label
+  const full = n.toString();
+  const { preview, digits } = digitPreview(full);
+  const previewNeeded = digits > PREVIEW_DIGITS;
 
-  // Estimate width WITHOUT scanning every bit, then decide how much to show.
-  const estBits = estimateBitLength(magnitude);
-
-  // Too large even to bound-render: show a compact "too large" state. The full
-  // value is still shown; no bit row is built.
-  if (estBits > TOO_LARGE_BITS) {
+  // Guard against a huge NUMBER-encoded value too (rare; numbers are ≤ 2^53).
+  // Estimate from the string length, cheaply, before deciding to bound-render.
+  if (full.length - (negative ? 1 : 0) > TOO_LARGE_DIGITS) {
+    const approxBits = Math.round(digits / LOG10_2);
     return (
       <div className="viz-empty">
-        <div><code>{label}</code> = {full}</div>
+        <div>
+          <code>{label}</code> = {preview}
+        </div>
         <div className="viz-note">
-          ≈{estBits.toLocaleString()} bits — too large to visualize as a bit row. The full value is
-          shown above and in the inspector.
+          {digits.toLocaleString()} digits (≈{approxBits.toLocaleString()} bits) — too large to
+          visualize as a bit row. The full value is available in the inspector.
         </div>
       </div>
     );
   }
 
-  // If the estimate is within the cap, compute the exact width (cheap) and show
-  // every bit. Otherwise cap to the LOW MAX_BITS bits and mark the omission.
-  const capped = estBits > MAX_BITS;
-  const trueBits = capped ? estBits : exactBitLength(magnitude); // exact only when small
+  // Decide the width cheaply from the decimal estimate; only near the 256-bit
+  // boundary do we compute the EXACT width (bounded, ~256-bit value) so the
+  // boundary is decided precisely: (1<<256)-1 is 256 bits (not capped), 1<<256
+  // is 257 bits (capped). A huge value like 1<<10000 is far above the cap, so no
+  // per-bit scan runs.
+  const estBits = estimateBitLength(magnitude);
+  const trueBits =
+    Math.abs(estBits - MAX_BITS) <= BOUNDARY_MARGIN ? exactBitLength(magnitude) : estBits;
+  const capped = trueBits > MAX_BITS;
   const shownBits = capped ? MAX_BITS : Math.max(8, Math.ceil(trueBits / 8) * 8);
 
-  // Materialize only `shownBits` low bits (O(shownBits) work regardless of size).
+  // Materialize only `shownBits` low bits — bounded diagram work regardless of
+  // the value's size.
   const lowMask = (1n << BigInt(shownBits)) - 1n;
   const shownValue = magnitude & lowMask;
   const bits: number[] = [];
@@ -120,17 +169,20 @@ export function BitsVisualizer({ event, binding }: { event: TraceEvent; binding:
   const noteLines = (negative ? 1 : 0) + (capped ? 1 : 0);
   const height = TOP + CELL + 30 + noteLines * 16;
   const x = (i: number) => PAD + i * (CELL + GAP);
+  // Keep the title/aria-label BOUNDED: use the preview for wide values so a
+  // capped SVG never embeds a multi-thousand-digit decimal string.
+  const shownFull = previewNeeded ? preview : full;
 
   return (
-    <svg className="array-viz" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Bits of ${label} = ${full}`}>
+    <svg className="array-viz" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Bits of ${label} = ${shownFull}`}>
       <text x={PAD} y={22} className="viz-title">
-        {label} = {full} ·{" "}
+        {label} = {shownFull} ·{" "}
         {capped ? `low ${shownBits} of ~${trueBits} bits` : `${shownBits}-bit`}
         {negative ? " (magnitude)" : ""}
       </text>
       {capped && (
         <text x={PAD} y={40} className="cell-index">
-          … higher bits (position ≥ {shownBits}) omitted — the full value is shown above
+          … higher bits (position ≥ {shownBits}) omitted — full value in the inspector
         </text>
       )}
       {bits.map((b, i) => {
@@ -146,8 +198,9 @@ export function BitsVisualizer({ event, binding }: { event: TraceEvent; binding:
       })}
       {negative && (
         <text x={PAD} y={TOP + CELL + 34} className="viz-note">
-          Negative: bits show the magnitude |{full}|. In Python, a negative int behaves in bitwise
-          ops as an infinite two&rsquo;s-complement sign extension (leading 1s), not a fixed width.
+          Negative: bits show the magnitude |{shownFull}|. In Python, a negative int behaves in
+          bitwise ops as an infinite two&rsquo;s-complement sign extension (leading 1s), not a fixed
+          width.
         </text>
       )}
     </svg>

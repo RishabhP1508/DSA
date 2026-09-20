@@ -314,6 +314,39 @@ lessons + 29 patterns UNCHANGED; 130 complexity; 27/27 visualizer shapes.
 packaging gate, reported separately). Only `BitsVisualizer.tsx` + its test
 changed; no lesson `expectedOutput` changed.
 
+## Amendment 6 (bit-width boundary + bounded huge-value text)
+
+Follow-up on amendment 5:
+
+1. **Exact width at the 256-bit boundary.** The decimal→bits estimate is ±1–2
+   bits, so exactly at the cap it could misjudge. The width is now decided by the
+   estimate EXCEPT within `BOUNDARY_MARGIN` (8) of `MAX_BITS`, where the exact
+   bit length is computed (a ~256-bit value → a bounded per-bit scan). Result:
+   `(1<<256)-1` (exactly 256 bits) renders all 256 cells with NO omitted-bits
+   warning; `1<<256` (257 bits) omits its 257th bit and shows the warning. A huge
+   value (`1<<10000`) is far above the cap, so no per-bit scan runs — it stays
+   bounded.
+2. **Bounded text for huge values.** The "too large" path and the capped SVG
+   title/aria-label no longer embed the full decimal. For string-encoded values
+   we detect "too large" from the STRING LENGTH before parsing to BigInt
+   (`TOO_LARGE_DIGITS ≈ 30,102` digits ⇒ > 100,000 bits), so a ~40,000-digit
+   value is never BigInt-parsed nor placed in the DOM; a bounded 12-digit preview
+   plus the digit count is shown, and the full value stays in the inspector.
+   Capped SVGs likewise use the preview in the title/aria-label. Test: a
+   40,000-digit value builds NO bit row, shows "too large", and neither the text
+   nor any attribute (`innerHTML`) contains the full string; the `1<<10000` case
+   asserts the full ~3011-digit string is not embedded (bounded preview instead).
+3. **Accurate cost description.** Comments now state the cost as BOUNDED diagram
+   work (≤ MAX_BITS cells materialized via masking) PLUS O(digits) to read the
+   input decimal string — not "O(256) for the entire renderer".
+
+Amendment-6 verification (tested commit: <FILLED AT COMMIT>):
+`check:all` green — lint 0 err / 9 warns; unit **167/167** (24 files); 130
+lessons + 29 patterns UNCHANGED; 130 complexity; 27/27 visualizer shapes.
+`test:browser`: **9 passed / 5 skipped** (the 5 skips are the R2 P-RUNNER-ORIGIN
+packaging gate, reported separately). Only `BitsVisualizer.tsx` + its test
+changed; no lesson `expectedOutput` changed.
+
 ## What was NOT proven / remaining
 - **Deque adapter was already fixed by R2** (evidence in the probe + the new
   `verify:visualizers` deque check); R4 closed the *verification* gap, not a live
