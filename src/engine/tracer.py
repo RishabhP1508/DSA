@@ -23,6 +23,7 @@ The recorded trace is returned to JS as plain JSON-serialisable data.
 
 import sys
 import io
+import json
 import builtins
 import inspect
 
@@ -36,6 +37,12 @@ import collections as _collections
 
 # Sentinel so `return None` is distinguishable from "no return value supplied".
 _MISSING = object()
+
+# Bounded serialization: never encode more than this many entries from a single
+# container in one snapshot, so inspecting one huge value cannot allocate an
+# unbounded payload before the byte budget is even checked (R2.4). The overflow
+# is marked so the UI can show the value was truncated.
+_MAX_ENTRIES_PER_OBJECT = 1000
 
 
 def _is_opaque(obj):
@@ -192,15 +199,25 @@ class _TraceRecorder:
         # a subclass cannot run learner code during inspection.
         if isinstance(obj, (list, tuple)):
             base = list if isinstance(obj, list) else tuple
-            entries = [
-                {"key": str(i), "value": self._encode_value(v, depth + 1)}
-                for i, v in enumerate(base.__iter__(obj))
-            ]
-            return {"id": oid, "type": tname, "entries": entries}
+            entries = []
+            truncated = False
+            for i, v in enumerate(base.__iter__(obj)):
+                if i >= _MAX_ENTRIES_PER_OBJECT:
+                    truncated = True
+                    break
+                entries.append({"key": str(i), "value": self._encode_value(v, depth + 1)})
+            out = {"id": oid, "type": tname, "entries": entries}
+            if truncated:
+                out["truncated"] = True
+            return out
         if isinstance(obj, dict):
             entries = []
+            truncated = False
             # dict.keys / dict.__getitem__ on the base type avoid subclass overrides.
-            for k in dict.keys(obj):
+            for i, k in enumerate(dict.keys(obj)):
+                if i >= _MAX_ENTRIES_PER_OBJECT:
+                    truncated = True
+                    break
                 v = dict.__getitem__(obj, k)
                 key, key_kind = self._encode_key(k)
                 entries.append(
@@ -210,20 +227,35 @@ class _TraceRecorder:
                         "value": self._encode_value(v, depth + 1),
                     }
                 )
-            return {"id": oid, "type": tname, "entries": entries}
+            out = {"id": oid, "type": tname, "entries": entries}
+            if truncated:
+                out["truncated"] = True
+            return out
         if isinstance(obj, (set, frozenset)):
             base = set if isinstance(obj, set) else frozenset
-            entries = [
-                {"key": str(i), "value": self._encode_value(v, depth + 1)}
-                for i, v in enumerate(base.__iter__(obj))
-            ]
-            return {"id": oid, "type": tname, "entries": entries}
+            entries = []
+            truncated = False
+            for i, v in enumerate(base.__iter__(obj)):
+                if i >= _MAX_ENTRIES_PER_OBJECT:
+                    truncated = True
+                    break
+                entries.append({"key": str(i), "value": self._encode_value(v, depth + 1)})
+            out = {"id": oid, "type": tname, "entries": entries}
+            if truncated:
+                out["truncated"] = True
+            return out
         if isinstance(obj, _collections.deque):
-            entries = [
-                {"key": str(i), "value": self._encode_value(v, depth + 1)}
-                for i, v in enumerate(_collections.deque.__iter__(obj))
-            ]
-            return {"id": oid, "type": tname, "entries": entries}
+            entries = []
+            truncated = False
+            for i, v in enumerate(_collections.deque.__iter__(obj)):
+                if i >= _MAX_ENTRIES_PER_OBJECT:
+                    truncated = True
+                    break
+                entries.append({"key": str(i), "value": self._encode_value(v, depth + 1)})
+            out = {"id": oid, "type": tname, "entries": entries}
+            if truncated:
+                out["truncated"] = True
+            return out
 
         # Generic objects: expose ordinary instance attributes via a
         # SIDE-EFFECT-FREE static read of __dict__. inspect.getattr_static and
@@ -300,8 +332,11 @@ class _TraceRecorder:
         fresh table. This is what makes each snapshot self-contained: a returned
         object's ref always resolves within its own event (fixes R1-D, where the
         return value was previously encoded before the table was reset)."""
+        # Once a limit has been hit, keep raising on EVERY call so a learner
+        # `except BaseException` cannot swallow the stop once and then resume
+        # unbounded recording (R2-E hardening).
         if self.stopped_reason is not None:
-            return
+            raise _StopTracing()
         if len(self.events) >= self.limit_events:
             self.stopped_reason = "event-limit"
             raise _StopTracing()
@@ -319,29 +354,36 @@ class _TraceRecorder:
             event["returnValue"] = self._encode_value(return_value)
         if error is not None:
             event["error"] = error
-        # rough size accounting to honour the trace-byte budget
-        self.approx_bytes += _rough_size(event)
-        if self.approx_bytes > self.limit_bytes:
+        # REAL byte accounting: measure the actual UTF-8 JSON size of this event
+        # exactly as it will cross to JS (strings, keys, output, metadata all
+        # counted). If adding it would exceed the budget, do NOT append it, keep
+        # the last valid states, mark trace-limit, and stop (R2-C).
+        try:
+            event_bytes = len(json.dumps(event).encode("utf-8"))
+        except (TypeError, ValueError):
+            # Should not happen (all values are JSON-safe by construction), but
+            # if an event is somehow non-serialisable, treat it as oversized.
             self.stopped_reason = "trace-limit"
             raise _StopTracing()
+        if self.approx_bytes + event_bytes > self.limit_bytes:
+            self.stopped_reason = "trace-limit"
+            raise _StopTracing()
+        self.approx_bytes += event_bytes
         self.events.append(event)
 
 
-class _StopTracing(Exception):
+class _StopTracing(BaseException):
+    """Internal control signal to stop recording at a resource limit.
+
+    Derives from BaseException (not Exception) so a learner `except Exception`
+    does not swallow it. A learner `except BaseException` still *can* catch it in
+    their frame, so this signal is NOT trusted as the sole guard: (1) `_record`
+    re-raises on EVERY call once `stopped_reason` is set, so a single swallow
+    cannot resume unbounded recording within the trace callback, and (2) the
+    coordinator terminates the worker after any limit and the 10 s exec timeout
+    is a hard main-thread backstop (see engine.ts / run.worker.ts, R2-E)."""
+
     pass
-
-
-def _rough_size(event):
-    # cheap heuristic: count frames, locals and objects rather than serialising
-    n = 32
-    for fr in event.get("frames", []):
-        n += 24 + 16 * len(fr.get("locals", []))
-    for _oid, ob in event.get("objects", {}).items():
-        if ob is None:
-            continue
-        n += 24 + 16 * len(ob.get("entries", []) or [])
-        n += len(ob.get("repr", "") or "")
-    return n
 
 
 def run_program(source, source_name, limit_events, limit_bytes, stdin_text):
@@ -387,8 +429,14 @@ def run_program(source, source_name, limit_events, limit_bytes, stdin_text):
                     },
                 )
         except _StopTracing:
-            sys.settrace(None)
-            return None
+            # A resource limit was hit. Propagate the stop so it unwinds the
+            # learner's frames and terminates exec(). We do NOT settrace(None):
+            # if learner code catches this (e.g. `except BaseException`), the
+            # NEXT traced event re-raises immediately (rec._record raises while
+            # stopped_reason is set), so a single swallow cannot resume the run.
+            # The main-thread exec timeout + worker termination remain the hard
+            # backstop (R2-E).
+            raise
         return _trace
 
     result = {
@@ -451,8 +499,12 @@ def run_program(source, source_name, limit_events, limit_bytes, stdin_text):
 
     if rec.stopped_reason == "event-limit":
         result["status"] = "event-limit"
+        result["incomplete"] = True
+        result["limitHit"] = "events"
     elif rec.stopped_reason == "trace-limit":
         result["status"] = "trace-limit"
+        result["incomplete"] = True
+        result["limitHit"] = "bytes"
 
     result["events"] = rec.events
     result["stdout"] = out_buf.getvalue()

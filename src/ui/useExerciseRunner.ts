@@ -8,8 +8,8 @@
  * snippet can `print(...)` a failing input for feedback.
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { ExecutionEngine } from "../engine/engine";
+import { useCallback, useState } from "react";
+import { getSharedEngine } from "../engine/engine";
 
 export type CheckOutcome = {
   status: "pass" | "fail" | "error";
@@ -18,51 +18,49 @@ export type CheckOutcome = {
   line?: number;
 };
 
-export function useExerciseRunner() {
-  const engineRef = useRef<ExecutionEngine | null>(null);
-  const [ready, setReady] = useState(false);
+export function useExerciseRunner(owner = "exercise") {
+  // Uses the ONE shared coordinator (R2-A): mounting a runner (or many, as
+  // Practice does) creates NO worker and warms NO Pyodide. The runtime loads
+  // only when runCheck() executes. `ready` is always true because warming is
+  // lazy; the button no longer needs a "Loading Python…" gate on mount.
+  const [ready] = useState(true);
   const [running, setRunning] = useState(false);
   const [outcome, setOutcome] = useState<CheckOutcome | null>(null);
 
-  useEffect(() => {
-    const engine = new ExecutionEngine({ onReady: () => setReady(true) });
-    engineRef.current = engine;
-    return () => engine.dispose();
-  }, []);
+  const runCheck = useCallback(
+    async (learnerCode: string, tests: string) => {
+      const engine = getSharedEngine();
+      setRunning(true);
+      setOutcome(null);
+      const source = `${learnerCode}\n\n# --- tests ---\n${tests}\n`;
+      const res = await engine.run(source, { owner });
+      setRunning(false);
+      if (res.status === "stopped") return; // superseded
 
-  const runCheck = useCallback(async (learnerCode: string, tests: string) => {
-    const engine = engineRef.current;
-    if (!engine) return;
-    setRunning(true);
-    setOutcome(null);
-    const source = `${learnerCode}\n\n# --- tests ---\n${tests}\n`;
-    const res = await engine.run(source);
-    setRunning(false);
-    if (res.status === "stopped") return; // superseded
-
-    if (res.status === "completed") {
-      // Convention: tests should print "OK" when all assertions pass, but even
-      // without that a clean completion means no assertion fired.
-      setOutcome({ status: "pass", stdout: res.stdout });
-    } else if (res.status === "error") {
-      const isAssert = res.error?.type === "AssertionError";
-      setOutcome({
-        status: isAssert ? "fail" : "error",
-        stdout: res.stdout,
-        message: res.error
-          ? `${res.error.type}: ${res.error.message}`
-          : res.stderr || "Run failed.",
-        line: res.error?.line,
-      });
-    } else {
-      // timeout / event-limit / trace-limit
-      setOutcome({
-        status: "error",
-        stdout: res.stdout,
-        message: `Run ${res.status.replace("-", " ")}.`,
-      });
-    }
-  }, []);
+      if (res.status === "completed") {
+        // A clean completion means no assertion fired.
+        setOutcome({ status: "pass", stdout: res.stdout });
+      } else if (res.status === "error") {
+        const isAssert = res.error?.type === "AssertionError";
+        setOutcome({
+          status: isAssert ? "fail" : "error",
+          stdout: res.stdout,
+          message: res.error
+            ? `${res.error.type}: ${res.error.message}`
+            : res.stderr || "Run failed.",
+          line: res.error?.line,
+        });
+      } else {
+        // timeout / event-limit / trace-limit / exited / stopped
+        setOutcome({
+          status: "error",
+          stdout: res.stdout,
+          message: `Run ${res.status.replace("-", " ")}.`,
+        });
+      }
+    },
+    [owner],
+  );
 
   const reset = useCallback(() => setOutcome(null), []);
 

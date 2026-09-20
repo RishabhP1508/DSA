@@ -60,6 +60,17 @@ export interface RunRequest {
   stdin?: string;
   /** Execution limits; engine substitutes defaults for missing fields. */
   limits?: Partial<RunLimits>;
+  /**
+   * The workspace/exercise id that owns this run (e.g. "lesson:dijkstra" or
+   * "exercise:lesson:...:ll-complete-1"). Streamed through the protocol so a
+   * result can be matched to the view that asked for it; a stale owner/run can
+   * never update a newer editor/exercise (R2.2).
+   */
+  owner?: string;
+  /** 32-bit hash of `source`, used to match a result to the exact source. */
+  sourceRev?: number;
+  /** 32-bit hash of `stdin`, used to match a result to the exact input. */
+  inputRev?: number;
 }
 
 /** The kind of runtime event captured at a source location. */
@@ -100,6 +111,12 @@ export interface TraceObject {
   entries?: { key: string; keyKind?: TraceValue["kind"]; value: TraceValue }[];
   /** For scalars wrapped as objects or opaque types. */
   repr?: string;
+  /**
+   * True when the container had more entries than the per-object cap and was
+   * truncated during inspection (bounded serialization, R2.4). The UI must show
+   * that entries were omitted, not present the partial list as complete.
+   */
+  truncated?: boolean;
 }
 
 /** One stack frame in a recorded state. */
@@ -156,7 +173,34 @@ export interface RunResult {
   stderr: string;
   /** Present when status === "error". */
   error?: { type: string; message: string; line?: number };
+  /**
+   * True when a resource limit truncated the trace: the recorded states are the
+   * last VALID states, not a complete run. The UI must mark the data incomplete
+   * and never present a partial state as complete (R2.4).
+   */
+  incomplete?: boolean;
+  /** Which limit stopped the run, when incomplete. */
+  limitHit?: "time" | "events" | "bytes";
+  /** For status === "exited": the SystemExit code. */
+  exitCode?: number | string | null;
 }
+
+/**
+ * The coordinator's lifecycle state (R2.2). `idle` before/after work;
+ * `initializing` while the worker warms its runtime; `running` once learner
+ * code is executing; the rest are terminal for the last run.
+ */
+export type EngineState =
+  | "idle"
+  | "initializing"
+  | "running"
+  | "completed"
+  | "error"
+  | "stopped"
+  | "timeout"
+  | "event-limit"
+  | "trace-limit"
+  | "exited";
 
 // ---------------------------------------------------------------------------
 // Visualization binding

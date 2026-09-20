@@ -1,104 +1,107 @@
 /// <reference lib="webworker" />
 /**
- * Execution worker for DSA Visual Lab.
+ * Execution worker for DSA Visual Lab (R2).
  *
- * Each run executes in this dedicated module worker. The worker:
- *   - lazily loads the locally-bundled Pyodide runtime (no network),
- *   - loads the Python tracer (tracer.py, imported as a raw string),
- *   - runs the requested program under sys.settrace,
- *   - posts back an immutable RunResult.
+ * Lifecycle: the coordinator creates a FRESH module worker per run and
+ * terminates it on settle. This worker therefore handles exactly ONE run and
+ * starts from a clean Pyodide + clean `sys.modules`, so a run can never inherit
+ * imported-module mutations from an earlier run (R2-B).
  *
- * Stale-run handling: the worker tracks the highest runId it has seen and
- * refuses to start or report a run whose id is older than the current one, so
- * a cancelled run can never overwrite a newer result (plan requirement).
+ * It does NOT warm Pyodide at module load (that eager warm was the R2-A defect).
+ * The runtime loads only when a validated `run` message arrives.
+ *
+ * It speaks the versioned protocol (protocol.ts): it validates the inbound
+ * message, emits `ready` → `exec-start` → batched `trace-batch`/`output` →
+ * a final `result` whose `tail` is only the events not already streamed.
  */
 
-import type { RunRequest, RunResult, RunLimits, TraceEvent } from "../core/types";
+import {
+  PROTOCOL_VERSION,
+  validateInbound,
+  MAX_BATCH_EVENTS,
+  MAX_BATCH_BYTES,
+  type OutboundMessage,
+  type OutboundKind,
+  type EnvelopeMeta,
+} from "./protocol";
+import type { RunStatus, TraceEvent } from "../core/types";
 // Vite `?raw` import inlines the tracer source so it ships offline.
 import tracerSource from "./tracer.py?raw";
 
-// The Pyodide type is loaded dynamically; keep it loose here.
 type PyodideInterface = {
   runPython: (code: string) => unknown;
   globals: { set: (k: string, v: unknown) => void; get: (k: string) => unknown };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pyimport: (name: string) => any;
   toPy: (obj: unknown) => unknown;
 };
 
-const DEFAULT_LIMITS: RunLimits = {
-  timeMs: 10_000,
-  maxEvents: 10_000,
-  maxTraceBytes: 16 * 1024 * 1024,
-};
-
-let pyodideReady: Promise<PyodideInterface> | null = null;
-let currentRunId = -1;
-
-/** Messages the worker accepts. */
-type InMessage =
-  | { type: "run"; request: RunRequest }
-  | { type: "stop"; runId: number };
-
-/** Messages the worker emits. */
-type OutMessage =
-  | { type: "ready" }
-  | { type: "result"; result: RunResult }
-  | { type: "error"; runId: number; message: string };
-
-async function loadPyodideRuntime(): Promise<PyodideInterface> {
-  if (!pyodideReady) {
-    pyodideReady = (async () => {
-      // Import the bundled Pyodide loader served from /pyodide/. The specifier
-      // is built at runtime so the bundler leaves it alone; the file is copied
-      // into public/pyodide so it is served locally (offline).
-      const specifier = "/pyodide/" + "pyodide.mjs";
-      const mod = (await import(/* @vite-ignore */ specifier)) as {
-        loadPyodide: (config?: { indexURL?: string }) => Promise<PyodideInterface>;
-      };
-      const pyodide = await mod.loadPyodide({ indexURL: "/pyodide/" });
-      return pyodide;
-    })();
-  }
-  return pyodideReady;
+/** Raw Python result shape returned by tracer.run_program. */
+interface RawResult {
+  status: RunStatus;
+  events: TraceEvent[];
+  stdout: string;
+  stderr: string;
+  error?: { type: string; message: string; line?: number };
+  exitCode?: number | string | null;
+  incomplete?: boolean;
+  limitHit?: "time" | "events" | "bytes";
 }
 
-async function handleRun(request: RunRequest): Promise<void> {
-  const { runId } = request;
-  // Reject stale runs: only advance forward.
-  if (runId < currentRunId) return;
-  currentRunId = runId;
+let seq = 0;
+let meta: Omit<EnvelopeMeta, "seq"> | null = null;
 
-  const limits: RunLimits = { ...DEFAULT_LIMITS, ...(request.limits ?? {}) };
+function post<K extends OutboundKind>(kind: K, payload: unknown): void {
+  if (!meta) return;
+  const msg = { ...meta, seq: seq++, kind, payload } as OutboundMessage;
+  (self as unknown as Worker).postMessage(msg);
+}
+
+async function loadPyodideRuntime(): Promise<PyodideInterface> {
+  // Built at runtime so the bundler leaves it alone; served locally from
+  // /public/pyodide (offline).
+  const specifier = "/pyodide/" + "pyodide.mjs";
+  const mod = (await import(/* @vite-ignore */ specifier)) as {
+    loadPyodide: (config?: { indexURL?: string }) => Promise<PyodideInterface>;
+  };
+  return mod.loadPyodide({ indexURL: "/pyodide/" });
+}
+
+async function handleRun(
+  m: Extract<ReturnType<typeof validateInbound>, { ok: true }>["value"] & { kind: "run" },
+): Promise<void> {
+  const { payload } = m;
 
   let pyodide: PyodideInterface;
   try {
     pyodide = await loadPyodideRuntime();
   } catch (e) {
-    post({ type: "error", runId, message: `Failed to load runtime: ${String(e)}` });
+    post("error", { message: `Failed to load runtime: ${String(e)}`, recoverable: true });
     return;
   }
 
-  // If a newer run started while the runtime was loading, abandon this one.
-  if (runId !== currentRunId) return;
+  // Signal readiness (runtime warmed) — the coordinator is still in
+  // "initializing" until exec-start.
+  post("ready", {});
 
   try {
-    // Install the tracer module once per worker.
+    // Install the tracer into a FRESH module (this worker is single-use, so
+    // there is no prior state to inherit — R2-B).
     pyodide.globals.set("__tracer_source__", tracerSource);
     pyodide.runPython(`
 import sys, types
-if "dsa_tracer" not in sys.modules:
-    _m = types.ModuleType("dsa_tracer")
-    exec(__tracer_source__, _m.__dict__)
-    sys.modules["dsa_tracer"] = _m
+_m = types.ModuleType("dsa_tracer")
+exec(__tracer_source__, _m.__dict__)
+sys.modules["dsa_tracer"] = _m
 `);
 
-    pyodide.globals.set("__run_source__", request.source);
-    pyodide.globals.set("__run_stdin__", request.stdin ?? "");
-    pyodide.globals.set("__limit_events__", limits.maxEvents);
-    pyodide.globals.set("__limit_bytes__", limits.maxTraceBytes);
+    pyodide.globals.set("__run_source__", payload.source);
+    pyodide.globals.set("__run_stdin__", payload.stdin);
+    pyodide.globals.set("__limit_events__", payload.limits.maxEvents);
+    pyodide.globals.set("__limit_bytes__", payload.limits.maxTraceBytes);
 
-    const resultProxy = pyodide.runPython(`
+    // Learner code begins now: tell the coordinator to arm the exec timer.
+    post("exec-start", {});
+
+    const resultJson = pyodide.runPython(`
 import json, sys
 _tracer = sys.modules["dsa_tracer"]
 _res = _tracer.run_program(
@@ -107,50 +110,77 @@ _res = _tracer.run_program(
 json.dumps(_res)
 `) as string;
 
-    // A newer run may have superseded us during execution.
-    if (runId !== currentRunId) return;
-
-    const parsed = JSON.parse(resultProxy) as {
-      status: RunResult["status"];
-      events: TraceEvent[];
-      stdout: string;
-      stderr: string;
-      error?: RunResult["error"];
-    };
-
-    post({
-      type: "result",
-      result: {
-        runId,
-        status: parsed.status,
-        events: parsed.events,
-        stdout: parsed.stdout,
-        stderr: parsed.stderr,
-        error: parsed.error,
-      },
-    });
+    const raw = JSON.parse(resultJson) as RawResult;
+    streamAndFinish(raw);
   } catch (e) {
-    if (runId !== currentRunId) return;
-    post({ type: "error", runId, message: String(e) });
+    post("error", { message: String(e), recoverable: true });
   }
 }
 
-function post(msg: OutMessage): void {
-  (self as unknown as Worker).postMessage(msg);
+/**
+ * Stream the recorded events in bounded batches, then send a final `result`
+ * whose `tail` contains ONLY the events not already streamed (the final message
+ * must not resend the whole trace).
+ */
+function streamAndFinish(raw: RawResult): void {
+  const events = raw.events ?? [];
+
+  // Partition events into bounded batches (≤MAX_BATCH_EVENTS / ~MAX_BATCH_BYTES).
+  const batches: TraceEvent[][] = [];
+  let cur: TraceEvent[] = [];
+  let curBytes = 0;
+  for (const ev of events) {
+    if (cur.length >= MAX_BATCH_EVENTS || curBytes >= MAX_BATCH_BYTES) {
+      batches.push(cur);
+      cur = [];
+      curBytes = 0;
+    }
+    cur.push(ev);
+    curBytes += approxEventBytes(ev);
+  }
+  if (cur.length) batches.push(cur);
+
+  // Stream every batch EXCEPT the last, which becomes the final message's tail
+  // so the terminal `result` never resends already-streamed events.
+  const tail = batches.length ? batches[batches.length - 1] : [];
+  for (let b = 0; b < batches.length - 1; b++) {
+    post("trace-batch", { events: batches[b] });
+  }
+
+  post("result", {
+    status: raw.status,
+    tail,
+    stdout: raw.stdout ?? "",
+    stderr: raw.stderr ?? "",
+    incomplete: Boolean(raw.incomplete),
+    limitHit: raw.limitHit,
+    error: raw.error,
+    exitCode: raw.exitCode,
+  });
 }
 
-self.onmessage = (ev: MessageEvent<InMessage>) => {
-  const msg = ev.data;
-  if (msg.type === "run") {
-    void handleRun(msg.request);
-  } else if (msg.type === "stop") {
-    // Advancing the id invalidates the in-flight run's ability to report.
-    // The main thread also terminates the worker for hard stops/timeouts.
-    if (msg.runId >= currentRunId) currentRunId = msg.runId + 1;
+function approxEventBytes(ev: TraceEvent): number {
+  try {
+    return JSON.stringify(ev).length;
+  } catch {
+    return 1024;
   }
+}
+
+self.onmessage = (ev: MessageEvent) => {
+  const v = validateInbound(ev.data);
+  if (!v.ok) return; // drop malformed/oversized/mismatched inbound messages
+  const msg = v.value;
+  // Capture the envelope identity so our outbound messages echo it.
+  meta = {
+    v: PROTOCOL_VERSION,
+    runId: msg.runId,
+    owner: msg.owner,
+    sourceRev: msg.sourceRev,
+    inputRev: msg.inputRev,
+  };
+  if (msg.kind === "run") {
+    void handleRun(msg);
+  }
+  // "stop" is handled by the coordinator terminating this worker; nothing to do.
 };
-
-// Warm the runtime as soon as the worker is created.
-void loadPyodideRuntime().then(() => post({ type: "ready" }));
-
-export type { InMessage, OutMessage };

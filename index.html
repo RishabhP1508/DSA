@@ -4,6 +4,24 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      Content-Security-Policy for the APP document (R2.5, Option B). This is the
+      "isolation-ready" baseline: it keeps the app offline (default-src 'self',
+      no remote connect/img/font), permits the module worker and Pyodide's WASM,
+      and forbids framing. Pyodide's CPython needs wasm-unsafe-eval (and eval for
+      the interpreter); those are scoped to script-src here.
+
+      NOTE: a <meta> CSP CANNOT set headers for a separately served worker or a
+      cross-origin runner bridge. The packaged Windows server MUST send CSP
+      RESPONSE HEADERS for the runner-origin bridge document and worker script.
+      Proving that in Chrome + Edge is the release-blocking gate P-RUNNER-ORIGIN
+      (see .kiro/specs/R2-worker-lifecycle and e2e/runner-origin.pending.spec.ts).
+      Do NOT treat this meta tag as evidence that the runner origin is isolated.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval' 'unsafe-inline'; worker-src 'self' blob:; child-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+    />
     <title>dsa</title>
   </head>
   <body>
