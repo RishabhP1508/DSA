@@ -7,40 +7,45 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ExecutionEngine } from "../engine/engine";
+import { getSharedEngine } from "../engine/engine";
 import { Replay } from "../engine/replay";
-import type { RunResult, TraceEvent } from "../core/types";
+import type { RunResult, TraceEvent, EngineState } from "../core/types";
 
-export function useEngine() {
-  const engineRef = useRef<ExecutionEngine | null>(null);
+export function useEngine(owner = "workspace") {
+  // ONE shared coordinator per app window (R2-A): no per-hook engine, and no
+  // worker is created until a run is requested.
+  const engine = getSharedEngine();
   const replayRef = useRef<Replay | null>(null);
-  const [ready, setReady] = useState(false);
+  const [ready] = useState(true); // the runtime warms lazily on first run
   const [running, setRunning] = useState(false);
+  const [state, setState] = useState<EngineState>(engine.state);
   const [result, setResult] = useState<RunResult | null>(null);
   const [position, setPosition] = useState(0);
 
   useEffect(() => {
-    const engine = new ExecutionEngine({ onReady: () => setReady(true) });
-    engineRef.current = engine;
-    return () => engine.dispose();
-  }, []);
+    // Subscribe to lifecycle changes for status display. Do NOT dispose the
+    // shared engine on unmount (it is process-lifetime).
+    const unsubscribe = engine.subscribe(setState);
+    return unsubscribe;
+  }, [engine]);
 
-  const run = useCallback(async (source: string, stdin?: string) => {
-    const engine = engineRef.current;
-    if (!engine) return;
-    setRunning(true);
-    const res = await engine.run(source, { stdin });
-    setRunning(false);
-    if (res.status === "stopped") return; // superseded by a newer run
-    replayRef.current = new Replay(res);
-    setResult(res);
-    setPosition(0);
-  }, []);
+  const run = useCallback(
+    async (source: string, stdin?: string) => {
+      setRunning(true);
+      const res = await engine.run(source, { stdin, owner });
+      setRunning(false);
+      if (res.status === "stopped") return; // superseded by a newer run
+      replayRef.current = new Replay(res);
+      setResult(res);
+      setPosition(0);
+    },
+    [engine, owner],
+  );
 
   const stop = useCallback(() => {
-    engineRef.current?.stop();
+    engine.stop();
     setRunning(false);
-  }, []);
+  }, [engine]);
 
   const seek = useCallback((i: number) => {
     const r = replayRef.current;
@@ -80,6 +85,7 @@ export function useEngine() {
   return {
     ready,
     running,
+    state,
     result,
     event,
     position,
