@@ -7,7 +7,18 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "verify:lessons": "node --experimental-strip-types --import ./scripts/lib/ts-register.mjs scripts/verify_lessons.mjs",
+    "verify:patterns": "node --experimental-strip-types --import ./scripts/lib/ts-register.mjs scripts/verify_patterns.mjs",
+    "verify:complexity": "node --experimental-strip-types --import ./scripts/lib/ts-register.mjs scripts/verify_complexity.mjs",
+    "verify:visualizers": "node scripts/verify_visualizers.mjs",
+    "verify:pipeline": "node scripts/verify_pipeline.mjs",
+    "verify:exercises": "node --experimental-strip-types --import ./scripts/lib/ts-register.mjs scripts/verify_exercise_tests.mjs",
+    "gen:coverage": "node --experimental-strip-types --import ./scripts/lib/ts-register.mjs scripts/gen_coverage_md.mjs",
+    "test:python": "node scripts/verify_pipeline.mjs && node scripts/verify_visualizers.mjs",
+    "test:curriculum": "npm run verify:lessons && npm run verify:patterns && npm run verify:complexity",
+    "test:exercises": "npm run verify:exercises",
+    "check:all": "npm run build && npm run lint && npm run test:python && npm run test:curriculum && npm run test:exercises"
   },
   "dependencies": {
     "@codemirror/commands": "^6.11.1",

@@ -3,19 +3,20 @@
  * truth). Groups entries by their `area` in first-seen order, renders one table
  * per area, and writes the version + progress header. Run with:
  *
- *   node --experimental-strip-types scripts/gen_coverage_md.mjs
+ *   node --experimental-strip-types --import ./scripts/lib/ts-register.mjs scripts/gen_coverage_md.mjs
  *
  * Idempotent: re-running with unchanged coverage.ts produces identical output.
+ * Cross-platform: the coverage module is imported via a file URL.
  */
 import { writeFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import path from "node:path";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(HERE, "..");
 
 const { coverage, COVERAGE_VERSION, coverageStats } = await import(
-  path.join(root, "src/content/coverage.ts")
+  pathToFileURL(path.join(root, "src/content/coverage.ts")).href
 );
 
 const stats = coverageStats(coverage);
