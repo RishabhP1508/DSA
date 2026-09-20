@@ -275,7 +275,7 @@ execution inspection and visualization; no lesson `expectedOutput` changed.
    repr-only truncated object. Tests: `tracer.depth.test.ts` (real deeply nested
    structure) + a new `ObjectInspector` case.
 
-Amendment-4 verification (tested commit: <FILLED AT COMMIT>):
+Amendment-4 verification (tested commit: `e281c64`, PR #16):
 `check:all` green — lint 0 err / 9 warns; unit **161/161** (24 files); 130
 lessons + 29 patterns UNCHANGED; 130 complexity; 27/27 visualizer shapes.
 `test:browser`: **9 passed / 5 skipped** (the 5 skips are the R2 P-RUNNER-ORIGIN
