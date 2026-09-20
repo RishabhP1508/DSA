@@ -123,7 +123,17 @@ The instructive contrast with unique paths is the **combiner**: counting uses \`
     { line: 16, executable: true, explanation: "Minimum path sum of the sample grid is 7." },
   ],
 
-  bindings: [{ variable: "dp", model: "dp-table" }],
+  bindings: [
+    {
+      variable: "dp",
+      model: "dp-table",
+      // 2D current cell (i, j) from the interior double loop.
+      overlays: [
+        { role: "pointer", label: "i", source: "i" },
+        { role: "pointer", label: "j", source: "j" },
+      ],
+    },
+  ],
 
   prediction: [
     {

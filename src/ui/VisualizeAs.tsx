@@ -36,19 +36,23 @@ export function VisualizeAs({
   const variable = binding?.variable ?? "";
   const model: VisualModel = binding?.model ?? "array";
   const path = binding?.path ?? "";
+  const directed = binding?.directed ?? false;
 
+  // Merge a patch onto the CURRENT binding so properties like `directed` (and
+  // any future ones) are PRESERVED when the learner changes the variable, model
+  // or path — rather than rebuilt from scratch and dropped.
   const update = (patch: Partial<VisualBinding>) => {
-    const nextVar = patch.variable ?? variable;
+    const base: VisualBinding = binding ?? { variable, model };
+    const nextVar = patch.variable ?? base.variable;
     if (!nextVar) {
       onChange(null);
       return;
     }
-    const next: VisualBinding = {
-      variable: nextVar,
-      model: (patch.model ?? model) as VisualModel,
-    };
-    const nextPath = patch.path ?? path;
-    if (nextPath) next.path = nextPath;
+    const next: VisualBinding = { ...base, ...patch, variable: nextVar };
+    // Normalise: drop an empty path so it doesn't linger as "".
+    if (!next.path) delete next.path;
+    // `directed` is only meaningful for the graph model.
+    if (next.model !== "graph") delete next.directed;
     onChange(next);
   };
 
@@ -85,6 +89,19 @@ export function VisualizeAs({
             ))}
           </select>
         </label>
+        {model === "graph" && (
+          <label>
+            Direction
+            <select
+              aria-label="Graph direction"
+              value={directed ? "directed" : "undirected"}
+              onChange={(e) => update({ directed: e.target.value === "directed" })}
+            >
+              <option value="undirected">Undirected</option>
+              <option value="directed">Directed</option>
+            </select>
+          </label>
+        )}
         <label>
           Path
           <input

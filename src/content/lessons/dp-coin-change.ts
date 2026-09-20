@@ -114,7 +114,14 @@ Note the **unbounded** flavor: because coins can repeat, the transition freely r
     { line: 11, executable: true, explanation: "For [1,2,5] and 11, the fewest is 3 (5+5+1)." },
   ],
 
-  bindings: [{ variable: "dp", model: "dp-table" }],
+  bindings: [
+    {
+      variable: "dp",
+      model: "dp-table",
+      // Current dp index is the sub-amount `a`; label it as the 1D index.
+      overlays: [{ role: "pointer", label: "i", source: "a" }],
+    },
+  ],
 
   prediction: [
     {

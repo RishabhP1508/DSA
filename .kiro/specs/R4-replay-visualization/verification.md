@@ -127,6 +127,66 @@ Amendment verification: `check:all` green (lint 0/9; unit **138/138**; 130
 lessons + 29 patterns unchanged; 130 complexity; 27/27 visualizer shapes);
 `test:browser` **9 passed / 5 skipped**.
 
+## Amendment 2 (pre-merge review follow-up on `0db525d`)
+
+Three defects the earlier checks did not cover. All added test-first (failing
+first, then passing):
+
+1. **Trace-matches-editor vs editor-matches-authored were conflated.** The prior
+   amendment gated authored artifacts on `!edited` only, so **restore original
+   after an edited run** (`edited === false`, `stale === true`) wrongly showed the
+   authored diagram/complexity against the edited run's trace and hid the stale
+   warning. Fixed in `LessonWorkspace` and `PatternWorkspace` with explicit
+   `traceMatchesEditor = !!result && !stale` and
+   `authoredMatchesTrace = traceMatchesEditor && !edited`. Now: trace/variables/
+   playback show only when `traceMatchesEditor`; authored explanations/bindings/
+   complexity only when `authoredMatchesTrace`; a stale warning shows whenever a
+   recorded result no longer matches the editor (including after restore);
+   playback is disabled and auto-paused while stale; a late edited-run result
+   cannot become the current validated trace (the UI keys on `traceMatchesEditor`,
+   and `isStale` compares `result.sourceRev` against the current source).
+   Failing-before/passing-after: `src/ui/workspace-staleness.test.tsx` (mocked
+   engine, both workspaces, incl. the restore-original-stale case and
+   playback-disabled).
+
+   Truth table verified:
+   | Editor & last run | Trace/vars/playback | Authored |
+   |---|---|---|
+   | original, original run | show | show |
+   | edited, old original run | stale (hidden) | hidden |
+   | edited, fresh edited run | show real edited trace | hidden |
+   | restored original, last run edited | stale (hidden) | hidden |
+   | original, fresh original run | show | show |
+
+2. **"Visualize as…" dropped graph direction.** Added a labeled Directed/
+   Undirected control shown only for the graph model, threaded into
+   `VisualBinding.directed`, and made `update()` merge onto the current binding so
+   `directed` is PRESERVED when the learner changes variable/model/path. Direction
+   is never inferred from reciprocal edges. Test: `src/ui/VisualizeAs.test.tsx`.
+
+3. **DP progress was only proven on a synthetic fixture.** Added current-cell
+   overlays driven by the REAL loop index to all 7 DP-table lessons
+   (`dp-tabulation` i, `dp-coin-change` a, `dp-lis` i, `dp-1d-2d` i/j,
+   `dp-grid-paths` i/j, `dp-knapsack` i/w, `dp-lcs` i/j) and the knapsack pattern
+   (s). Rendered tests driven by real bundled-Pyodide traces for a 1D lesson
+   (`dp-tabulation`) and a 2D lesson (`dp-grid-paths`) assert the current cell is
+   highlighted at an initial and a later transition:
+   `src/visualizers/DPTableVisualizer.real.test.tsx`.
+   **Documented gap:** none of these lessons track a *computed-cell set*, so
+   "computed" shading (`computedSource`) is intentionally NOT populated — the
+   renderer shows the truthful current-cell only and never infers computation
+   from a non-None value. Adding computed-cell shading would require authoring an
+   explicit observed/authored state variable in the lesson code (out of R4 scope;
+   flagged for R5/R7 if desired). Trace-timing note preserved: a `line` event is
+   the state *before* that line runs, so the current-cell overlay marks the cell
+   about to be written.
+
+Amendment-2 verification (tested commit: <FILLED AT COMMIT>):
+`check:all` green — lint **0 errors / 9 warnings**; unit **150/150** (20 files);
+130 lessons + 29 patterns unchanged; 130 complexity; 27/27 visualizer shapes.
+`test:browser`: **9 passed / 5 skipped** (the 5 skips are the R2 P-RUNNER-ORIGIN
+packaging gate, reported separately). No lesson `expectedOutput` changed.
+
 ## What was NOT proven / remaining
 - **Deque adapter was already fixed by R2** (evidence in the probe + the new
   `verify:visualizers` deque check); R4 closed the *verification* gap, not a live

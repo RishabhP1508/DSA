@@ -30,28 +30,44 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
     void markLessonViewed(lesson.id);
   }, [lesson.id]);
 
-  // The learner has edited away from the ORIGINAL lesson source. The authored
-  // artifacts (line explanations, bindings, complexity claims) are keyed to the
-  // original source and are only valid for it, so they are disabled until the
-  // original source is restored (R4 amendment). The recorded TRACE itself stays
-  // usable — a fresh run of the edited code produces real, inspectable states.
+  // Two INDEPENDENT questions (R4 amendment):
+  //  - `edited`: does the editor differ from the ORIGINAL authored lesson code?
+  //  - `stale`:  does the recorded trace differ from the CURRENT editor content?
+  // They are not the same: after edit → run edited → restore the original text
+  // (without rerunning), `edited === false` but `stale === true` — the trace is
+  // still from the edited run and must not be presented as current, nor used to
+  // back the authored diagram/complexity.
   const edited = source !== lesson.code;
-  // The trace no longer matches the current editor content (edited but not
-  // re-run): the trace-driven line highlight no longer maps to the source.
   const stale = engine.isStale(source, lesson.stdin ?? "");
 
-  // Editor line highlight: the complexity-hover highlight applies ONLY when the
-  // authored complexity is valid (i.e. not edited/stale) — staleness overrides a
-  // lingering hover highlight. Otherwise use the trace line unless it is stale.
-  const cxHover = !edited && !stale ? cxHighlight?.[0] : null;
-  const currentLine = cxHover ?? (stale ? null : engine.event?.line ?? null);
+  // The recorded trace is CURRENT only when a result exists and matches the
+  // editor. Authored explanations/bindings/complexity are valid only when the
+  // current trace also came from the unedited authored source.
+  const traceMatchesEditor = Boolean(engine.result) && !stale;
+  const authoredMatchesTrace = traceMatchesEditor && !edited;
 
-  // Authored line explanations are keyed to the ORIGINAL source; only show them
-  // when the source is unedited.
+  // While the trace is stale, pause playback so it can't keep advancing a trace
+  // that no longer matches the editor.
+  useEffect(() => {
+    if (stale && engine.playing) engine.pause();
+  }, [stale, engine]);
+
+  // Editor line highlight: the complexity-hover highlight applies ONLY when the
+  // authored complexity is valid; staleness/edits override a lingering hover.
+  // Otherwise use the trace line only when the trace matches the editor.
+  const cxHover = authoredMatchesTrace ? cxHighlight?.[0] : null;
+  const currentLine = cxHover ?? (traceMatchesEditor ? engine.event?.line ?? null : null);
+
+  // Authored line explanations are keyed to the ORIGINAL source and the current
+  // trace; only show them when both match.
   const lineExplanation = useMemo(() => {
-    if (edited || !currentLine) return null;
+    if (!authoredMatchesTrace || !currentLine) return null;
     return lesson.codeExplanations.find((c) => c.line === currentLine) ?? null;
-  }, [edited, currentLine, lesson]);
+  }, [authoredMatchesTrace, currentLine, lesson]);
+
+  // The event fed to the trace/variables/visualization panels: only the current
+  // (non-stale) trace; a stale result's panels are hidden until rerun.
+  const liveEvent = traceMatchesEditor ? engine.event : undefined;
 
   return (
     <div className="workspace">
@@ -62,12 +78,12 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
           </button>
           <button onClick={engine.stop} disabled={!engine.running}>■ Stop</button>
           <span className="spacer" />
-          <button onClick={() => (engine.playing ? engine.pause() : engine.play())} disabled={!engine.result || engine.length === 0}>
+          <button onClick={() => (engine.playing ? engine.pause() : engine.play())} disabled={!traceMatchesEditor || engine.length === 0}>
             {engine.playing ? "⏸ Pause" : "▶ Play"}
           </button>
-          <button onClick={engine.restart} disabled={!engine.result}>⏮ Restart</button>
-          <button onClick={engine.prev} disabled={!engine.result || engine.position <= 0}>‹ Prev</button>
-          <button onClick={engine.next} disabled={!engine.result || engine.position >= engine.length - 1}>Next ›</button>
+          <button onClick={engine.restart} disabled={!traceMatchesEditor}>⏮ Restart</button>
+          <button onClick={engine.prev} disabled={!traceMatchesEditor || engine.position <= 0}>‹ Prev</button>
+          <button onClick={engine.next} disabled={!traceMatchesEditor || engine.position >= engine.length - 1}>Next ›</button>
           <label className="speed-control">
             Speed
             <select aria-label="Playback speed" value={engine.speed} onChange={(e) => engine.setSpeed(Number(e.target.value))}>
@@ -84,17 +100,23 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
           </button>
         </div>
 
-        {edited && (
+        {engine.result && stale && (
+          <div className="stale-banner" role="status">
+            ⚠ This recorded run no longer matches the code in the editor — its trace, variables and
+            playback are hidden until you run again.
+          </div>
+        )}
+        {edited && !stale && (
           <div className="stale-banner" role="status">
             ⚠ You edited the lesson code — the authored line explanations, diagram bindings and
-            complexity claims are hidden until you restore the original source. Run to inspect your
-            edited program; its trace and variables still work.
+            complexity claims are hidden until you restore the original source. Your edited program's
+            trace and variables still work.
           </div>
         )}
 
         <CodeEditor value={source} onChange={setSource} highlightLine={currentLine} />
 
-        {engine.result && (
+        {traceMatchesEditor && engine.result && (
           <div className="timeline">
             <input
               type="range"
@@ -115,10 +137,13 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
 
         <div className="explanation-box">
           <h4>What this line does</h4>
-          {edited ? (
+          {!authoredMatchesTrace ? (
             <p className="dim">
-              Authored line explanations are hidden while the code differs from the original lesson.
-              Restore the original source to see them again.
+              {edited
+                ? "Authored line explanations are hidden while the code differs from the original lesson. Restore the original source to see them again."
+                : stale
+                  ? "Run again to see line-by-line explanations for the current code."
+                  : "Run the program and step through to see line-by-line explanations."}
             </p>
           ) : lineExplanation ? (
             <p>
@@ -136,10 +161,16 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
         <div className="diagram">
           <h4>Visualization</h4>
           {(() => {
-            const ev = engine.event;
-            if (!ev) return <p className="dim">Run the program to see the visualization.</p>;
+            if (!traceMatchesEditor)
+              return (
+                <p className="dim">
+                  {stale
+                    ? "The recorded run no longer matches the editor — run again to refresh the visualization."
+                    : "Run the program to see the visualization."}
+                </p>
+              );
             // Authored bindings are keyed to the original source; disable them
-            // while edited. The trace/variables below still reflect the run.
+            // while edited even though the trace itself is current.
             if (edited)
               return (
                 <p className="dim">
@@ -151,13 +182,13 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
               return <p className="dim">This lesson has no visual bindings.</p>;
             return lesson.bindings.map((b, i) => (
               <div key={`${b.variable}-${b.model}-${i}`} className="viz-slot">
-                <Visualizer event={ev} binding={b} />
+                <Visualizer event={liveEvent!} binding={b} />
               </div>
             ));
           })()}
         </div>
-        <VariablesPanel event={engine.event} output={engine.outputSoFar} />
-        {lesson.complexityExplanation && !edited && (
+        <VariablesPanel event={liveEvent} output={traceMatchesEditor ? engine.outputSoFar : ""} />
+        {lesson.complexityExplanation && authoredMatchesTrace && (
           <ComplexityPanel
             explanation={lesson.complexityExplanation}
             result={engine.result}

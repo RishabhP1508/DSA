@@ -123,7 +123,17 @@ This is **O(n·cap)** time and space — it fills an (n+1)×(cap+1) table once. 
     { line: 15, executable: true, explanation: "Best value for the sample is 35 (items 1 and 2)." },
   ],
 
-  bindings: [{ variable: "dp", model: "dp-table" }],
+  bindings: [
+    {
+      variable: "dp",
+      model: "dp-table",
+      // 2D current cell: row = item index `i`, column = capacity `w`.
+      overlays: [
+        { role: "pointer", label: "i", source: "i" },
+        { role: "pointer", label: "j", source: "w" },
+      ],
+    },
+  ],
 
   prediction: [
     {
