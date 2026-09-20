@@ -18,61 +18,53 @@ current as things change.
   (both merged). Create a fresh feature branch per phase; do not commit directly
   to `main`.
 
-## Progress
+## Current status — READ THIS (supersedes earlier "phase complete" claims)
 
-- **Phase 3 COMPLETE and merged into `main`: 130 / 130 subtopics verified**
-  (`COVERAGE_VERSION` was 10 at that merge; Phase 4 bumped it to 11 by linking
-  `patternIds` into coverage entries).
-- **Phase 4 built** on branch `phase-4-patterns-practice` (PR into `main`):
-  Pattern Library (10 verified patterns in `src/content/patterns/`, registered
-  in `registry.ts` `patterns[]` + `getPattern`), a top-level view switcher
-  (Learn / Patterns / Practice / Playground / Backup) in `App.tsx`, recognition
-  practice with progressive hints, a runnable coding-exercise runner
-  (`useExerciseRunner` + `tests` field on `Exercise`), a Code Playground, and
-  IndexedDB persistence with versioned JSON backup/restore
-  (`src/storage/progress.ts`, validates before replacing data).
-  New verify scripts: `scripts/verify_patterns.mjs` (walkthrough stdout) and
-  `scripts/verify_exercise_tests.mjs` (model answers pass their own tests).
-  UI is verified via `npx tsc -b` + `npm run build` (no server smoke test in the
-  sandbox — the production build succeeding is the proxy).
-- **Phase 4.1** expanded the Pattern Library to **29 verified patterns** (branch
-  `phase-4.1`, PR into `main`): added merge-intervals, cyclic-sort, in-place
-  linked-list reversal, tree-bfs, tree-dfs, two-heaps, modified-binary-search,
-  bitwise-xor, k-way-merge, knapsack (0/1 / subset-sum), topological-sort,
-  graph-dfs-components, union-find, dijkstra, trie-prefix, dynamic-programming,
-  divide-and-conquer, greedy-interval-scheduling, and matrix-traversal — on top
-  of the original 10. This matches the canonical Grokking-16 + common 20–28
-  pattern taxonomies. `COVERAGE_VERSION` bumped to 12; `patternIds` linked into
-  ~45 coverage entries. Probe: `scripts/probe_patterns_2.py`.
-- **Pattern authoring recipe** (for adding more later): write the walkthrough in
-  `scripts/probe_patterns*.py`, run on py3.14 to capture exact stdout, author a
-  `PatternDefinition` in `src/content/patterns/<id>.ts` (set
-  `walkthroughExpectedOutput` to that stdout, `category` groups it in the UI),
-  register in `registry.ts` `patterns[]`, then `node scripts/verify_patterns.mjs`
-  + `npx tsc -b` + `npm run build` must all pass.
-- Remaining roadmap: **Phase 5** (offline Windows package: Start.cmd launcher,
-  portable Node, bundled runtimes, ZIP delivery).
+**The milestone is functional repair before UI redesign. It is NOT "release
+complete" and it is NOT "only Phase 5 remains."**
 
-## How to verify content (repeatable — all must pass)
+A repository audit of `main` @ `249a2f8` found the product does not meet its
+acceptance criteria despite building and passing sample-output checks. The
+reproduced findings and the repair plan (specs R0–R9) live in
+`.kiro/specs/R0-baseline/findings.md`. Do not treat any of the following as true:
 
-Load toolchains first:
+- ❌ "Only Phase 5 remains." (Multiple functional defects remain across R1–R8.)
+- ❌ "130/130 verified" as a statement of full acceptance. (That flag reflects
+  *sample-output* checks, not the plan's definition of done.)
+- ❌ "A successful production build is a proxy for UI verification."
+- ❌ "A Node test of the tracer proves the browser worker path."
+
+What is genuinely present (built, correctness under repair): 130 lessons, 29
+patterns, the tracing engine, visualizers, Practice, Playground, and IndexedDB
+persistence with backup/restore. What is confirmed broken (see findings.md):
+unsafe tracer inspection (can run learner `__repr__`/descriptors), an object-table
+return-value bug, EOF returning `""` instead of `EOFError`, the deque visualizer
+(no `entries`), eager per-exercise Python workers, non-unique exercise IDs,
+heuristic resource limits, no runner-origin isolation, and verification scripts
+that silently skip items and don't run on Windows.
+
+Roadmap after functional repair: **UI redesign** (layout/styling/accessibility),
+then the **offline Windows package** (Start.cmd launcher, portable Node, ZIP).
+
+## How to verify content (cross-platform — Node only, no pyenv/nvm needed)
+
+The bundled Pyodide provides Python; a system Python is not required. These
+commands must run on Windows, macOS, and Linux without editing sources.
 
 ```bash
-export NVM_DIR="$HOME/.nvm"; . "$NVM_DIR/nvm.sh"
-export PYENV_ROOT="$HOME/.pyenv"; export PATH="$PYENV_ROOT/bin:$PATH"; eval "$(pyenv init -)"; pyenv shell 3.14.4
+npm run check:all        # aggregate gate
+# individual layers:
+npm run test:python      # bundled-Pyodide tracer + pipeline checks
+npm run test:curriculum  # lessons + patterns load and their outputs match
+npm run test:exercises   # coding-exercise model solutions pass; mistakes rejected
+npm run test:unit        # TS logic / component tests
+npm run test:browser     # Playwright real-browser integration
 ```
 
-Then run:
-
-```bash
-npx tsc -b                                            # 0 TS errors (or npm run build)
-npm run lint                                          # 0 errors (9 pre-existing warnings OK)
-node scripts/verify_lessons.mjs                       # every stdout == expectedOutput (bundled Pyodide 3.14)
-node --experimental-strip-types scripts/verify_complexity.mjs  # complexity panels valid
-node scripts/verify_visualizers.mjs                   # structure object shapes OK
-node scripts/verify_pipeline.mjs                      # end-to-end trace sanity
-python scripts/test_tracer.py                         # tracer unit checks on local CPython 3.14
-```
+> A green content check does not prove the browser UI, a visualization's
+> correctness, a complexity claim, or an exercise grader's effectiveness. Those
+> need `test:browser` and human review. Each spec's `verification.md` states
+> exactly what was established and what remains.
 
 ## Content authoring workflow (established)
 
@@ -100,13 +92,23 @@ python scripts/test_tracer.py                         # tracer unit checks on lo
 7. Before staging: `rm -rf src/engine/__pycache__ scripts/__pycache__`. Never commit
    `__pycache__` or `dist`.
 
-## Runtime / engine gotchas (do not "fix")
+## Runtime / engine facts
 
+**Keep (intentional):**
 - Target **CPython 3.14** (bundled Pyodide 314.0.7 = CPython 3.14.2).
-- The tracer encodes non-finite floats as the strings `"Infinity"` / `"-Infinity"`
-  / `"NaN"` (JS `JSON.parse` rejects the literals). Keep this.
-- Trace event limit is 10,000 — keep recursion/DP example inputs small
-  (e.g. `fib(10)`, tiny grids) so traces stay well under it.
-- Opaque objects (modules/classes/functions) are shown as `repr`, not walked.
-- Coverage total is **130** (graph "representations/adjacency lists" is split into
-  two entries — keep the split).
+- The tracer encodes non-finite floats as the strings `"Infinity"` /
+  `"-Infinity"` / `"NaN"` (JS `JSON.parse` rejects the literals). Keep this.
+- Coverage total is **130** (graph "representations/adjacency lists" is split
+  into two entries — keep the split).
+
+**Under repair (do NOT protect as-is — see R1/R2/R4 in findings.md):**
+- The tracer's inspection can execute learner code: the `_encode_object`
+  fallback calls `repr()`, and it reads `getattr(obj, "__dict__")` which fires
+  `@property`/descriptors. R1 replaces this with side-effect-free inspection
+  (`inspect.getattr_static`, explicit adapters). Modules/classes/functions may
+  still be shown as a safe type label — but **never** by invoking a user
+  `__repr__` as a fallback.
+- The 10,000-event limit is real, but the 16 MiB limit is only a heuristic
+  (`_rough_size`); R2 makes it measure actual encoded bytes. Keeping example
+  inputs small is still sensible, but the engine must enforce the true limit.
+- The deque adapter is broken (deque encodes with no `entries`); R4 fixes it.

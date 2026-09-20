@@ -1,30 +1,20 @@
 /**
+/**
  * Trace-driven verification that each structure family produces the object
  * shapes the visualizers read. Runs the SAME tracer.py against the SAME bundled
  * Pyodide the browser uses, then asserts the last event exposes the expected
- * fields/entries. This is the Phase-2 analogue of verify_pipeline.mjs.
+ * fields/entries.
+ *
+ * NOTE: this checks the trace object SHAPE, not the rendered SVG. Real rendering
+ * is covered by the Playwright suite (npm run test:browser). Cross-platform:
+ * uses file-URL imports via the shared harness.
+ *
+ * Run:  node scripts/verify_visualizers.mjs
  */
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import path from "node:path";
+import { runProgram } from "./lib/pyodide-harness.mjs";
 
-const HERE = path.dirname(fileURLToPath(import.meta.url));
-const root = path.join(HERE, "..");
-const tracerSource = readFileSync(path.join(root, "src/engine/tracer.py"), "utf8");
-const { loadPyodide } = await import(path.join(root, "public/pyodide/pyodide.mjs"));
-const py = await loadPyodide({ indexURL: path.join(root, "public/pyodide") + "/" });
-
-py.globals.set("__tracer_source__", tracerSource);
-py.runPython(`import sys, types
-_m = types.ModuleType("dsa_tracer")
-exec(__tracer_source__, _m.__dict__)
-sys.modules["dsa_tracer"] = _m`);
-
-function run(src) {
-  py.globals.set("__s", src);
-  const j = py.runPython(`import json, sys
-json.dumps(sys.modules["dsa_tracer"].run_program(__s, "<lesson>", 10000, 16*1024*1024, ""))`);
-  return JSON.parse(j);
+async function run(src) {
+  return runProgram(src, "");
 }
 
 function localsOf(ev) {
@@ -48,7 +38,7 @@ function check(name, cond, detail) {
 
 // --- linked list ---
 {
-  const res = run(`class Node:
+  const res = await run(`class Node:
     def __init__(self, v, n=None):
         self.val = v
         self.next = n
@@ -64,7 +54,7 @@ head = Node(1, Node(2, Node(3)))
 
 // --- tree ---
 {
-  const res = run(`class T:
+  const res = await run(`class T:
     def __init__(self, v, l=None, r=None):
         self.val = v; self.left = l; self.right = r
 root = T(5, T(3), T(8))
@@ -78,7 +68,7 @@ root = T(5, T(3), T(8))
 
 // --- heap (0-based list) ---
 {
-  const res = run(`import heapq
+  const res = await run(`import heapq
 h = [5,3,8,1]
 heapq.heapify(h)
 `);
@@ -91,7 +81,7 @@ heapq.heapify(h)
 
 // --- graph adjacency ---
 {
-  const res = run(`g = {0:[1,2], 1:[2], 2:[0]}
+  const res = await run(`g = {0:[1,2], 1:[2], 2:[0]}
 visited = set()
 `);
   const ev = res.events.at(-1);
@@ -103,7 +93,7 @@ visited = set()
 
 // --- dp 2D ---
 {
-  const res = run(`dp = [[0,0,0],[0,0,0]]
+  const res = await run(`dp = [[0,0,0],[0,0,0]]
 dp[1][2] = 5
 `);
   const ev = res.events.at(-1);
@@ -115,7 +105,7 @@ dp[1][2] = 5
 
 // --- bits (int) ---
 {
-  const res = run(`x = 0
+  const res = await run(`x = 0
 x = x | (1 << 3)
 `);
   const ev = res.events.at(-1);
@@ -124,7 +114,7 @@ x = x | (1 << 3)
 
 // --- trie ---
 {
-  const res = run(`class TrieNode:
+  const res = await run(`class TrieNode:
     def __init__(self):
         self.children = {}
         self.is_end = False
