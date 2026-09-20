@@ -44,7 +44,7 @@
   tracer, proving the R2 deque fix end-to-end and closing the coverage gap
   (these families were previously untested).
 
-## Results after the fix (tested commit: <FILLED AT COMMIT>)
+## Results after the fix (tested commit: `779e649`, PR #16 → `main`)
 
 | Check | Result |
 |---|---|
