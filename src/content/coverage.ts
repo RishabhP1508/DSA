@@ -12,7 +12,7 @@
 
 import type { CoverageEntry } from "../core/types";
 
-export const COVERAGE_VERSION = 10;
+export const COVERAGE_VERSION = 11;
 
 function e(
   area: string,
@@ -50,18 +50,18 @@ export const coverage: CoverageEntry[] = [
 
   // --- Arrays ---
   e("Arrays", "Traversal", "arrays/traversal", { lessonId: "array-traversal", hasVisualExample: true, hasExercise: true, status: "verified" }),
-  e("Arrays", "Two pointers", "arrays/two-pointers", { lessonId: "two-pointers", hasVisualExample: true, hasExercise: true, status: "verified" }),
-  e("Arrays", "Sliding windows", "arrays/sliding-window", { lessonId: "sliding-window", hasVisualExample: true, hasExercise: true, status: "verified" }),
-  e("Arrays", "Prefix sums", "arrays/prefix-sums", { lessonId: "prefix-sums", hasVisualExample: true, hasExercise: true, status: "verified" }),
-  e("Arrays", "Kadane's algorithm", "arrays/kadane", { lessonId: "kadane", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Arrays", "Two pointers", "arrays/two-pointers", { patternIds: ["two-pointers"], lessonId: "two-pointers", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Arrays", "Sliding windows", "arrays/sliding-window", { patternIds: ["sliding-window"], lessonId: "sliding-window", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Arrays", "Prefix sums", "arrays/prefix-sums", { patternIds: ["prefix-sums-hashmap"], lessonId: "prefix-sums", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Arrays", "Kadane's algorithm", "arrays/kadane", { patternIds: ["kadane"], lessonId: "kadane", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Arrays", "In-place modification", "arrays/in-place", { lessonId: "in-place-modification", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Arrays", "Matrix traversal", "arrays/matrix-traversal", { lessonId: "matrix-traversal", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Arrays", "Intervals", "arrays/intervals", { lessonId: "intervals", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Strings ---
   e("Strings", "Character frequency counting", "strings/frequency", { lessonId: "string-frequency", hasVisualExample: true, hasExercise: true, status: "verified" }),
-  e("Strings", "Two pointers", "strings/two-pointers", { lessonId: "string-two-pointers", hasVisualExample: true, hasExercise: true, status: "verified" }),
-  e("Strings", "Sliding windows", "strings/sliding-window", { lessonId: "string-sliding-window", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Strings", "Two pointers", "strings/two-pointers", { patternIds: ["two-pointers"], lessonId: "string-two-pointers", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Strings", "Sliding windows", "strings/sliding-window", { patternIds: ["sliding-window"], lessonId: "string-sliding-window", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Strings", "Parsing", "strings/parsing", { lessonId: "string-parsing", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Strings", "Palindromes", "strings/palindromes", { lessonId: "palindromes", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Strings", "Anagrams", "strings/anagrams", { lessonId: "anagrams", hasVisualExample: true, hasExercise: true, status: "verified" }),
@@ -74,8 +74,8 @@ export const coverage: CoverageEntry[] = [
     hasExercise: true,
     status: "verified",
   }),
-  e("Linked lists", "Slow/fast pointers", "linked-lists/slow-fast", { lessonId: "linked-list-slow-fast", hasVisualExample: true, hasExercise: true, status: "verified" }),
-  e("Linked lists", "Cycle detection", "linked-lists/cycle-detection", { lessonId: "linked-list-cycle-detection", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Linked lists", "Slow/fast pointers", "linked-lists/slow-fast", { patternIds: ["fast-slow-pointers"], lessonId: "linked-list-slow-fast", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Linked lists", "Cycle detection", "linked-lists/cycle-detection", { patternIds: ["fast-slow-pointers"], lessonId: "linked-list-cycle-detection", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Linked lists", "Reversal", "linked-lists/reversal", { lessonId: "linked-list-reversal", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Linked lists", "Merging", "linked-lists/merging", { lessonId: "linked-list-merging", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Linked lists", "Finding the middle", "linked-lists/middle", { lessonId: "linked-list-middle", hasVisualExample: true, hasExercise: true, status: "verified" }),
@@ -99,7 +99,7 @@ export const coverage: CoverageEntry[] = [
 
   // --- Stacks and queues ---
   e("Stacks and queues", "Stack/queue operations", "stacks/operations", { lessonId: "stack-queue-operations", hasVisualExample: true, hasExercise: true, status: "verified" }),
-  e("Stacks and queues", "Monotonic stacks", "stacks/monotonic", { lessonId: "monotonic-stack", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Stacks and queues", "Monotonic stacks", "stacks/monotonic", { patternIds: ["monotonic-stack"], lessonId: "monotonic-stack", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Stacks and queues", "Parentheses matching", "stacks/parentheses", { lessonId: "parentheses-matching", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Stacks and queues", "Expression evaluation", "stacks/expression-eval", { lessonId: "expression-evaluation", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Stacks and queues", "BFS queues", "stacks/bfs-queues", { lessonId: "bfs-queues", hasVisualExample: true, hasExercise: true, status: "verified" }),
@@ -108,12 +108,12 @@ export const coverage: CoverageEntry[] = [
   // --- Graphs ---
   e("Graphs", "Representations", "graphs/representations", { lessonId: "graph-representations", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Graphs", "Adjacency lists", "graphs/adjacency-lists", { lessonId: "adjacency-lists", hasVisualExample: true, hasExercise: true, status: "verified" }),
-  e("Graphs", "BFS", "graphs/bfs", { lessonId: "graph-bfs", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Graphs", "BFS", "graphs/bfs", { patternIds: ["bfs-shortest-path"], lessonId: "graph-bfs", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Graphs", "DFS", "graphs/dfs", { lessonId: "graph-dfs", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Graphs", "Components", "graphs/components", { lessonId: "connected-components", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Graphs", "Cycle detection", "graphs/cycle-detection", { lessonId: "graph-cycle-detection", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Graphs", "Topological sorting", "graphs/topo-sort", { lessonId: "topological-sort", hasVisualExample: true, hasExercise: true, status: "verified" }),
-  e("Graphs", "Shortest paths", "graphs/shortest-paths", { lessonId: "shortest-paths-unweighted", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Graphs", "Shortest paths", "graphs/shortest-paths", { patternIds: ["bfs-shortest-path"], lessonId: "shortest-paths-unweighted", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Graphs", "Multi-source BFS", "graphs/multi-source-bfs", { lessonId: "multi-source-bfs", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Graphs", "Union-find", "graphs/union-find", { lessonId: "union-find", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Graphs", "Dijkstra", "graphs/dijkstra", { lessonId: "dijkstra", hasVisualExample: true, hasExercise: true, status: "verified" }),
@@ -125,8 +125,8 @@ export const coverage: CoverageEntry[] = [
   // --- Dynamic programming and recursion ---
   e("DP and recursion", "Base cases", "dp/base-cases", { lessonId: "dp-base-cases", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("DP and recursion", "Recursive calls", "dp/recursive-calls", { lessonId: "dp-recursive-calls", hasVisualExample: true, hasExercise: true, status: "verified" }),
-  e("DP and recursion", "Backtracking", "dp/backtracking", { lessonId: "dp-backtracking", hasVisualExample: true, hasExercise: true, status: "verified" }),
-  e("DP and recursion", "Subsets", "dp/subsets", { lessonId: "dp-subsets", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "Backtracking", "dp/backtracking", { patternIds: ["backtracking"], lessonId: "dp-backtracking", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("DP and recursion", "Subsets", "dp/subsets", { patternIds: ["backtracking"], lessonId: "dp-subsets", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("DP and recursion", "Permutations", "dp/permutations", { lessonId: "dp-permutations", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("DP and recursion", "Combinations", "dp/combinations", { lessonId: "dp-combinations", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("DP and recursion", "Memoization", "dp/memoization", { lessonId: "dp-memoization", hasVisualExample: true, hasExercise: true, status: "verified" }),
@@ -146,8 +146,8 @@ export const coverage: CoverageEntry[] = [
 
   // --- Heaps ---
   e("Heaps", "Min/max heaps", "heaps/min-max", { lessonId: "min-max-heaps", hasVisualExample: true, hasExercise: true, status: "verified" }),
-  e("Heaps", "Top-K elements", "heaps/top-k", { lessonId: "top-k", hasVisualExample: true, hasExercise: true, status: "verified" }),
-  e("Heaps", "Kth largest/smallest", "heaps/kth", { lessonId: "kth-largest", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Heaps", "Top-K elements", "heaps/top-k", { patternIds: ["top-k-heap"], lessonId: "top-k", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Heaps", "Kth largest/smallest", "heaps/kth", { patternIds: ["top-k-heap"], lessonId: "kth-largest", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Heaps", "Running median", "heaps/running-median", { lessonId: "running-median", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Heaps", "Merging sorted data", "heaps/merge-sorted", { lessonId: "merge-sorted-data", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Heaps", "Two-heap pattern", "heaps/two-heap", { lessonId: "two-heap-pattern", hasVisualExample: true, hasExercise: true, status: "verified" }),
@@ -158,7 +158,7 @@ export const coverage: CoverageEntry[] = [
   e("Hashing", "Duplicate detection", "hashing/duplicates", { lessonId: "duplicate-detection", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Hashing", "Value-to-index mapping", "hashing/value-to-index", { lessonId: "value-to-index", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Hashing", "Grouping", "hashing/grouping", { lessonId: "grouping", hasVisualExample: true, hasExercise: true, status: "verified" }),
-  e("Hashing", "Prefix sums with maps", "hashing/prefix-sums-maps", { lessonId: "prefix-sums-map", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Hashing", "Prefix sums with maps", "hashing/prefix-sums-maps", { patternIds: ["prefix-sums-hashmap"], lessonId: "prefix-sums-map", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Hashing", "Caching seen values", "hashing/caching", { lessonId: "caching-seen", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Bit manipulation ---
@@ -184,7 +184,7 @@ export const coverage: CoverageEntry[] = [
   // --- Searching ---
   e("Searching", "Linear search", "searching/linear", { lessonId: "linear-search", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Searching", "Binary search (sorted arrays)", "searching/binary", { lessonId: "binary-search", hasVisualExample: true, hasExercise: true, status: "verified" }),
-  e("Searching", "Binary search on the answer", "searching/binary-on-answer", { lessonId: "binary-search-answer", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Searching", "Binary search on the answer", "searching/binary-on-answer", { patternIds: ["binary-search-on-answer"], lessonId: "binary-search-answer", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Searching", "Rotated arrays", "searching/rotated", { lessonId: "rotated-array-search", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Searching", "Lower/upper bounds", "searching/bounds", { lessonId: "bounds", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Searching", "Matrix search", "searching/matrix", { lessonId: "matrix-search", hasVisualExample: true, hasExercise: true, status: "verified" }),

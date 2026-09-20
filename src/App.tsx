@@ -3,6 +3,22 @@ import "./App.css";
 import { lessons } from "./content/registry";
 import type { LessonDefinition } from "./core/types";
 import { LessonWorkspace } from "./ui/LessonWorkspace";
+import { ExercisePanel } from "./ui/ExercisePanel";
+import { PatternLibrary } from "./ui/PatternLibrary";
+import { Practice } from "./ui/Practice";
+import { Playground } from "./ui/Playground";
+import { BackupView } from "./ui/BackupView";
+import { mdInline } from "./ui/md";
+
+type View = "learn" | "patterns" | "practice" | "playground" | "backup";
+
+const NAV: { key: View; label: string }[] = [
+  { key: "learn", label: "Learn" },
+  { key: "patterns", label: "Patterns" },
+  { key: "practice", label: "Practice" },
+  { key: "playground", label: "Playground" },
+  { key: "backup", label: "Backup" },
+];
 
 function LessonContent({ lesson }: { lesson: LessonDefinition }) {
   return (
@@ -33,7 +49,7 @@ function LessonContent({ lesson }: { lesson: LessonDefinition }) {
         <h3>Interactive example</h3>
         <p className="dim">
           Use Run and the Prev/Next controls to step through the program. The current line is
-          highlighted, its explanation appears below the code, and the list is drawn on the right.
+          highlighted, its explanation appears below the code, and the structure is drawn on the right.
         </p>
         <LessonWorkspace key={lesson.id} lesson={lesson} />
       </section>
@@ -87,13 +103,7 @@ function LessonContent({ lesson }: { lesson: LessonDefinition }) {
       <section>
         <h3>Practice</h3>
         {lesson.exercises.map((ex) => (
-          <details key={ex.id} className="exercise">
-            <summary>[{ex.kind}] {ex.prompt}</summary>
-            {ex.starterCode && <pre className="starter">{ex.starterCode}</pre>}
-            <p className="hints-label">Hints (reveal in order):</p>
-            <ol>{ex.hints.map((h, i) => <li key={i}>{h}</li>)}</ol>
-            {ex.expected && <details><summary>Show expected</summary><pre>{ex.expected}</pre></details>}
-          </details>
+          <ExercisePanel key={ex.id} exercise={ex} />
         ))}
       </section>
 
@@ -126,46 +136,63 @@ function Concept({ label, text }: { label: string; text: string }) {
   );
 }
 
-// Minimal inline markdown: **bold** and `code`. Content is authored in-repo
-// (trusted), so this limited transform is safe.
-function mdInline(s: string): string {
-  return s
-    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-    .replace(/`(.+?)`/g, "<code>$1</code>");
-}
-
-export default function App() {
+function LearnView() {
   const [activeId, setActiveId] = useState(lessons[0]?.id);
   const active = lessons.find((l) => l.id === activeId) ?? lessons[0];
 
   return (
+    <div className="app-body">
+      <nav className="sidebar">
+        <h3>Lessons</h3>
+        <ul>
+          {lessons.map((l) => (
+            <li key={l.id}>
+              <button className={l.id === activeId ? "active" : ""} onClick={() => setActiveId(l.id)}>
+                {l.title}
+              </button>
+            </li>
+          ))}
+        </ul>
+        <p className="phase-note">{lessons.length} lessons across the full curriculum.</p>
+      </nav>
+      <main className="content">
+        {active ? <LessonContent lesson={active} /> : <p>No lessons yet.</p>}
+      </main>
+    </div>
+  );
+}
+
+export default function App() {
+  const [view, setView] = useState<View>("learn");
+
+  return (
     <div className="app">
       <header className="app-header">
-        <h1>DSA Visual Lab</h1>
-        <p className="tagline">Learn Python, data structures &amp; algorithms — offline, with real execution.</p>
-      </header>
-      <div className="app-body">
-        <nav className="sidebar">
-          <h3>Lessons</h3>
-          <ul>
-            {lessons.map((l) => (
-              <li key={l.id}>
-                <button className={l.id === activeId ? "active" : ""} onClick={() => setActiveId(l.id)}>
-                  {l.title}
-                </button>
-              </li>
+        <div className="header-row">
+          <div>
+            <h1>DSA Visual Lab</h1>
+            <p className="tagline">Learn Python, data structures &amp; algorithms — offline, with real execution.</p>
+          </div>
+          <nav className="top-nav" aria-label="Main views">
+            {NAV.map((n) => (
+              <button
+                key={n.key}
+                className={view === n.key ? "active" : ""}
+                onClick={() => setView(n.key)}
+                aria-current={view === n.key ? "page" : undefined}
+              >
+                {n.label}
+              </button>
             ))}
-          </ul>
-          <p className="phase-note">
-            Phase 1 foundation: one fully-researched lesson with a live tracing engine.
-            More lessons, patterns and visualizers arrive in later phases.
-          </p>
-        </nav>
-        <main className="content">
-          {active ? <LessonContent lesson={active} /> : <p>No lessons yet.</p>}
-        </main>
-      </div>
+          </nav>
+        </div>
+      </header>
+
+      {view === "learn" && <LearnView />}
+      {view === "patterns" && <PatternLibrary />}
+      {view === "practice" && <Practice />}
+      {view === "playground" && <Playground />}
+      {view === "backup" && <BackupView />}
     </div>
   );
 }

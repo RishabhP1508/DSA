@@ -245,6 +245,13 @@ export interface Exercise {
   starterCode?: string;
   /** Reference/expected solution or expected output. */
   expected?: string;
+  /**
+   * Optional Python test snippet appended after the learner's code and run on
+   * the real engine. Use `assert` for property checks and `print` to surface a
+   * failing input. When present, the exercise becomes runnable ("Run tests")
+   * with pass/fail feedback instead of self-assessment.
+   */
+  tests?: string;
   /** Progressive hints, revealed one at a time. */
   hints: string[];
 }
@@ -438,6 +445,10 @@ export interface PatternExercise extends Exercise {
 export interface PatternDefinition {
   id: string;
   title: string;
+  /** Grouping heading for the Pattern Library, e.g. "Arrays & strings". */
+  category: string;
+  /** One-line description shown in the library list. */
+  summary: string;
   /** Signals in input, output, constraints, required operations. */
   clues: string[];
   /** A naive baseline solution and its bottleneck (markdown). */
@@ -452,8 +463,17 @@ export interface PatternDefinition {
   counterexamples: string[];
   /** A complete, visual Python walkthrough program. */
   walkthroughCode: string;
+  /**
+   * Exact stdout produced by walkthroughCode on the bundled Python 3.14,
+   * so the walkthrough can be verified the same way lessons are.
+   */
+  walkthroughExpectedOutput: string;
+  /** Optional stdin fed to input() during the walkthrough. */
+  walkthroughStdin?: string;
   codeExplanations: CodeLineExplanation[];
   bindings: VisualBinding[];
+  /** Complexity note for the walkthrough (plain English). */
+  complexityNote?: string;
   /** Lessons this pattern links to. */
   linkedLessons: string[];
   exercises: PatternExercise[];
