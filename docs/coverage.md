@@ -1,8 +1,8 @@
 # Curriculum coverage inventory
 
-Coverage version: 9. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
+Coverage version: 10. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
 
-**Progress: 127 / 130 verified.**
+**Progress: 130 / 130 verified.**
 
 Status legend: planned · in-progress · authored · verified
 
@@ -44,7 +44,7 @@ Status legend: planned · in-progress · authored · verified
 | Matrix traversal | `arrays/matrix-traversal` | verified | matrix-traversal |
 | Intervals | `arrays/intervals` | verified | intervals |
 
-## Strings (7/8)
+## Strings (8/8)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
@@ -55,7 +55,7 @@ Status legend: planned · in-progress · authored · verified
 | Palindromes | `strings/palindromes` | verified | palindromes |
 | Anagrams | `strings/anagrams` | verified | anagrams |
 | Substrings | `strings/substrings` | verified | substrings |
-| KMP string matching | `strings/kmp` | planned | — |
+| KMP string matching | `strings/kmp` | verified | kmp |
 
 ## Linked lists (10/10)
 
@@ -204,10 +204,10 @@ Status legend: planned · in-progress · authored · verified
 | Lower/upper bounds | `searching/bounds` | verified | bounds |
 | Matrix search | `searching/matrix` | verified | matrix-search |
 
-## Range queries (0/2)
+## Range queries (2/2)
 
 | Subtopic | id | Status | Lesson |
 |---|---|---|---|
-| Fenwick trees | `range/fenwick` | planned | — |
-| Segment trees | `range/segment` | planned | — |
+| Fenwick trees | `range/fenwick` | verified | fenwick-tree |
+| Segment trees | `range/segment` | verified | segment-tree |
 

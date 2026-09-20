@@ -12,7 +12,7 @@
 
 import type { CoverageEntry } from "../core/types";
 
-export const COVERAGE_VERSION = 9;
+export const COVERAGE_VERSION = 10;
 
 function e(
   area: string,
@@ -190,9 +190,9 @@ export const coverage: CoverageEntry[] = [
   e("Searching", "Matrix search", "searching/matrix", { lessonId: "matrix-search", hasVisualExample: true, hasExercise: true, status: "verified" }),
 
   // --- Further range-query structures & strings (agreed additions) ---
-  e("Range queries", "Fenwick trees", "range/fenwick"),
-  e("Range queries", "Segment trees", "range/segment"),
-  e("Strings", "KMP string matching", "strings/kmp"),
+  e("Range queries", "Fenwick trees", "range/fenwick", { lessonId: "fenwick-tree", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Range queries", "Segment trees", "range/segment", { lessonId: "segment-tree", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Strings", "KMP string matching", "strings/kmp", { lessonId: "kmp", hasVisualExample: true, hasExercise: true, status: "verified" }),
 ];
 
 /** Quick coverage stats for docs and the (future) Learning Path progress view. */

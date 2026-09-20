@@ -132,6 +132,9 @@ import { dpLis } from "./lessons/dp-lis";
 import { dpLcs } from "./lessons/dp-lcs";
 import { dpDivideAndConquer } from "./lessons/dp-divide-and-conquer";
 import { dpNQueens } from "./lessons/dp-n-queens";
+import { fenwickTree } from "./lessons/fenwick-tree";
+import { segmentTree } from "./lessons/segment-tree";
+import { kmp } from "./lessons/kmp";
 
 export const lessons: LessonDefinition[] = [
   // Programming foundations
@@ -275,6 +278,11 @@ export const lessons: LessonDefinition[] = [
   dpLcs,
   dpDivideAndConquer,
   dpNQueens,
+  // Range queries
+  fenwickTree,
+  segmentTree,
+  // Strings — KMP
+  kmp,
 ];
 
 export const patterns: PatternDefinition[] = [];
