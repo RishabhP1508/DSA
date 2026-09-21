@@ -255,7 +255,7 @@ The loop condition \`prev.next is not None and prev.next.next is not None\` chec
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "fd320af46eb9c09e",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

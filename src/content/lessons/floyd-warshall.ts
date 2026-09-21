@@ -164,7 +164,7 @@ The cost is three nested loops over all vertices: **O(V³)** time and **O(V²)**
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "0054644f6ce1b021",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

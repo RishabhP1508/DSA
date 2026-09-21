@@ -167,7 +167,7 @@ The cost is dominated by **sorting the edges: O(E log E)** (equivalently O(E log
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "72dc25240000bb2b",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

@@ -179,7 +179,7 @@ export const dynamicProgrammingPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "6c9173ebc66b7c96",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

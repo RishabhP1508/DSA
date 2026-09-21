@@ -146,7 +146,7 @@ These two disciplines drive huge parts of DSA: stacks power recursion/backtracki
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "8c4637f0b9e6b67c",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

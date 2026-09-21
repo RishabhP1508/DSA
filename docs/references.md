@@ -191,9 +191,16 @@ times — interval-sorting only gives sorting + earliest-end greedy).
   (height 0) so every bar's rectangle is measured.
 - **Combination Sum → `dp-combinations`.** Bridge: same choose/explore/un-choose
   backtracking, but recurse with the SAME index (`bt(i, ...)`) to allow reuse and
-  subtract from a running target, pruning when it goes negative. Key condition:
-  reuse is allowed and there is a target sum (unlike LC 77 Combinations — fixed k,
-  no reuse — which is in `ADDITIONAL_PRACTICE`).
+  subtract from a running target, pruning when it goes negative. Key conditions:
+  (1) reuse is allowed and there is a target sum; (2) the `remaining < 0` prune and
+  the search's TERMINATION require **strictly positive** candidates — a zero
+  candidate never decreases `remaining` (reusing it recurses forever) and a
+  negative one increases it (never overshoots, never terminates); (3) the
+  "each combination once" (no-duplicate) argument assumes **distinct** candidate
+  values — duplicate input values would emit the same multiset twice unless you
+  add a skip-equal-siblings guard. LeetCode's Combination Sum guarantees distinct
+  positive candidates, which is why the plain adaptation is correct there. (Unlike
+  LC 77 Combinations — fixed k, no reuse — which is in `ADDITIONAL_PRACTICE`.)
 - **Sum of Two Integers → `bit-logical-ops`.** Bridge: `sum = a ^ b` (add without
   carry), `carry = (a & b) << 1`, loop until carry is 0. Key condition: in Python
   (arbitrary-precision ints) mask to 32 bits each step and reinterpret the sign,

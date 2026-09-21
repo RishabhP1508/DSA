@@ -207,7 +207,7 @@ Tabulation vs memoization is a real design choice. **Memoization** is easy to wr
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "2d202287c95a1993",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

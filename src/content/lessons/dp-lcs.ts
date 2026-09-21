@@ -214,7 +214,7 @@ This is **O(m·n)** time and space — one fill of an (m+1)×(n+1) grid. Two tak
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "37cee5ef9dd92716",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

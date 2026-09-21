@@ -152,7 +152,7 @@ The mechanics are exactly "cache what you've seen": before computing, check the 
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "9d6a927bf0e5b46a",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

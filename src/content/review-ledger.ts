@@ -249,7 +249,7 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "dp-combinations",
     "kind": "lesson",
-    "reviewedHash": "0bef251f2f88aeee",
+    "reviewedHash": "d8348c1f82ebf7c9",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },

@@ -181,7 +181,7 @@ BFS visits every node once, so it is **O(n)** time. Its space is the **maximum w
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "d892bd09e285ca0f",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

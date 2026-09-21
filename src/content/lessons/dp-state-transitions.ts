@@ -207,7 +207,7 @@ This is DP with the table compressed to a **constant number of rolling variables
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "6b8bf29b7a8008fb",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

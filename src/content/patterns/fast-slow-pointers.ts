@@ -202,7 +202,7 @@ export const fastSlowPointersPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "425433b5f53ab15b",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

@@ -169,7 +169,7 @@ Crucially, \`start\` only ever moves **forward**, and \`i\` moves forward once p
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "305dfbb81644ed5c",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

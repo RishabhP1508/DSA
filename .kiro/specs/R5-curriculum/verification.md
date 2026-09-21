@@ -473,3 +473,54 @@ separate **25** `ADDITIONAL_PRACTICE` problems — unchanged.
 - `P-RUNNER-ORIGIN` remains a release-blocking packaging gate (the 5 e2e skips).
 - Big-O CLAIM correctness beyond structural consistency is R7.
 - **R6/UI/packaging NOT started; PR #17 NOT merged.**
+
+
+
+---
+
+# R5 AMENDMENT 6 (Combination Sum bridge preconditions)
+
+Narrow, test-first correction on PR #17. No new PR; R6/UI/packaging not started;
+PR not merged.
+
+## What was wrong
+The learner-facing Combination Sum bridge (in `dp-combinations`) asserted its
+`remaining < 0` pruning/termination and its no-duplicate argument without stating
+the preconditions that make them hold.
+
+## Fix (test-first)
+- **Test first (`notion-bridges.test.ts`, +2, now 17):** added assertions that the
+  learner-facing content states the pruning/termination requires **positive**
+  candidates (and why zero/negative break it) and that the no-duplicate argument
+  assumes **distinct** candidate values. Confirmed both FAILED first, then fixed.
+- **Lesson content (`dp-combinations` explanation + `dpcomb-combination-sum-1`
+  exercise expected/hints):** now states (a) candidates must be strictly
+  **positive** — the `remaining < 0` prune and the whole search's termination only
+  work because every pick decreases `remaining`; a **zero** candidate never
+  decreases it (reusing it recurses forever), a **negative** one increases it
+  (never overshoots, never terminates); and (b) candidates must be **distinct
+  values** — the "each combination once" argument assumes distinct values, so
+  duplicate inputs would emit the same multiset twice without an extra
+  skip-equal-siblings guard. Notes that LeetCode's Combination Sum guarantees
+  distinct positive candidates, which is why the plain adaptation is correct there.
+- **Consistency:** the manifest rationale (`notion-practice.ts`) and the developer
+  reference note (`docs/references.md`, "Notion practice bridges") were updated to
+  match — both now carry the positive + distinct preconditions and failure modes.
+
+## Unchanged / preserved
+- Combination Sum stays `mapped` to `dp-combinations` (the bridge is genuinely
+  taught, now with its preconditions).
+- **Task Scheduler and Meeting Rooms II remain `unresolved`** — their counts were
+  NOT changed to make the manifest look complete. Manifest is still **79
+  occurrences / 75 unique / 77 mapped + 2 unresolved / 25 additional**.
+- Editing `dp-combinations` changed its content hash, so its evidence + review
+  ledger were regenerated (this session re-read the updated content); all other
+  items unchanged. COVERAGE_VERSION 17 → 18.
+
+## Full suite (tested commit = amendment-6 tip)
+- `check:all`: green — build; lint 0 err / 9 warn; unit **592 / 592** (33 files);
+  pipeline; visualizers; 131 lessons; 29 patterns; 131 complexity; line
+  explanations 131 + 29; example model 131 + 29; coverage evidence 131; semantic
+  consistency (0 failures / 7 advisory); runnable exercises.
+- `test:browser`: **9 passed / 5 skipped** (the 5 skips = `P-RUNNER-ORIGIN`
+  packaging gate, unchanged).

@@ -156,7 +156,7 @@ When the data is **sorted**, binary search does far better (O(log n)); when you 
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "c99b9daa622305fd",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

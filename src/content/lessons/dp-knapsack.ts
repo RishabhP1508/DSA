@@ -220,7 +220,7 @@ This is **O(n·cap)** time and space — it fills an (n+1)×(cap+1) table once. 
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "c77a488534b0dbdf",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

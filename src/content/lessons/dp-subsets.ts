@@ -206,7 +206,7 @@ Recording \`path[:]\` (a **copy**) rather than \`path\` itself is essential: \`p
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "ac7949d9001b72dd",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

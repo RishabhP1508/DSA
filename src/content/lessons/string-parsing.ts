@@ -147,7 +147,7 @@ The cost is linear in the total number of characters: \`split\` scans the whole 
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "64a5b2cab101bb4a",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

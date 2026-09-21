@@ -167,7 +167,7 @@ It is **stable** and uses **O(1)** extra space. Among the three quadratic sorts,
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "f3ec2e8f7473cd6a",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

@@ -172,7 +172,7 @@ All three are **O(n)** time (every node visited once) and **O(h)** space (recurs
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "05ecbe9184642e1c",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

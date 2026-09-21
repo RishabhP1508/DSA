@@ -166,7 +166,7 @@ BFS visits every reachable vertex once and scans every incident edge once, so it
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "382e88786482a4ab",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

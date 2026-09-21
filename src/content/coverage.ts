@@ -13,7 +13,7 @@
 import type { CoverageEntry } from "../core/types";
 import { NOTION_PRACTICE } from "./notion-practice";
 
-export const COVERAGE_VERSION = 17;
+export const COVERAGE_VERSION = 18;
 
 function e(
   area: string,

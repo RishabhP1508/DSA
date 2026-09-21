@@ -147,7 +147,7 @@ Python's \`heapq.merge(*iterables)\` implements this and returns a **lazy iterat
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "7c6cb70710713bc5",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

@@ -264,7 +264,7 @@ export const linkedListCycleDetection: LessonDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "215b87bdeace9f0b",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

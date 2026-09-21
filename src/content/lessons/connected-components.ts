@@ -179,7 +179,7 @@ The whole thing is **O(V + E)** time even though it launches multiple traversals
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "4f76bc47ed30a856",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

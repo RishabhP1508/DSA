@@ -152,7 +152,7 @@ Two practical rules: keys (and set elements) must be **hashable** (immutable —
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "4f48d5c53a071da7",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

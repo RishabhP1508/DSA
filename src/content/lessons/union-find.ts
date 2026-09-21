@@ -190,7 +190,7 @@ Here, unioning {0,1,2} and {3,4} leaves \`count = 2\` sets; \`find(0) == find(2)
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "e64199d6c689f591",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

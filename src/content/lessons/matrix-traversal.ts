@@ -151,7 +151,7 @@ Row/column pointers in the visualization highlight the current cell so you can s
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "0706cb68dea95a7a",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

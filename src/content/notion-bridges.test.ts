@@ -94,6 +94,19 @@ describe("R5.6 bridge — Combination Sum is taught in dp-combinations", () => {
     expect(t).toMatch(/prune|remaining < 0|remaining<0|negative|overshoot/);
     expect(t).toMatch(/non-decreasing|increasing|duplicate|order/);
   });
+  it("states the pruning/termination requires POSITIVE candidates (and why zero/negative break it)", () => {
+    // The remaining<0 prune + termination argument only hold when every reusable
+    // candidate is strictly positive.
+    expect(t).toMatch(/positive/);
+    // Must explain the failure mode for a zero or negative reusable value
+    // (remaining never decreases / never crosses below 0 -> no termination).
+    expect(t).toMatch(/zero|0\b/);
+    expect(t).toMatch(/negative/);
+    expect(t).toMatch(/never (decreas|terminat|shrink)|infinite|forever|would not terminate|does not decrease/);
+  });
+  it("states the no-duplicate argument assumes DISTINCT candidate values", () => {
+    expect(t).toMatch(/distinct/);
+  });
   it("manifest keeps it mapped to dp-combinations", () => {
     assertMapped("https://leetcode.com/problems/combination-sum/", "dp-combinations");
   });

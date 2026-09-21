@@ -214,7 +214,7 @@ Backtracking's structure is always the same three beats — **choose, explore, u
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "cd588546b241553b",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

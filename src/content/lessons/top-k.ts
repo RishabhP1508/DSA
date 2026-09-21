@@ -167,7 +167,7 @@ Python's \`heapq.nlargest(k, nums)\` does exactly this internally and returns th
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "5f680c436688f8ae",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

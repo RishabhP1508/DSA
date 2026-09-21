@@ -196,7 +196,7 @@ Here \`fact(n)\` computes n·(n−1)·…·1. The base case is \`n <= 1 → retu
     },
   ],
   evidence: {
-    inventoryVersion: 17,
+    inventoryVersion: 18,
     contentHash: "e97f44ebd92612d7",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
