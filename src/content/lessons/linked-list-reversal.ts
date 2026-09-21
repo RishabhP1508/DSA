@@ -243,8 +243,8 @@ This is **O(n)** time (each node is visited once) and **O(1)** space (three poin
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "d80bb0723a21c8c4",
+    inventoryVersion: 17,
+    contentHash: "ec9e65ff7a3d42ff",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

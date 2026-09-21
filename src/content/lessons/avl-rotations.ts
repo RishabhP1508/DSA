@@ -179,8 +179,8 @@ There are four imbalance cases — **LL, RR, LR, RL** — fixed by a single or d
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "300857776383e640",
+    inventoryVersion: 17,
+    contentHash: "bbcd62975022d36d",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

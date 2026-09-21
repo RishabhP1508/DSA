@@ -201,8 +201,8 @@ The point of this worked example is to see the full DP pipeline on something int
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "668382c2d1667956",
+    inventoryVersion: 17,
+    contentHash: "c3b9b07d34ca592e",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

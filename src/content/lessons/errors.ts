@@ -140,8 +140,8 @@ Catch **specific** exception types (\`IndexError\`, \`ValueError\`, \`KeyError\`
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "ee2139d54ac176eb",
+    inventoryVersion: 17,
+    contentHash: "935f03e64e7a8423",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

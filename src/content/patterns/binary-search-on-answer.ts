@@ -205,8 +205,8 @@ export const binarySearchOnAnswerPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "f949bd7e4b22bd6e",
+    inventoryVersion: 17,
+    contentHash: "47cff2f026433ea9",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

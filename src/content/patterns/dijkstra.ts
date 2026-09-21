@@ -198,8 +198,8 @@ export const dijkstraPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "db513ddc58461a3a",
+    inventoryVersion: 17,
+    contentHash: "1c1203240fbc86b8",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

@@ -175,8 +175,8 @@ export const mergeIntervalsPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "b338311febd76e5d",
+    inventoryVersion: 17,
+    contentHash: "a4b44c093ede17e4",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

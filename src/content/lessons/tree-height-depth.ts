@@ -162,8 +162,8 @@ The computation is **O(n)** time (each node contributes to exactly one height ca
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "f59a0d8ac5a9e183",
+    inventoryVersion: 17,
+    contentHash: "7a42a58ae3c9f40f",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

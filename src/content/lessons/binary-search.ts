@@ -170,8 +170,8 @@ Two details make or break correctness: the loop condition \`lo <= hi\` (so a one
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "fee64ecee9cdbecd",
+    inventoryVersion: 17,
+    contentHash: "d21d0a0e796c9bee",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

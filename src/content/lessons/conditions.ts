@@ -138,8 +138,8 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "5f9953611ad82a02",
+    inventoryVersion: 17,
+    contentHash: "dfc89aa5393f06da",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

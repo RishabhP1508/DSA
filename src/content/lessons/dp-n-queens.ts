@@ -225,8 +225,8 @@ Those diagonal keys are the clever bit worth remembering: encoding a constraint 
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "99977c48dac52925",
+    inventoryVersion: 17,
+    contentHash: "15b3247eca96e9a0",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

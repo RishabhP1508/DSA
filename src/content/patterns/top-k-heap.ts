@@ -181,8 +181,8 @@ export const topKHeapPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "4a809679462c01ae",
+    inventoryVersion: 17,
+    contentHash: "555d2446c2cddc97",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

@@ -209,8 +209,8 @@ This is **O(n²)** time (each \`i\` scans all earlier \`j\`) and **O(n)** space.
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "52776e6f9b309965",
+    inventoryVersion: 17,
+    contentHash: "24ce470bc7fc7510",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

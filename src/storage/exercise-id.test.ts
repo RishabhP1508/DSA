@@ -20,10 +20,12 @@ describe("exercise-id — global uniqueness", () => {
     expect(unique.size).toBe(ids.length); // no collisions
   });
 
-  it("matches the known count (383 exercises)", () => {
-    // 381 at the R5 baseline + 2 added by the R5 amendment's heap-sift lesson
-    // (sift-predict-1, sift-choose-1).
-    expect(allComposite().length).toBe(383);
+  it("matches the known count (388 exercises)", () => {
+    // 381 at the R5 baseline + 2 from the heap-sift lesson (sift-predict-1,
+    // sift-choose-1) + 5 learner-facing bridge exercises added by the practice-
+    // bridge amendment (ps-product-except-self-1, pal-longest-substring-1,
+    // mono-histogram-1, dpcomb-combination-sum-1, bit-log-sum-1).
+    expect(allComposite().length).toBe(388);
   });
 
   it("flags exactly the four known ambiguous bare ids", () => {

@@ -25,7 +25,9 @@ export const prefixSums: LessonDefinition = {
 
 The trick is a one-time **O(n)** preprocessing pass to build \`prefix\`. After that, each range-sum query is a single subtraction. If you answer q queries, the naive approach costs **O(n·q)** (re-summing each range), while prefix sums cost **O(n + q)** — a huge win when q is large.
 
-We use a leading \`0\` (\`prefix[0] = 0\`) so the formula \`prefix[b] - prefix[a]\` works cleanly for any range, including ranges starting at index 0. Prefix sums also power more advanced tricks: combined with a hash map, they count subarrays with a target sum (including with negative numbers) — a different problem from the fixed-size window.`,
+We use a leading \`0\` (\`prefix[0] = 0\`) so the formula \`prefix[b] - prefix[a]\` works cleanly for any range, including ranges starting at index 0. Prefix sums also power more advanced tricks: combined with a hash map, they count subarrays with a target sum (including with negative numbers) — a different problem from the fixed-size window.
+
+**Adapting the idea to products — "Product of Array Except Self".** You want \`answer[i]\` = the product of every element *except* \`nums[i]\`, in O(n) and **without division**. It is the prefix-sum idea with \`+\` replaced by \`*\`, but a product needs *both* sides, so you make **two passes**. Pass 1 (left→right): \`answer[i]\` = product of everything strictly *before* i (start the running product at 1, so index 0 gets the empty product 1). Pass 2 (right→left): multiply \`answer[i]\` by the product of everything strictly *after* i (running product starts at 1 again). For \`nums = [1,2,3,4]\` the prefix-products are \`[1,1,2,6]\` and the suffix-products are \`[24,12,4,1]\`, giving \`answer = [24,12,8,6]\`. **Correctness condition:** neither pass ever multiplies in \`nums[i]\` itself, so the result is exactly "all except i"; and because there is no division, a single **zero** in the input is handled correctly (division would break on it).`,
 
   vocabulary: [
     { term: "Prefix sum", definition: "prefix[i] = sum of the first i elements of the array." },
@@ -104,6 +106,7 @@ We use a leading \`0\` (\`prefix[0] = 0\`) so the formula \`prefix[b] - prefix[a
     "Compute the whole-array sum as prefix[len(nums)] - prefix[0].",
     "Answer three different range sums using only subtractions.",
     "Remove the leading 0 and see how the range formula breaks for ranges starting at index 0.",
+    "Prefix products (Product of Array Except Self): run the SAME idea with multiplication instead of addition, but in TWO passes — a left-to-right prefix product and a right-to-left suffix product — then set answer[i] = prefixLeft[i] * suffixRight[i]. The correctness condition: each answer EXCLUDES nums[i] itself (prefixLeft[i] is the product strictly before i, suffixRight[i] strictly after), and it uses no division, so it stays correct even when a zero is present. Try nums = [1,2,3,4] and confirm [24,12,8,6].",
   ],
 
   exercises: [
@@ -122,9 +125,16 @@ We use a leading \`0\` (\`prefix[0] = 0\`) so the formula \`prefix[b] - prefix[a
       expected: "Prefix sums: O(n) build + O(1) per query = O(n + q). Re-summing is O(n) per query = O(n·q), far worse here.",
       hints: ["How many queries, and is the array fixed?", "Preprocess once, then answer each query in O(1).", "O(n+q) beats O(n·q) massively for large q."],
     },
+    {
+      id: "ps-product-except-self-1",
+      kind: "predict-state",
+      prompt: "Adapt prefix sums to PRODUCTS for 'Product of Array Except Self' on nums = [1,2,3,4]. Using a left-to-right prefix-product pass and a right-to-left suffix-product pass, what are prefixLeft, suffixRight, and the final answer? State the condition that makes each answer exclude nums[i].",
+      expected: "prefixLeft = [1,1,2,6] (product strictly BEFORE i, starting from the empty product 1). suffixRight = [24,12,4,1] (product strictly AFTER i). answer[i] = prefixLeft[i]*suffixRight[i] = [24,12,8,6]. Condition: neither pass ever multiplies in nums[i] itself, so the product is 'all except i' — and because there is no division it stays correct even if the array contains a zero.",
+      hints: ["It's the prefix-sum idea with * instead of +, but products need both sides.", "prefixLeft[i] = product of everything strictly before i (start at 1); suffixRight[i] = product strictly after i.", "answer[i] = prefixLeft[i] * suffixRight[i]; excluding nums[i] is what makes it correct, and no-division handles zeros."],
+    },
   ],
 
-  review: `A **prefix sum** array (\`prefix[i]\` = sum of the first i elements, with a leading 0) answers any range sum as \`prefix[b] - prefix[a]\` in **O(1)** after an **O(n)** build and **O(n)** space. It wins big for many queries (O(n+q) vs O(n·q)) and — with a hash map — also counts target-sum subarrays, which is a distinct problem from the fixed-size window.`,
+  review: `A **prefix sum** array (\`prefix[i]\` = sum of the first i elements, with a leading 0) answers any range sum as \`prefix[b] - prefix[a]\` in **O(1)** after an **O(n)** build and **O(n)** space. It wins big for many queries (O(n+q) vs O(n·q)) and — with a hash map — also counts target-sum subarrays, which is a distinct problem from the fixed-size window. The same idea generalizes to **prefix/suffix PRODUCTS** (Product of Array Except Self): two passes give \`answer[i] = productBefore[i] * productAfter[i]\`, which excludes \`nums[i]\` and needs no division (so zeros are fine).`,
 
   expectedOutput: "[0, 3, 4, 8, 9, 14]\n6\n",
 
@@ -149,8 +159,8 @@ We use a leading \`0\` (\`prefix[0] = 0\`) so the formula \`prefix[b] - prefix[a
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "5b61cc7ef25b6acb",
+    inventoryVersion: 17,
+    contentHash: "fc196b7aeb3fab57",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

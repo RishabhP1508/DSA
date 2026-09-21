@@ -223,8 +223,8 @@ The instructive contrast with unique paths is the **combiner**: counting uses \`
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "b1e479617577798d",
+    inventoryVersion: 17,
+    contentHash: "4f7e05cac4c48fd1",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

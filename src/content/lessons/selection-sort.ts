@@ -154,8 +154,8 @@ A subtle contrast: selection sort's comparison count is **the same regardless of
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "faedab22e3e92765",
+    inventoryVersion: 17,
+    contentHash: "d705f40e376781b1",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

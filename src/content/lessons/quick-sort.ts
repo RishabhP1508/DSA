@@ -152,8 +152,8 @@ The version shown is a clear, teaching-friendly form using list comprehensions (
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "e1e141fb37c3b72c",
+    inventoryVersion: 17,
+    contentHash: "e310478b9e80e5b9",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

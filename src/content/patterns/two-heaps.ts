@@ -203,8 +203,8 @@ export const twoHeapsPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "6d4f1af9d4031137",
+    inventoryVersion: 17,
+    contentHash: "cb75838b74c6ac49",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

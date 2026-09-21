@@ -34,6 +34,8 @@ export const dpCombinations: LessonDefinition = {
 
 The key to avoiding duplicates (like \`[1,2]\` and \`[2,1]\`) is the same **increasing \`start\` index** used for subsets: each recursion considers only elements **after** the one just chosen (\`i + 1\`), so every combination is generated in a single increasing order exactly once. We record a **copy** of \`path\` only when its length reaches \`k\`. The backtracking rhythm is unchanged: **choose \`i\`, explore from \`i + 1\`, un-choose**.
 
+**Adapting to "Combination Sum" (reuse + a target).** A common variant asks for all combinations of candidates that **sum to a target**, where each candidate may be **reused any number of times**. Two small changes to this template do it. (1) **Allow reuse:** recurse with the **same index** \`bt(i, ...)\` instead of \`bt(i + 1, ...)\`, so \`i\` can be chosen again; the non-decreasing start index still prevents permutation-duplicates like \`[2,3]\` vs \`[3,2]\`. (2) **Drive by a remaining target instead of a size \`k\`:** subtract the chosen value from \`remaining\`, record \`path\` when \`remaining == 0\`, and **prune** the branch when \`remaining < 0\` (the running sum overshot). **Correctness condition:** recursing from \`i\` (not \`i+1\`) is what permits reuse, and keeping the start index non-decreasing is what stops the same multiset being emitted in different orders — drop either and you get wrong results (no reuse, or duplicate orderings).
+
 A practical **pruning** exists (not shown, to keep the example minimal): if there aren't enough remaining numbers to reach size k, stop early — you can cap the loop at \`n - (k - len(path)) + 1\`. For \`combine(4, 2)\` the six combinations are \`[[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]\`. Cost is **O(k·C(n,k))** time (C(n,k) combinations, each O(k) to copy) and **O(k)** auxiliary space for the recursion depth and path. Recognizing "choose k, order irrelevant" → combinations, versus "arrange all, order matters" → permutations, is the reusable takeaway.`,
 
   vocabulary: [
@@ -178,6 +180,13 @@ A practical **pruning** exists (not shown, to keep the example minimal): if ther
         "Largest increasing pair last.",
       ],
     },
+    {
+      id: "dpcomb-combination-sum-1",
+      kind: "choose-approach",
+      prompt: "Adapt this template to 'Combination Sum': all combinations of candidates=[2,3,6,7] that sum to target=7, where each candidate may be REUSED. What two changes to the choose/explore/un-choose template are needed, what prunes a branch, and what are the results?",
+      expected: "Two changes: (1) recurse with the SAME index bt(i, ...) instead of bt(i+1, ...) so a candidate can be reused; (2) drive by a remaining target instead of a size k — subtract the chosen value, record path when remaining == 0, and PRUNE when remaining < 0 (overshoot). Keeping the start index non-decreasing prevents duplicate orderings like [2,2,3] vs [3,2,2]. Results: [[2,2,3],[7]]. If you recursed from i+1 you'd forbid reuse and miss [2,2,3]; without the remaining<0 prune it would recurse forever/over-explore.",
+      hints: ["Reuse means you may pick candidate i again — recurse from i, not i+1.", "Replace the size-k check with a running 'remaining' target; record when it hits 0.", "Prune when remaining goes negative; keep the index non-decreasing to avoid duplicate orderings."],
+    },
   ],
 
   review: `A **combination** selects k items where **order doesn't matter**; there are **C(n,k)** of them. It's the subset template plus a **size check**: record a copy only when \`len(path) == k\`. The **increasing \`start\` index** (recurse from \`i + 1\`) generates each combination once with no duplicates. It is **O(k·C(n,k))** time and **O(k)** auxiliary space. Recognize the fork: order matters → permutations (n!, used array); order doesn't → combinations (C(n,k), start index). \`combine(4,2)\` gives all 6 pairs.`,
@@ -210,8 +219,8 @@ A practical **pruning** exists (not shown, to keep the example minimal): if ther
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "edda1f8ff0e62cd8",
+    inventoryVersion: 17,
+    contentHash: "0bef251f2f88aeee",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

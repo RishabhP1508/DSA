@@ -139,8 +139,8 @@ Because a Python list is backed by a contiguous array, reading \`nums[i]\` is **
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "cc644aac7c93555f",
+    inventoryVersion: 17,
+    contentHash: "a6683bf342da2d72",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

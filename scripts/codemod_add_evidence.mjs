@@ -34,49 +34,28 @@ const { lessons, patterns } = await loadCurriculum();
 const { COVERAGE_VERSION } = await import(pathToFileURL(path.join(ROOT, "src/content/coverage.ts")).href);
 
 /**
- * R5.3 — the six-batch semantic review is COMPLETE: every lesson and pattern's
- * teaching content (definition/invariant/reasoning/edge cases, not just
- * structure) has been read against the R5.3 checklist this milestone. Findings
- * are recorded in .kiro/specs/R5-curriculum/batch-review.md; the automated
- * `verify_semantic_consistency` scan (0 contradictions) is the structural
- * backstop. Every item therefore gets evidence.semanticReview = true with its
- * batch number, derived from its area. (Patterns are reviewed within the batch
- * of their category.)
+ * R5.3 — semantic review is NOT auto-granted here. This codemod records only the
+ * MACHINE evidence (checks + content hash). The `semanticReview` flag is derived
+ * strictly from the HUMAN-REVIEW LEDGER (src/content/review-ledger.ts): an item
+ * gets `semanticReview: true` ONLY when its CURRENT content hash equals the
+ * ledger's `reviewedHash` for that id. So a content edit (which changes the hash)
+ * automatically reverts the item to `semanticReview: false` when evidence is
+ * regenerated — the review claim cannot outlive the content it was made against.
+ * To re-grant it, a human re-reads the item and re-runs gen_review_ledger.mjs.
  */
-const LESSON_AREA_TO_BATCH = {
-  "Programming foundations": 1,
-  "DSA foundations": 1,
-  "Arrays": 2,
-  "Strings": 2,
-  "Hashing": 2,
-  "Bit manipulation": 2,
-  "Searching": 3,
-  "Sorting": 3,
-  "Linear structures": 4, // linked lists
-  "Stacks and queues": 4,
-  "Heaps": 4,
-  "Trees and tries": 5,
-  "Graphs": 5,
-  "Range queries": 5,
-  "DP and recursion": 6,
-};
-const PATTERN_CATEGORY_TO_BATCH = {
-  "Arrays & strings": 2,
-  "Searching": 3,
-  "Linked lists & sequences": 4,
-  "Stacks & queues": 4,
-  "Heaps & priority": 4,
-  "Graphs & trees": 5,
-  "Intervals": 3,
-  "Greedy": 3,
-  "Recursion & search": 6,
-  "Dynamic programming": 6,
-  "Sorting & divide-and-conquer": 3,
-  "Bit manipulation": 2,
-};
-function reviewBatchFor(kind, item) {
-  if (kind === "lesson") return LESSON_AREA_TO_BATCH[item.area];
-  return PATTERN_CATEGORY_TO_BATCH[item.category];
+const { REVIEW_LEDGER_BY_KEY } = await import(pathToFileURL(path.join(ROOT, "src/content/review-ledger.ts")).href);
+
+/**
+ * Returns { reviewed, batch } for an item given its CURRENT content hash:
+ * reviewed is true only if a ledger entry (keyed by kind:id) exists AND its
+ * reviewedHash matches. (kind:id keying is required because a lesson and a
+ * pattern can share an id.)
+ */
+function reviewStateFor(kind, item, currentHash) {
+  const entry = REVIEW_LEDGER_BY_KEY.get(kind + ":" + item.id);
+  if (!entry) return { reviewed: false, batch: undefined };
+  if (entry.reviewedHash !== currentHash) return { reviewed: false, batch: entry.batch };
+  return { reviewed: true, batch: entry.batch };
 }
 
 // Map registry id -> file path (by exported const's file). We locate files by
@@ -136,7 +115,7 @@ async function evidenceFor(kind, item) {
   return { checks, unresolved, res };
 }
 
-function renderEvidence(hash, checks, unresolved, indent, inventoryVersion, reviewBatch) {
+function renderEvidence(hash, checks, unresolved, indent, inventoryVersion, reviewed, reviewBatch) {
   const c = checks;
   const lines = [];
   lines.push(`${indent}evidence: {`);
@@ -144,12 +123,11 @@ function renderEvidence(hash, checks, unresolved, indent, inventoryVersion, revi
   lines.push(`${indent}  contentHash: "${hash}",`);
   lines.push(`${indent}  verifiedAt: "${NOW}",`);
   lines.push(`${indent}  checks: { content: ${c.content}, implementation: ${c.implementation}, visualization: ${c.visualization}, exercise: ${c.exercise}, complexity: ${c.complexity}, references: ${c.references} },`);
-  if (reviewBatch !== undefined) {
-    lines.push(`${indent}  semanticReview: true,`);
-    lines.push(`${indent}  reviewBatch: ${reviewBatch},`);
-  } else {
-    lines.push(`${indent}  semanticReview: false,`);
-  }
+  // semanticReview is true ONLY when the human-review ledger's reviewedHash
+  // matches the current content hash (see reviewStateFor). reviewBatch is
+  // recorded when a ledger entry exists (even if stale) for traceability.
+  lines.push(`${indent}  semanticReview: ${reviewed ? "true" : "false"},`);
+  if (reviewBatch !== undefined) lines.push(`${indent}  reviewBatch: ${reviewBatch},`);
   if (unresolved.length) {
     lines.push(`${indent}  unresolved: [${unresolved.map((u) => JSON.stringify(u)).join(", ")}],`);
   }
@@ -177,10 +155,10 @@ for (const [kind, items, files] of [["lesson", lessons, lessonFiles], ["pattern"
     const filePath = files.get(item.id);
     if (!filePath) { console.log(`  ! no file for ${kind} ${item.id}`); continue; }
     const { checks, unresolved } = await evidenceFor(kind, item);
-    const hash = contentHashOf(item); // hash of current content (scope already added)
+    const hash = contentHashOf(item); // hash of current content
     const indent = "  ";
-    const reviewBatch = reviewBatchFor(kind, item);
-    writeEvidence(filePath, renderEvidence(hash, checks, unresolved, indent, COVERAGE_VERSION, reviewBatch));
+    const { reviewed, batch } = reviewStateFor(kind, item, hash);
+    writeEvidence(filePath, renderEvidence(hash, checks, unresolved, indent, COVERAGE_VERSION, reviewed, batch));
     done++;
   }
 }

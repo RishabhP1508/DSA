@@ -210,8 +210,8 @@ This is **O(m·n)** time (fill every cell once) and **O(m·n)** space for the gr
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "e810efcfd028df72",
+    inventoryVersion: 17,
+    contentHash: "010df59c32e2771e",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

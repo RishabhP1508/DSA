@@ -174,8 +174,8 @@ It runs in **O(V + E)** — each vertex is queued once and each edge relaxes one
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "153b5c1ed4d17631",
+    inventoryVersion: 17,
+    contentHash: "5959887f6a3ab874",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

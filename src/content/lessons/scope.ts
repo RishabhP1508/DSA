@@ -129,8 +129,8 @@ The rule of thumb: assigning to a name inside a function makes it local (unless 
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "a4073f80b86f8f1f",
+    inventoryVersion: 17,
+    contentHash: "35f184459c464a8b",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

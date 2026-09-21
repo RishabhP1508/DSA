@@ -1,6 +1,6 @@
 # Curriculum coverage inventory
 
-Coverage version: 16. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
+Coverage version: 17. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
 
 **Evidence-verified (structural): 131 / 131.**
 **Human semantic review (R5.3): 131 / 131 coverage entries complete; 0 pending.**

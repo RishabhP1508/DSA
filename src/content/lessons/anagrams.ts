@@ -141,8 +141,8 @@ So both are correct, but they sit at different complexities: **O(n log n)** (sor
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "4aea28e731d0d4d1",
+    inventoryVersion: 17,
+    contentHash: "97beb74ee9a56a67",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

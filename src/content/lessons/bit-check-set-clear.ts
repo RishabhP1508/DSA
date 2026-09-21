@@ -148,8 +148,8 @@ The trick each time is that the mask \`1 << i\` isolates exactly bit \`i\`, and 
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "f9ac57a64c5dc0c7",
+    inventoryVersion: 17,
+    contentHash: "aa2494271ae5faaa",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

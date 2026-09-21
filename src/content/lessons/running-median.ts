@@ -178,8 +178,8 @@ Reading the median is **O(1)**: if the counts are equal it's the average of the 
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "c8fedb5d21b3ffce",
+    inventoryVersion: 17,
+    contentHash: "751ae8ae83b298db",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

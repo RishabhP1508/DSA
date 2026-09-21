@@ -159,8 +159,8 @@ It runs in **O(n)** time and **O(n)** space. Converting normal **infix** express
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "e7aef030e1474251",
+    inventoryVersion: 17,
+    contentHash: "562a44ce56ec57fd",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

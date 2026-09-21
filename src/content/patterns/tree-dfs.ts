@@ -204,8 +204,8 @@ export const treeDfsPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "629e4355203d62bd",
+    inventoryVersion: 17,
+    contentHash: "d7df312529da2294",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

@@ -8,10 +8,17 @@
  * these produces a different hash, so a stored `evidence.contentHash` that no
  * longer matches signals stale evidence.
  *
- * It intentionally does NOT hash prose like `explanation`/`review` narration
- * that does not carry a testable claim on its own — but DOES hash the concept
- * fields and vocabulary that state teaching claims. Kept conservative: when in
- * doubt, include the field (a false "stale" is safe; a false "fresh" is not).
+ * It hashes ALL learner-facing CLAIM-BEARING fields — including the prose a
+ * learner actually reads: a lesson's `title`, `explanation`, `review`, and the
+ * summary `complexity` table (alongside concepts, vocabulary, code, line
+ * explanations, bindings, exercises, prediction, structured complexity, and
+ * references); and a pattern's `title`, `summary`, `naiveApproach`, `whyItHelps`,
+ * `complexityNote` (alongside clues/conditions/alternatives/counterexamples,
+ * walkthrough, bindings, exercises, structured complexity, references). Editing
+ * any of these — e.g. the bridge worked-example paragraph now taught in
+ * `explanation` — MUST invalidate prior verification evidence, so semantic review
+ * cannot silently outlive a content edit. Kept conservative: when in doubt,
+ * include the field (a false "stale" is safe; a false "fresh" is not).
  *
  * Uses SHA-256 over a canonical JSON projection (sorted keys) so the hash is
  * stable across runs and platforms.
@@ -32,6 +39,10 @@ function canonical(value) {
 function lessonProjection(l) {
   return {
     id: l.id,
+    title: l.title,
+    // learner-facing prose that carries teaching claims (incl. the bridge notes)
+    explanation: l.explanation,
+    review: l.review,
     code: l.code,
     stdin: l.stdin ?? null,
     expectedOutput: l.expectedOutput,
@@ -40,9 +51,12 @@ function lessonProjection(l) {
     bindingsRationale: l.bindingsRationale ?? null,
     concepts: l.concepts,
     vocabulary: l.vocabulary,
-    exercises: l.exercises,
-    prediction: l.prediction,
+    // both the summary complexity table AND the structured explanation
+    complexity: l.complexity ?? null,
     complexityExplanation: l.complexityExplanation ?? null,
+    exercises: l.exercises,
+    experiments: l.experiments ?? null,
+    prediction: l.prediction,
     references: l.references,
   };
 }
@@ -51,6 +65,11 @@ function lessonProjection(l) {
 function patternProjection(p) {
   return {
     id: p.id,
+    title: p.title,
+    // learner-facing recognition/teaching prose
+    summary: p.summary,
+    naiveApproach: p.naiveApproach,
+    whyItHelps: p.whyItHelps,
     walkthroughCode: p.walkthroughCode,
     walkthroughStdin: p.walkthroughStdin ?? null,
     walkthroughExpectedOutput: p.walkthroughExpectedOutput,
@@ -62,6 +81,8 @@ function patternProjection(p) {
     alternatives: p.alternatives,
     counterexamples: p.counterexamples,
     exercises: p.exercises,
+    // both the short complexity note AND the structured explanation
+    complexityNote: p.complexityNote ?? null,
     complexityExplanation: p.complexityExplanation ?? null,
     references: p.references,
   };

@@ -192,8 +192,8 @@ export const divideAndConquerPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "671ecf973c39e918",
+    inventoryVersion: 17,
+    contentHash: "166f5a5629254054",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

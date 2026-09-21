@@ -179,8 +179,8 @@ export const greedyIntervalSchedulingPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "84ee5949f5560d73",
+    inventoryVersion: 17,
+    contentHash: "109a0d7da8b51689",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

@@ -213,8 +213,8 @@ Naming is the usual stumbling block: \`append\`/\`pop\` act on the **right** end
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "1204764ae9a293c0",
+    inventoryVersion: 17,
+    contentHash: "0d245a88161095ab",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

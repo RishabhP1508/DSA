@@ -162,13 +162,13 @@ authored in later phases. Consult the tables above plus these hints:
 ## R5.6 — Notion practice bridges (content-audited mappings)
 
 Some Notion practice problems reuse a lesson's technique with a small, specific
-ADAPTATION the lesson does not spell out. Rather than imply the lesson already
-covers the problem, each bridge below states the missing step and its key
-condition. Content-audited against the actual lesson/pattern on 2026-09-20; the
-per-occurrence rationale in `src/content/notion-practice.ts` points here. Two
-problems had NO teaching (only a prerequisite) and are recorded as `unresolved`
-in the manifest instead: **Task Scheduler** (greedy cooldown / idle-slot
-scheduling — top-k only gives the max-heap-of-counts prerequisite) and
+ADAPTATION. Each such adaptation and its correctness condition is now **taught in
+the mapped lesson's LEARNER-FACING content** (explanation prose + an experiment +
+an exercise) — this section is a developer-facing summary/provenance record, NOT
+the place the learner encounters it. Content-audited against the actual lesson on
+2026-09-20. Two problems had NO teaching (only a prerequisite) and are
+`unresolved` in the manifest instead: **Task Scheduler** (greedy cooldown /
+idle-slot scheduling — top-k only gives the max-heap-of-counts prerequisite) and
 **Meeting Rooms II** (concurrent-overlap room counting via a min-heap of end
 times — interval-sorting only gives sorting + earliest-end greedy).
 

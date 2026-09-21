@@ -202,8 +202,8 @@ export const modifiedBinarySearchPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "9bf1703bbe720247",
+    inventoryVersion: 17,
+    contentHash: "199e2189f6d57d0b",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

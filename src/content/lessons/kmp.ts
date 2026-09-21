@@ -274,8 +274,8 @@ The search then walks the text once with two pointers \`i\` (text) and \`j\` (pa
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "97ad89709f2aa696",
+    inventoryVersion: 17,
+    contentHash: "eac8660e504ddee6",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

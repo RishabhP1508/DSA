@@ -166,8 +166,8 @@ The trade-off is **space**: the merges build new lists, so it uses **O(n)** auxi
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "aad2f840e0568a79",
+    inventoryVersion: 17,
+    contentHash: "f6de8048ab5d8d89",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

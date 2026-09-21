@@ -28,6 +28,9 @@ const { lessons, patterns } = await loadRegistry();
 const { coverage, COVERAGE_VERSION } = await import(
   pathToFileURL(path.join(ROOT, "src/content/coverage.ts")).href
 );
+const { REVIEW_LEDGER_BY_KEY } = await import(
+  pathToFileURL(path.join(ROOT, "src/content/review-ledger.ts")).href
+);
 
 const lessonById = new Map(lessons.map((l) => [l.id, l]));
 const patternById = new Map(patterns.map((p) => [p.id, p]));
@@ -48,6 +51,14 @@ function evidenceProblems(kind, item) {
     if (c[aspect] !== true) problems.push(`${kind} ${item.id}: check "${aspect}" is not true`);
   }
   if (Array.isArray(ev.unresolved) && ev.unresolved.length) problems.push(`${kind} ${item.id}: has unresolved issues [${ev.unresolved.join("; ")}]`);
+  // Semantic-review integrity: a `true` flag MUST be backed by a human-review
+  // ledger entry whose reviewedHash equals the live content hash. This blocks a
+  // hand-edited or stale `semanticReview: true` from surviving a content change.
+  if (ev.semanticReview === true) {
+    const entry = REVIEW_LEDGER_BY_KEY.get(`${kind}:${item.id}`);
+    if (!entry) problems.push(`${kind} ${item.id}: semanticReview true but no review-ledger entry`);
+    else if (entry.reviewedHash !== live) problems.push(`${kind} ${item.id}: semanticReview true but ledger reviewedHash ${entry.reviewedHash} != live ${live} (re-read required)`);
+  }
   return problems;
 }
 

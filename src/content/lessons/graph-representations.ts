@@ -171,8 +171,8 @@ An **adjacency matrix** is a V×V grid where \`mat[u][v] = 1\` marks an edge. It
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "dc6f99b15c3af8a1",
+    inventoryVersion: 17,
+    contentHash: "7d1fbf4143bcbf7d",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

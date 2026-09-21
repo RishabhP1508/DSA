@@ -233,8 +233,8 @@ In the example, the initial prefix sum of the first 4 values is **10**, the rang
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "0b6f5c608ca3fd61",
+    inventoryVersion: 17,
+    contentHash: "8cd9c596dba9c38c",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

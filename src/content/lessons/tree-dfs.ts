@@ -171,8 +171,8 @@ DFS visits every node exactly once, so it is **O(n)** time. Its space is the **r
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "3a77e1136cd5ab2f",
+    inventoryVersion: 17,
+    contentHash: "60e56c2ba1437bc8",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

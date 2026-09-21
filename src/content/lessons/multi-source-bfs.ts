@@ -172,8 +172,8 @@ This pattern is everywhere in grid problems: "rotting oranges" (all rotten cells
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "d6da7c520da3e2c6",
+    inventoryVersion: 17,
+    contentHash: "c96edf1aa43e6cc3",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

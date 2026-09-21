@@ -185,8 +185,8 @@ export const cyclicSortPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "2d3914c6401f1656",
+    inventoryVersion: 17,
+    contentHash: "d2fd863554d64d88",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

@@ -172,8 +172,8 @@ This is the **fixed-size** window (the width k never changes). A later variant i
     },
   ],
   evidence: {
-    inventoryVersion: 16,
-    contentHash: "f703cc8cb595cf38",
+    inventoryVersion: 17,
+    contentHash: "25ad7561287d0a04",
     verifiedAt: "2026-09-20",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
