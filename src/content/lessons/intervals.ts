@@ -52,6 +52,7 @@ This is a **greedy sweep**: sorting guarantees that once you move past an interv
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of intervals" }],
     costModel: "Sorting n items is O(n log n) (Python's Timsort). Each merge step is O(1); comparing/list ops are O(1) amortized.",
     time: {
@@ -153,4 +154,12 @@ This is a **greedy sweep**: sorting guarantees that once you move past an interv
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "dd19cbd5f67b20d0",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

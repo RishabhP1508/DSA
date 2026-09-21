@@ -69,6 +69,35 @@ export const binarySearchOnAnswerPattern: PatternDefinition = {
   complexityNote:
     "O(n · log(sum − max)) time: each feasibility check is an O(n) pass, run O(log(range)) times. O(1) extra space.",
 
+  complexityExplanation: {
+    scope: "program",
+    variables: [
+      { symbol: "n", meaning: "the number of weights" },
+      { symbol: "R", meaning: "the size of the capacity search range (sum(weights) − max(weights))" },
+    ],
+    costModel: "The answer space [max, sum] is searched by binary search; each candidate capacity is tested by one O(n) feasibility scan.",
+    time: {
+      bound: "O(n · log R)",
+      case: "worst",
+      explanation: "The binary search over capacities (lines 13-18) runs O(log R) iterations, halving the range each time. Each iteration calls can_ship (line 15), an O(n) pass over the weights. So total O(n · log R).",
+    },
+    space: {
+      bound: "O(1)",
+      case: "worst",
+      explanation: "Only a few scalars (lo, hi, mid, used, cur) are kept; nothing grows with n.",
+      inputOutputNote: "weights (n values) is the input; the answer is a single integer.",
+    },
+    derivation: [
+      { lines: [13, 14], description: "Binary search halves the range each step — O(log R) iterations.", cost: "O(log R)", dimension: "time" },
+      { lines: [4, 5, 8], description: "Each feasibility check scans all n weights.", cost: "O(n)", dimension: "time" },
+      { lines: [3, 12], description: "A constant number of scalar variables.", cost: "O(1)", dimension: "space" },
+    ],
+    assumptions: ["The feasibility predicate is MONOTONE in capacity (once feasible, larger is feasible) — required for binary search on the answer.", "Arithmetic and comparison are O(1)."],
+    tradeoffs: "A linear scan over every candidate capacity would be O(n·R); binary search cuts the R factor to log R by exploiting monotonicity.",
+    counters: [{ label: "feasibility checks", definition: "iterations of the binary-search loop (line 13)", countLines: [13] }],
+    fixedDataNote: "For these 10 weights the range is [10, 55], so ~log2(45) ≈ 6 checks. The O(n · log R) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: binary search over candidate capacities." },
     { line: 2, executable: true, explanation: "Define the feasibility test can_ship(weights, cap, days)." },
@@ -175,4 +204,12 @@ export const binarySearchOnAnswerPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "47cff2f026433ea9",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 3,
+  },
 };

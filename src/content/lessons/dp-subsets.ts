@@ -62,6 +62,7 @@ Recording \`path[:]\` (a **copy**) rather than \`path\` itself is essential: \`p
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel:
       "Each recursive node does O(1) work plus copying the current path (O(path length)). There are 2ⁿ subsets to produce.",
@@ -204,4 +205,12 @@ Recording \`path[:]\` (a **copy**) rather than \`path\` itself is essential: \`p
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "ac7949d9001b72dd",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 6,
+  },
 };

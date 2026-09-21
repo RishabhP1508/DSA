@@ -57,6 +57,7 @@ BFS visits every reachable vertex once and scans every incident edge once, so it
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "V", meaning: "the number of vertices" },
       { symbol: "E", meaning: "the number of edges" },
@@ -164,4 +165,12 @@ BFS visits every reachable vertex once and scans every incident edge once, so it
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "382e88786482a4ab",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

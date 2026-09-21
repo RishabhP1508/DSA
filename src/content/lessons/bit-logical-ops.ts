@@ -22,6 +22,8 @@ export const bitLogicalOps: LessonDefinition = {
 
 You can read the example directly in binary: \`1100 & 1010 = 1000\` (only the 8-bit is set in both), \`1100 | 1010 = 1110\`, and \`1100 ^ 1010 = 0110\`. Python's \`0b\` prefix writes binary literals, and \`bin(x)\` shows a number's bits.
 
+**Adding without \`+\` — "Sum of Two Integers".** XOR and AND together *are* binary addition. Look at one bit column: \`a ^ b\` is the sum **ignoring carry** (\`1^1=0\`, \`1^0=1\`), and \`a & b\` marks exactly the columns that **produce a carry** (both bits 1); that carry lands one column to the **left**, so it is \`(a & b) << 1\`. Repeat — \`a, b = a ^ b, (a & b) << 1\` — until the carry is \`0\`, and \`a\` holds the sum. **Python caveat (correctness condition):** Python ints are **arbitrary-precision**, so a negative sum's carry never runs off a fixed width and the loop would spin forever. Emulate 32-bit two's-complement: after each step \`mask = 0xFFFFFFFF\`, keep \`a &= mask\`, and at the end if \`a\` has the sign bit set (\`a > 0x7FFFFFFF\`) reinterpret it as negative with \`a - 0x100000000\` (i.e. \`~(a ^ mask)\`). On a fixed-width machine word this masking is automatic; in Python you add it by hand.
+
 Each operation is **O(1)** on machine-word integers (a fixed number of hardware operations). Python integers are *arbitrary precision*, so for numbers with \`w\` bits these are technically **O(w)**, but for normal values treat them as constant time. Bitwise ops are the foundation for masks, flags, sets-as-bits, and the XOR tricks in later lessons. The mental model to build: think of a number as a **row of independent bits** you can test and combine.`,
 
   vocabulary: [
@@ -47,6 +49,7 @@ Each operation is **O(1)** on machine-word integers (a fixed number of hardware 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "w", meaning: "the number of bits in the integers involved" }],
     costModel: "A bitwise operation on machine-word integers is one hardware instruction (O(1)); on arbitrary-precision integers it processes w bits (O(w)).",
     time: {
@@ -91,6 +94,7 @@ Each operation is **O(1)** on machine-word integers (a fixed number of hardware 
     "Print bin(a & b), bin(a | b), bin(a ^ b) to see the bit patterns.",
     "Compute ~a and note Python's two's-complement result -(a+1).",
     "Try a ^ a and a ^ 0 to preview XOR identities.",
+    "Add without '+': loop a, b = (a ^ b) & 0xFFFFFFFF, ((a & b) << 1) & 0xFFFFFFFF until b == 0, then map a back to signed (a - 0x100000000 if a > 0x7FFFFFFF). Confirm add(2, 3) == 5 and add(-2, 3) == 1, and note it hangs without the 32-bit mask.",
   ],
 
   exercises: [
@@ -107,6 +111,13 @@ Each operation is **O(1)** on machine-word integers (a fixed number of hardware 
       prompt: "You want to combine several on/off feature flags into one integer and test them. Which operators do you use to SET a flag and to TEST it?",
       expected: "Use OR (|) with the flag's bit to set it, and AND (&) with the flag's bit to test it (non-zero means set).",
       hints: ["Setting a bit adds it in.", "OR adds bits; AND masks/tests them.", "flags |= FLAG to set; (flags & FLAG) to test."],
+    },
+    {
+      id: "bit-log-sum-1",
+      kind: "predict-state",
+      prompt: "'Sum of Two Integers' without '+': using a = a ^ b (sum without carry) and carry = (a & b) << 1, trace add(2, 3) column by column. Why must a Python implementation mask to 32 bits, and what mapping turns the masked result back into a signed int?",
+      expected: "2=0b010, 3=0b011. Step 1: sum-without-carry a^b = 0b001 (1), carry (a&b)<<1 = (0b010)<<1 = 0b100 (4). Step 2: 1 ^ 4 = 0b101 (5), carry (1&4)<<1 = 0. Carry is 0, result 5. Python needs a 32-bit mask (& 0xFFFFFFFF) each step because its ints are arbitrary-precision: a negative sum's carry never falls off a fixed width, so the loop would run forever. Map back to signed at the end with: if a > 0x7FFFFFFF: a -= 0x100000000 (the sign bit set means negative in 32-bit two's complement).",
+      hints: ["XOR is the sum ignoring carry; AND<<1 is the carry into the next column.", "Loop until the carry is 0.", "Mask with 0xFFFFFFFF; if the top (sign) bit is set, subtract 2**32 to get the negative value."],
     },
   ],
 
@@ -134,4 +145,12 @@ Each operation is **O(1)** on machine-word integers (a fixed number of hardware 
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "83dfb7176d0862bb",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

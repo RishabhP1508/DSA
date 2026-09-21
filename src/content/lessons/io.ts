@@ -49,6 +49,7 @@ In this workspace you supply the input ahead of time (a "supplied input" box), a
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "L", meaning: "the number of characters in the text being read or printed" }],
     costModel: "Reading or printing a line costs time proportional to its length L; converting a numeric string of length L to int is O(L).",
     time: {
@@ -140,4 +141,12 @@ In this workspace you supply the input ahead of time (a "supplied input" box), a
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "0c34394abcb68771",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 1,
+  },
 };

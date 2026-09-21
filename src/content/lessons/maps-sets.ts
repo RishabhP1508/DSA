@@ -51,6 +51,7 @@ Two practical rules: keys (and set elements) must be **hashable** (immutable —
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of key/value pairs or set elements" }],
     costModel: "Hashing a key and jumping to its slot is O(1) on average; collisions add a small constant. Resizing is amortized O(1) per insert.",
     time: {
@@ -150,4 +151,12 @@ Two practical rules: keys (and set elements) must be **hashable** (immutable —
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "4f48d5c53a071da7",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

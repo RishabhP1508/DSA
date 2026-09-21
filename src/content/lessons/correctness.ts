@@ -55,6 +55,7 @@ You will use this style of reasoning throughout: state what stays true, check th
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the upper bound of the sum (we add 1..n)" }],
     costModel: "Each loop pass does one addition and one increment — constant time.",
     time: {
@@ -142,4 +143,12 @@ You will use this style of reasoning throughout: state what stays true, check th
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "bbe19b60be936c65",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 1,
+  },
 };

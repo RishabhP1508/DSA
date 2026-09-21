@@ -18,8 +18,20 @@ const root = path.join(HERE, "..");
 const { coverage, COVERAGE_VERSION, coverageStats } = await import(
   pathToFileURL(path.join(root, "src/content/coverage.ts")).href
 );
+const registry = await import(pathToFileURL(path.join(root, "src/content/registry.ts")).href);
+const { NOTION_PRACTICE, ADDITIONAL_PRACTICE, NOTION_UNIQUE_URL_COUNT } = await import(
+  pathToFileURL(path.join(root, "src/content/notion-practice.ts")).href
+);
+const lessonById = new Map(registry.lessons.map((l) => [l.id, l]));
 
 const stats = coverageStats(coverage);
+
+/** Whether the entry's lesson carries a completed human semantic review (R5.3). */
+function isSemanticallyReviewed(entry) {
+  const l = entry.lessonId ? lessonById.get(entry.lessonId) : undefined;
+  return Boolean(l?.evidence?.semanticReview);
+}
+const semanticReviewed = coverage.filter(isSemanticallyReviewed).length;
 
 // Preserve the first-seen order of areas.
 const areas = [];
@@ -39,9 +51,25 @@ lines.push(
   `Coverage version: ${COVERAGE_VERSION}. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: \`src/content/coverage.ts\`.`,
 );
 lines.push("");
-lines.push(`**Progress: ${stats.verified} / ${stats.total} verified.**`);
+lines.push(`**Evidence-verified (structural): ${stats.verified} / ${stats.total}.**`);
+lines.push(
+  `**Human semantic review (R5.3): ${semanticReviewed} / ${stats.total} coverage entries complete; ${stats.total - semanticReviewed} pending.**`,
+);
 lines.push("");
-lines.push("Status legend: planned · in-progress · authored · verified");
+const totalExamples = registry.lessons.length + registry.patterns.length;
+const reviewedExamples =
+  registry.lessons.filter((l) => l.evidence?.semanticReview).length +
+  registry.patterns.filter((p) => p.evidence?.semanticReview).length;
+lines.push(
+  `> Two count families, kept SEPARATE (do not mix them): (a) **EXAMPLES** — ${registry.lessons.length} lessons + ${registry.patterns.length} patterns = ${totalExamples} executable examples, of which ${reviewedExamples} are semantically reviewed and ${totalExamples - reviewedExamples} pending; ` +
+    `(b) **COVERAGE ENTRIES** — the ${stats.total} rows in this inventory, of which ${semanticReviewed} are semantically reviewed and ${stats.total - semanticReviewed} pending.`,
+);
+lines.push("");
+lines.push(
+  "Two layers: *evidence-verified* means the item passes all machine checks (output, line explanations, complexity panel, example-model contract, references) with a current content-hash tie (see `verify:coverage-evidence`). *Semantic-reviewed* means a person read the teaching claim/definition/reasoning (`evidence.semanticReview: true`). Any item still pending semantic review is structurally verified but NOT claimed as fully reviewed. The six-batch review log is `.kiro/specs/R5-curriculum/batch-review.md`.",
+);
+lines.push("");
+lines.push("Status legend: planned · in-progress · authored · verified. Reviewed column: ✅ = semantic review done, ⏳ = pending.");
 lines.push("");
 
 for (const area of areas) {
@@ -49,17 +77,33 @@ for (const area of areas) {
   const areaVerified = entries.filter((e) => e.status === "verified").length;
   lines.push(`## ${area} (${areaVerified}/${entries.length})`);
   lines.push("");
-  lines.push("| Subtopic | id | Status | Lesson |");
-  lines.push("|---|---|---|---|");
+  lines.push("| Subtopic | id | Status | Reviewed | Lesson | Ext. practice |");
+  lines.push("|---|---|---|---|---|---|");
   for (const e of entries) {
     const lesson = e.lessonId ? e.lessonId : "—";
-    lines.push(`| ${e.subtopic} | \`${e.id}\` | ${e.status} | ${lesson} |`);
+    const ext = e.externalPractice && e.externalPractice.length ? String(e.externalPractice.length) : "—";
+    const reviewed = isSemanticallyReviewed(e) ? "✅" : "⏳";
+    lines.push(`| ${e.subtopic} | \`${e.id}\` | ${e.status} | ${reviewed} | ${lesson} | ${ext} |`);
   }
   lines.push("");
 }
 
+const extTotal = coverage.reduce((s, e) => s + (e.externalPractice?.length ?? 0), 0);
+const extEntries = coverage.filter((e) => e.externalPractice?.length).length;
+lines.push("---");
+lines.push("");
+lines.push(
+  `External practice (optional): **RECONCILED from the supplied Notion export** (R5.6). ` +
+    `Notion occurrences: **${NOTION_PRACTICE.length}**; unique Notion problems: **${NOTION_UNIQUE_URL_COUNT}**; ` +
+    `mapped occurrences: **${NOTION_PRACTICE.filter((r) => r.status === "mapped").length}**; ` +
+    `unresolved occurrences: **${NOTION_PRACTICE.filter((r) => r.status === "unresolved").length}**; ` +
+    `additional optional problems (not in the export): **${ADDITIONAL_PRACTICE.length}**. ` +
+    `Each coverage entry's practice column is DERIVED from \`src/content/notion-practice.ts\` via each occurrence's EXPLICIT in-topic \`coverageIds\` (never by shared-pattern id matching, which leaked questions across topics); ${extTotal} occurrences surface across ${extEntries} subtopics. Titles + canonical links only; local lessons teach each technique regardless. The 2 unresolved occurrences (Task Scheduler, Meeting Rooms II) have a documented content gap and are NOT surfaced. The historical Cloudflare-blocked access attempts are preserved in \`.kiro/specs/R5-curriculum/external-practice-manifest.md\`.`,
+);
+lines.push("");
+
 const out = lines.join("\n") + "\n";
 writeFileSync(path.join(root, "docs/coverage.md"), out, "utf8");
 console.log(
-  `Wrote docs/coverage.md — ${stats.verified}/${stats.total} verified (version ${COVERAGE_VERSION}).`,
+  `Wrote docs/coverage.md — ${stats.verified}/${stats.total} evidence-verified, ${semanticReviewed}/${stats.total} semantically reviewed (version ${COVERAGE_VERSION}).`,
 );

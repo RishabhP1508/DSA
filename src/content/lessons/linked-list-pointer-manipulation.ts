@@ -81,6 +81,7 @@ The loop condition \`prev.next is not None and prev.next.next is not None\` chec
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of nodes in the list" }],
     costModel:
       "Each pointer read and `next` assignment is O(1). Each loop iteration processes one pair with a constant number of assignments.",
@@ -253,4 +254,12 @@ The loop condition \`prev.next is not None and prev.next.next is not None\` chec
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "fd320af46eb9c09e",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

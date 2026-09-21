@@ -60,6 +60,7 @@ This is DP with the table compressed to a **constant number of rolling variables
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of days / prices" }],
     costModel:
       "Each step does O(1) work: two comparisons and updates to the two state variables.",
@@ -205,4 +206,12 @@ This is DP with the table compressed to a **constant number of rolling variables
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "6b8bf29b7a8008fb",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 6,
+  },
 };

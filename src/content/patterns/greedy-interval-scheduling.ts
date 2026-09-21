@@ -60,6 +60,32 @@ export const greedyIntervalSchedulingPattern: PatternDefinition = {
   complexityNote:
     "O(n log n) time, dominated by sorting; the selection pass is O(n). O(1) extra space beyond the sort.",
 
+  complexityExplanation: {
+    scope: "program",
+    variables: [{ symbol: "n", meaning: "the number of intervals" }],
+    costModel: "Sort by end time (O(n log n)), then a single greedy pass picking each interval that starts at or after the last chosen end.",
+    time: {
+      bound: "O(n log n)",
+      case: "worst",
+      explanation: "Sorting by end time (line 4) is O(n log n) and dominates. The selection loop (lines 7-10) is a single O(n) pass. Total O(n log n).",
+    },
+    space: {
+      bound: "O(1)",
+      case: "worst",
+      explanation: "Beyond the sort, only `count` and `last_end` scalars are kept. (Python's list.sort is in place; its own working space is O(n) but not part of the algorithm's auxiliary state here.)",
+      inputOutputNote: "intervals (n) is the input, sorted in place; the answer is a single count.",
+    },
+    derivation: [
+      { lines: [4], description: "Sort the intervals by end time.", cost: "O(n log n)", dimension: "time" },
+      { lines: [7, 8, 9, 10], description: "One greedy pass selecting compatible intervals.", cost: "O(n)", dimension: "time" },
+      { lines: [5, 6], description: "Two scalar accumulators.", cost: "O(1)", dimension: "space" },
+    ],
+    assumptions: ["Choosing the earliest-ending compatible interval is optimal (the classic exchange-argument proof).", "Comparison sort is O(n log n)."],
+    tradeoffs: "Sorting by start time instead requires extra bookkeeping; the earliest-end greedy is provably optimal and simplest. There is no faster comparison-based approach since sorting is the bottleneck.",
+    counters: [{ label: "intervals selected", definition: "executions of count += 1 (line 9)", countLines: [9] }],
+    fixedDataNote: "For these 5 intervals the greedy picks 3 non-overlapping meetings. The O(n log n) bound generalises via the sort.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: greedily pick earliest-finishing compatible intervals." },
     { line: 2, executable: false, explanation: "Comment continued." },
@@ -152,4 +178,12 @@ export const greedyIntervalSchedulingPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "109a0d7da8b51689",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 3,
+  },
 };

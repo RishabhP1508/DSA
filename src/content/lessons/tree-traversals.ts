@@ -65,6 +65,7 @@ All three are **O(n)** time (every node visited once) and **O(h)** space (recurs
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of nodes" },
       { symbol: "h", meaning: "the tree height (recursion depth)" },
@@ -170,4 +171,12 @@ All three are **O(n)** time (every node visited once) and **O(h)** space (recurs
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "05ecbe9184642e1c",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

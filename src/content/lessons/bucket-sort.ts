@@ -54,6 +54,7 @@ It generalizes counting sort (which is bucket sort with one bucket per value) an
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of elements" },
       { symbol: "k", meaning: "the number of buckets" },
@@ -159,4 +160,12 @@ It generalizes counting sort (which is bucket sort with one bucket per value) an
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "4ce22d75e5db9ed6",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 3,
+  },
 };

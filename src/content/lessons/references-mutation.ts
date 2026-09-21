@@ -57,6 +57,7 @@ So \`add_item\` changes \`shared\` (mutation of a shared object), but \`try_rebi
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in the list (this run uses a small fixed list)" }],
     costModel: "append is amortized O(1); passing an argument copies only a reference (O(1)), never the object.",
     time: {
@@ -99,9 +100,8 @@ So \`add_item\` changes \`shared\` (mutation of a shared object), but \`try_rebi
     { line: 12, executable: true, explanation: "Define try_rebind(n)." },
     { line: 13, executable: true, explanation: "n = n + 100 rebinds the LOCAL n to a new int; it does not change x." },
     { line: 14, executable: false, explanation: "Blank line." },
-    { line: 15, executable: false, explanation: "Comment separates the two calls (blank/omitted)." },
-    { line: 16, executable: true, explanation: "Call try_rebind(x). Inside, n becomes 105, but x is untouched." },
-    { line: 17, executable: true, explanation: "Print x → still 5." },
+    { line: 15, executable: true, explanation: "Call try_rebind(x). Inside, n becomes 105, but x is untouched." },
+    { line: 16, executable: true, explanation: "Print x → still 5." },
   ],
 
   bindings: [
@@ -160,4 +160,12 @@ So \`add_item\` changes \`shared\` (mutation of a shared object), but \`try_rebi
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "0237324213b22cc2",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 1,
+  },
 };

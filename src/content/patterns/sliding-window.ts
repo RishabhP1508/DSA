@@ -59,6 +59,35 @@ export const slidingWindowPattern: PatternDefinition = {
   complexityNote:
     "O(n) time: the first window costs O(k) once, then each of the remaining n−k slides is O(1). O(1) auxiliary space for the running sum. The naive per-window recompute is O(n·k).",
 
+  complexityExplanation: {
+    scope: "program",
+    variables: [
+      { symbol: "n", meaning: "the number of elements in nums" },
+      { symbol: "k", meaning: "the fixed window width" },
+    ],
+    costModel: "Each slide does a constant number of additions and one comparison. The first window is summed once over k elements.",
+    time: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "Summing the first window (line 3) is O(k). The slide loop (lines 5-7) runs n-k times, each an O(1) update. Total O(k) + O(n-k) = O(n). The naive per-window recompute would be O(n·k).",
+    },
+    space: {
+      bound: "O(1)",
+      case: "worst",
+      explanation: "Only the running `window` and `best` scalars are kept; nothing grows with n.",
+      inputOutputNote: "nums (n elements) is the input; there is no auxiliary array. Note the sum(nums[:k]) here allocates a transient O(k) slice — the fixed-window LESSON avoids it with explicit accumulation for a strict O(1)-aux claim.",
+    },
+    derivation: [
+      { lines: [3], description: "Sum the first window over k elements once.", cost: "O(k)", dimension: "time" },
+      { lines: [5, 6, 7], description: "Slide n-k times, each an O(1) add-entering/subtract-leaving update.", cost: "O(n)", dimension: "time" },
+      { lines: [3, 4], description: "A fixed set of running scalars.", cost: "O(1)", dimension: "space" },
+    ],
+    assumptions: ["Addition and comparison are O(1).", "0 < k <= len(nums) (a valid window exists)."],
+    tradeoffs: "The naive per-window recompute is O(n·k) time. Prefix sums are a valid alternative (O(n) time, O(n) space); the window is preferred for its O(1) auxiliary space.",
+    counters: [{ label: "slides", definition: "executions of the slide update (line 6)", countLines: [6] }],
+    fixedDataNote: "This run has n=6, k=3, so 3 slides after the first window; the answer 9 is [5,1,3]. The O(n) bound generalises the slide count.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: fixed-size window over k consecutive elements." },
     { line: 2, executable: true, explanation: "Define max_sum_k(nums, k)." },
@@ -154,4 +183,12 @@ export const slidingWindowPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "78b424d3a1cb8d6d",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

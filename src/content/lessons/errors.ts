@@ -50,6 +50,7 @@ Catch **specific** exception types (\`IndexError\`, \`ValueError\`, \`KeyError\`
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "—", meaning: "no input size; a fixed amount of work" }],
     costModel: "Entering a try block and raising/catching an exception are treated as constant-time control-flow operations here.",
     time: {
@@ -138,4 +139,12 @@ Catch **specific** exception types (\`IndexError\`, \`ValueError\`, \`KeyError\`
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "935f03e64e7a8423",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 1,
+  },
 };

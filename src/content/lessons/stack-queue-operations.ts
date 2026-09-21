@@ -50,6 +50,7 @@ These two disciplines drive huge parts of DSA: stacks power recursion/backtracki
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of items currently in the stack/queue" }],
     costModel: "list.append/pop at the end are amortized O(1); deque.append/popleft are O(1). list.pop(0) is O(n) and is avoided.",
     time: {
@@ -144,4 +145,12 @@ These two disciplines drive huge parts of DSA: stacks power recursion/backtracki
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "8c4637f0b9e6b67c",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

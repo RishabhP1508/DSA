@@ -72,6 +72,35 @@ export const matrixTraversalPattern: PatternDefinition = {
   complexityNote:
     "O(m·n) time — each of the m·n cells is visited exactly once. O(1) auxiliary space (just the four boundaries), excluding the output list.",
 
+  complexityExplanation: {
+    scope: "program",
+    variables: [
+      { symbol: "m", meaning: "the number of rows" },
+      { symbol: "n", meaning: "the number of columns" },
+    ],
+    costModel: "Four shrinking boundaries (top/bottom/left/right) walk the perimeter each lap; every cell is appended to the result exactly once.",
+    time: {
+      bound: "O(m·n)",
+      case: "worst",
+      explanation: "Each cell is appended exactly once across the four directional loops (lines 8-9, 11-12, 15-16, 19-20). There are m·n cells, so the total number of appends is m·n. The while loop just tightens the boundary each lap. So O(m·n).",
+    },
+    space: {
+      bound: "O(1)",
+      case: "worst",
+      explanation: "Only the four integer boundaries and loop indices are kept — O(1) auxiliary, independent of the grid size.",
+      inputOutputNote: "The m×n matrix is the input; the O(m·n) result list is the output (not counted as auxiliary).",
+    },
+    derivation: [
+      { lines: [8, 9], description: "Walk the top row left→right.", cost: "O(n) per lap", dimension: "time" },
+      { lines: [11, 12, 15, 16, 19, 20], description: "Walk the right column, bottom row, left column; every cell appended once.", cost: "O(m·n) total", dimension: "time" },
+      { lines: [5, 6], description: "Four boundary scalars.", cost: "O(1)", dimension: "space" },
+    ],
+    assumptions: ["The matrix is rectangular (all rows length n).", "Appending to a list is amortised O(1)."],
+    tradeoffs: "Spiral order needs the boundary bookkeeping but visits each cell once at O(1) extra space; a visited-matrix approach would add O(m·n) space.",
+    counters: [{ label: "cells visited", definition: "executions of the top-row append (line 9)", countLines: [9] }],
+    fixedDataNote: "For the 3×3 grid all 9 cells are emitted in spiral order. The O(m·n) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: traverse a grid in a controlled order." },
     { line: 2, executable: false, explanation: "Comment: spiral order with shrinking bounds." },
@@ -172,4 +201,12 @@ export const matrixTraversalPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "53ed4fa3a5771257",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

@@ -47,6 +47,7 @@ The lesson's takeaway is a warning as much as a technique: generating all substr
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the length of the string" }],
     costModel: "There are n(n+1)/2 = O(n²) substrings. Building each slice s[i:j] copies its length, up to n characters.",
     time: {
@@ -146,4 +147,12 @@ The lesson's takeaway is a warning as much as a technique: generating all substr
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "7ef2dc4db9e7a9fb",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

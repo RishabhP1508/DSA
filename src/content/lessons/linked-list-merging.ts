@@ -83,6 +83,7 @@ Using \`<=\` (not \`<\`) keeps the merge **stable**: equal values keep their ori
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of nodes in list a" },
       { symbol: "m", meaning: "the number of nodes in list b" },
@@ -262,4 +263,12 @@ Using \`<=\` (not \`<\`) keeps the merge **stable**: equal values keep their ori
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "61896f0e4aa70951",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

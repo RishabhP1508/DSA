@@ -52,6 +52,7 @@ This is a crucial pattern-recognition contrast from the Arrays topic: **fixed-si
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel: "Each running-sum update, map get, and map set is expected O(1).",
     time: {
@@ -155,4 +156,12 @@ This is a crucial pattern-recognition contrast from the Arrays topic: **fixed-si
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "57a9438955b80cea",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

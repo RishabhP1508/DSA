@@ -65,6 +65,7 @@ BFS visits every node once, so it is **O(n)** time. Its space is the **maximum w
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of nodes in the tree" },
       { symbol: "w", meaning: "the maximum width (most nodes on any single level)" },
@@ -179,4 +180,12 @@ BFS visits every node once, so it is **O(n)** time. Its space is the **maximum w
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "d892bd09e285ca0f",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

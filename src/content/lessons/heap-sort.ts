@@ -48,6 +48,7 @@ Heap sort's classic advantage is space: an in-place array heap sorts with **O(1)
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements to sort" }],
     costModel: "heapify is O(n). Each heappop restores the heap in O(log n). Reading n results.",
     time: {
@@ -141,4 +142,12 @@ Heap sort's classic advantage is space: an in-place array heap sorts with **O(1)
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "19e3fad50a51dfd5",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 3,
+  },
 };

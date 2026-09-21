@@ -30,7 +30,9 @@ export const monotonicStack: LessonDefinition = {
 
 Here we solve **Next Greater Element**: for each value, find the first larger value to its right. We keep a stack of **indices whose answer we haven't found yet**, with their values **decreasing** from bottom to top. When a new value \`nums[i]\` arrives, it is the "next greater" for every stacked index whose value is smaller — so we pop those and record \`nums[i]\` as their answer. Then we push \`i\`.
 
-The magic of the O(n) bound: although there is a \`while\` inside the \`for\`, **each index is pushed once and popped at most once** across the entire run. Total pushes + pops ≤ 2n, so the whole thing is linear despite the nested loop. Recognising "for each element, find the nearest bigger/smaller one" is the cue to reach for a monotonic stack.`,
+The magic of the O(n) bound: although there is a \`while\` inside the \`for\`, **each index is pushed once and popped at most once** across the entire run. Total pushes + pops ≤ 2n, so the whole thing is linear despite the nested loop. Recognising "for each element, find the nearest bigger/smaller one" is the cue to reach for a monotonic stack.
+
+**A harder application — "Largest Rectangle in Histogram".** Here bars have heights and you want the largest axis-aligned rectangle. Use a stack of bar **indices kept INCREASING by height** (the opposite direction from next-greater). When a bar \`heights[i]\` is **shorter** than the bar on top, that top bar can extend no further right, so you **pop it and compute its rectangle**: its height is \`heights[popped]\`, and its **width** spans from just after the new stack top up to \`i−1\`. Concretely the width is \`i − stack[-1] − 1\` after popping (or \`i\` if the stack is now empty, meaning the popped bar was the shortest so far and stretches all the way left). Keep the largest area seen. **Correctness condition:** you must **flush the stack at the end** as if a sentinel bar of height 0 arrived at index \`n\`, so every bar still on the stack gets its rectangle measured; without that flush, bars that are never "closed" by a shorter bar are missed. Each index is pushed and popped once, so it is still **O(n)** time and **O(n)** space.`,
 
   vocabulary: [
     { term: "Monotonic stack", definition: "A stack kept entirely increasing or decreasing by popping order-breaking elements." },
@@ -53,6 +55,7 @@ The magic of the O(n) bound: although there is a \`while\` inside the \`for\`, *
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel: "Each push and each pop is O(1). The total number of stack operations bounds the work.",
     time: {
@@ -116,6 +119,7 @@ The magic of the O(n) bound: although there is a \`while\` inside the \`for\`, *
     "Trace the stack for [2,1,2,4,3] and watch 4 resolve three pending indices at once.",
     "Change < to > to compute the Next Smaller Element instead.",
     "Feed a strictly decreasing array and see the stack grow to size n (all -1 answers).",
+    "Largest rectangle in histogram: keep an INCREASING-height index stack; when heights[i] is shorter than the top, pop and compute area = heights[popped] * (i - stack[-1] - 1) (or i if the stack is empty). Append a sentinel height 0 at the end to flush. On heights = [2,1,5,6,2,3] confirm the max area is 10 (the 5,6 pair: height 5 x width 2). Remove the sentinel flush and watch the tall trailing bars get missed.",
   ],
 
   exercises: [
@@ -133,6 +137,13 @@ The magic of the O(n) bound: although there is a \`while\` inside the \`for\`, *
       starterCode: "stack = []\nfor i in range(len(nums)):\n    while stack and stack[-1] < nums[i]:\n        stack.pop()\n    stack.append(nums[i])",
       expected: "stack = []\nfor i in range(len(nums)):\n    while stack and nums[stack[-1]] < nums[i]:\n        stack.pop()\n    stack.append(i)",
       hints: ["To compute gaps you need positions, not values.", "Push i and compare via nums[stack[-1]].", "Store indices; index the array when comparing."],
+    },
+    {
+      id: "mono-histogram-1",
+      kind: "predict-state",
+      prompt: "Largest Rectangle in Histogram on heights = [2,1,5,6,2,3] using an increasing-height index stack (with a height-0 sentinel appended). When bar i=4 (height 2) arrives, the stack holds indices [.. ,2,3] (heights 5,6). Which bars are popped, what widths/areas are computed, and what is the final maximum area? Why is the end sentinel required?",
+      expected: "At i=4 (height 2): pop index 3 (height 6) -> width = 4 - stack[-1] - 1 = 4 - 2 - 1 = 1, area 6; then pop index 2 (height 5) -> width = 4 - 1 - 1 = 2, area 10. The maximum area is 10 (bars 5,6 give height 5 x width 2). The appended height-0 sentinel at index n forces every remaining bar to be popped and measured at the end; without it the tall trailing bars (e.g. index 5, height 3) would never be closed and their rectangles would be missed.",
+      hints: ["Pop while the top bar is taller than the incoming height.", "Width after a pop = i - stack[-1] - 1 (or i if the stack is empty).", "The height-0 sentinel at the end flushes every unclosed bar."],
     },
   ],
 
@@ -160,4 +171,12 @@ The magic of the O(n) bound: although there is a \`while\` inside the \`for\`, *
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "5ca8e54606f871f9",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

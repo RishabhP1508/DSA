@@ -56,6 +56,7 @@ Two details make or break correctness: the loop condition \`lo <= hi\` (so a one
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in the sorted array" }],
     costModel: "Each iteration does one midpoint computation and one comparison — O(1) — and halves the remaining range.",
     time: {
@@ -93,12 +94,12 @@ Two details make or break correctness: the loop condition \`lo <= hi\` (so a one
     { line: 5, executable: true, explanation: "Loop while the range is non-empty (lo <= hi covers one-element ranges)." },
     { line: 6, executable: true, explanation: "Compute the midpoint index." },
     { line: 7, executable: true, explanation: "If the middle element is the target, return its index." },
-    { line: 8, executable: false, explanation: "Comment/branch: middle too small." },
-    { line: 9, executable: true, explanation: "Middle < target: discard the left half by moving lo to mid+1." },
-    { line: 10, executable: false, explanation: "Otherwise the middle is too big." },
-    { line: 11, executable: true, explanation: "Middle > target: discard the right half by moving hi to mid-1." },
-    { line: 12, executable: true, explanation: "If the range empties with no match, return -1." },
-    { line: 13, executable: false, explanation: "Blank line." },
+    { line: 8, executable: true, explanation: "Found it: return mid." },
+    { line: 9, executable: true, explanation: "Else if the middle is too small (nums[mid] < target)..." },
+    { line: 10, executable: true, explanation: "...discard the left half by moving lo to mid+1 (target is in the right half)." },
+    { line: 11, executable: true, explanation: "Otherwise the middle is too big." },
+    { line: 12, executable: true, explanation: "Discard the right half by moving hi to mid-1 (target is in the left half)." },
+    { line: 13, executable: true, explanation: "If the range empties with no match, return -1." },
     { line: 14, executable: false, explanation: "Blank line." },
     { line: 15, executable: true, explanation: "Search for 7 in the sorted array → index 3." },
     { line: 16, executable: true, explanation: "Search for 4 (absent) → -1." },
@@ -168,4 +169,12 @@ Two details make or break correctness: the loop condition \`lo <= hi\` (so a one
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "d21d0a0e796c9bee",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 3,
+  },
 };

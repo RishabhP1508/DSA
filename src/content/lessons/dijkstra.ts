@@ -61,6 +61,7 @@ In the example, the direct edge 0→1 costs 4, but 0→2→1 costs 1+2=3, so \`d
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "V", meaning: "the number of vertices" },
       { symbol: "E", meaning: "the number of edges" },
@@ -170,4 +171,12 @@ In the example, the direct edge 0→1 costs 4, but 0→2→1 costs 1+2=3, so \`d
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "fed7b9baec3e2464",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

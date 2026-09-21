@@ -71,6 +71,7 @@ import { bitCheckSetClear } from "./lessons/bit-check-set-clear";
 import { xorCancellation } from "./lessons/xor-cancellation";
 import { countSetBits } from "./lessons/count-set-bits";
 import { minMaxHeaps } from "./lessons/min-max-heaps";
+import { heapSift } from "./lessons/heap-sift";
 import { topK } from "./lessons/top-k";
 import { kthLargest } from "./lessons/kth-largest";
 import { runningMedian } from "./lessons/running-median";
@@ -244,6 +245,7 @@ export const lessons: LessonDefinition[] = [
   countSetBits,
   // Heaps
   minMaxHeaps,
+  heapSift,
   topK,
   kthLargest,
   runningMedian,

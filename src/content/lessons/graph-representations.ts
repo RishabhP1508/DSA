@@ -61,6 +61,7 @@ An **adjacency matrix** is a V×V grid where \`mat[u][v] = 1\` marks an edge. It
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "V", meaning: "the number of vertices" },
       { symbol: "E", meaning: "the number of edges" },
@@ -169,4 +170,12 @@ An **adjacency matrix** is a V×V grid where \`mat[u][v] = 1\` marks an edge. It
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "7d1fbf4143bcbf7d",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

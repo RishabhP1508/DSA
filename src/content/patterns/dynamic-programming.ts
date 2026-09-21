@@ -62,6 +62,32 @@ export const dynamicProgrammingPattern: PatternDefinition = {
   complexityNote:
     "O(number of distinct states × work per state). Here O(n) time (each fib(k) computed once) and O(n) space for the memo plus recursion stack; naive recursion is O(2ⁿ).",
 
+  complexityExplanation: {
+    scope: "program",
+    variables: [{ symbol: "n", meaning: "the Fibonacci index requested" }],
+    costModel: "Memoized top-down DP: total time = (number of distinct states) × (work per state). Here there are n+1 states fib(0..n), each computed once with O(1) work, then cached.",
+    time: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "The memo (lines 8-10) ensures each fib(k) is computed once; the second and later requests for the same k hit the cache in O(1). So n distinct subproblems × O(1) each = O(n), versus O(2ⁿ) for naive recomputation.",
+    },
+    space: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "The memo holds up to n entries, and the recursion stack is up to n deep on the first descent.",
+      inputOutputNote: "The answer is a single integer; the O(n) is the memo + stack.",
+    },
+    derivation: [
+      { lines: [8, 9], description: "Cache hit returns a solved subproblem in O(1).", cost: "O(1) per hit", dimension: "time" },
+      { lines: [10], description: "Each of the n distinct states is computed once.", cost: "O(n)", dimension: "time" },
+      { lines: [4, 5], description: "Memo dict (<= n entries) + recursion depth (<= n).", cost: "O(n)", dimension: "space" },
+    ],
+    assumptions: ["dict lookup/insert are amortised O(1).", "Combining subproblems (an addition) is O(1) here (Fibonacci grows, but treated as O(1) machine arithmetic for the model)."],
+    tradeoffs: "Bottom-up tabulation computes the same O(n) with an explicit array and O(1) recursion depth; a rolling two-variable version is O(1) space. Naive recursion without a memo is O(2ⁿ).",
+    counters: [{ label: "states computed", definition: "executions of the memo write (line 10)", countLines: [10] }],
+    fixedDataNote: "fib(10) computes states fib(2..10) once each — 9 memo writes — instead of ~2^10 calls. The O(n) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: solve overlapping subproblems once." },
     { line: 2, executable: false, explanation: "Comment: memoized Fibonacci." },
@@ -152,4 +178,12 @@ export const dynamicProgrammingPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "6c9173ebc66b7c96",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 6,
+  },
 };

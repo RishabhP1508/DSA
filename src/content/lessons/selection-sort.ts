@@ -52,6 +52,7 @@ A subtle contrast: selection sort's comparison count is **the same regardless of
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements" }],
     costModel: "Each comparison is O(1); each swap is O(1). The nested loops set the comparison count.",
     time: {
@@ -152,4 +153,12 @@ A subtle contrast: selection sort's comparison count is **the same regardless of
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "d705f40e376781b1",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 3,
+  },
 };

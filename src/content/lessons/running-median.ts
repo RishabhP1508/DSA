@@ -40,7 +40,7 @@ export const runningMedian: LessonDefinition = {
 
 The invariant to maintain on every insert: \`small\` holds the smaller half (its **max** at the root), \`large\` holds the larger half (its **min** at the root), and their sizes differ by at most one with \`small\` allowed to be the bigger by one. The clean insertion recipe is: push the new value into \`small\`, immediately move \`small\`'s max into \`large\` (this places the value on the correct side), then rebalance if \`large\` got bigger. Each insert is **O(log n)**.
 
-Reading the median is **O(1)**: if the counts are equal it's the average of the two roots; if \`small\` has one extra it's \`small\`'s max. For \`{1,3,5,15}\` that's \`(3+5)/2 = 4.0\`; after adding 4, \`{1,3,4,5,15}\` has middle \`4\`. This **two-heap balancing** is the specific application; the next lesson generalizes the pattern. Because Python's heaps are min-only, the lower half stores **negated** values to act as a max-heap.`,
+Reading the median is **O(1)**: if the counts are equal it's the average of the two roots; if \`small\` has one extra it's \`small\`'s max. For \`{1,3,5,15}\` that's \`(3+5)/2 = 4.0\`; after adding 4, \`{1,3,4,5,15}\` has middle \`4\`. This **two-heap balancing** is the specific application; the next lesson generalizes the pattern. \`heapq\`'s unqualified functions are a **min-heap**, so this lesson stores the lower half as **negated** values to act as a max-heap — a portable technique that runs on any version. (Python 3.14 also offers native \`heapq.*_max\` functions, so a max-heap can be built directly without negation.)`,
 
   vocabulary: [
     { term: "Running median", definition: "The median maintained as new values stream in." },
@@ -65,6 +65,7 @@ Reading the median is **O(1)**: if the counts are equal it's the average of the 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of values inserted so far" }],
     costModel: "Each heappush/heappop is O(log n); reading a root is O(1). add does a constant number of heap operations.",
     time: {
@@ -152,7 +153,7 @@ Reading the median is **O(1)**: if the counts are equal it's the average of the 
     },
   ],
 
-  review: `**Running median** keeps two balanced heaps — a **max-heap of the lower half** and a **min-heap of the upper half** — so the median sits at the roots. Each **add** is **O(log n)** (a few heap ops to rebalance) and each **median** query is **O(1)**, vastly beating re-sorting per query. Python's min-only heaps require **negating** the lower half. This is the two-heap balancing pattern applied to streaming medians.`,
+  review: `**Running median** keeps two balanced heaps — a **max-heap of the lower half** and a **min-heap of the upper half** — so the median sits at the roots. Each **add** is **O(log n)** (a few heap ops to rebalance) and each **median** query is **O(1)**, vastly beating re-sorting per query. This lesson negates the lower half to turn \`heapq\`'s default **min-heap** into a max-heap — a portable trick (Python 3.14 also has native \`heapq.*_max\` functions). This is the two-heap balancing pattern applied to streaming medians.`,
 
   expectedOutput: "4.0\n4\n",
 
@@ -171,9 +172,17 @@ Reading the median is **O(1)**: if the counts are equal it's the average of the 
       title: "heapq — Heap queue algorithm — Python 3.14 documentation",
       section: "heappush / heappop; min-heap and negation for max-heap",
       topic: "heaps/running-median",
-      purpose: "Confirm heapq is min-only (negation gives a max-heap) and push/pop are O(log n).",
+      purpose: "Confirm heapq's unqualified functions are a min-heap (negation gives a portable max-heap; 3.14 also adds native *_max functions) and push/pop are O(log n).",
       verifiedClaims: ["heapq implements a min-heap; a max-heap is obtained by negating values"],
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "751ae8ae83b298db",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

@@ -64,6 +64,7 @@ The whole thing is **O(V + E)** time even though it launches multiple traversals
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "V", meaning: "the number of vertices" },
       { symbol: "E", meaning: "the number of edges" },
@@ -116,8 +117,9 @@ The whole thing is **O(V + E)** time even though it launches multiple traversals
     { line: 20, executable: true, explanation: "...mark it..." },
     { line: 21, executable: true, explanation: "...and push it (stays within this component)." },
     { line: 22, executable: true, explanation: "Return the component count." },
-    { line: 23, executable: false, explanation: "Comment describing the example." },
-    { line: 24, executable: true, explanation: "count_components(5, ...) → 2." },
+    { line: 23, executable: false, explanation: "Blank line." },
+    { line: 24, executable: false, explanation: "Comment: 5 vertices; {0,1,2} and {3,4} connected → 2 components." },
+    { line: 25, executable: true, explanation: "count_components(5, [(0,1),(1,2),(3,4)]) → 2." },
   ],
 
   bindings: [
@@ -176,4 +178,12 @@ The whole thing is **O(V + E)** time even though it launches multiple traversals
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "4f76bc47ed30a856",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

@@ -52,6 +52,7 @@ The mechanics are exactly "cache what you've seen": before computing, check the 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the Fibonacci index requested" }],
     costModel: "Each memo lookup/store is expected O(1). Each distinct argument's body runs at most once.",
     time: {
@@ -150,4 +151,12 @@ The mechanics are exactly "cache what you've seen": before computing, check the 
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "9d6a927bf0e5b46a",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

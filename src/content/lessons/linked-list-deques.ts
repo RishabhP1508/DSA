@@ -66,6 +66,7 @@ Naming is the usual stumbling block: \`append\`/\`pop\` act on the **right** end
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of items currently in the deque" }],
     costModel:
       "Each deque end operation relinks a constant number of internal references, independent of how many items are stored.",
@@ -211,4 +212,12 @@ Naming is the usual stumbling block: \`append\`/\`pop\` act on the **right** end
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "0d245a88161095ab",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

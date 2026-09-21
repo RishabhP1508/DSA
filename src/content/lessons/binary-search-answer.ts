@@ -62,6 +62,7 @@ Here we find the minimum ship capacity to deliver all packages within \`days\`. 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of weights (items)" },
       { symbol: "R", meaning: "the size of the answer range, sum(weights) - max(weights)" },
@@ -173,4 +174,12 @@ Here we find the minimum ship capacity to deliver all packages within \`days\`. 
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "12891e8de1aaae8b",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 3,
+  },
 };

@@ -85,6 +85,7 @@ Both share the even-length **convention**: with \`fast\`/\`slow\` starting at th
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of nodes in the list" }],
     costModel:
       "Advancing along `next` is O(1). Each iteration of either method does constant work.",
@@ -256,4 +257,12 @@ Both share the even-length **convention**: with \`fast\`/\`slow\` starting at th
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "e796e46510cc0078",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

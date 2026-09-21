@@ -51,6 +51,7 @@ Python has three "division-like" operators that beginners often confuse: \`/\` i
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "—", meaning: "no input size; this example does a fixed amount of arithmetic" }],
     costModel: "Each arithmetic operation on machine-sized integers/floats is treated as one constant-time step. (Python integers are arbitrary precision, so arithmetic on very large integers with d digits costs more — noted below.)",
     time: {
@@ -143,4 +144,12 @@ Python has three "division-like" operators that beginners often confuse: \`/\` i
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "0031a9400b72ef46",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 1,
+  },
 };

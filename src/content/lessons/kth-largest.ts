@@ -51,6 +51,7 @@ There's an important alternative worth knowing: **Quickselect** (a partial quick
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of elements" },
       { symbol: "k", meaning: "the rank to find (kth largest)" },
@@ -92,7 +93,8 @@ There's an important alternative worth knowing: **Quickselect** (a partial quick
     { line: 8, executable: true, explanation: "If the heap exceeds k..." },
     { line: 9, executable: true, explanation: "...pop the smallest, keeping only the k largest." },
     { line: 10, executable: true, explanation: "The root is the smallest of the k largest = the kth largest." },
-    { line: 11, executable: true, explanation: "2nd largest of [3,2,1,5,6,4] is 5." },
+    { line: 11, executable: false, explanation: "Blank line." },
+    { line: 12, executable: true, explanation: "2nd largest of [3, 2, 1, 5, 6, 4] is 5." },
   ],
 
   bindings: [
@@ -156,4 +158,12 @@ There's an important alternative worth knowing: **Quickselect** (a partial quick
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "26a1e3942362c56d",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

@@ -59,6 +59,7 @@ The trade-off is **space**: the merges build new lists, so it uses **O(n)** auxi
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements to sort" }],
     costModel: "Splitting is O(1) index math (slicing copies, noted in space); each merge does one linear pass over the elements it combines.",
     time: {
@@ -164,4 +165,12 @@ The trade-off is **space**: the merges build new lists, so it uses **O(n)** auxi
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "f6de8048ab5d8d89",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 3,
+  },
 };

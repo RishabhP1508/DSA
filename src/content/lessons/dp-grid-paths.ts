@@ -64,6 +64,7 @@ The instructive contrast with unique paths is the **combiner**: counting uses \`
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "m", meaning: "the number of rows" },
       { symbol: "n", meaning: "the number of columns" },
@@ -221,4 +222,12 @@ The instructive contrast with unique paths is the **combiner**: counting uses \`
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "4f7e05cac4c48fd1",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 6,
+  },
 };

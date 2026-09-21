@@ -70,6 +70,7 @@ Here, unioning {0,1,2} and {3,4} leaves \`count = 2\` sets; \`find(0) == find(2)
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements" }],
     costModel: "find climbs parent pointers (shortened by path compression); union does two finds plus O(1) pointer updates.",
     time: {
@@ -188,4 +189,12 @@ Here, unioning {0,1,2} and {3,4} leaves \`count = 2\` sets; \`find(0) == find(2)
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "e64199d6c689f591",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

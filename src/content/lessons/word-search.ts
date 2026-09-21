@@ -64,6 +64,7 @@ Complexity is the honest scary part of backtracking. From each of the \`m·n\` s
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "m", meaning: "the number of grid rows" },
       { symbol: "n", meaning: "the number of grid columns" },
@@ -180,4 +181,12 @@ Complexity is the honest scary part of backtracking. From each of the \`m·n\` s
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "d20741b6c70583e8",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

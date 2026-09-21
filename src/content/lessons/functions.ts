@@ -50,6 +50,7 @@ Watching the call stack in the visualization makes this concrete: a frame appear
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "—", meaning: "no input size; the function does constant work per call" }],
     costModel: "One arithmetic operation and the setup/teardown of one call frame are each constant time.",
     time: {
@@ -132,4 +133,12 @@ Watching the call stack in the visualization makes this concrete: a frame appear
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "8a4cf399be4cfaa9",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 1,
+  },
 };

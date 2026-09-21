@@ -59,6 +59,7 @@ Every operation is **O(1)**, at the cost of **O(n)** extra space for the second 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements currently on the stack" }],
     costModel: "append/pop and min-of-two are O(1). Reading the top of a list is O(1).",
     time: {
@@ -168,4 +169,12 @@ Every operation is **O(1)**, at the cost of **O(n)** extra space for the second 
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "3919ac49b17bad05",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

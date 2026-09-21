@@ -59,6 +59,7 @@ Why is this in a DP unit? Because subsequence *structure* is the backbone of maj
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the length of t (the text being scanned)" },
       { symbol: "m", meaning: "the length of s (the candidate subsequence)" },
@@ -208,4 +209,12 @@ Why is this in a DP unit? Because subsequence *structure* is the backbone of maj
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "4502c3b49c252a77",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 6,
+  },
 };

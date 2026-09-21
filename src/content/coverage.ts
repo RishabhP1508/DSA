@@ -11,8 +11,9 @@
  */
 
 import type { CoverageEntry } from "../core/types";
+import { NOTION_PRACTICE } from "./notion-practice";
 
-export const COVERAGE_VERSION = 12;
+export const COVERAGE_VERSION = 18;
 
 function e(
   area: string,
@@ -146,6 +147,7 @@ export const coverage: CoverageEntry[] = [
 
   // --- Heaps ---
   e("Heaps", "Min/max heaps", "heaps/min-max", { lessonId: "min-max-heaps", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Heaps", "Sift-up / sift-down mechanics", "heaps/sift-mechanics", { lessonId: "heap-sift", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Heaps", "Top-K elements", "heaps/top-k", { patternIds: ["top-k-heap"], lessonId: "top-k", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Heaps", "Kth largest/smallest", "heaps/kth", { patternIds: ["top-k-heap"], lessonId: "kth-largest", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Heaps", "Running median", "heaps/running-median", { patternIds: ["two-heaps"], lessonId: "running-median", hasVisualExample: true, hasExercise: true, status: "verified" }),
@@ -194,6 +196,39 @@ export const coverage: CoverageEntry[] = [
   e("Range queries", "Segment trees", "range/segment", { lessonId: "segment-tree", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Strings", "KMP string matching", "strings/kmp", { lessonId: "kmp", hasVisualExample: true, hasExercise: true, status: "verified" }),
 ];
+
+/**
+ * R5.6 — External practice mappings (optional further practice).
+ *
+ * RECONCILED FROM THE SUPPLIED NOTION EXPORT. The authoritative question list
+ * now lives in `src/content/notion-practice.ts` (`NOTION_PRACTICE`, 79 rows /
+ * 75 unique URLs) with per-occurrence lesson/pattern mappings; the earlier
+ * Cloudflare-blocked access attempts are preserved in
+ * .kiro/specs/R5-curriculum/external-practice-manifest.md.
+ *
+ * Here we DERIVE each coverage entry's `externalPractice` STRICTLY from each
+ * occurrence's declared `coverageIds` — NOT by "any mapped lesson/pattern id
+ * matches this entry". The old id-match projection leaked questions across main
+ * topics because some patterns (sliding-window, two-pointers, prefix-sums-hashmap,
+ * matrix-traversal, …) are shared by coverage entries in different areas. Each
+ * occurrence names its own in-topic coverage entry (validated by
+ * notion-projection.test.ts), so a Strings sliding-window question can never
+ * surface under an Arrays entry. Cross-topic duplicates carry two occurrences
+ * that each target their own topic's entry. Only `status: "mapped"` occurrences
+ * surface (unresolved ones are recorded in the manifest, not shown as practice).
+ */
+for (const entry of coverage) {
+  const seen = new Set<string>();
+  const mapped: { name: string; url: string }[] = [];
+  for (const row of NOTION_PRACTICE) {
+    if (row.status !== "mapped") continue;
+    if (row.coverageIds.includes(entry.id) && !seen.has(row.url)) {
+      seen.add(row.url);
+      mapped.push({ name: row.title, url: row.url });
+    }
+  }
+  if (mapped.length) entry.externalPractice = mapped;
+}
 
 /** Quick coverage stats for docs and the (future) Learning Path progress view. */
 export function coverageStats(list: CoverageEntry[] = coverage) {

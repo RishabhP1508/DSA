@@ -62,6 +62,7 @@ Prim resembles Dijkstra structurally (heap of frontier candidates) but optimizes
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "V", meaning: "the number of vertices" },
       { symbol: "E", meaning: "the number of edges" },
@@ -174,4 +175,12 @@ Prim resembles Dijkstra structurally (heap of frontier candidates) but optimizes
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "7b95bb3d8a19af4c",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

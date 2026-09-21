@@ -62,6 +62,7 @@ Because it follows one root-to-leaf path, LCA-in-a-BST is **O(h)** time (O(log n
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of nodes" },
       { symbol: "h", meaning: "the tree height" },
@@ -176,4 +177,12 @@ Because it follows one root-to-leaf path, LCA-in-a-BST is **O(h)** time (O(log n
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "8fa7d7ce6ae0a3ca",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

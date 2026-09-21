@@ -67,6 +67,35 @@ export const divideAndConquerPattern: PatternDefinition = {
   complexityNote:
     "Merge sort: T(n) = 2T(n/2) + O(n) = O(n log n) time. O(n) auxiliary space for the merge buffers, O(log n) recursion depth.",
 
+  complexityExplanation: {
+    scope: "program",
+    variables: [{ symbol: "n", meaning: "the number of elements to sort" }],
+    costModel: "Divide into two halves, recurse, then merge in linear time: T(n) = 2T(n/2) + O(n). By the master theorem this is O(n log n).",
+    time: {
+      bound: "O(n log n)",
+      case: "worst",
+      explanation: "Each recursion level splits the array (lines 5-7) and merges the halves in O(n) total (lines 8-16). There are O(log n) levels (halving each time), so O(n) per level × O(log n) levels = O(n log n). Unlike quicksort there is no O(n²) degenerate case.",
+      otherCases: [
+        { case: "best", bound: "O(n log n)", note: "Merge sort does the same work regardless of input order." },
+      ],
+    },
+    space: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "Each merge builds a new `out` list; the slices a[:mid]/a[mid:] and buffers total O(n) auxiliary. Recursion depth is O(log n).",
+      inputOutputNote: "The returned sorted list is O(n) output; the merge buffers are O(n) auxiliary.",
+    },
+    derivation: [
+      { lines: [6, 7], description: "Two recursive calls on halves — T(2·n/2).", cost: "O(log n) levels", dimension: "time" },
+      { lines: [10, 11, 12, 13, 14, 15, 16], description: "Merge the two sorted halves in linear time per level.", cost: "O(n) per level", dimension: "time" },
+      { lines: [6, 7, 8], description: "Slice copies + merge buffer = O(n) auxiliary.", cost: "O(n)", dimension: "space" },
+    ],
+    assumptions: ["Comparisons are O(1).", "List slicing a[:mid] copies O(mid) elements.", "append/extend are amortised O(1) per element."],
+    tradeoffs: "Merge sort is stable and guaranteed O(n log n) but uses O(n) extra space; quicksort is in-place (O(log n)) but O(n²) worst case; heapsort is in-place O(n log n) but not stable.",
+    counters: [{ label: "merge comparisons", definition: "executions of the merge compare (line 11)", countLines: [11] }],
+    fixedDataNote: "Sorting 6 elements recurses ~log2(6) ≈ 3 levels. The O(n log n) recurrence generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: split, conquer halves, combine." },
     { line: 2, executable: true, explanation: "Define merge_sort(a)." },
@@ -162,4 +191,12 @@ export const divideAndConquerPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "166f5a5629254054",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 3,
+  },
 };

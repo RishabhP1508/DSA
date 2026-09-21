@@ -60,6 +60,32 @@ export const monotonicStackPattern: PatternDefinition = {
   complexityNote:
     "O(n) time — each index is pushed and popped at most once, so the inner while-loop is amortized O(1). O(n) space for the stack and result.",
 
+  complexityExplanation: {
+    scope: "program",
+    variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
+    costModel: "A stack holds indices with decreasing values. Each index is pushed exactly once and popped at most once, so the inner while-loop's total pops over the whole run are bounded by n (amortised analysis).",
+    time: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "Although lines 6-7 are a nested while inside the for, each index is pushed once (line 8) and popped at most once (line 7). Across the ENTIRE run there are at most n pops, so the total inner-loop work is O(n), not O(n²). The for loop itself is O(n). Total O(n) amortised.",
+    },
+    space: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "The stack can hold up to n indices (a strictly decreasing array), and the result array is size n.",
+      inputOutputNote: "nums (n) is the input; the O(n) result is the output; the stack is O(n) auxiliary.",
+    },
+    derivation: [
+      { lines: [5], description: "Outer loop over n elements.", cost: "O(n)", dimension: "time" },
+      { lines: [6, 7], description: "Each index popped at most once across the whole run (amortised).", cost: "O(n) total", dimension: "time" },
+      { lines: [3, 4], description: "Result array + stack, each up to n.", cost: "O(n)", dimension: "space" },
+    ],
+    assumptions: ["Push/pop on a Python list end are amortised O(1).", "The 'amortised O(1) per step' argument relies on each index being popped at most once."],
+    tradeoffs: "A brute-force next-greater scan is O(n²); the monotonic stack achieves O(n) by never re-examining a resolved index.",
+    counters: [{ label: "pops", definition: "executions of the stack pop / assignment (line 7)", countLines: [7] }],
+    fixedDataNote: "For [2,1,2,4,3] the result is [4,2,4,-1,-1] with total pops <= n. The O(n) amortised bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: compute the next greater element per index in O(n)." },
     { line: 2, executable: true, explanation: "Define next_greater(nums)." },
@@ -155,4 +181,12 @@ export const monotonicStackPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "819741f643ed2285",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

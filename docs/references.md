@@ -88,6 +88,53 @@ Executed the lesson program on CPython 3.14.4 and confirmed output
 Executed on CPython 3.14.4; output `1\n2\n3\n` confirmed (and via
 `scripts/verify_lessons.mjs` against the bundled Pyodide).
 
+### heaps/min-max — ✅ verified (R5.2, corrected)
+
+- [Python 3.14 `heapq` docs](https://docs.python.org/3.14/library/heapq.html)
+  — **Corrects the earlier "Python only has a min-heap" claim.** Python 3.14
+  adds a native max-heap family: `heapify_max`, `heappush_max`, `heappop_max`,
+  `heapreplace_max`, `heappushpop_max` (each marked *"Added in version 3.14"*).
+  `maxheap[0]` holds the largest; unqualified functions remain a min-heap with
+  `heap[0]` smallest. `heapify`/`heapify_max` transform a list into a heap **in
+  linear time** (O(n)). heapq uses **zero-based indexing** (children of `i` at
+  `2i+1`, `2i+2`); the docs note textbooks often use 1-based and favour max-heaps.
+  Verified sections: "Min-heaps"/"Max-heaps" intro and the min/max function
+  listings. Accessed 2026-09-20.
+- [Princeton priority queues](https://algs4.cs.princeton.edu/24pq/)
+  — cross-check: binary-heap insert and delete-min/max are O(log n); Princeton
+  uses **1-based** indexing and a max-oriented default (reconciled to heapq's
+  0-based min default). Accessed 2026-09-20.
+- **Runtime evidence:** ran a probe on the bundled Pyodide (CPython 3.14.2)
+  confirming `heapify_max`/`heappush_max`/`heappop_max`/`heapreplace_max`/
+  `heappushpop_max` all exist, keep the max at index 0 (max-heap invariant
+  `maxheap[2k+1] <= maxheap[k]` held on a shuffled 20-element list), and that
+  negation still works as the portable alternative. The corrected
+  `min-max-heaps` lesson output `1\n0\n1\n9\n9\n8\n` is verified by
+  `verify_lessons.mjs`. Also corrected the "min-only" phrasing in
+  `running-median` and `two-heap-pattern` (they still negate the lower half, now
+  framed as portable rather than required).
+
+### arrays/sliding-window (fixed) — ✅ verified (R5.2.4, corrected)
+
+- [Python 3.14 stdlib — sequence slicing](https://docs.python.org/3.14/tutorial/introduction.html#lists)
+  — a slice `nums[:k]` builds a NEW list of k elements, so it is O(k) time AND
+  O(k) auxiliary space. **Correction:** the fixed sliding-window lesson claimed
+  O(1) auxiliary space while initialising the first window with `sum(nums[:k])`;
+  it now accumulates the first window with an explicit loop (no slice), states
+  the O(k) init cost, guards `k <= 0`/`k > n`, and notes prefix sums are a valid
+  O(n)-time / O(n)-space alternative. Accessed 2026-09-20.
+- [NeetCode roadmap — Sliding Window](https://neetcode.io/roadmap)
+  — placement and the fixed-vs-variable distinction. Accessed 2026-09-20.
+
+### patterns/complexity — ✅ verified (R5.1.2)
+
+Every pattern's `walkthroughCode` now carries a structured `complexityExplanation`
+(variables, cost model, line-linked derivation, assumptions, tradeoffs, an
+executing counter), not just a `complexityNote`. Derivation line ranges and
+counter executability are checked by `scripts/verify_example_model.mjs` against
+the bundled runtime. The Big-O CLAIMS themselves remain subject to human review
+(R7); this verifies structural completeness and internal consistency only.
+
 ### (pending topics)
 
 The following are seeded starting points; entries get filled in as each topic is
@@ -108,3 +155,57 @@ authored in later phases. Consult the tables above plus these hints:
 - **advanced graphs (union-find, Dijkstra, Bellman–Ford, Floyd–Warshall, Prim, Kruskal)** → CP-Algorithms, Princeton.
 - **DP** → MIT 6.006, CP-Algorithms.
 - **Fenwick/segment trees, bit manipulation, KMP** → CP-Algorithms.
+
+
+---
+
+## R5.6 — Notion practice bridges (content-audited mappings)
+
+Some Notion practice problems reuse a lesson's technique with a small, specific
+ADAPTATION. Each such adaptation and its correctness condition is now **taught in
+the mapped lesson's LEARNER-FACING content** (explanation prose + an experiment +
+an exercise) — this section is a developer-facing summary/provenance record, NOT
+the place the learner encounters it. Content-audited against the actual lesson on
+2026-09-20. Two problems had NO teaching (only a prerequisite) and are
+`unresolved` in the manifest instead: **Task Scheduler** (greedy cooldown /
+idle-slot scheduling — top-k only gives the max-heap-of-counts prerequisite) and
+**Meeting Rooms II** (concurrent-overlap room counting via a min-heap of end
+times — interval-sorting only gives sorting + earliest-end greedy).
+
+- **Best Time to Buy and Sell Stock → `kadane`.** Bridge: track the running
+  minimum price seen so far and the best `price − min` profit in one pass. Key
+  condition: you may only sell after buying, so the minimum must be a strictly
+  earlier index — equivalent to Kadane over the day-to-day price deltas.
+- **Product of Array Except Self → `prefix-sums`.** Bridge: run the prefix
+  accumulation twice — a left-to-right prefix product and a right-to-left suffix
+  product — and multiply them per index. Key condition: exclude the current
+  element (the answer at i is prefixLeft[i] × prefixRight[i]); no division.
+- **Longest Palindromic Substring → `palindromes`.** Bridge: use the lesson's
+  two-pointer "is this a palindrome" check as an expand-from-center test, run
+  from all 2n−1 centers (each index, and each gap between indices), keeping the
+  longest. Key condition: handle both odd (single center) and even (gap) centers.
+- **Largest Rectangle in Histogram → `monotonic-stack`.** Bridge: keep a
+  monotonic INCREASING stack of bar indices; when a shorter bar arrives, pop and
+  compute `height[popped] × width`, where width spans from the new stack top+1 to
+  the current index. Key condition: flush the stack at the end with a sentinel
+  (height 0) so every bar's rectangle is measured.
+- **Combination Sum → `dp-combinations`.** Bridge: same choose/explore/un-choose
+  backtracking, but recurse with the SAME index (`bt(i, ...)`) to allow reuse and
+  subtract from a running target, pruning when it goes negative. Key conditions:
+  (1) reuse is allowed and there is a target sum; (2) the `remaining < 0` prune and
+  the search's TERMINATION require **strictly positive** candidates — a zero
+  candidate never decreases `remaining` (reusing it recurses forever) and a
+  negative one increases it (never overshoots, never terminates); (3) the
+  "each combination once" (no-duplicate) argument assumes **distinct** candidate
+  values — duplicate input values would emit the same multiset twice unless you
+  add a skip-equal-siblings guard. LeetCode's Combination Sum guarantees distinct
+  positive candidates, which is why the plain adaptation is correct there. (Unlike
+  LC 77 Combinations — fixed k, no reuse — which is in `ADDITIONAL_PRACTICE`.)
+- **Sum of Two Integers → `bit-logical-ops`.** Bridge: `sum = a ^ b` (add without
+  carry), `carry = (a & b) << 1`, loop until carry is 0. Key condition: in Python
+  (arbitrary-precision ints) mask to 32 bits each step and reinterpret the sign,
+  since there is no native fixed-width overflow.
+- **Longest Consecutive Sequence → `maps-sets`.** Bridge: put all numbers in a
+  set, then only start counting a run from `x` when `x−1` is absent, walking
+  `x+1, x+2, …`. Key condition: the start-of-run guard is what keeps it O(n)
+  overall (each number is visited at most twice).

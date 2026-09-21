@@ -81,6 +81,35 @@ export const inPlaceLinkedListReversalPattern: PatternDefinition = {
   complexityNote:
     "O(n) time (each node in the reversed section is relinked once) and O(1) extra space (a handful of pointers; nodes are reused).",
 
+  complexityExplanation: {
+    scope: "program",
+    variables: [
+      { symbol: "n", meaning: "the number of nodes in the list" },
+      { symbol: "q", meaning: "the end position of the reversed section (1-based)" },
+    ],
+    costModel: "Walk to the node before position p (O(p)), then splice each of the q−p following nodes to the front of the sublist with a constant number of pointer updates.",
+    time: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "Walking to position p (lines 23-24) is O(p). The splice loop (lines 26-30) runs q−p times, each doing a constant number of pointer reassignments. Since p and q are within the list, total work is O(q) ≤ O(n).",
+    },
+    space: {
+      bound: "O(1)",
+      case: "worst",
+      explanation: "Only a few pointers (dummy, prev, curr, nxt) are used; the existing nodes are relinked, not copied.",
+      inputOutputNote: "The linked list is modified in place and its head returned; no new nodes for the reversal.",
+    },
+    derivation: [
+      { lines: [23, 24], description: "Walk to the node before position p.", cost: "O(p)", dimension: "time" },
+      { lines: [26, 27, 28, 29, 30], description: "Splice each of the q−p nodes to the front — O(1) each.", cost: "O(q−p)", dimension: "time" },
+      { lines: [21, 22, 25], description: "A constant number of pointers.", cost: "O(1)", dimension: "space" },
+    ],
+    assumptions: ["1 <= p <= q <= n (valid positions).", "The dummy head avoids special-casing reversal that includes the head.", "Following/reassigning .next is O(1)."],
+    tradeoffs: "Copying values into a list, reversing, and writing back is also O(n) time but O(n) space; in-place pointer splicing keeps O(1) space.",
+    counters: [{ label: "splices", definition: "executions of the splice step (line 30)", countLines: [30] }],
+    fixedDataNote: "Reversing positions 2..4 of [1,2,3,4,5] gives [1,4,3,2,5] via 3 splices. The O(n) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: true, explanation: "Define the Node class (value + next)." },
     { line: 2, executable: true, explanation: "Constructor." },
@@ -199,4 +228,12 @@ export const inPlaceLinkedListReversalPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "a36c98667b7f633c",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

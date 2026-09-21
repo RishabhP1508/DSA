@@ -61,6 +61,7 @@ Tabulation vs memoization is a real design choice. **Memoization** is easy to wr
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the Fibonacci index requested (number of table cells)" }],
     costModel:
       "Filling one table cell is O(1) (an addition and two lookups). The loop fills each cell once.",
@@ -205,4 +206,12 @@ Tabulation vs memoization is a real design choice. **Memoization** is easy to wr
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "2d202287c95a1993",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 6,
+  },
 };

@@ -58,6 +58,7 @@ The cost is three nested loops over all vertices: **O(V³)** time and **O(V²)**
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "V", meaning: "the number of vertices" }],
     costModel: "Each relaxation d[i][j] = min(...) is O(1). The algorithm does three nested loops over all vertices.",
     time: {
@@ -162,4 +163,12 @@ The cost is three nested loops over all vertices: **O(V³)** time and **O(V²)**
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "0054644f6ce1b021",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

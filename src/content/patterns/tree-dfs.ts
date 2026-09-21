@@ -73,6 +73,35 @@ export const treeDfsPattern: PatternDefinition = {
   complexityNote:
     "O(n) time (each node visited once). O(h) auxiliary space for the recursion stack (h = tree height), plus the current path; the collected paths are output.",
 
+  complexityExplanation: {
+    scope: "program",
+    variables: [
+      { symbol: "n", meaning: "the number of nodes in the tree" },
+      { symbol: "h", meaning: "the height of the tree" },
+    ],
+    costModel: "DFS carries a running path and sum down each root-to-leaf route; each node is entered once with O(1) work (plus an O(path) copy only at qualifying leaves).",
+    time: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "Each node is visited exactly once (lines 11-20), doing O(1) work to extend/backtrack the path. Copying path[:] happens only at leaves that hit the target (line 16). In the worst case the recorded-paths copying adds up to O(n·h), but the traversal itself is O(n).",
+    },
+    space: {
+      bound: "O(h)",
+      case: "worst",
+      explanation: "The recursion stack is at most h deep, and the current `path` holds at most h values. This EXCLUDES the collected result paths.",
+      inputOutputNote: "The `res` list of matching paths is output storage, separate from the O(h) auxiliary space.",
+    },
+    derivation: [
+      { lines: [13, 14], description: "Extend the path and running sum entering each node.", cost: "O(1) per node", dimension: "time" },
+      { lines: [18, 19], description: "Recurse into both children — each node entered once.", cost: "O(n)", dimension: "time" },
+      { lines: [10, 13], description: "Recursion depth + path length, both <= h.", cost: "O(h)", dimension: "space" },
+    ],
+    assumptions: ["append/pop at a list end are amortised O(1).", "path.pop() (line 20) restores state so the shared path is correct on every branch (backtracking)."],
+    tradeoffs: "An iterative stack-based DFS avoids Python's recursion-limit risk on deep trees but needs explicit path bookkeeping; recursion is clearer at O(h) stack.",
+    counters: [{ label: "nodes visited", definition: "executions of path.append (line 13)", countLines: [13] }],
+    fixedDataNote: "For this 4-node tree the path 1->2->4 sums to 7. The O(n) traversal bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: true, explanation: "Define the tree node class." },
     { line: 2, executable: true, explanation: "Constructor with value and optional children." },
@@ -174,4 +203,12 @@ export const treeDfsPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "d7df312529da2294",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

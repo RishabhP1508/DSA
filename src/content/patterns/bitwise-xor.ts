@@ -57,6 +57,32 @@ export const bitwiseXorPattern: PatternDefinition = {
   complexityNote:
     "O(n) time (one pass XOR-ing each element) and O(1) space (a single accumulator). No hash map or sort needed.",
 
+  complexityExplanation: {
+    scope: "program",
+    variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
+    costModel: "A single accumulator is XOR-ed with each element once. XOR on machine-word-sized ints is O(1).",
+    time: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "One pass over the n elements (lines 5-6), each doing a constant-time XOR into the accumulator. No sorting or hashing, so exactly O(n).",
+    },
+    space: {
+      bound: "O(1)",
+      case: "worst",
+      explanation: "A single integer accumulator `x`; nothing grows with n.",
+      inputOutputNote: "nums (n elements) is the input; the answer is one integer.",
+    },
+    derivation: [
+      { lines: [4], description: "Initialise the accumulator.", cost: "O(1)", dimension: "time" },
+      { lines: [5, 6], description: "XOR each of the n elements into the accumulator once.", cost: "O(n)", dimension: "time" },
+      { lines: [4], description: "A single accumulator variable.", cost: "O(1)", dimension: "space" },
+    ],
+    assumptions: ["Values fit in a machine word so XOR is O(1) (Python ints are arbitrary-size, but these are small).", "Every value except one appears an even number of times (so pairs cancel)."],
+    tradeoffs: "A hash-set/count approach also finds the unique element in O(n) time but needs O(n) space; XOR uses O(1) space by exploiting a ^ a == 0.",
+    counters: [{ label: "XOR operations", definition: "executions of x ^= v (line 6)", countLines: [6] }],
+    fixedDataNote: "For [4,1,2,1,2] the loop runs 5 XORs and the 1s and 2s cancel, leaving 4. The O(n) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: XOR cancels equal values." },
     { line: 2, executable: false, explanation: "Comment continued." },
@@ -138,4 +164,12 @@ export const bitwiseXorPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "c3595172baff811b",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

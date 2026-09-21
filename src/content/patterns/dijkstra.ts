@@ -69,6 +69,35 @@ export const dijkstraPattern: PatternDefinition = {
   complexityNote:
     "O((V + E) log V) with a binary heap — each edge may push once, each node is popped once. O(V + E) space for distances, the graph, and the heap.",
 
+  complexityExplanation: {
+    scope: "program",
+    variables: [
+      { symbol: "V", meaning: "the number of vertices" },
+      { symbol: "E", meaning: "the number of edges" },
+    ],
+    costModel: "Lazy-deletion Dijkstra: each relaxation may push a (dist, node) pair; the heap can hold up to O(E) entries, each push/pop O(log E) = O(log V) for simple graphs. Stale entries are skipped on pop.",
+    time: {
+      bound: "O((V + E) log V)",
+      case: "worst",
+      explanation: "Each edge can trigger at most one heap push (line 16), so up to O(E) pushes, each O(log V). Each vertex is settled once (its first pop); stale pops (line 10) are skipped. Summed, the heap work is O((V + E) log V).",
+    },
+    space: {
+      bound: "O(V + E)",
+      case: "worst",
+      explanation: "The dist array is O(V); the heap can hold up to O(E) pending (dist, node) pairs.",
+      inputOutputNote: "The adjacency structure (O(V + E)) is the input; dist (O(V)) is the result.",
+    },
+    derivation: [
+      { lines: [9], description: "Each vertex is popped/settled once; stale pops skipped (line 10-11).", cost: "O(V log V)", dimension: "time" },
+      { lines: [12, 13, 14, 16], description: "Each edge relaxation may push once — O(E) pushes, each O(log V).", cost: "O(E log V)", dimension: "time" },
+      { lines: [5, 7], description: "dist array O(V) + heap up to O(E).", cost: "O(V + E)", dimension: "space" },
+    ],
+    assumptions: ["All edge weights are NON-NEGATIVE (Dijkstra's precondition; negatives need Bellman-Ford).", "Heap push/pop are O(log(size))."],
+    tradeoffs: "A Fibonacci heap gives O(E + V log V); an array-scan Dijkstra is O(V²), better only for dense graphs. Bellman-Ford (O(V·E)) handles negative weights this heap version cannot.",
+    counters: [{ label: "heap pops", definition: "executions of heappop (line 9)", countLines: [9] }],
+    fixedDataNote: "This 4-vertex graph pops each settled node once plus any stale entries. The O((V+E) log V) bound generalises.",
+  },
+
   codeExplanations: [
     { line: 1, executable: true, explanation: "Import heapq for the priority queue." },
     { line: 2, executable: false, explanation: "Blank line." },
@@ -168,4 +197,12 @@ export const dijkstraPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "1c1203240fbc86b8",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

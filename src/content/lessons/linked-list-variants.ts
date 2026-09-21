@@ -111,6 +111,7 @@ Choosing a variant is a **tradeoff**: singly is leanest; doubly buys backward tr
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of nodes in the list" }],
     costModel:
       "Reading or assigning a `prev`/`next` reference is O(1). Building visits each input value once; traversal visits each node once.",
@@ -301,4 +302,12 @@ Choosing a variant is a **tradeoff**: singly is leanest; doubly buys backward tr
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "930cee5b8ff7a9ad",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

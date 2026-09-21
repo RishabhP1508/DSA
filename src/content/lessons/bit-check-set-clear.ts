@@ -54,6 +54,7 @@ The trick each time is that the mask \`1 << i\` isolates exactly bit \`i\`, and 
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "—", meaning: "no input size; fixed bit operations on one integer" }],
     costModel: "Building a mask (a shift) and applying one bitwise operator are each O(1) on machine words.",
     time: {
@@ -146,4 +147,12 @@ The trick each time is that the mask \`1 << i\` isolates exactly bit \`i\`, and 
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "aa2494271ae5faaa",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

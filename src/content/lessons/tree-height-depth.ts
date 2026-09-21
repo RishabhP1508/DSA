@@ -56,6 +56,7 @@ The computation is **O(n)** time (each node contributes to exactly one height ca
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of nodes" },
       { symbol: "h", meaning: "the tree height (recursion depth)" },
@@ -160,4 +161,12 @@ The computation is **O(n)** time (each node contributes to exactly one height ca
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "7a42a58ae3c9f40f",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

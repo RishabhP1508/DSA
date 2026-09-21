@@ -51,6 +51,7 @@ Python also gives you the answer for free: \`bin(x).count("1")\` (and \`int.bit_
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "s", meaning: "the number of set (1) bits in n" },
       { symbol: "w", meaning: "the total number of bits in n" },
@@ -91,9 +92,10 @@ Python also gives you the answer for free: \`bin(x).count("1")\` (and \`int.bit_
     { line: 5, executable: true, explanation: "n &= n - 1 clears the lowest set bit — one 1-bit removed per pass." },
     { line: 6, executable: true, explanation: "Count that cleared bit." },
     { line: 7, executable: true, explanation: "Return the total number of set bits." },
-    { line: 8, executable: true, explanation: "0b1011 has three 1-bits → 3." },
-    { line: 9, executable: false, explanation: "Comment: Python built-in shortcut." },
-    { line: 10, executable: true, explanation: "bin(13) is '0b1101'; counting '1' gives 3." },
+    { line: 8, executable: false, explanation: "Blank line." },
+    { line: 9, executable: true, explanation: "0b1011 (decimal 11) has three 1-bits → 3." },
+    { line: 10, executable: false, explanation: "Comment: Python built-in shortcut." },
+    { line: 11, executable: true, explanation: "bin(13) is '0b1101'; counting the '1' characters gives 3." },
   ],
 
   bindings: [{ variable: "n", model: "bits" }],
@@ -150,4 +152,12 @@ Python also gives you the answer for free: \`bin(x).count("1")\` (and \`int.bit_
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "8fa5a5886bff758a",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

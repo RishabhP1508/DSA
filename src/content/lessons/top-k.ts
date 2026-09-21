@@ -56,6 +56,7 @@ Python's \`heapq.nlargest(k, nums)\` does exactly this internally and returns th
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of elements" },
       { symbol: "k", meaning: "how many top elements to return" },
@@ -165,4 +166,12 @@ Python's \`heapq.nlargest(k, nums)\` does exactly this internally and returns th
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "5f680c436688f8ae",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

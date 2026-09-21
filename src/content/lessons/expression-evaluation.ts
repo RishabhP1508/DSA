@@ -57,6 +57,7 @@ It runs in **O(n)** time and **O(n)** space. Converting normal **infix** express
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of tokens in the expression" }],
     costModel: "Each token is one O(1) push, or one operator step (two pops, one arithmetic op, one push) — all O(1).",
     time: {
@@ -98,8 +99,8 @@ It runs in **O(n)** time and **O(n)** space. Converting normal **infix** express
     { line: 12, executable: false, explanation: "Otherwise the token is a number." },
     { line: 13, executable: true, explanation: "Convert it to int and push it." },
     { line: 14, executable: true, explanation: "The single remaining value is the result." },
-    { line: 15, executable: false, explanation: "Comment: the meaning of the sample." },
-    { line: 16, executable: false, explanation: "Blank line." },
+    { line: 15, executable: false, explanation: "Blank line." },
+    { line: 16, executable: false, explanation: "Comment: the meaning of the sample." },
     { line: 17, executable: true, explanation: "Evaluate (2+1)*3 → 9." },
   ],
 
@@ -157,4 +158,12 @@ It runs in **O(n)** time and **O(n)** space. Converting normal **infix** express
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "562a44ce56ec57fd",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

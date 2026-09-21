@@ -60,6 +60,7 @@ This is **O(n²)** time (each \`i\` scans all earlier \`j\`) and **O(n)** space.
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel: "Each (i, j) pair does O(1) work (a comparison and a possible update).",
     time: {
@@ -207,4 +208,12 @@ This is **O(n²)** time (each \`i\` scans all earlier \`j\`) and **O(n)** space.
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "24ce470bc7fc7510",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 6,
+  },
 };

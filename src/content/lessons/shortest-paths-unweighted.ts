@@ -59,6 +59,7 @@ It runs in **O(V + E)** time and **O(V)** space — the same as plain BFS. The c
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "V", meaning: "the number of vertices" },
       { symbol: "E", meaning: "the number of edges" },
@@ -170,4 +171,12 @@ It runs in **O(V + E)** time and **O(V)** space — the same as plain BFS. The c
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "e18032f91ae15e60",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 5,
+  },
 };

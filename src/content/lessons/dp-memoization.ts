@@ -61,6 +61,7 @@ Two conditions must hold for memoization to be correct and useful: **overlapping
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the Fibonacci index requested (number of distinct subproblems)" }],
     costModel:
       "A cache hit is an O(1) dictionary lookup. Each distinct subproblem runs its O(1) body once; a cache miss also pays that O(1) body.",
@@ -197,4 +198,12 @@ Two conditions must hold for memoization to be correct and useful: **overlapping
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "080bdcb900a9f453",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 6,
+  },
 };

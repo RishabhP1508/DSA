@@ -75,6 +75,7 @@ This is **O(n)** time (each node is visited once) and **O(1)** space (three poin
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of nodes in the list" }],
     costModel:
       "Reading and reassigning a `next` reference is O(1). Each loop iteration does a constant number of such assignments.",
@@ -241,4 +242,12 @@ This is **O(n)** time (each node is visited once) and **O(1)** space (three poin
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "ec9e65ff7a3d42ff",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

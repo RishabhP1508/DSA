@@ -47,6 +47,7 @@ Row/column pointers in the visualization highlight the current cell so you can s
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [
       { symbol: "R", meaning: "the number of rows" },
       { symbol: "C", meaning: "the number of columns per row" },
@@ -149,4 +150,12 @@ Row/column pointers in the visualization highlight the current cell so you can s
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "0706cb68dea95a7a",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

@@ -66,6 +66,7 @@ Think of a scavenger hunt: each clue (node) tells you where the next clue is. Yo
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of nodes in the linked list" }],
     costModel:
       "We count each visit to a node as constant work: reading current.val and following current.next are O(1) because a node holds a direct reference to the next node.",
@@ -227,4 +228,12 @@ Think of a scavenger hunt: each clue (node) tells you where the next clue is. Yo
       accessDate: "2026-09-19",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "a83276a2f18bd51c",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 4,
+  },
 };

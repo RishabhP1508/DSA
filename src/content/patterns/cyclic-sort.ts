@@ -64,6 +64,33 @@ export const cyclicSortPattern: PatternDefinition = {
   complexityNote:
     "O(n) time — each value is placed with at most one swap, so total swaps are bounded by n. O(1) extra space (in-place).",
 
+  complexityExplanation: {
+    scope: "program",
+    variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
+    costModel: "The while loop either swaps a value into its home index or advances i. Each successful swap places one value permanently, so swaps are bounded by n; i advances at most n times.",
+    time: {
+      bound: "O(n)",
+      case: "worst",
+      explanation: "The placement loop (lines 5-10) does at most n swaps total (each swap fixes one value's final position) plus at most n index advances, so O(n) — even though it is a while loop, not a simple for. The final scan (lines 11-13) is another O(n). Total O(n).",
+    },
+    space: {
+      bound: "O(1)",
+      case: "worst",
+      explanation: "Sorting is done in place with a constant number of index variables; no auxiliary array.",
+      inputOutputNote: "nums is rearranged in place; the answer is a single index.",
+    },
+    derivation: [
+      { lines: [5, 6, 7, 8], description: "Each swap places one value at its home index; total swaps <= n.", cost: "O(n)", dimension: "time" },
+      { lines: [9, 10], description: "Each non-swap advances i; at most n advances.", cost: "O(n)", dimension: "time" },
+      { lines: [11, 12], description: "Final linear scan for the first misplaced index.", cost: "O(n)", dimension: "time" },
+      { lines: [3], description: "A constant number of index variables (in-place).", cost: "O(1)", dimension: "space" },
+    ],
+    assumptions: ["Values lie in the known range 0..n (cyclic sort's precondition).", "List indexing and swap are O(1)."],
+    tradeoffs: "Sorting then scanning is O(n log n); a boolean/seen array is O(n) time but O(n) space. Cyclic sort is O(n) time AND O(1) space by exploiting the value-equals-index range.",
+    counters: [{ label: "placements", definition: "loop iterations placing/advancing (line 5)", countLines: [5] }],
+    fixedDataNote: "For [3,0,1] the loop places 0 and 1 and detects index 2 missing. The O(n) bound generalises via the swap-count argument.",
+  },
+
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: place each value at its own index." },
     { line: 2, executable: true, explanation: "Define find_missing(nums)." },
@@ -157,4 +184,12 @@ export const cyclicSortPattern: PatternDefinition = {
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "d2fd863554d64d88",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

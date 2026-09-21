@@ -21,7 +21,9 @@ The **slice** method, \`s == s[::-1]\`, builds a **reversed copy** of the string
 
 The **two-pointer** method (previous lesson) compares characters from both ends inward, using **O(1) extra space** and stopping early on the first mismatch. For \`"hello"\`, the reversed string \`"olleh"\` differs from \`"hello"\`, so the answer is \`False\`.
 
-Which to use? The slice is perfect for clarity and small strings; the two-pointer scan wins when memory matters or you want early exit. Recognising that both are O(n) time but differ in **space** is exactly the kind of comparison the complexity panel is meant to surface.`,
+Which to use? The slice is perfect for clarity and small strings; the two-pointer scan wins when memory matters or you want early exit. Recognising that both are O(n) time but differ in **space** is exactly the kind of comparison the complexity panel is meant to surface.
+
+**Finding the longest palindromic SUBSTRING — "expand around center".** Testing one string is the building block; the classic follow-up is to find the longest palindromic substring inside a string. The key idea reuses the two-pointer check *in reverse*: instead of starting at the ends and moving in, start at a **center** and expand **outward** while \`s[lo] == s[hi]\`, recording the widest match. A palindrome has a center, but there are **two kinds** of center — a single character (odd length, e.g. \`"aba"\`) and the gap between two characters (even length, e.g. \`"abba"\`). So you try expanding from **all \`2n−1\` centers** (each index, and each between-index gap) and keep the longest. **Correctness condition:** you must check both the odd center (\`expand(i, i)\`) and the even center (\`expand(i, i+1)\`) at every position, or you miss all even-length palindromes. Each expansion is O(n) and there are O(n) centers, so this is O(n²) time and O(1) extra space.`,
 
   vocabulary: [
     { term: "Palindrome", definition: "A string equal to its own reverse." },
@@ -45,6 +47,7 @@ Which to use? The slice is perfect for clarity and small strings; the two-pointe
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the length of the string" }],
     costModel: "Building s[::-1] copies n characters (O(n) time and space). Comparing two strings is O(n).",
     time: {
@@ -87,6 +90,7 @@ Which to use? The slice is perfect for clarity and small strings; the two-pointe
     "Test 'racecar' and 'level' and confirm True.",
     "Test 'Aba' and then 'Aba'.lower() to see why normalization matters.",
     "Compare timing/space intuition against the two-pointer version for a long string.",
+    "Longest palindromic substring: write expand(lo, hi) that grows outward while s[lo]==s[hi], and call it from every center as BOTH expand(i,i) (odd) and expand(i,i+1) (even). On 'babad' confirm you find 'bab' (or 'aba'); on 'cbbd' confirm the even center finds 'bb'. Drop the even-center call and watch 'bb' be missed.",
   ],
 
   exercises: [
@@ -104,6 +108,13 @@ Which to use? The slice is perfect for clarity and small strings; the two-pointe
       prompt: "For a very long string in a memory-tight environment, which palindrome method do you choose and why?",
       expected: "The two-pointer method: O(1) extra space and early exit on mismatch, versus the slice's O(n) reversed copy.",
       hints: ["What does the slice allocate?", "A full reversed copy (O(n) space).", "Two pointers avoid the copy — O(1) space."],
+    },
+    {
+      id: "pal-longest-substring-1",
+      kind: "choose-approach",
+      prompt: "To find the LONGEST palindromic substring of 'cbbd' by expanding around centers, which centers do you try, and why does an odd-center-only version get the wrong answer here?",
+      expected: "Try all 2n-1 centers: each single index i (odd-length, expand(i,i)) AND each gap between i and i+1 (even-length, expand(i,i+1)), expanding while s[lo]==s[hi]. For 'cbbd' the answer 'bb' is an EVEN-length palindrome centered in the gap between the two 'b's, so an odd-center-only version never checks that center and would return a length-1 answer. Overall O(n^2) time, O(1) extra space.",
+      hints: ["A palindrome center is either a character or the gap between two characters.", "Odd centers alone miss every even-length palindrome like 'bb'.", "Expand from expand(i,i) and expand(i,i+1) for every i and keep the widest."],
     },
   ],
 
@@ -131,4 +142,12 @@ Which to use? The slice is perfect for clarity and small strings; the two-pointe
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "95071746a9dc61f6",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 2,
+  },
 };

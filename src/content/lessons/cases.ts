@@ -52,6 +52,7 @@ Reporting a bound **without saying which case** is ambiguous, so always state it
   ],
 
   complexityExplanation: {
+    scope: "program",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel: "Each equality comparison is one constant-time step. The loop may exit early on a match.",
     time: {
@@ -148,4 +149,12 @@ Reporting a bound **without saying which case** is ambiguous, so always state it
       accessDate: "2026-09-20",
     },
   ],
+  evidence: {
+    inventoryVersion: 18,
+    contentHash: "1209e895786f399f",
+    verifiedAt: "2026-09-20",
+    checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
+    semanticReview: true,
+    reviewBatch: 1,
+  },
 };
