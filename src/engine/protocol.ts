@@ -19,7 +19,7 @@
  * validator interfaces are shaped so R3 can migrate to Zod mechanically.
  */
 
-import type { RunStatus, TraceEvent } from "../core/types";
+import type { RunStatus, TraceEvent, ComplexityAnalysisResult } from "../core/types";
 
 /** Bump on any breaking change to the envelope or payload shapes. */
 export const PROTOCOL_VERSION = 1 as const;
@@ -89,6 +89,8 @@ export interface ResultPayload {
   limitHit?: "time" | "events" | "bytes";
   error?: { type: string; message: string; line?: number };
   exitCode?: number | string | null;
+  /** R7.5 — conservative static complexity analysis of the run's source. */
+  analysis?: ComplexityAnalysisResult;
 }
 
 export interface ErrorPayload {

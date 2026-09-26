@@ -24,9 +24,11 @@ import {
   type OutboundKind,
   type EnvelopeMeta,
 } from "./protocol";
-import type { RunStatus, TraceEvent } from "../core/types";
+import type { RunStatus, TraceEvent, ComplexityAnalysisResult } from "../core/types";
 // Vite `?raw` import inlines the tracer source so it ships offline.
 import tracerSource from "./tracer.py?raw";
+// R7.3/7.5 — conservative AST complexity analyzer, run in the same worker.
+import analyzerSource from "./complexity_analyzer.py?raw";
 
 type PyodideInterface = {
   runPython: (code: string) => unknown;
@@ -44,6 +46,7 @@ interface RawResult {
   exitCode?: number | string | null;
   incomplete?: boolean;
   limitHit?: "time" | "events" | "bytes";
+  analysis?: ComplexityAnalysisResult;
 }
 
 let seq = 0;
@@ -86,11 +89,15 @@ async function handleRun(
     // Install the tracer into a FRESH module (this worker is single-use, so
     // there is no prior state to inherit — R2-B).
     pyodide.globals.set("__tracer_source__", tracerSource);
+    pyodide.globals.set("__analyzer_source__", analyzerSource);
     pyodide.runPython(`
 import sys, types
 _m = types.ModuleType("dsa_tracer")
 exec(__tracer_source__, _m.__dict__)
 sys.modules["dsa_tracer"] = _m
+_a = types.ModuleType("dsa_cx")
+exec(__analyzer_source__, _a.__dict__)
+sys.modules["dsa_cx"] = _a
 `);
 
     pyodide.globals.set("__run_source__", payload.source);
@@ -107,6 +114,12 @@ _tracer = sys.modules["dsa_tracer"]
 _res = _tracer.run_program(
     __run_source__, "<lesson>", __limit_events__, __limit_bytes__, __run_stdin__
 )
+# R7.5 — attach a conservative static complexity analysis of the SAME source.
+# Pure AST work; never executes the program and never raises out of here.
+try:
+    _res["analysis"] = sys.modules["dsa_cx"].analyze_complexity(__run_source__)
+except Exception as _e:
+    _res["analysis"] = {"source": "not-determined", "uncertaintyReason": "analyzer error: " + str(_e)}
 json.dumps(_res)
 `) as string;
 
@@ -156,6 +169,7 @@ function streamAndFinish(raw: RawResult): void {
     limitHit: raw.limitHit,
     error: raw.error,
     exitCode: raw.exitCode,
+    analysis: raw.analysis,
   });
 }
 

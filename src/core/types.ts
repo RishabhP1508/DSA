@@ -255,6 +255,13 @@ export interface RunResult {
   source?: string;
   /** The EXACT stdin string this result was produced from (UI freshness). */
   stdin?: string;
+  /**
+   * R7.5 — conservative static complexity analysis of the run's source
+   * (auto-supported bound, or an explicit not-determined state with a reason).
+   * Present for personal/Playground code; observed stats are computed
+   * separately from the trace.
+   */
+  analysis?: ComplexityAnalysisResult;
 }
 
 /**
@@ -522,6 +529,50 @@ export interface ComplexityAnalysisResult {
     value: number;
     definition: string;
   }[];
+  /**
+   * R7.3 conservative-analyzer fields (source === "auto-supported"). The
+   * analyzer (src/engine/complexity_analyzer.py) establishes a bound ONLY for
+   * the supported forms; otherwise it returns source "not-determined" with an
+   * `uncertaintyReason`.
+   */
+  /** Analysis scope for the auto-supported bound. */
+  scope?: "program" | "function" | "operation";
+  /** The established time bound, e.g. "O(n1·n2)". */
+  time?: string;
+  /** Structurally-named input-size variables (never inferred from names). */
+  sizeVars?: { symbol: string; meaning: string }[];
+  /** Plain-English supported local findings behind the bound. */
+  supportedFindings?: string[];
+}
+
+/**
+ * R7.6 — an authored baseline-vs-improved comparison experiment. Both
+ * implementations solve the SAME problem; the harness runs them on equivalent
+ * fresh inputs of several sizes, VERIFIES they produce equal results, and
+ * compares a clearly-defined OPERATION COUNT (observed, per input size). The
+ * theoretical growth curve is labelled separately from the observed counts;
+ * traced timing is never used as a benchmark.
+ */
+export interface ComparisonExperiment {
+  id: string;
+  title: string;
+  /** What the two implementations compute (for the equal-output check). */
+  problem: string;
+  /** Python that defines `gen(size)` returning the call arguments for a size. */
+  inputGenerator: string;
+  /** The baseline implementation: defines `solve(*args)`. */
+  baseline: { label: string; code: string; theoretical: string };
+  /** The improved implementation: defines `solve(*args)`. */
+  improved: { label: string; code: string; theoretical: string };
+  /** Input sizes to compare at. */
+  sizes: number[];
+  /**
+   * A named operation to count in each implementation, defined as a Python
+   * expression the harness increments — expressed as a counter the code calls
+   * `__op()` at the point of the counted operation. Both implementations must
+   * count the SAME kind of operation for the comparison to be meaningful.
+   */
+  operation: string;
 }
 
 /**

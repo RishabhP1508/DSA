@@ -193,7 +193,11 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
             explanation={lesson.complexityExplanation}
             result={engine.result}
             onHighlightLines={setCxHighlight}
-            fixedData
+            currentIndex={engine.position}
+            // R7.4 — the "this run vs the general algorithm" section is shown
+            // only when the author declared the example uses fixed literal data
+            // (fixedDataNote), not unconditionally.
+            fixedData={Boolean(lesson.complexityExplanation.fixedDataNote)}
           />
         )}
       </div>

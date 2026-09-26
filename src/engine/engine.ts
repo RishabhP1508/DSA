@@ -345,6 +345,7 @@ export class ExecutionEngine {
           limitHit: pay.limitHit,
           error: pay.error,
           exitCode: pay.exitCode,
+          analysis: pay.analysis,
         });
         return;
       }
