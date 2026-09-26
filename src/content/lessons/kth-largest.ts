@@ -159,9 +159,9 @@ There's an important alternative worth knowing: **Quickselect** (a partial quick
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "26a1e3942362c56d",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "df0d6174cd1d4269",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 4,

@@ -144,9 +144,9 @@ You will use this style of reasoning throughout: state what stays true, check th
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "bbe19b60be936c65",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "76121f369b7dcc0c",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 1,

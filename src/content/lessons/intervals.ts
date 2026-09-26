@@ -155,9 +155,9 @@ This is a **greedy sweep**: sorting guarantees that once you move past an interv
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "dd19cbd5f67b20d0",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "c8e094528cb87a81",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 2,

@@ -182,9 +182,9 @@ Complexity is the honest scary part of backtracking. From each of the \`m·n\` s
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "d20741b6c70583e8",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "ba9d6414cb6089f8",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 5,

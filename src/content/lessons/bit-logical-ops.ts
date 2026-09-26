@@ -146,9 +146,9 @@ Each operation is **O(1)** on machine-word integers (a fixed number of hardware 
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "83dfb7176d0862bb",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "45ff320caba8429c",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 2,

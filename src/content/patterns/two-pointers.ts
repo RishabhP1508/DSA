@@ -189,9 +189,9 @@ export const twoPointersPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "c2de5e2be9b19faf",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "c81867b731e0b97f",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 2,

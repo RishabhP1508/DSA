@@ -145,9 +145,9 @@ Python has three "division-like" operators that beginners often confuse: \`/\` i
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "0031a9400b72ef46",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "f468a4884157f52b",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 1,

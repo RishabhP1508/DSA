@@ -157,9 +157,9 @@ The idea is repeated **relaxation**. A shortest path in a graph with V vertices 
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "f332f8640ae28309",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "3d50c4a7c359763c",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 5,

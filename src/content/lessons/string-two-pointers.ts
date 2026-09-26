@@ -151,9 +151,9 @@ The early \`break\` gives a good best case (a mismatch at the very first pair is
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "0c5053ccf16d1910",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "3f515bb6c7e7b375",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 2,

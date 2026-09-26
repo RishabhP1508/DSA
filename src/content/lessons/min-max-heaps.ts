@@ -190,9 +190,9 @@ Before 3.14 (and still, if you want code that runs on 3.11–3.13) the classic w
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "29ace62fcb4adc2d",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "92fff25d8392e6cb",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 4,

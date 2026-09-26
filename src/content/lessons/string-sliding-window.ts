@@ -169,9 +169,9 @@ Crucially, \`start\` only ever moves **forward**, and \`i\` moves forward once p
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "305dfbb81644ed5c",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "e7a511cafe0e3e6d",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 2,

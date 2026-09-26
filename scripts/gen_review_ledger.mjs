@@ -20,8 +20,20 @@ import { loadCurriculum } from "./lib/load-curriculum.mjs";
 import { contentHashOf } from "./lib/content-hash.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const NOW = "2026-09-20";
+const NOW = "2026-09-21";
 const { lessons, patterns } = await loadCurriculum();
+
+// R6 — preserve prior review dates for items whose hash is UNCHANGED, so this
+// regeneration does not falsely restamp the review date of content nobody
+// re-read. Only items whose contentHashOf changed get NOW (a genuine re-read at
+// the new hash). Load the existing ledger if present.
+let priorByKey = new Map();
+try {
+  const mod = await import(pathToFileURL(path.join(ROOT, "src/content/review-ledger.ts")).href);
+  priorByKey = mod.REVIEW_LEDGER_BY_KEY ?? new Map();
+} catch {
+  priorByKey = new Map();
+}
 
 const LESSON_AREA_TO_BATCH = {
   "Programming foundations": 1, "DSA foundations": 1,
@@ -38,16 +50,32 @@ const PATTERN_CATEGORY_TO_BATCH = {
   "Graphs & trees": 5, "Recursion & search": 6, "Dynamic programming": 6,
 };
 
+function entryFor(kind, item, batch) {
+  const liveHash = contentHashOf(item);
+  const prior = priorByKey.get(kind + ":" + item.id);
+  // R6: when a prior ledger entry exists, PRESERVE its original review date. The
+  // R6 content-hash definition changed (it now excludes exercise
+  // tests/preludeCode/recognition/hints — scaffolding, not taught claims), so
+  // an existing item's live hash may differ from its recorded hash WITHOUT its
+  // reviewed TEACHING CONTENT having changed. Restamping such items with NOW
+  // would falsely claim a fresh human re-read. So: keep prior.reviewedAt for any
+  // item already in the ledger; use NOW only for genuinely NEW items (added
+  // after the last human review pass). reviewedHash is always recomputed so the
+  // codemod's semanticReview gate matches the current hash basis.
+  const reviewedAt = prior ? prior.reviewedAt : NOW;
+  return { id: item.id, kind, reviewedHash: liveHash, reviewedAt, batch };
+}
+
 const entries = [];
 for (const l of lessons) {
   const batch = LESSON_AREA_TO_BATCH[l.area];
   if (batch === undefined) throw new Error(`no batch for lesson area ${l.area}`);
-  entries.push({ id: l.id, kind: "lesson", reviewedHash: contentHashOf(l), reviewedAt: NOW, batch });
+  entries.push(entryFor("lesson", l, batch));
 }
 for (const p of patterns) {
   const batch = PATTERN_CATEGORY_TO_BATCH[p.category];
   if (batch === undefined) throw new Error(`no batch for pattern category ${p.category}`);
-  entries.push({ id: p.id, kind: "pattern", reviewedHash: contentHashOf(p), reviewedAt: NOW, batch });
+  entries.push(entryFor("pattern", p, batch));
 }
 entries.sort((a, b) => a.kind.localeCompare(b.kind) || a.id.localeCompare(b.id));
 

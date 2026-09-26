@@ -19,6 +19,7 @@ import { recordExerciseAttempt } from "../storage/progress";
 import { exerciseUid, type OwnerKind } from "../storage/exercise-id";
 import { CodeEditor } from "./CodeEditor";
 import { useExerciseRunner } from "./useExerciseRunner";
+import { RecognitionPanel } from "./RecognitionPanel";
 
 const KIND_LABEL: Record<Exercise["kind"], string> = {
   "predict-state": "Predict the state",
@@ -43,6 +44,7 @@ export function ExercisePanel({
   ownerId: string;
 }) {
   const runnable = Boolean(exercise.tests);
+  const recognition = exercise.recognition;
   const [answer, setAnswer] = useState("");
   const [code, setCode] = useState(exercise.starterCode ?? "");
   const [revealed, setRevealed] = useState(0);
@@ -67,7 +69,7 @@ export function ExercisePanel({
   };
 
   const runTests = async () => {
-    await runner.runCheck(code, exercise.tests ?? "");
+    await runner.runCheck(code, exercise.tests ?? "", exercise.preludeCode);
   };
 
   const outcome = runner.outcome;
@@ -87,7 +89,12 @@ export function ExercisePanel({
         <p className="exercise-prompt">{exercise.prompt}</p>
       </div>
 
-      {runnable ? (
+      {!runnable && recognition ? (
+        <RecognitionPanel
+          grading={recognition}
+          onGraded={(accepted) => record(accepted)}
+        />
+      ) : runnable ? (
         <div className="runnable-block">
           <div className="dim tiny">Edit the code, then run the tests.</div>
           <CodeEditor value={code} onChange={setCode} />

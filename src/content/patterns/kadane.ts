@@ -179,9 +179,9 @@ export const kadanePattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "2f4bdf4bdc3a5307",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "efd782e62a56c770",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 2,

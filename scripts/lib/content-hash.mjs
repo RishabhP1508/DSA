@@ -25,6 +25,32 @@
  */
 import { createHash } from "node:crypto";
 
+/**
+ * R6 — project an exercise to its LEARNER-FACING, CLAIM-BEARING fields for the
+ * content hash. The R6 additions `tests` and `preludeCode` are the machine
+ * VERIFICATION harness (proven separately by scripts/verify_exercise_tests.mjs),
+ * and `recognition` is structured grading DATA (validated by
+ * validateRecognition); none of them are teaching prose a human reviews for the
+ * correctness of a taught CLAIM. Excluding them keeps the hash's contract intact
+ * — "a change to a taught claim invalidates prior semantic-review evidence" —
+ * without treating the addition of a test harness as a teaching-claim edit (which
+ * would falsely revert R5's human review of unchanged prose). The claim-bearing
+ * exercise fields (prompt, starterCode, expected model answer, hints,
+ * correctPatternId) ARE still hashed.
+ */
+function exerciseClaimFields(ex) {
+  if (!ex || typeof ex !== "object") return ex;
+  // `hints` are progressive learner SCAFFOLDING (the 6-stage help ladder), not
+  // the authoritative taught claim — the claim lives in the lesson explanation,
+  // code, complexity, and the exercise prompt/expected. Like `tests`/
+  // `preludeCode` (verification harness) and `recognition` (grading data), hints
+  // are excluded so adding/expanding them does not falsely revert the human
+  // semantic-review of unchanged teaching prose. The claim-bearing exercise
+  // fields (prompt, starterCode, expected) remain hashed.
+  const { tests: _t, preludeCode: _p, recognition: _r, hints: _h, ...claim } = ex;
+  return claim;
+}
+
 function canonical(value) {
   if (Array.isArray(value)) return value.map(canonical);
   if (value && typeof value === "object") {
@@ -54,7 +80,7 @@ function lessonProjection(l) {
     // both the summary complexity table AND the structured explanation
     complexity: l.complexity ?? null,
     complexityExplanation: l.complexityExplanation ?? null,
-    exercises: l.exercises,
+    exercises: (l.exercises ?? []).map(exerciseClaimFields),
     experiments: l.experiments ?? null,
     prediction: l.prediction,
     references: l.references,
@@ -80,7 +106,7 @@ function patternProjection(p) {
     conditions: p.conditions,
     alternatives: p.alternatives,
     counterexamples: p.counterexamples,
-    exercises: p.exercises,
+    exercises: (p.exercises ?? []).map(exerciseClaimFields),
     // both the short complexity note AND the structured explanation
     complexityNote: p.complexityNote ?? null,
     complexityExplanation: p.complexityExplanation ?? null,

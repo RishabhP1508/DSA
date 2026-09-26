@@ -182,9 +182,9 @@ For an **undirected** graph, the check is: during DFS, if you reach a neighbour 
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "fb9a0abc24bacb9b",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "20404691a974a7c3",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 5,

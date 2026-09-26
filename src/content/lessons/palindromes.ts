@@ -143,9 +143,9 @@ Which to use? The slice is perfect for clarity and small strings; the two-pointe
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "95071746a9dc61f6",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "ac37883cb5daa819",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 2,

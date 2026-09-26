@@ -138,9 +138,9 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "dfc89aa5393f06da",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "6c798609f0518c64",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 1,

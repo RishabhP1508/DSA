@@ -192,9 +192,9 @@ export const prefixSumsHashmapPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "cc9c58251e7081ba",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "178e7f330fe6c912",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 2,

@@ -223,9 +223,9 @@ The instructive contrast with unique paths is the **combiner**: counting uses \`
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "4f7e05cac4c48fd1",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "5ae3491ae702ef5f",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 6,

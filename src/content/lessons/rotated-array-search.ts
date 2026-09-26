@@ -182,9 +182,9 @@ This is binary search adapted to a broken-but-structured order. The same "which 
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "12bfcc593bb15c8a",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "2363c807562f89ee",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 3,

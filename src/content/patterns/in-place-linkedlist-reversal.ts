@@ -229,9 +229,9 @@ export const inPlaceLinkedListReversalPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "a36c98667b7f633c",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "8ef3ef9cc48bd3e7",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 4,

@@ -379,14 +379,101 @@ export interface Exercise {
   /** Reference/expected solution or expected output. */
   expected?: string;
   /**
+   * R6: optional scaffold prepended before the learner's code when running
+   * tests, so a lesson code FRAGMENT (which references names defined elsewhere
+   * in the lesson, or is a loop body / method body) becomes a complete, runnable
+   * program. The learner does not edit the prelude; it supplies the surrounding
+   * context (imports, fixtures, a wrapping function/class). When present the run
+   * source is `preludeCode + learnerCode + tests`.
+   */
+  preludeCode?: string;
+  /**
    * Optional Python test snippet appended after the learner's code and run on
    * the real engine. Use `assert` for property checks and `print` to surface a
    * failing input. When present, the exercise becomes runnable ("Run tests")
    * with pass/fail feedback instead of self-assessment.
    */
   tests?: string;
-  /** Progressive hints, revealed one at a time. */
+  /**
+   * Progressive hints, revealed one at a time. For coding and recognition
+   * exercises the R6 hint progression is the six authored stages: understand
+   * the example; identify repeated work/storage; reveal a useful property;
+   * suggest an approach; show pseudocode; reveal the explained solution.
+   */
   hints: string[];
+  /**
+   * R6: authored recognition grading for `choose-approach` exercises. When
+   * present, the exercise presents structured approach + reason choices and is
+   * graded against this data (acceptable approaches, required reasons, valid
+   * alternatives with conditions, rejection feedback) instead of pure
+   * self-assessment. Free-text reflection remains ungraded.
+   */
+  recognition?: RecognitionGrading;
+}
+
+/**
+ * R6 authored recognition grading. Grades a learner's (approach, reason) pair
+ * against authored data — never by keyword-matching free prose.
+ *
+ * A submission is ACCEPTED when the chosen approach is `acceptable` (or a valid
+ * `alternative` whose stated conditions hold) AND the chosen reason is one of
+ * that approach's `requiredReasonIds`. It is REJECTED when the approach is ruled
+ * out by the constraints, or the reason is a `contradictory` one, or the
+ * approach/reason pair is not sanctioned; rejection returns authored feedback.
+ */
+export interface RecognitionGrading {
+  /** The scenario/constraints the learner reasons about (may repeat the prompt). */
+  scenario: string;
+  /** Candidate approaches the learner chooses among. */
+  approaches: RecognitionApproach[];
+  /** Selectable reasons (justifications) the learner pairs with an approach. */
+  reasons: RecognitionReason[];
+  /**
+   * Approach ids that are correct for the primary constraints. Each must also
+   * declare its `requiredReasonIds` on the approach entry.
+   */
+  acceptableApproachIds: string[];
+  /**
+   * Valid alternative approaches that are acceptable only when their conditions
+   * hold (e.g. "prefix sums also work here"). Explains the tradeoff.
+   */
+  alternatives?: {
+    approachId: string;
+    /** When this alternative is acceptable. */
+    conditions: string;
+    /** Why one might still prefer the primary approach. */
+    tradeoff: string;
+    /** Reason ids that justify this alternative. */
+    requiredReasonIds: string[];
+  }[];
+  /** Optional free-text reflection prompt; NEVER auto-graded. */
+  reflectionPrompt?: string;
+  /** Model explanation shown for the reflection / on reveal. */
+  modelExplanation: string;
+}
+
+export interface RecognitionApproach {
+  id: string;
+  /** Short label, e.g. "Fixed-size sliding window". */
+  label: string;
+  /**
+   * Reason ids that MUST accompany this approach for it to be accepted (for an
+   * acceptable or alternative approach). Empty for approaches that are never
+   * acceptable.
+   */
+  requiredReasonIds: string[];
+  /** Feedback shown when this approach is chosen but ruled out. */
+  rejectionFeedback?: string;
+}
+
+export interface RecognitionReason {
+  id: string;
+  text: string;
+  /**
+   * True when this reason is contradictory/incorrect regardless of approach
+   * (e.g. cites a property the input does not have). Selecting it never passes.
+   */
+  contradictory?: boolean;
 }
 
 /** Complexity claim for an operation or the lesson subject (summary table row). */

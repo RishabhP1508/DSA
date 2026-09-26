@@ -157,9 +157,9 @@ This runs in **O(n)** time with **O(n)** worst-case stack space (a string of all
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "d0fc1e6b9db9b427",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "ac8bf5cbb2887d67",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 4,

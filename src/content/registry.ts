@@ -167,8 +167,9 @@ import { dynamicProgrammingPattern } from "./patterns/dynamic-programming";
 import { divideAndConquerPattern } from "./patterns/divide-and-conquer";
 import { greedyIntervalSchedulingPattern } from "./patterns/greedy-interval-scheduling";
 import { matrixTraversalPattern } from "./patterns/matrix-traversal";
+import { attachExerciseData } from "./exercise-tests";
 
-export const lessons: LessonDefinition[] = [
+const _lessons: LessonDefinition[] = [
   // Programming foundations
   variablesAndTypes,
   expressions,
@@ -318,7 +319,7 @@ export const lessons: LessonDefinition[] = [
   kmp,
 ];
 
-export const patterns: PatternDefinition[] = [
+const _patterns: PatternDefinition[] = [
   // Arrays & strings
   slidingWindowPattern,
   prefixSumsHashmapPattern,
@@ -364,6 +365,14 @@ export const patterns: PatternDefinition[] = [
   // Sorting & divide-and-conquer
   divideAndConquerPattern,
 ];
+
+// R6: merge authored runnable-exercise tests and recognition grading onto the
+// exercises (pure; keyed by uid ownerKind:ownerId:exerciseId). Both the UI and
+// the Node verifier read from these exported arrays, so they see identical
+// objects with `tests`/`recognition` attached.
+const _merged = attachExerciseData(_lessons, _patterns);
+export const lessons: LessonDefinition[] = _merged.lessons;
+export const patterns: PatternDefinition[] = _merged.patterns;
 
 export function getLesson(id: string): LessonDefinition | undefined {
   return lessons.find((l) => l.id === id);

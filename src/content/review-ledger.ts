@@ -25,1120 +25,1120 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "adjacency-lists",
     "kind": "lesson",
-    "reviewedHash": "acf53e74cf68e6c1",
+    "reviewedHash": "7f68c2c7ebc515cc",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "amortized",
     "kind": "lesson",
-    "reviewedHash": "df41c96b0cd163e2",
+    "reviewedHash": "ce94e80ff544fa4f",
     "reviewedAt": "2026-09-20",
     "batch": 1
   },
   {
     "id": "anagrams",
     "kind": "lesson",
-    "reviewedHash": "97beb74ee9a56a67",
+    "reviewedHash": "b12a78a25235425e",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "array-traversal",
     "kind": "lesson",
-    "reviewedHash": "a6683bf342da2d72",
+    "reviewedHash": "f616daf8c6cd1672",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "avl-rotations",
     "kind": "lesson",
-    "reviewedHash": "bbcd62975022d36d",
+    "reviewedHash": "adeb4dcb3fff93c5",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "bellman-ford",
     "kind": "lesson",
-    "reviewedHash": "f332f8640ae28309",
+    "reviewedHash": "3d50c4a7c359763c",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "bfs-queues",
     "kind": "lesson",
-    "reviewedHash": "c7b585674290f9d4",
+    "reviewedHash": "a2ce1fbf3a6e289b",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "binary-search",
     "kind": "lesson",
-    "reviewedHash": "d21d0a0e796c9bee",
+    "reviewedHash": "858676ebe239736a",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "binary-search-answer",
     "kind": "lesson",
-    "reviewedHash": "12891e8de1aaae8b",
+    "reviewedHash": "4d882f930f6d95d4",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "bit-check-set-clear",
     "kind": "lesson",
-    "reviewedHash": "aa2494271ae5faaa",
+    "reviewedHash": "26f65c64c99c9b43",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "bit-logical-ops",
     "kind": "lesson",
-    "reviewedHash": "83dfb7176d0862bb",
+    "reviewedHash": "45ff320caba8429c",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "bit-shifts",
     "kind": "lesson",
-    "reviewedHash": "57390a348f03f7e2",
+    "reviewedHash": "790ea4afc87d7ed1",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "bounds",
     "kind": "lesson",
-    "reviewedHash": "1716bd90dcb9bf8d",
+    "reviewedHash": "edecf44dc364f302",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "bst-operations",
     "kind": "lesson",
-    "reviewedHash": "4d3da813c2e5a8e4",
+    "reviewedHash": "621da21591ad3de3",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "bubble-sort",
     "kind": "lesson",
-    "reviewedHash": "15117d367ff3ea1f",
+    "reviewedHash": "52c4327b96e4414f",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "bucket-sort",
     "kind": "lesson",
-    "reviewedHash": "4ce22d75e5db9ed6",
+    "reviewedHash": "309dedebdb8017e4",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "caching-seen",
     "kind": "lesson",
-    "reviewedHash": "9d6a927bf0e5b46a",
+    "reviewedHash": "e6176608e19165d1",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "cases",
     "kind": "lesson",
-    "reviewedHash": "1209e895786f399f",
+    "reviewedHash": "3071b09105a0b4fe",
     "reviewedAt": "2026-09-20",
     "batch": 1
   },
   {
     "id": "classes",
     "kind": "lesson",
-    "reviewedHash": "7ad5c0b0b6d0c22f",
+    "reviewedHash": "21447fd00300d564",
     "reviewedAt": "2026-09-20",
     "batch": 1
   },
   {
     "id": "comparators",
     "kind": "lesson",
-    "reviewedHash": "c640669672b5c73f",
+    "reviewedHash": "9d38dedfe3c0ac31",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "complexity",
     "kind": "lesson",
-    "reviewedHash": "82f8046bf5a953e3",
+    "reviewedHash": "e8a0d4d6d10a6c0b",
     "reviewedAt": "2026-09-20",
     "batch": 1
   },
   {
     "id": "conditions",
     "kind": "lesson",
-    "reviewedHash": "dfc89aa5393f06da",
+    "reviewedHash": "6c798609f0518c64",
     "reviewedAt": "2026-09-20",
     "batch": 1
   },
   {
     "id": "connected-components",
     "kind": "lesson",
-    "reviewedHash": "4f76bc47ed30a856",
+    "reviewedHash": "2f833866cd25c402",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "correctness",
     "kind": "lesson",
-    "reviewedHash": "bbe19b60be936c65",
+    "reviewedHash": "76121f369b7dcc0c",
     "reviewedAt": "2026-09-20",
     "batch": 1
   },
   {
     "id": "count-set-bits",
     "kind": "lesson",
-    "reviewedHash": "8fa5a5886bff758a",
+    "reviewedHash": "1eb24d36b17f395d",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "counting-sort",
     "kind": "lesson",
-    "reviewedHash": "1f4e7ea019cc7533",
+    "reviewedHash": "366a8d4778374e38",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "dijkstra",
     "kind": "lesson",
-    "reviewedHash": "fed7b9baec3e2464",
+    "reviewedHash": "daa83e77d9ad9981",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "dp-1d-2d",
     "kind": "lesson",
-    "reviewedHash": "010df59c32e2771e",
+    "reviewedHash": "c0322a7aa8f75947",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-backtracking",
     "kind": "lesson",
-    "reviewedHash": "cd588546b241553b",
+    "reviewedHash": "f45dfe337744e8d1",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-base-cases",
     "kind": "lesson",
-    "reviewedHash": "e97f44ebd92612d7",
+    "reviewedHash": "50f8db5a407a2386",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-climbing-stairs",
     "kind": "lesson",
-    "reviewedHash": "c3b9b07d34ca592e",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "da18e0dc3179927d",
+    "reviewedAt": "2026-09-21",
     "batch": 6
   },
   {
     "id": "dp-coin-change",
     "kind": "lesson",
-    "reviewedHash": "490a600b4651693f",
+    "reviewedHash": "6a4b7dc2fc0c141a",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-combinations",
     "kind": "lesson",
-    "reviewedHash": "d8348c1f82ebf7c9",
+    "reviewedHash": "728b4e6f50b0a001",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-divide-and-conquer",
     "kind": "lesson",
-    "reviewedHash": "00e75e6c611fc44b",
+    "reviewedHash": "60b2b686e927ece5",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-grid-paths",
     "kind": "lesson",
-    "reviewedHash": "4f7e05cac4c48fd1",
+    "reviewedHash": "5ae3491ae702ef5f",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-house-robber",
     "kind": "lesson",
-    "reviewedHash": "4770a85e88b0d403",
+    "reviewedHash": "418441b9c60bf081",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-knapsack",
     "kind": "lesson",
-    "reviewedHash": "c77a488534b0dbdf",
+    "reviewedHash": "d78b986ca8eb438e",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-lcs",
     "kind": "lesson",
-    "reviewedHash": "37cee5ef9dd92716",
+    "reviewedHash": "cd8a47388ef49f98",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-lis",
     "kind": "lesson",
-    "reviewedHash": "24ce470bc7fc7510",
+    "reviewedHash": "09fda4bb9f74739d",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-memoization",
     "kind": "lesson",
-    "reviewedHash": "080bdcb900a9f453",
+    "reviewedHash": "3be2a477955dc070",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-n-queens",
     "kind": "lesson",
-    "reviewedHash": "15b3247eca96e9a0",
+    "reviewedHash": "e4110d6cb8a37817",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-permutations",
     "kind": "lesson",
-    "reviewedHash": "939b89d03e8efe2c",
+    "reviewedHash": "bad1d9f45bfeb32a",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-recursive-calls",
     "kind": "lesson",
-    "reviewedHash": "d266e7b616b7c900",
+    "reviewedHash": "7ff86b664bf2e25c",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-state-transitions",
     "kind": "lesson",
-    "reviewedHash": "6b8bf29b7a8008fb",
+    "reviewedHash": "9e4facb93c49195a",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-subsequences",
     "kind": "lesson",
-    "reviewedHash": "4502c3b49c252a77",
+    "reviewedHash": "1a4727e017c902bc",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-subsets",
     "kind": "lesson",
-    "reviewedHash": "ac7949d9001b72dd",
+    "reviewedHash": "b602aea1318dabb9",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "dp-tabulation",
     "kind": "lesson",
-    "reviewedHash": "2d202287c95a1993",
+    "reviewedHash": "83adced1c625a49a",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "duplicate-detection",
     "kind": "lesson",
-    "reviewedHash": "230037c80a8b7f76",
+    "reviewedHash": "6aee44733fc5647b",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "errors",
     "kind": "lesson",
-    "reviewedHash": "935f03e64e7a8423",
+    "reviewedHash": "ebcb0f13434b9c81",
     "reviewedAt": "2026-09-20",
     "batch": 1
   },
   {
     "id": "expression-evaluation",
     "kind": "lesson",
-    "reviewedHash": "562a44ce56ec57fd",
+    "reviewedHash": "b7bfb5e829ac0a3c",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "expressions",
     "kind": "lesson",
-    "reviewedHash": "0031a9400b72ef46",
+    "reviewedHash": "f468a4884157f52b",
     "reviewedAt": "2026-09-20",
     "batch": 1
   },
   {
     "id": "fenwick-tree",
     "kind": "lesson",
-    "reviewedHash": "8cd9c596dba9c38c",
+    "reviewedHash": "d8c35612ca1fa2da",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "floyd-warshall",
     "kind": "lesson",
-    "reviewedHash": "0054644f6ce1b021",
+    "reviewedHash": "4e91454e6ba0b498",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "functions",
     "kind": "lesson",
-    "reviewedHash": "8a4cf399be4cfaa9",
+    "reviewedHash": "7d799d6d7e822e95",
     "reviewedAt": "2026-09-20",
     "batch": 1
   },
   {
     "id": "graph-bfs",
     "kind": "lesson",
-    "reviewedHash": "382e88786482a4ab",
+    "reviewedHash": "811f24f1f6600b3d",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "graph-cycle-detection",
     "kind": "lesson",
-    "reviewedHash": "fb9a0abc24bacb9b",
+    "reviewedHash": "20404691a974a7c3",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "graph-dfs",
     "kind": "lesson",
-    "reviewedHash": "53e5fcf1bd53b057",
+    "reviewedHash": "9652c3ab9322257b",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "graph-representations",
     "kind": "lesson",
-    "reviewedHash": "7d1fbf4143bcbf7d",
+    "reviewedHash": "5171166c687dd224",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "grouping",
     "kind": "lesson",
-    "reviewedHash": "737cf029a3a7afa3",
+    "reviewedHash": "ffb83aa3cdf61059",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "hashing-frequency",
     "kind": "lesson",
-    "reviewedHash": "919f88fdbd87b5af",
+    "reviewedHash": "60952d2af4740c9d",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "heap-sift",
     "kind": "lesson",
-    "reviewedHash": "661843ab16264d08",
+    "reviewedHash": "a5b7db93c08fb145",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "heap-sort",
     "kind": "lesson",
-    "reviewedHash": "19e3fad50a51dfd5",
+    "reviewedHash": "04b645b046888e1f",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "in-place-modification",
     "kind": "lesson",
-    "reviewedHash": "d8f67eacc96b75e2",
+    "reviewedHash": "a2df1a265529b0c1",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "insertion-sort",
     "kind": "lesson",
-    "reviewedHash": "f3ec2e8f7473cd6a",
+    "reviewedHash": "ca9b001787731a5c",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "interval-sorting",
     "kind": "lesson",
-    "reviewedHash": "49724a8fb9f03e24",
+    "reviewedHash": "513f8dd67a2dc080",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "intervals",
     "kind": "lesson",
-    "reviewedHash": "dd19cbd5f67b20d0",
+    "reviewedHash": "c8e094528cb87a81",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "io",
     "kind": "lesson",
-    "reviewedHash": "0c34394abcb68771",
+    "reviewedHash": "6f85c9e72a228543",
     "reviewedAt": "2026-09-20",
     "batch": 1
   },
   {
     "id": "kadane",
     "kind": "lesson",
-    "reviewedHash": "ac44661c3fb5bc41",
+    "reviewedHash": "aaf71317c6005d87",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "kmp",
     "kind": "lesson",
-    "reviewedHash": "eac8660e504ddee6",
+    "reviewedHash": "446d68e0a7001797",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "kruskal",
     "kind": "lesson",
-    "reviewedHash": "72dc25240000bb2b",
+    "reviewedHash": "e3dbeae2bcc7dcb9",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "kth-largest",
     "kind": "lesson",
-    "reviewedHash": "26a1e3942362c56d",
+    "reviewedHash": "df0d6174cd1d4269",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "linear-search",
     "kind": "lesson",
-    "reviewedHash": "c99b9daa622305fd",
+    "reviewedHash": "e5deba3966b36eae",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "linked-list-cycle-detection",
     "kind": "lesson",
-    "reviewedHash": "215b87bdeace9f0b",
+    "reviewedHash": "e3a452a6d8c59008",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "linked-list-deques",
     "kind": "lesson",
-    "reviewedHash": "0d245a88161095ab",
+    "reviewedHash": "51ed8899310a33e7",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "linked-list-dummy-nodes",
     "kind": "lesson",
-    "reviewedHash": "d2a7e4a1cc56afba",
+    "reviewedHash": "48c4dd2c6e4b4662",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "linked-list-merging",
     "kind": "lesson",
-    "reviewedHash": "61896f0e4aa70951",
+    "reviewedHash": "59f1efab7036d3f8",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "linked-list-middle",
     "kind": "lesson",
-    "reviewedHash": "e796e46510cc0078",
+    "reviewedHash": "2d52848498c4f4e2",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "linked-list-pointer-manipulation",
     "kind": "lesson",
-    "reviewedHash": "fd320af46eb9c09e",
+    "reviewedHash": "01743459a398036c",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "linked-list-reversal",
     "kind": "lesson",
-    "reviewedHash": "ec9e65ff7a3d42ff",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "857315a8c745ea34",
+    "reviewedAt": "2026-09-21",
     "batch": 4
   },
   {
     "id": "linked-list-slow-fast",
     "kind": "lesson",
-    "reviewedHash": "3b1198567adc22b0",
+    "reviewedHash": "362e77924370cd15",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "linked-list-traversal",
     "kind": "lesson",
-    "reviewedHash": "a83276a2f18bd51c",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "b8eea42d6735a88f",
+    "reviewedAt": "2026-09-21",
     "batch": 4
   },
   {
     "id": "linked-list-variants",
     "kind": "lesson",
-    "reviewedHash": "930cee5b8ff7a9ad",
+    "reviewedHash": "9b42c27282fa4e5a",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "loops",
     "kind": "lesson",
-    "reviewedHash": "8652678e5497d9c4",
+    "reviewedHash": "deea373a486b5371",
     "reviewedAt": "2026-09-20",
     "batch": 1
   },
   {
     "id": "lowest-common-ancestor",
     "kind": "lesson",
-    "reviewedHash": "8fa7d7ce6ae0a3ca",
+    "reviewedHash": "1354410f680a391d",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "maps-sets",
     "kind": "lesson",
-    "reviewedHash": "4f48d5c53a071da7",
+    "reviewedHash": "661c4d8cff1ea841",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "matrix-search",
     "kind": "lesson",
-    "reviewedHash": "1344987a074e5df0",
+    "reviewedHash": "eec14557b61b2f6a",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "matrix-traversal",
     "kind": "lesson",
-    "reviewedHash": "0706cb68dea95a7a",
+    "reviewedHash": "ddc73b7d60517a2b",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "merge-sort",
     "kind": "lesson",
-    "reviewedHash": "f6de8048ab5d8d89",
+    "reviewedHash": "458cbc7314588dfb",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "merge-sorted-data",
     "kind": "lesson",
-    "reviewedHash": "7c6cb70710713bc5",
+    "reviewedHash": "cebf06d98c187c83",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "min-max-heaps",
     "kind": "lesson",
-    "reviewedHash": "29ace62fcb4adc2d",
+    "reviewedHash": "92fff25d8392e6cb",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "min-max-tracking",
     "kind": "lesson",
-    "reviewedHash": "3919ac49b17bad05",
+    "reviewedHash": "2574f926717eb8f3",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "monotonic-stack",
     "kind": "lesson",
-    "reviewedHash": "5ca8e54606f871f9",
+    "reviewedHash": "2798e6cda01da93a",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "multi-source-bfs",
     "kind": "lesson",
-    "reviewedHash": "c96edf1aa43e6cc3",
+    "reviewedHash": "fb978bd14a94836d",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "palindromes",
     "kind": "lesson",
-    "reviewedHash": "95071746a9dc61f6",
+    "reviewedHash": "ac37883cb5daa819",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "parentheses-matching",
     "kind": "lesson",
-    "reviewedHash": "d0fc1e6b9db9b427",
+    "reviewedHash": "ac8bf5cbb2887d67",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "prefix-search",
     "kind": "lesson",
-    "reviewedHash": "175bba019a175975",
+    "reviewedHash": "cbb946da658a13ec",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "prefix-sums",
     "kind": "lesson",
-    "reviewedHash": "fc196b7aeb3fab57",
+    "reviewedHash": "92a7f8ab934d6310",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "prefix-sums-map",
     "kind": "lesson",
-    "reviewedHash": "57a9438955b80cea",
+    "reviewedHash": "f8d7f87c48b5cee9",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "prim",
     "kind": "lesson",
-    "reviewedHash": "7b95bb3d8a19af4c",
+    "reviewedHash": "f8f767d2d2b389fb",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "quick-sort",
     "kind": "lesson",
-    "reviewedHash": "e310478b9e80e5b9",
+    "reviewedHash": "6ddeedabb64ddfc0",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "radix-sort",
     "kind": "lesson",
-    "reviewedHash": "a92f35299a603e37",
+    "reviewedHash": "e07f1331233791ca",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "references-mutation",
     "kind": "lesson",
-    "reviewedHash": "0237324213b22cc2",
+    "reviewedHash": "bdfd71de6dbf2fdf",
     "reviewedAt": "2026-09-20",
     "batch": 1
   },
   {
     "id": "representations",
     "kind": "lesson",
-    "reviewedHash": "234fdd7bef71bb6e",
+    "reviewedHash": "c8890b6f2e543964",
     "reviewedAt": "2026-09-20",
     "batch": 1
   },
   {
     "id": "rotated-array-search",
     "kind": "lesson",
-    "reviewedHash": "12bfcc593bb15c8a",
+    "reviewedHash": "2363c807562f89ee",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "running-median",
     "kind": "lesson",
-    "reviewedHash": "751ae8ae83b298db",
+    "reviewedHash": "32b6550144481f53",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "scope",
     "kind": "lesson",
-    "reviewedHash": "35f184459c464a8b",
+    "reviewedHash": "fa66cb266bc57f18",
     "reviewedAt": "2026-09-20",
     "batch": 1
   },
   {
     "id": "segment-tree",
     "kind": "lesson",
-    "reviewedHash": "37ccd62898f3b611",
+    "reviewedHash": "d48da2f9cd658834",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "selection-sort",
     "kind": "lesson",
-    "reviewedHash": "d705f40e376781b1",
+    "reviewedHash": "367a32685f5d8fdb",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "shortest-paths-unweighted",
     "kind": "lesson",
-    "reviewedHash": "e18032f91ae15e60",
+    "reviewedHash": "cf7f9d2070eb5686",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "sliding-window",
     "kind": "lesson",
-    "reviewedHash": "25ad7561287d0a04",
+    "reviewedHash": "74bfa7e672eeddf1",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "stack-queue-operations",
     "kind": "lesson",
-    "reviewedHash": "8c4637f0b9e6b67c",
+    "reviewedHash": "c5524ee01c9035cd",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "string-frequency",
     "kind": "lesson",
-    "reviewedHash": "2689a28ccd8cbdf2",
+    "reviewedHash": "b5e9d6c9b83f14e6",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "string-parsing",
     "kind": "lesson",
-    "reviewedHash": "64a5b2cab101bb4a",
+    "reviewedHash": "a93ae24bc0c537f6",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "string-sliding-window",
     "kind": "lesson",
-    "reviewedHash": "305dfbb81644ed5c",
+    "reviewedHash": "e7a511cafe0e3e6d",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "string-two-pointers",
     "kind": "lesson",
-    "reviewedHash": "0c5053ccf16d1910",
+    "reviewedHash": "3f515bb6c7e7b375",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "substrings",
     "kind": "lesson",
-    "reviewedHash": "7ef2dc4db9e7a9fb",
+    "reviewedHash": "33af0854d68ef359",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "top-k",
     "kind": "lesson",
-    "reviewedHash": "5f680c436688f8ae",
+    "reviewedHash": "3af0a2f3e28f1dd2",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "topological-sort",
     "kind": "lesson",
-    "reviewedHash": "5959887f6a3ab874",
+    "reviewedHash": "f078941e3f9246a4",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "tree-bfs",
     "kind": "lesson",
-    "reviewedHash": "d892bd09e285ca0f",
+    "reviewedHash": "4df7d7c7e37958ea",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "tree-construction",
     "kind": "lesson",
-    "reviewedHash": "e319428dc111a302",
+    "reviewedHash": "bb8c7942898c6a9c",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "tree-dfs",
     "kind": "lesson",
-    "reviewedHash": "60e56c2ba1437bc8",
+    "reviewedHash": "4947b5aa1f04029a",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "tree-height-depth",
     "kind": "lesson",
-    "reviewedHash": "7a42a58ae3c9f40f",
+    "reviewedHash": "da2e86bc77664c94",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "tree-traversals",
     "kind": "lesson",
-    "reviewedHash": "05ecbe9184642e1c",
+    "reviewedHash": "dd8bc80e7dd6d71d",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "trie-insertion",
     "kind": "lesson",
-    "reviewedHash": "f8bdff7320763ae1",
+    "reviewedHash": "6b038b720dd891ab",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "two-heap-pattern",
     "kind": "lesson",
-    "reviewedHash": "a68b17d8ed2109fb",
+    "reviewedHash": "84cd0aadc15180e9",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "two-pointers",
     "kind": "lesson",
-    "reviewedHash": "f3ef9a86ea18c1d1",
+    "reviewedHash": "cf4bae0c98ce3962",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "union-find",
     "kind": "lesson",
-    "reviewedHash": "e64199d6c689f591",
+    "reviewedHash": "48d6312f36de86b2",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "value-to-index",
     "kind": "lesson",
-    "reviewedHash": "b4be939b638390e5",
+    "reviewedHash": "542d8d931571f5bc",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "variables-and-types",
     "kind": "lesson",
-    "reviewedHash": "8d39aed16bb15697",
+    "reviewedHash": "94a6032650916f3e",
     "reviewedAt": "2026-09-20",
     "batch": 1
   },
   {
     "id": "word-search",
     "kind": "lesson",
-    "reviewedHash": "d20741b6c70583e8",
+    "reviewedHash": "ba9d6414cb6089f8",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "xor-cancellation",
     "kind": "lesson",
-    "reviewedHash": "f304c8a310a0312e",
+    "reviewedHash": "a9b1f265718677d1",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "backtracking",
     "kind": "pattern",
-    "reviewedHash": "badc11b260c89c05",
+    "reviewedHash": "bc29d040d44e7170",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "bfs-shortest-path",
     "kind": "pattern",
-    "reviewedHash": "5234cd0650af5b6f",
+    "reviewedHash": "957e7deb189901c7",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "binary-search-on-answer",
     "kind": "pattern",
-    "reviewedHash": "47cff2f026433ea9",
+    "reviewedHash": "45469c50d2ddd812",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "bitwise-xor",
     "kind": "pattern",
-    "reviewedHash": "c3595172baff811b",
+    "reviewedHash": "f6df2c04e6e7ce62",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "cyclic-sort",
     "kind": "pattern",
-    "reviewedHash": "d2fd863554d64d88",
+    "reviewedHash": "ed13dda9854c0181",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "dijkstra",
     "kind": "pattern",
-    "reviewedHash": "1c1203240fbc86b8",
+    "reviewedHash": "3a5b31d46b111b11",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "divide-and-conquer",
     "kind": "pattern",
-    "reviewedHash": "166f5a5629254054",
+    "reviewedHash": "de7f5335e2cae7e4",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "dynamic-programming",
     "kind": "pattern",
-    "reviewedHash": "6c9173ebc66b7c96",
+    "reviewedHash": "b7dee1b0b8f39abf",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "fast-slow-pointers",
     "kind": "pattern",
-    "reviewedHash": "425433b5f53ab15b",
+    "reviewedHash": "e41303f85cbcd3c4",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "graph-dfs-components",
     "kind": "pattern",
-    "reviewedHash": "ffcc920d66558bc2",
+    "reviewedHash": "9c61dcbd0bf61b54",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "greedy-interval-scheduling",
     "kind": "pattern",
-    "reviewedHash": "109a0d7da8b51689",
+    "reviewedHash": "ce6a9d1806261ecb",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "in-place-linkedlist-reversal",
     "kind": "pattern",
-    "reviewedHash": "a36c98667b7f633c",
+    "reviewedHash": "8ef3ef9cc48bd3e7",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "k-way-merge",
     "kind": "pattern",
-    "reviewedHash": "af13a4e570af8b27",
+    "reviewedHash": "989d9ee9833ddc7d",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "kadane",
     "kind": "pattern",
-    "reviewedHash": "2f4bdf4bdc3a5307",
+    "reviewedHash": "efd782e62a56c770",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "knapsack",
     "kind": "pattern",
-    "reviewedHash": "d94fa36ddbc91839",
+    "reviewedHash": "7749c49d19d34a6b",
     "reviewedAt": "2026-09-20",
     "batch": 6
   },
   {
     "id": "matrix-traversal",
     "kind": "pattern",
-    "reviewedHash": "53ed4fa3a5771257",
+    "reviewedHash": "ecea1e62a727d0d0",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "merge-intervals",
     "kind": "pattern",
-    "reviewedHash": "a4b44c093ede17e4",
+    "reviewedHash": "83d1682bc2616fd2",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "modified-binary-search",
     "kind": "pattern",
-    "reviewedHash": "199e2189f6d57d0b",
+    "reviewedHash": "2cabd34ad69274cf",
     "reviewedAt": "2026-09-20",
     "batch": 3
   },
   {
     "id": "monotonic-stack",
     "kind": "pattern",
-    "reviewedHash": "819741f643ed2285",
+    "reviewedHash": "7687976eed941da5",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "prefix-sums-hashmap",
     "kind": "pattern",
-    "reviewedHash": "cc9c58251e7081ba",
+    "reviewedHash": "178e7f330fe6c912",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "sliding-window",
     "kind": "pattern",
-    "reviewedHash": "78b424d3a1cb8d6d",
+    "reviewedHash": "39e48720198beaab",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "top-k-heap",
     "kind": "pattern",
-    "reviewedHash": "555d2446c2cddc97",
+    "reviewedHash": "36205da1f8844db0",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "topological-sort",
     "kind": "pattern",
-    "reviewedHash": "294aa2301a17661b",
+    "reviewedHash": "573ff3d71ec011ad",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "tree-bfs",
     "kind": "pattern",
-    "reviewedHash": "93333da7d410c7ab",
+    "reviewedHash": "ca33adc64ede7837",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "tree-dfs",
     "kind": "pattern",
-    "reviewedHash": "d7df312529da2294",
+    "reviewedHash": "ae4607ac6aa41ef3",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "trie-prefix",
     "kind": "pattern",
-    "reviewedHash": "ce366fef2a20542b",
+    "reviewedHash": "105ec245df12260e",
     "reviewedAt": "2026-09-20",
     "batch": 5
   },
   {
     "id": "two-heaps",
     "kind": "pattern",
-    "reviewedHash": "cb75838b74c6ac49",
+    "reviewedHash": "e9fd943134a8ecc2",
     "reviewedAt": "2026-09-20",
     "batch": 4
   },
   {
     "id": "two-pointers",
     "kind": "pattern",
-    "reviewedHash": "c2de5e2be9b19faf",
+    "reviewedHash": "c81867b731e0b97f",
     "reviewedAt": "2026-09-20",
     "batch": 2
   },
   {
     "id": "union-find",
     "kind": "pattern",
-    "reviewedHash": "9b0e0c1338468ab7",
+    "reviewedHash": "85f85239d7e426d1",
     "reviewedAt": "2026-09-20",
     "batch": 5
   }

@@ -303,9 +303,9 @@ Choosing a variant is a **tradeoff**: singly is leanest; doubly buys backward tr
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "930cee5b8ff7a9ad",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "9b42c27282fa4e5a",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 4,

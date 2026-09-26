@@ -28,11 +28,12 @@ export function useExerciseRunner(owner = "exercise") {
   const [outcome, setOutcome] = useState<CheckOutcome | null>(null);
 
   const runCheck = useCallback(
-    async (learnerCode: string, tests: string) => {
+    async (learnerCode: string, tests: string, prelude?: string) => {
       const engine = getSharedEngine();
       setRunning(true);
       setOutcome(null);
-      const source = `${learnerCode}\n\n# --- tests ---\n${tests}\n`;
+      const pre = prelude ? `${prelude}\n` : "";
+      const source = `${pre}${learnerCode}\n\n# --- tests ---\n${tests}\n`;
       const res = await engine.run(source, { owner });
       setRunning(false);
       if (res.status === "stopped") return; // superseded

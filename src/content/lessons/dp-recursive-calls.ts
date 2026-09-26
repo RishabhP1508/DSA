@@ -201,9 +201,9 @@ Two costs matter and they are **different**. **Time** is the **total number of c
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "d266e7b616b7c900",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "7ff86b664bf2e25c",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 6,

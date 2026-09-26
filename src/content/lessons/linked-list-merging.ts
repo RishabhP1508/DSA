@@ -264,9 +264,9 @@ Using \`<=\` (not \`<\`) keeps the merge **stable**: equal values keep their ori
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "61896f0e4aa70951",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "59f1efab7036d3f8",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 4,

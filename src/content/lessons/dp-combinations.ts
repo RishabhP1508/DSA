@@ -219,9 +219,9 @@ A practical **pruning** exists (not shown, to keep the example minimal): if ther
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "d8348c1f82ebf7c9",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "728b4e6f50b0a001",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 6,

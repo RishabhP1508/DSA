@@ -213,9 +213,9 @@ Naming is the usual stumbling block: \`append\`/\`pop\` act on the **right** end
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "0d245a88161095ab",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "51ed8899310a33e7",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 4,

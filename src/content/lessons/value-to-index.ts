@@ -156,9 +156,9 @@ This "look up the complement" idea is the general **value-to-index** pattern: wh
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "b4be939b638390e5",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "542d8d931571f5bc",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 2,

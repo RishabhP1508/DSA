@@ -145,9 +145,9 @@ For **multi-level** ordering, return a **tuple** key: \`key=lambda p: (p.age, p.
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "c640669672b5c73f",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "9d38dedfe3c0ac31",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 3,

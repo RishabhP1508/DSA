@@ -208,9 +208,9 @@ Note the **unbounded** flavor: because coins can repeat, the transition freely r
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "490a600b4651693f",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "6a4b7dc2fc0c141a",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 6,

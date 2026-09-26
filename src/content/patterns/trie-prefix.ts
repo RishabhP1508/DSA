@@ -212,9 +212,9 @@ export const triePrefixPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "ce366fef2a20542b",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "105ec245df12260e",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 5,

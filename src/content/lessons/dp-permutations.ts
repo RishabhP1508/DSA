@@ -218,9 +218,9 @@ The output for \`[1,2,3]\` is all 6 orderings in depth-first order: \`[[1,2,3],[
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "939b89d03e8efe2c",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "bad1d9f45bfeb32a",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 6,

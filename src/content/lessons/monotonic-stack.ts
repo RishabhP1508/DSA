@@ -172,9 +172,9 @@ The magic of the O(n) bound: although there is a \`while\` inside the \`for\`, *
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "5ca8e54606f871f9",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "2798e6cda01da93a",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 4,

@@ -160,9 +160,9 @@ Counting sort is the foundation of **radix sort** (which applies it digit by dig
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "1f4e7ea019cc7533",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "366a8d4778374e38",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 3,

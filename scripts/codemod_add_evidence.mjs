@@ -28,7 +28,7 @@ import { contentHashOf } from "./lib/content-hash.mjs";
 import { validateExample } from "./lib/example-model.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const NOW = "2026-09-20";
+const NOW = "2026-09-21";
 
 const { lessons, patterns } = await loadCurriculum();
 const { COVERAGE_VERSION } = await import(pathToFileURL(path.join(ROOT, "src/content/coverage.ts")).href);

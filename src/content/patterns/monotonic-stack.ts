@@ -182,9 +182,9 @@ export const monotonicStackPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "819741f643ed2285",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "7687976eed941da5",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 4,

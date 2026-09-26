@@ -207,9 +207,9 @@ This is DP with the table compressed to a **constant number of rolling variables
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "6b8bf29b7a8008fb",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "9e4facb93c49195a",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 6,

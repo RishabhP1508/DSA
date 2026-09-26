@@ -210,9 +210,9 @@ export const treeBfsPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "93333da7d410c7ab",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "ca33adc64ede7837",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 5,

@@ -191,9 +191,9 @@ export const bfsShortestPathPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "5234cd0650af5b6f",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "957e7deb189901c7",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 5,

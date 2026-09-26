@@ -200,9 +200,9 @@ export const graphDfsComponentsPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "ffcc920d66558bc2",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "9c61dcbd0bf61b54",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,
     reviewBatch: 5,
