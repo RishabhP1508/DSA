@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
-import { lessons } from "./content/registry";
+import { lessons, patterns } from "./content/registry";
 import type { LessonDefinition } from "./core/types";
 import { LessonWorkspace } from "./ui/LessonWorkspace";
 import { ExercisePanel } from "./ui/ExercisePanel";
@@ -8,23 +8,67 @@ import { PatternLibrary } from "./ui/PatternLibrary";
 import { Practice } from "./ui/Practice";
 import { Playground } from "./ui/Playground";
 import { BackupView } from "./ui/BackupView";
+import { GlossaryView } from "./ui/GlossaryView";
 import { mdInline } from "./ui/md";
+import { useProgress } from "./ui/useProgress";
+import { NOTION_PRACTICE } from "./content/notion-practice";
 
-type View = "learn" | "patterns" | "practice" | "playground" | "backup";
+type View = "learn" | "patterns" | "practice" | "playground" | "glossary" | "backup";
 
 const NAV: { key: View; label: string }[] = [
   { key: "learn", label: "Learn" },
   { key: "patterns", label: "Patterns" },
   { key: "practice", label: "Practice" },
   { key: "playground", label: "Playground" },
+  { key: "glossary", label: "Glossary" },
   { key: "backup", label: "Backup" },
 ];
 
-function LessonContent({ lesson }: { lesson: LessonDefinition }) {
+function LessonContent({
+  lesson,
+  onOpenLesson,
+  onOpenPatterns,
+  completed,
+  onMarkComplete,
+}: {
+  lesson: LessonDefinition;
+  onOpenLesson: (id: string) => void;
+  onOpenPatterns: () => void;
+  completed: boolean;
+  onMarkComplete: () => void;
+}) {
+  const prereqs = lesson.prerequisites ?? [];
+  // R8.2 — external practice problems whose technique THIS lesson teaches.
+  const practice = NOTION_PRACTICE.filter((row) => row.mappedIds.includes(lesson.id));
+  // Patterns that link to this lesson (actionable related content).
+  const relatedPatterns = patterns.filter((p) => (p.linkedLessons ?? []).includes(lesson.id));
+
   return (
     <div className="lesson-content">
       <h2>{lesson.title}</h2>
       <p className="area">{lesson.area}</p>
+
+      <div className="lesson-pathbar">
+        {prereqs.length > 0 && (
+          <div className="prereqs">
+            <span className="dim tiny">Prerequisites:</span>{" "}
+            {prereqs.map((pid, i) => {
+              const pl = lessons.find((l) => l.id === pid);
+              return (
+                <span key={pid}>
+                  <button className="link-like" onClick={() => onOpenLesson(pid)}>
+                    {pl?.title ?? pid}
+                  </button>
+                  {i < prereqs.length - 1 ? ", " : ""}
+                </span>
+              );
+            })}
+          </div>
+        )}
+        <button className={completed ? "sa on" : "sa"} onClick={onMarkComplete} disabled={completed}>
+          {completed ? "✓ Completed" : "Mark lesson complete"}
+        </button>
+      </div>
 
       <section>
         <h3>Simple explanation</h3>
@@ -112,6 +156,37 @@ function LessonContent({ lesson }: { lesson: LessonDefinition }) {
         ))}
       </section>
 
+      {relatedPatterns.length > 0 && (
+        <section>
+          <h3>Related patterns</h3>
+          <ul>
+            {relatedPatterns.map((p) => (
+              <li key={p.id}>
+                <button className="link-like" onClick={onOpenPatterns}>{p.title}</button>
+                <span className="dim"> — {p.summary}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {practice.length > 0 && (
+        <section>
+          <h3>Optional external practice</h3>
+          <p className="dim tiny">
+            These LeetCode problems use this lesson's technique. They are optional — the local
+            exercises above already teach it.
+          </p>
+          <ul>
+            {practice.map((row) => (
+              <li key={row.url}>
+                <a href={row.url} target="_blank" rel="noreferrer">{row.title}</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <section>
         <h3>Review</h3>
         <p dangerouslySetInnerHTML={{ __html: mdInline(lesson.review) }} />
@@ -141,18 +216,44 @@ function Concept({ label, text }: { label: string; text: string }) {
   );
 }
 
-function LearnView() {
-  const [activeId, setActiveId] = useState(lessons[0]?.id);
+function LearnView({
+  activeId,
+  setActiveId,
+  onOpenPatterns,
+}: {
+  activeId: string;
+  setActiveId: (id: string) => void;
+  onOpenPatterns: () => void;
+}) {
   const active = lessons.find((l) => l.id === activeId) ?? lessons[0];
+  const { recommendation, markViewed, markCompleted, isCompleted } = useProgress();
+
+  // R8.1 — opening a lesson records a VIEW (not a completion).
+  useEffect(() => {
+    if (active) void markViewed(active.id);
+  }, [active?.id, markViewed]);
+
+  const recId = "lessonId" in recommendation ? recommendation.lessonId : null;
 
   return (
     <div className="app-body">
       <nav className="sidebar">
         <h3>Lessons</h3>
+        <div className="continue-learning">
+          <p className="dim tiny">{recommendation.reason}</p>
+          {recId && (
+            <button className="continue-btn" onClick={() => setActiveId(recId)}>
+              ▶ Continue learning
+            </button>
+          )}
+        </div>
         <ul>
           {lessons.map((l) => (
             <li key={l.id}>
               <button className={l.id === activeId ? "active" : ""} onClick={() => setActiveId(l.id)}>
+                <span className="lesson-status" aria-hidden>
+                  {isCompleted(l.id) ? "✓ " : l.id === recId ? "▶ " : ""}
+                </span>
                 {l.title}
               </button>
             </li>
@@ -161,7 +262,17 @@ function LearnView() {
         <p className="phase-note">{lessons.length} lessons across the full curriculum.</p>
       </nav>
       <main className="content">
-        {active ? <LessonContent lesson={active} /> : <p>No lessons yet.</p>}
+        {active ? (
+          <LessonContent
+            lesson={active}
+            onOpenLesson={setActiveId}
+            onOpenPatterns={onOpenPatterns}
+            completed={isCompleted(active.id)}
+            onMarkComplete={() => void markCompleted(active.id)}
+          />
+        ) : (
+          <p>No lessons yet.</p>
+        )}
       </main>
     </div>
   );
@@ -169,6 +280,12 @@ function LearnView() {
 
 export default function App() {
   const [view, setView] = useState<View>("learn");
+  const [activeLessonId, setActiveLessonId] = useState(lessons[0]?.id ?? "");
+
+  const openLesson = (id: string) => {
+    setActiveLessonId(id);
+    setView("learn");
+  };
 
   return (
     <div className="app">
@@ -193,10 +310,17 @@ export default function App() {
         </div>
       </header>
 
-      {view === "learn" && <LearnView />}
+      {view === "learn" && (
+        <LearnView
+          activeId={activeLessonId}
+          setActiveId={setActiveLessonId}
+          onOpenPatterns={() => setView("patterns")}
+        />
+      )}
       {view === "patterns" && <PatternLibrary />}
       {view === "practice" && <Practice />}
       {view === "playground" && <Playground />}
+      {view === "glossary" && <GlossaryView onOpenLesson={openLesson} />}
       {view === "backup" && <BackupView />}
     </div>
   );

@@ -44,6 +44,12 @@ const exerciseEntry = z.object({
 const draftEntry = z.object({
   source: z.string(),
   savedAt: isoDateString,
+  // R8.3 — a draft may also carry its stdin, a human name, and a saved custom
+  // visual binding. All optional so older (source-only) drafts still validate,
+  // and all preserved across backup/restore (not silently stripped).
+  stdin: z.string().optional(),
+  name: z.string().optional(),
+  binding: z.unknown().optional(),
 });
 
 const legacyEntry = z.object({
