@@ -128,11 +128,16 @@ exercises not yet authored" — now 164/164 graded.)*
 - Original pre-merge audit base `main` tip: `f754e75` (R0–R5 merged); integrated
   audit tree was assembled locally on `repair/r9-verification-handoff`.
 - **On-main close-out (this reconciliation):** all of R6 (#18), R7 (#19), R8
-  (#20), and R9 (#21) are now **merged** into `main`. The canonical integrated
-  tree re-verified here is **`main` = `30533a22bfa90a429a1c97fae4c17ae23c403af2`**.
+  (#20), and R9 (#21) are now **merged** into `main`. The canonical merged-main
+  base is **`30533a2` (`30533a22bfa90a429a1c97fae4c17ae23c403af2`)**.
   `npm run check:all` (exit 0) and `npm run test:browser` (18 passed / 5 skipped)
-  were run against this exact commit after a clean `npm ci`. The earlier
-  "re-run on main once #18/#19/#20 merge" instruction is hereby discharged.
+  were run — with identical results — on that base **and** on this PR's branch
+  tip **`2bd9749` (`2bd97492d9c3cae2718be345540e682aaa97769d`)**, a docs-only
+  descendant of `30533a2` (the diff is `.kiro/` markdown only). The exact
+  tested tip is `2bd9749`; `30533a2` is its merged-main base, and the difference
+  between them is documentation only. See `verification.md` → "Test evidence".
+  The earlier "re-run on main once #18/#19/#20 merge" instruction is hereby
+  discharged.
 
 ## 10. OPEN REQUIREMENT — human semantic review (160 pending)
 
@@ -151,10 +156,22 @@ functional requirement and is **not** satisfied by any passing test.
   outlive the content it was made against.
 - **What closing it requires (do NOT bulk-sign):** a human re-reads the changed
   learner-facing content **in recorded batches** and signs off only the items
-  actually read, by running
-  `gen_review_ledger.mjs REVIEWED_NOW="<kind:id,...>" SIGNOFF_DATE=<yyyy-mm-dd>`
-  then regenerating evidence (`codemod_add_evidence.mjs`) and committing. Items
-  not yet re-read stay `false`.
+  actually read. The `REVIEWED_NOW` / `SIGNOFF_DATE` env vars must be set
+  **before** the command (they are read from the environment, not passed as
+  script args):
+
+  ```bash
+  # Sign off ONLY the ids actually re-read; use a real ISO date.
+  REVIEWED_NOW="lesson:io,lesson:errors" SIGNOFF_DATE="2026-10-02" \
+    node --experimental-strip-types --import ./scripts/lib/ts-register.mjs \
+    scripts/gen_review_ledger.mjs
+  # Regenerate evidence so semanticReview flips true ONLY where the hash matches:
+  node --experimental-strip-types --import ./scripts/lib/ts-register.mjs \
+    scripts/codemod_add_evidence.mjs
+  ```
+
+  Then commit. Items not in `REVIEWED_NOW` (and any not yet re-read) stay
+  `semanticReview: false`.
 - **Suggested batching** (mirrors the R5.3 review batches by area): B1
   foundations; B2 arrays/strings/hashing/bits; B3 searching/sorting; B4 linear
   structures/stacks/queues/heaps; B5 trees/tries/graphs/range; B6 DP & recursion;
@@ -181,9 +198,10 @@ functional requirement and is **not** satisfied by any passing test.
 
 ## Verdict
 Machine verification of the functional repair (R0–R9) is **complete and green on
-`main` `30533a2`** — `check:all` exit 0 (unit 476/476), `test:browser` 18 passed
-/ 5 skipped. **The project is NOT yet ready for UI review.** Two things remain
-before that status can be claimed:
+`main` base `30533a2` (tested tip `2bd9749`, docs-only descendant)** —
+`check:all` exit 0 (unit 476/476), `test:browser` 18 passed / 5 skipped. **The
+project is NOT yet ready for UI review.** Two things remain before that status
+can be claimed:
 
 1. **Human semantic review (160 pending)** — §10. Must be closed in recorded
    batches; items genuinely re-read are signed off, the rest stay pending.

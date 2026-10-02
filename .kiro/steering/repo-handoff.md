@@ -18,7 +18,9 @@ current as things change.
   (both merged). Create a fresh feature branch per phase; do not commit directly
   to `main`.
 
-## Status update (2026-09-21) — R0–R9 MERGED into `main`
+## Status update (2026-10-02) — R0–R9 MERGED into `main`
+
+*(PRs #18–#21 merged into `main` on 2026-10-01; this status recorded 2026-10-02.)*
 
 **All functional-repair specs R0–R9 are now merged into `main` =
 `30533a22bfa90a429a1c97fae4c17ae23c403af2`** (PRs #18 R6, #19 R7, #20 R8, #21 R9,
@@ -41,9 +43,19 @@ for historical context only.
   false`; no human sign-offs yet). The R6–R8 content changes moved every item's
   hash past its last recorded human-review hash, so the ledger reverted them all
   to pending. Close it by re-reading the changed learner-facing content **in
-  recorded batches** (by a human) and signing off only reviewed items via
-  `gen_review_ledger.mjs REVIEWED_NOW="kind:id,..." SIGNOFF_DATE=yyyy-mm-dd`, then
-  `codemod_add_evidence.mjs`. Do NOT bulk-sign. Tracked in handoff.md §10.
+  recorded batches** (by a human) and signing off only reviewed items. The env
+  vars MUST be set **before** the command (they are read from the environment, not
+  passed as script args):
+
+  ```bash
+  REVIEWED_NOW="lesson:io,lesson:errors" SIGNOFF_DATE="2026-10-02" \
+    node --experimental-strip-types --import ./scripts/lib/ts-register.mjs \
+    scripts/gen_review_ledger.mjs
+  node --experimental-strip-types --import ./scripts/lib/ts-register.mjs \
+    scripts/codemod_add_evidence.mjs
+  ```
+
+  Do NOT bulk-sign. Tracked in handoff.md §10.
 - **`P-RUNNER-ORIGIN`** two-origin runner topology + CSP on Windows Chrome/Edge
   (release-blocking; belongs to packaging).
 - **FU-1 / FU-2** curriculum follow-ups (Task Scheduler cooldown; Meeting Rooms II
