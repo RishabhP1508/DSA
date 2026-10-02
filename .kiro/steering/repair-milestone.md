@@ -29,3 +29,21 @@ Binding rules for this milestone:
 
 The attached product plan (`AGENTS.md` + the repair plan) is the requirements
 source. When it conflicts with older notes, the plan and this rule win.
+
+
+## Progress (as of R9)
+
+R0–R5 are merged into `main`. R6 (coding exercises runnable + recognition
+grading, PR #18), R7 (complexity analysis + comparisons, PR #19), and R8
+(learning-path + Playground drafts, PR #20) are complete on their branches and
+verified green; they merge cleanly together (R9 integrated audit:
+`check:all` exit 0, unit 625/37 files, 135/161 coding runnable, 77 recognition,
+212 six-stage hints; browser 17 passed / 5 skipped). R9
+(`.kiro/specs/R9-verification-handoff/`) is the audit + handoff: see
+`handoff.md` and `audit-recheck.md`.
+
+**Status when #18/#19/#20 merge: functional repair complete; ready for UI
+review.** Still open and visible: `P-RUNNER-ORIGIN` (packaging), 26 non-runnable
+coding fragments, 87 un-graded recognition drills, FU-1/FU-2, and the
+Windows-browser acceptance gap. UI redesign and Windows packaging remain separate
+milestones and are NOT started.
