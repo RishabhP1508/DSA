@@ -21,9 +21,8 @@ differ only in R9 documentation (no source, content, ledger, or test changes):
 Because the two trees are code-identical, the verification numbers below apply to
 both; where a document names `30533a2` it refers to the merged-main base, and the
 tested PR commit is `2bd9749`. **The difference between them is documentation
-only.** (The current PR branch tip is `e61dc90`, itself a documentation-only
-descendant of `2bd9749`; no rerun was needed for the wording-only edits since
-`2bd9749`.)
+only.** Any later changes on this branch are documentation-only and needed no
+rerun.
 
 ## R9.1 — all verification layers (on `main` 30533a2)
 `npm run check:all` → **exit 0**:

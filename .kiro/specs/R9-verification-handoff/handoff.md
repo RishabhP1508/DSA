@@ -135,10 +135,10 @@ exercises not yet authored" — now 164/164 graded.)*
   **`2bd9749` (`2bd97492d9c3cae2718be345540e682aaa97769d`)**, a docs-only
   descendant of `30533a2` (the diff is `.kiro/` markdown only). The exact tested
   PR commit is `2bd9749`; `30533a2` is its merged-main base, and the difference
-  between them is documentation only. (The current PR branch tip is `e61dc90`, a
-  documentation-only descendant of `2bd9749`; the wording-only edits since
-  `2bd9749` needed no rerun.) See `verification.md` → "Test evidence". The earlier
-  "re-run on main once #18/#19/#20 merge" instruction is hereby discharged.
+  between them is documentation only. Any later changes on this branch are
+  documentation-only and needed no rerun. See `verification.md` → "Test evidence".
+  The earlier "re-run on main once #18/#19/#20 merge" instruction is hereby
+  discharged.
 
 ## 10. OPEN REQUIREMENT — human semantic review (160 pending)
 
