@@ -18,6 +18,54 @@ current as things change.
   (both merged). Create a fresh feature branch per phase; do not commit directly
   to `main`.
 
+## Status update (2026-10-02) — R0–R9 MERGED into `main`
+
+*(PRs #18–#21 merged into `main` on 2026-10-01; this status recorded 2026-10-02.)*
+
+**All functional-repair specs R0–R9 are now merged into `main` =
+`30533a22bfa90a429a1c97fae4c17ae23c403af2`** (PRs #18 R6, #19 R7, #20 R8, #21 R9,
+plus R0–R5 earlier). Machine verification is green on that commit: `npm run
+check:all` exit 0 (unit **476/476** across 38 files; **161/161** coding exercises
+runnable with model-passes + rejection of starter/empty and three
+independently-authored faulty variants; **164/164** recognition graded; **325**
+interactive exercises with full 6-stage hints; coverage 131 verified / 0 not-yet)
+and `npm run test:browser` **18 passed / 5 skipped** (the 5 skips are the
+`P-RUNNER-ORIGIN` packaging gate).
+
+The "under repair" defects listed further down (unsafe tracer inspection, object
+-table return bug, EOF, deque visualizer, eager workers, non-unique IDs,
+heuristic limits, silent-skip scripts) are **fixed and regression-guarded** — see
+`.kiro/specs/R9-verification-handoff/audit-recheck.md`. That section below is kept
+for historical context only.
+
+**Still OPEN (the project is NOT "ready for UI review" yet):**
+- **Human semantic review — 160/160 content items pending** (`semanticReview:
+  false`; no human sign-offs yet). The R6–R8 content changes moved every item's
+  hash past its last recorded human-review hash, so the ledger reverted them all
+  to pending. Close it by re-reading the changed learner-facing content **in
+  recorded batches** (by a human) and signing off only reviewed items. The env
+  vars MUST be set **before** the command (they are read from the environment, not
+  passed as script args):
+
+  ```bash
+  REVIEWED_NOW="lesson:io,lesson:errors" SIGNOFF_DATE="2026-10-02" \
+    node --experimental-strip-types --import ./scripts/lib/ts-register.mjs \
+    scripts/gen_review_ledger.mjs
+  node --experimental-strip-types --import ./scripts/lib/ts-register.mjs \
+    scripts/codemod_add_evidence.mjs
+  ```
+
+  Do NOT bulk-sign. Tracked in handoff.md §10.
+- **`P-RUNNER-ORIGIN`** two-origin runner topology + CSP on Windows Chrome/Edge
+  (release-blocking; belongs to packaging).
+- **FU-1 / FU-2** curriculum follow-ups (Task Scheduler cooldown; Meeting Rooms II
+  concurrent-overlap).
+
+Next milestones after the semantic review closes: **UI redesign**, then the
+**offline Windows package**. Neither is started.
+
+---
+
 ## Current status — READ THIS (supersedes earlier "phase complete" claims)
 
 **The milestone is functional repair before UI redesign. It is NOT "release
