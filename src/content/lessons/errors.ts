@@ -144,7 +144,7 @@ Catch **specific** exception types (\`IndexError\`, \`ValueError\`, \`KeyError\`
     contentHash: "c144f84f8a9c03e1",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 1,
   },
 };

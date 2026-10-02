@@ -37,12 +37,11 @@ heuristic limits, silent-skip scripts) are **fixed and regression-guarded** — 
 for historical context only.
 
 **Still OPEN (the project is NOT "ready for UI review" yet):**
-- **Human semantic review — 158/160 content items pending** (`semanticReview:
-  false`; 2 agent-reviewed so far: `lesson:io`, `lesson:errors`). The R6–R8
-  content changes moved every item's hash past its last recorded human-review
-  hash, so the ledger reverted them to pending. Close the rest by re-reading the
-  changed learner-facing content **in recorded batches** and signing off only
-  reviewed items via
+- **Human semantic review — 160/160 content items pending** (`semanticReview:
+  false`; no human sign-offs yet). The R6–R8 content changes moved every item's
+  hash past its last recorded human-review hash, so the ledger reverted them all
+  to pending. Close it by re-reading the changed learner-facing content **in
+  recorded batches** (by a human) and signing off only reviewed items via
   `gen_review_ledger.mjs REVIEWED_NOW="kind:id,..." SIGNOFF_DATE=yyyy-mm-dd`, then
   `codemod_add_evidence.mjs`. Do NOT bulk-sign. Tracked in handoff.md §10.
 - **`P-RUNNER-ORIGIN`** two-origin runner topology + CSP on Windows Chrome/Edge

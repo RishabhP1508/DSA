@@ -10,7 +10,7 @@
 | T6 | Keep the PR clean (R9 artifacts only on `main`); PR | discipline | PR | done |
 | T7 | Re-confirm on canonical `main` after R6–R9 merge; correct counts | R9.1 | `main` 30533a2: check:all exit 0; browser 18/5 | done |
 | T8 | Carry the 160 pending human semantic reviews into the audit as an open requirement; do NOT mark "ready for UI review" | R9.4 | handoff.md §10 | done |
-| T9 | Reread changed learner-facing content in recorded batches; sign off only reviewed items | R9.4 | ledger `REVIEWED_NOW` + `SIGNOFF_DATE` | **open (2/160: io, errors agent-reviewed; 158 pending)** |
+| T9 | Reread changed learner-facing content in recorded batches; sign off only reviewed items | R9.4 | ledger `REVIEWED_NOW` + `SIGNOFF_DATE` | **open (0/160 — all pending; human review not yet done)** |
 
 ## Note
 The original integrated audit (unit 625/37, 135 runnable, 77 recognition, 212
@@ -21,6 +21,6 @@ included): unit **476/38**, **161/161** runnable with authored faulty variants,
 those merge" item is discharged.
 
 **Still open:** human semantic review of the R6–R8-changed learner-facing content
-is pending (158/160 `semanticReview: false`; 2 agent-reviewed so far — `io`,
-`errors`). Close the rest in recorded batches before claiming "ready for UI
-review" — see handoff.md §10.
+is pending repo-wide (160/160 `semanticReview: false`; no human sign-offs yet).
+Close it in recorded batches by a human before claiming "ready for UI review" —
+see handoff.md §10.

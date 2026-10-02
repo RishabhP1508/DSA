@@ -2,9 +2,9 @@
 
 > **Status: functional repair verified on `main`; NOT YET ready for UI review.**
 > One functional-content requirement is still open: **human semantic review of
-> the learner-facing content is pending repo-wide (158 of 160 items
-> `semanticReview: false`; 2 agent-reviewed so far).** UI review must not start
-> until that is resolved in recorded batches (see §10). UI redesign and offline Windows packaging remain
+> the learner-facing content is pending repo-wide (**160 of 160 items
+> `semanticReview: false`**). UI review must not start until that is resolved
+> in recorded batches by a human reviewer (see §10). UI redesign and offline Windows packaging remain
 > separate later milestones.
 
 This is the gate before the UI redesign. It summarises the repaired behaviour,
@@ -64,7 +64,7 @@ work or packaging.
 - Coverage entries **131**, all `verified` with current content-hash evidence
   (machine checks). This is machine verification only — see §10 for human review.
 - External practice: 79 occurrences reconciled (77 mapped, 2 unresolved = FU-1/2).
-- **Human semantic review: 2 of 160 signed off (158 pending).** Open requirement,
+- **Human semantic review: 0 of 160 signed off (160 pending).** Open requirement,
   tracked in §10 — the project is NOT ready for UI review while this is open.
 
 ## 3. Required vs executed test counts (re-run on `main` 30533a2)
@@ -140,9 +140,8 @@ exercises not yet authored" — now 164/164 graded.)*
 semantic review of the learner-facing content is a **separate, still-open**
 functional requirement and is **not** satisfied by any passing test.
 
-- **State:** 158 of 160 content items (131 lessons + 29 patterns) carry
-  `semanticReview: false`; **2** (`lesson:io`, `lesson:errors`) have been
-  agent-reviewed and signed off at their current hash (see the progress ledger). The review ledger (`src/content/review-ledger.ts`)
+- **State:** 160 of 160 content items (131 lessons + 29 patterns) carry
+  `semanticReview: false` — none signed off yet. The review ledger (`src/content/review-ledger.ts`)
   grants `semanticReview: true` for an item ONLY when a human has recorded a
   sign-off at the item's *current* content hash (`gen_review_ledger.mjs` with
   `REVIEWED_NOW` + a validated `SIGNOFF_DATE`). Because R6–R8 changed
@@ -168,20 +167,17 @@ functional requirement and is **not** satisfied by any passing test.
 
   | Batch | Area | Items reviewed (ids) | Reviewed on | Reviewer | Signed off |
   |---|---|---|---|---|---|
-  | B1 (partial) | Programming foundations | `lesson:io`, `lesson:errors` | 2026-09-21 | AI agent (full re-read, see note) | **2** |
-  | remaining | all other areas | — | — | — | **0** |
-  | **Total** | | | | | **2 / 160 (158 pending)** |
+  | B1–B7 | all | — | — | — | **0** |
+  | **Total** | | | | | **0 / 160 (160 pending)** |
 
-  **Note on the 2 signed-off items.** These two were re-read in full by the AI
-  agent doing the reconciliation and judged correct: `io` (input() returns str,
-  the `"5"*2` trap, O(L) reasoning, converted `io-fix-1`/`io-predict-1`,
-  `expectedOutput` "Name: Number: Hello Ada\n10\n") and `errors` (try/except
-  semantics, specific-exception guidance, O(1) reasoning, `err-complete-1`
-  safe_div / `err-choose-1`, `expectedOutput` "caught: index out of
-  range\nafter\n"). If your process requires a *human* (not agent) sign-off, treat
-  these two as agent-reviewed and re-confirm them; the mechanism and the honest
-  2-of-160 state are what this demonstrates. The other **158 remain pending** and
-  were deliberately NOT signed off.
+  **No items have been signed off.** Human semantic review has not yet been
+  performed; all 160 items remain `semanticReview: false`. (During this
+  reconciliation an agent did read `lesson:io` and `lesson:errors` in full to
+  confirm the sign-off *mechanism* works end-to-end — ledger `REVIEWED_NOW` +
+  validated `SIGNOFF_DATE` flips exactly those items and the evidence codemod
+  grants `semanticReview: true` only on a hash match — but that trial sign-off was
+  **reverted** so the ledger honestly reflects zero human reviews. The reviews
+  must be done by a human in recorded batches; do NOT bulk-sign.)
 
 ## Verdict
 Machine verification of the functional repair (R0–R9) is **complete and green on

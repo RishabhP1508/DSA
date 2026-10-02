@@ -46,11 +46,10 @@ integration; the R6 amendment then completed all coding/recognition work.)*
 
 **Status: functional repair MACHINE-verified on `main`; NOT yet ready for UI
 review.** The one open functional-content requirement is **human semantic review
-— 158/160 items pending** (`semanticReview: false` after the R6–R8 content
-changes; 2 agent-reviewed so far: `io`, `errors`). It must be closed by
-re-reading the changed learner-facing content in recorded batches and signing off
-only reviewed items (ledger `REVIEWED_NOW` + validated `SIGNOFF_DATE`); do NOT
-bulk-sign. Also still open and visible:
+— 160/160 items pending** (`semanticReview: false` after the R6–R8 content
+changes; no human sign-offs yet). It must be closed by a human re-reading the
+changed learner-facing content in recorded batches and signing off only reviewed
+items (ledger `REVIEWED_NOW` + validated `SIGNOFF_DATE`); do NOT bulk-sign. Also still open and visible:
 `P-RUNNER-ORIGIN` (packaging), FU-1/FU-2, and the Windows-browser acceptance gap.
 *(No longer open: the former "26 non-runnable coding fragments" and "87 un-graded
 recognition drills" — resolved by the R6 amendment.)* UI redesign and Windows

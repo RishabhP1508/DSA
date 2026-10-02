@@ -39,8 +39,8 @@ to the post-R6-amendment reality (161/161 coding runnable; 164/164 recognition).
 | **Single source-only Playground draft** | one slot, source only | named drafts (source+stdin+binding), import/export | `python-file.test.ts` (6) + browser | **Passed** | **R8 (#20)** |
 
 ## Carried-forward / open (not closed)
-- **Human semantic review — 158 of 160 pending** (2 agent-reviewed: `lesson:io`,
-  `lesson:errors`; the rest `semanticReview: false`). Machine verification is complete; human re-reading of
+- **Human semantic review — 160 of 160 pending** (all content items
+  `semanticReview: false`; no human sign-offs yet). Machine verification is complete; human re-reading of
   the R6–R8-changed learner-facing content has NOT been done. Must be closed in
   recorded batches (handoff.md §10) before the project is "ready for UI review".
   **Blocks the UI-review status** (not packaging).

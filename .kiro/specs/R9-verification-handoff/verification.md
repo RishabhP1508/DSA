@@ -57,10 +57,10 @@ packaging work, and the exact commit basis.
   offline test, the audit table, and the handoff.
 
 ## Not proven / carried forward
-- **Human semantic review — 158/160 pending** (2 agent-reviewed and signed off:
-  `lesson:io`, `lesson:errors`; the rest `semanticReview: false`). Machine
-  verification complete; re-reading the remaining R6–R8-changed learner-facing
-  content is the open requirement. Must be closed in
+- **Human semantic review — 160/160 pending** (all content items
+  `semanticReview: false`; no human sign-offs yet). Machine verification complete;
+  re-reading the R6–R8-changed learner-facing content in recorded batches is the
+  open requirement. Must be closed in
   recorded batches (handoff.md §10) before "ready for UI review" can be claimed.
 - `P-RUNNER-ORIGIN`; FU-1/FU-2; Windows-browser acceptance; full visual pixel
   snapshots.

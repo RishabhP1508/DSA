@@ -146,7 +146,7 @@ In this workspace you supply the input ahead of time (a "supplied input" box), a
     contentHash: "9ec7390e15aa8128",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 1,
   },
 };
