@@ -23,34 +23,87 @@ const all: { kind: "lesson" | "pattern"; item: Item }[] = [
 ];
 
 describe("R5.3 review ledger — semanticReview:true is backed by a matching-hash ledger entry", () => {
-  for (const { kind, item } of all) {
-    if (item.evidence?.semanticReview === true) {
-      it(`${kind} ${item.id}: ledger reviewedHash == current content hash`, () => {
-        const entry = REVIEW_LEDGER_BY_KEY.get(`${kind}:${item.id}`);
-        expect(entry, `${kind} ${item.id} claims semanticReview but has no ledger entry`).toBeTruthy();
-        expect(entry!.reviewedHash, `${kind} ${item.id} ledger hash must match live content`).toBe(contentHashOf(item));
-      });
+  // Invariant (runs even when zero items are currently reviewed): EVERY item
+  // that claims semanticReview:true must have a ledger entry whose reviewedHash
+  // equals its live content hash. After R6 added hints/recognition to every
+  // item, semantic review is honestly PENDING repo-wide (no item claims true)
+  // until a human re-reads — so this set may be empty, which is itself valid.
+  it("every semanticReview:true item is backed by a current-hash ledger entry", () => {
+    const claimed = all.filter((x) => x.item.evidence?.semanticReview === true);
+    for (const { kind, item } of claimed) {
+      const entry = REVIEW_LEDGER_BY_KEY.get(`${kind}:${item.id}`);
+      expect(entry, `${kind} ${item.id} claims semanticReview but has no ledger entry`).toBeTruthy();
+      expect(entry!.reviewedHash, `${kind} ${item.id} ledger hash must match live content`).toBe(
+        contentHashOf(item),
+      );
     }
-  }
+    // Document the current honest state: a count (possibly 0) of reviewed items.
+    expect(claimed.length).toBeGreaterThanOrEqual(0);
+  });
 });
 
 describe("R5.3 review ledger — a content edit breaks the ledger match (review cannot survive an edit)", () => {
-  it("editing a reviewed lesson's explanation makes its live hash differ from the ledger", () => {
+  // These prove the MECHANISM: a ledger entry recorded at a given hash no longer
+  // matches once a claim-bearing field changes. We record a hash at the CURRENT
+  // content (rather than assuming the live ledger currently marks the item
+  // reviewed — after R6 added hints/recognition to every item, semantic review
+  // is honestly pending repo-wide until a human re-reads), then show an edit
+  // breaks that recorded hash.
+  it("editing a lesson's explanation makes its hash differ from a hash recorded now", () => {
     const l = lessons.find((x) => x.id === "prefix-sums")! as LessonDefinition;
-    const entry = REVIEW_LEDGER_BY_KEY.get("lesson:prefix-sums")!;
-    expect(entry.reviewedHash).toBe(contentHashOf(l)); // currently reviewed
+    const recordedHash = contentHashOf(l); // simulate a fresh human review NOW
     const edited: LessonDefinition = { ...l, explanation: l.explanation + " (edited)" };
-    // The edited content no longer matches the ledger, so semanticReview could
-    // not be granted for it on regeneration.
-    expect(contentHashOf(edited)).not.toBe(entry.reviewedHash);
+    expect(contentHashOf(edited)).not.toBe(recordedHash);
   });
 
-  it("editing a pattern's whyItHelps breaks its ledger match", () => {
+  it("editing a lesson's hints (a learner-facing claim) breaks its recorded hash", () => {
+    const l = lessons.find((x) => x.id === "prefix-sums")! as LessonDefinition;
+    const recordedHash = contentHashOf(l);
+    const ex0 = l.exercises[0];
+    const edited: LessonDefinition = {
+      ...l,
+      exercises: [{ ...ex0, hints: [...ex0.hints, "an added hint claim"] }, ...l.exercises.slice(1)],
+    };
+    // hints are claim-bearing and INCLUDED in the hash (R6 correction), so this
+    // must change the hash and therefore require re-review.
+    expect(contentHashOf(edited)).not.toBe(recordedHash);
+  });
+
+  it("editing a pattern's whyItHelps breaks its recorded hash", () => {
     const p = patterns.find((x) => x.id === "sliding-window")! as PatternDefinition;
-    const entry = REVIEW_LEDGER_BY_KEY.get("pattern:sliding-window")!;
-    expect(entry.reviewedHash).toBe(contentHashOf(p));
+    const recordedHash = contentHashOf(p);
     const edited: PatternDefinition = { ...p, whyItHelps: p.whyItHelps + " (edited)" };
-    expect(contentHashOf(edited)).not.toBe(entry.reviewedHash);
+    expect(contentHashOf(edited)).not.toBe(recordedHash);
+  });
+});
+
+describe("R6 — exercise claim fields (hints, recognition) are part of the content hash", () => {
+  // tests/preludeCode are machine-verification harness and excluded; hints and
+  // recognition are learner-facing CLAIMS and MUST change the hash so semantic
+  // review reverts to pending when they change.
+  const l = lessons.find((x) => x.id === "two-pointers")! as LessonDefinition;
+
+  it("adding a recognition block changes the content hash", () => {
+    const base = contentHashOf(l);
+    const ex0 = l.exercises[0] as LessonDefinition["exercises"][number] & { recognition?: unknown };
+    const withRec = {
+      ...l,
+      exercises: [
+        { ...ex0, recognition: { scenario: "x", approaches: [], reasons: [], acceptableApproachIds: [], modelExplanation: "m" } },
+        ...l.exercises.slice(1),
+      ],
+    } as unknown as LessonDefinition;
+    expect(contentHashOf(withRec)).not.toBe(base);
+  });
+
+  it("adding a tests field (machine harness) does NOT change the content hash", () => {
+    const base = contentHashOf(l);
+    const ex0 = l.exercises[0] as LessonDefinition["exercises"][number] & { tests?: string };
+    const withTests = {
+      ...l,
+      exercises: [{ ...ex0, tests: "assert True\nprint('OK')" }, ...l.exercises.slice(1)],
+    } as unknown as LessonDefinition;
+    expect(contentHashOf(withTests)).toBe(base);
   });
 });
 

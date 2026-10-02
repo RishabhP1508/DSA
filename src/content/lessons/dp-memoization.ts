@@ -199,11 +199,11 @@ Two conditions must hold for memoization to be correct and useful: **overlapping
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "080bdcb900a9f453",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "0fefb88e8917a8b0",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

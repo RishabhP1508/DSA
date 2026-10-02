@@ -140,11 +140,11 @@ export const prefixSumsHashmapPattern: PatternDefinition = {
       id: "pat-ps-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This undercounts subarrays that start at index 0. Fix the initialization.",
+        "`count_subarrays(nums, k)` counts contiguous subarrays summing to k. This undercounts subarrays that start at index 0. Fix the initialization.",
       starterCode:
-        "seen = defaultdict(int)\ncount = 0\nprefix = 0\nfor x in nums:\n    prefix += x\n    count += seen[prefix - k]\n    seen[prefix] += 1\nreturn count",
+        "from collections import defaultdict\ndef count_subarrays(nums, k):\n    seen = defaultdict(int)\n    count = 0\n    prefix = 0\n    for x in nums:\n        prefix += x\n        count += seen[prefix - k]\n        seen[prefix] += 1\n    return count",
       expected:
-        "seen = defaultdict(int)\nseen[0] = 1\ncount = 0\nprefix = 0\nfor x in nums:\n    prefix += x\n    count += seen[prefix - k]\n    seen[prefix] += 1\nreturn count",
+        "from collections import defaultdict\ndef count_subarrays(nums, k):\n    seen = defaultdict(int)\n    seen[0] = 1\n    count = 0\n    prefix = 0\n    for x in nums:\n        prefix += x\n        count += seen[prefix - k]\n        seen[prefix] += 1\n    return count",
       hints: [
         "What about a range that begins at the very start?",
         "Its start prefix is the empty prefix, sum 0.",
@@ -192,11 +192,11 @@ export const prefixSumsHashmapPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "cc9c58251e7081ba",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "05b5174c5d1db107",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

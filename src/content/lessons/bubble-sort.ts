@@ -120,9 +120,9 @@ In real code you would call Python's built-in \`sorted\` (O(n log n)). Bubble so
     {
       id: "bub-fix-1",
       kind: "fix-mistake",
-      prompt: "This inner range causes an index error. Fix it.",
-      starterCode: "for i in range(n):\n    for j in range(n):\n        if a[j] > a[j + 1]:\n            a[j], a[j + 1] = a[j + 1], a[j]",
-      expected: "for i in range(n):\n    for j in range(n - 1 - i):\n        if a[j] > a[j + 1]:\n            a[j], a[j + 1] = a[j + 1], a[j]",
+      prompt: "`bubble_sort(a)` should sort the list in place and return it, but the inner range reads past the end and raises an index error. Fix the inner range.",
+      starterCode: "def bubble_sort(a):\n    n = len(a)\n    for i in range(n):\n        for j in range(n):\n            if a[j] > a[j + 1]:\n                a[j], a[j + 1] = a[j + 1], a[j]\n    return a",
+      expected: "def bubble_sort(a):\n    n = len(a)\n    for i in range(n):\n        for j in range(n - 1 - i):\n            if a[j] > a[j + 1]:\n                a[j], a[j + 1] = a[j + 1], a[j]\n    return a",
       hints: ["a[j+1] goes out of bounds when j reaches n-1.", "The last i elements are already sorted.", "Use range(n - 1 - i)."],
     },
     {
@@ -150,11 +150,11 @@ In real code you would call Python's built-in \`sorted\` (O(n log n)). Bubble so
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "15117d367ff3ea1f",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "68ada90c73e155c9",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

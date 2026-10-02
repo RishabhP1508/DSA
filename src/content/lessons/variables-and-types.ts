@@ -256,11 +256,11 @@ A subtle but important consequence: two names can refer to the **same** object. 
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "8d39aed16bb15697",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "60ba3ee9a8e20f2e",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 1,
   },
 };

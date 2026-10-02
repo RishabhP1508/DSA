@@ -101,10 +101,10 @@ Catch **specific** exception types (\`IndexError\`, \`ValueError\`, \`KeyError\`
     {
       id: "err-complete-1",
       kind: "complete-code",
-      prompt: "Wrap this division so a divisor of 0 prints 'undefined' instead of crashing.",
-      starterCode: "a, b = 10, 0\n# TODO: try/except so b == 0 prints 'undefined'\nprint(a / b)",
-      expected: "a, b = 10, 0\ntry:\n    print(a / b)\nexcept ZeroDivisionError:\n    print('undefined')",
-      hints: ["Dividing by zero raises a specific exception.", "It is ZeroDivisionError.", "Put a / b in try and handle ZeroDivisionError in except."],
+      prompt: "Complete `safe_div(a, b)` so dividing by 0 returns the string 'undefined' instead of crashing; otherwise return a / b.",
+      starterCode: "def safe_div(a, b):\n    # TODO: try/except so b == 0 returns 'undefined'\n    return a / b",
+      expected: "def safe_div(a, b):\n    try:\n        return a / b\n    except ZeroDivisionError:\n        return 'undefined'",
+      hints: ["Dividing by zero raises a specific exception.", "It is ZeroDivisionError.", "Put a / b in try and handle ZeroDivisionError in except, returning 'undefined'."],
     },
     {
       id: "err-choose-1",
@@ -140,11 +140,11 @@ Catch **specific** exception types (\`IndexError\`, \`ValueError\`, \`KeyError\`
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "935f03e64e7a8423",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "c144f84f8a9c03e1",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 1,
   },
 };

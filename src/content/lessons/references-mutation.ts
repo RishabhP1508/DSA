@@ -161,11 +161,11 @@ So \`add_item\` changes \`shared\` (mutation of a shared object), but \`try_rebi
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "0237324213b22cc2",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "5feb2cad2643ea0c",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 1,
   },
 };

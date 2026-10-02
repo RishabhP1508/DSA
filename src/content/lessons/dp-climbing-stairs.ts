@@ -201,11 +201,11 @@ The point of this worked example is to see the full DP pipeline on something int
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "c3b9b07d34ca592e",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "702cbcdd09e4a80d",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

@@ -146,11 +146,11 @@ Naming is the usual stumbling block: \`append\`/\`pop\` act on the **right** end
     {
       id: "lldq-complete-1",
       kind: "complete-code",
-      prompt: "Complete the code so it uses a deque as a QUEUE (FIFO): enqueue 1,2,3 then dequeue once.",
+      prompt: "Complete `dequeue_front(items)` so it uses a deque as a QUEUE (FIFO): enqueue every item in order, then dequeue once and return a tuple `(first, remaining)` where `first` is the item removed and `remaining` is the list of what is left in front-to-back order.",
       starterCode:
-        "from collections import deque\nq = deque()\nq.append(1)\nq.append(2)\nq.append(3)\n# TODO: dequeue the front item into `first`\nprint(first)",
+        "from collections import deque\ndef dequeue_front(items):\n    q = deque()\n    for x in items:\n        q.append(x)\n    # TODO: dequeue the front item into `first`\n    return first, list(q)",
       expected:
-        "from collections import deque\nq = deque()\nq.append(1)\nq.append(2)\nq.append(3)\nfirst = q.popleft()\nprint(first)",
+        "from collections import deque\ndef dequeue_front(items):\n    q = deque()\n    for x in items:\n        q.append(x)\n    first = q.popleft()\n    return first, list(q)",
       hints: [
         "FIFO removes from the front (left).",
         "append adds at the right; the front is the left.",
@@ -213,11 +213,11 @@ Naming is the usual stumbling block: \`append\`/\`pop\` act on the **right** end
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "0d245a88161095ab",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "28f64dc99f7fb9b7",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

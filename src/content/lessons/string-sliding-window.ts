@@ -137,9 +137,9 @@ Crucially, \`start\` only ever moves **forward**, and \`i\` moves forward once p
     {
       id: "ssw-fix-1",
       kind: "fix-mistake",
-      prompt: "This version wrongly lets start move backward for characters seen outside the window. Add the missing guard.",
-      starterCode: "if ch in seen:\n    start = seen[ch] + 1",
-      expected: "if ch in seen and seen[ch] >= start:\n    start = seen[ch] + 1",
+      prompt: "`length_of_longest_unique(s)` returns the length of the longest substring without repeating characters. This version lets `start` jump backward for a character last seen OUTSIDE the window. Add the missing guard.",
+      starterCode: "def length_of_longest_unique(s):\n    seen = {}\n    start = 0\n    best = 0\n    for i, ch in enumerate(s):\n        if ch in seen:\n            start = seen[ch] + 1\n        seen[ch] = i\n        best = max(best, i - start + 1)\n    return best",
+      expected: "def length_of_longest_unique(s):\n    seen = {}\n    start = 0\n    best = 0\n    for i, ch in enumerate(s):\n        if ch in seen and seen[ch] >= start:\n            start = seen[ch] + 1\n        seen[ch] = i\n        best = max(best, i - start + 1)\n    return best",
       hints: ["A character seen long ago may be outside the current window.", "Only contract if its last index is within [start, i].", "Add: and seen[ch] >= start"],
     },
   ],
@@ -169,11 +169,11 @@ Crucially, \`start\` only ever moves **forward**, and \`i\` moves forward once p
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "305dfbb81644ed5c",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "2bd6c27b57f2f7a1",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

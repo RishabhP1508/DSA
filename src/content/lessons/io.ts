@@ -103,10 +103,10 @@ In this workspace you supply the input ahead of time (a "supplied input" box), a
     {
       id: "io-fix-1",
       kind: "fix-mistake",
-      prompt: "This program should print double the entered number but prints it twice in a row instead. Fix it.",
-      starterCode: "n = input('n: ')\nprint(n * 2)",
-      expected: "n = int(input('n: '))\nprint(n * 2)",
-      hints: ["What type does input() return?", "Multiplying a string repeats it.", "Convert with int() before doing arithmetic."],
+      prompt: "`double(text)` takes the string a user typed and should return TWICE the number it represents. This version forgets to convert the text to a number, so `'7'` becomes `'77'` (string repetition). Fix it.",
+      starterCode: "def double(text):\n    n = text\n    return n * 2",
+      expected: "def double(text):\n    n = int(text)\n    return n * 2",
+      hints: ["What type does input()/the raw text have?", "Multiplying a string repeats it.", "Convert with int() before doing arithmetic."],
     },
     {
       id: "io-predict-1",
@@ -142,11 +142,11 @@ In this workspace you supply the input ahead of time (a "supplied input" box), a
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "0c34394abcb68771",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "9ec7390e15aa8128",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 1,
   },
 };

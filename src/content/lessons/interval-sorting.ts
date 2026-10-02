@@ -103,9 +103,9 @@ The cost is dominated by the sort, **O(n log n)**, using \`sorted(..., key=lambd
     {
       id: "isort-complete-1",
       kind: "complete-code",
-      prompt: "Sort intervals by their END time.",
-      starterCode: "intervals = [[1, 5], [2, 3], [4, 6]]\n# TODO: sort by end time\nprint(sorted(intervals, key=None))",
-      expected: "intervals = [[1, 5], [2, 3], [4, 6]]\nprint(sorted(intervals, key=lambda iv: iv[1]))",
+      prompt: "Complete `sort_by_end(intervals)` so it returns the intervals sorted by their END time (index 1).",
+      starterCode: "def sort_by_end(intervals):\n    # TODO: sort by end time\n    return sorted(intervals, key=None)",
+      expected: "def sort_by_end(intervals):\n    return sorted(intervals, key=lambda iv: iv[1])",
       hints: ["The end is index 1 of each interval.", "Use a key lambda on iv[1].", "key=lambda iv: iv[1]"],
     },
   ],
@@ -135,11 +135,11 @@ The cost is dominated by the sort, **O(n log n)**, using \`sorted(..., key=lambd
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "49724a8fb9f03e24",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "67f1d3358e72d72d",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

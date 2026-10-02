@@ -208,11 +208,11 @@ The search then walks the text once with two pointers \`i\` (text) and \`j\` (pa
     {
       id: "kmp-complete-1",
       kind: "complete-code",
-      prompt: "Complete the mismatch handling in the search loop (fall back or advance).",
+      prompt: "Complete `kmp_search(text, pattern)`: return the sorted list of start indices where `pattern` occurs in `text`. Fill the mismatch handling (fall back via the LPS).",
       starterCode:
-        "if text[i] == pattern[j]:\n    i += 1\n    j += 1\n    if j == len(pattern):\n        res.append(i - j)\n        j = lps[j - 1]\nelif j > 0:\n    # TODO: reuse the matched prefix\n    pass\nelse:\n    i += 1",
+        "def kmp_search(text, pattern):\n    if not pattern:\n        return list(range(len(text) + 1))\n    lps = [0] * len(pattern)\n    k = 0\n    for q in range(1, len(pattern)):\n        while k > 0 and pattern[k] != pattern[q]:\n            k = lps[k - 1]\n        if pattern[k] == pattern[q]:\n            k += 1\n        lps[q] = k\n    res = []\n    i = j = 0\n    while i < len(text):\n        if text[i] == pattern[j]:\n            i += 1; j += 1\n            if j == len(pattern):\n                res.append(i - j)\n                j = lps[j - 1]\n        elif j > 0:\n            # TODO: reuse the matched prefix\n            pass\n        else:\n            i += 1\n    return res",
       expected:
-        "if text[i] == pattern[j]:\n    i += 1\n    j += 1\n    if j == len(pattern):\n        res.append(i - j)\n        j = lps[j - 1]\nelif j > 0:\n    j = lps[j - 1]\nelse:\n    i += 1",
+        "def kmp_search(text, pattern):\n    if not pattern:\n        return list(range(len(text) + 1))\n    lps = [0] * len(pattern)\n    k = 0\n    for q in range(1, len(pattern)):\n        while k > 0 and pattern[k] != pattern[q]:\n            k = lps[k - 1]\n        if pattern[k] == pattern[q]:\n            k += 1\n        lps[q] = k\n    res = []\n    i = j = 0\n    while i < len(text):\n        if text[i] == pattern[j]:\n            i += 1; j += 1\n            if j == len(pattern):\n                res.append(i - j)\n                j = lps[j - 1]\n        elif j > 0:\n            j = lps[j - 1]\n        else:\n            i += 1\n    return res",
       hints: [
         "On a mismatch with j > 0, don't restart or move i back.",
         "Fall back using the LPS of the last matched character.",
@@ -274,11 +274,11 @@ The search then walks the text once with two pointers \`i\` (text) and \`j\` (pa
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "eac8660e504ddee6",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "fb12ab32e65830f9",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

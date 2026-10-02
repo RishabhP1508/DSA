@@ -175,11 +175,11 @@ The loop condition is the subtle part: \`while fast is not None and fast.next is
     {
       id: "llsf-fix-1",
       kind: "fix-mistake",
-      prompt: "This crashes on even-length lists with 'NoneType has no attribute next'. Fix the loop condition.",
+      prompt: "`middle(head)` returns the middle node of a non-empty list using slow/fast pointers. This crashes on even-length lists with 'NoneType has no attribute next'. Fix the loop condition.",
       starterCode:
-        "while fast is not None:\n    slow = slow.next\n    fast = fast.next.next",
+        "def middle(head):\n    slow = head\n    fast = head\n    while fast is not None:\n        slow = slow.next\n        fast = fast.next.next\n    return slow",
       expected:
-        "while fast is not None and fast.next is not None:\n    slow = slow.next\n    fast = fast.next.next",
+        "def middle(head):\n    slow = head\n    fast = head\n    while fast is not None and fast.next is not None:\n        slow = slow.next\n        fast = fast.next.next\n    return slow",
       hints: [
         "fast.next.next reads two links ahead.",
         "Both fast AND fast.next must exist before stepping twice.",
@@ -230,11 +230,11 @@ The loop condition is the subtle part: \`while fast is not None and fast.next is
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "3b1198567adc22b0",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "aa33fef3c2f4854c",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

@@ -166,11 +166,11 @@ Think of a scavenger hunt: each clue (node) tells you where the next clue is. Yo
     {
       id: "ll-fix-1",
       kind: "fix-mistake",
-      prompt: "This traversal never terminates. Find and fix the bug.",
+      prompt: "`collect(head)` should walk the list and return a list of every node's value in order. This traversal never terminates. Find and fix the bug.",
       starterCode:
-        "current = head\nwhile current is not None:\n    print(current.val)\n    # bug: current is never advanced",
+        "def collect(head):\n    out = []\n    current = head\n    while current is not None:\n        out.append(current.val)\n        # bug: current is never advanced\n    return out",
       expected:
-        "current = head\nwhile current is not None:\n    print(current.val)\n    current = current.next",
+        "def collect(head):\n    out = []\n    current = head\n    while current is not None:\n        out.append(current.val)\n        current = current.next\n    return out",
       hints: [
         "What has to change each iteration for the loop to end?",
         "The pointer must move toward the end of the list.",
@@ -229,11 +229,11 @@ Think of a scavenger hunt: each clue (node) tells you where the next clue is. Yo
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "a83276a2f18bd51c",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "cafe637d84959bbf",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

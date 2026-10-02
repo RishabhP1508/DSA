@@ -166,11 +166,11 @@ export const twoHeapsPattern: PatternDefinition = {
       id: "pat-th-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This max-heap isn't actually a max-heap (heapq is a min-heap). Fix the lower half.",
+        "`add_lower(small, large, num)` pushes `num` into the lower half (`small`, a MAX-heap kept as negated values) and moves that half's current maximum up into `large`, then returns `(small, large)`. This max-heap isn't actually a max-heap (heapq is a min-heap). Fix the lower half.",
       starterCode:
-        "heapq.heappush(self.small, num)\nheapq.heappush(self.large, heapq.heappop(self.small))",
+        "import heapq\ndef add_lower(small, large, num):\n    heapq.heappush(small, num)\n    heapq.heappush(large, heapq.heappop(small))\n    return small, large",
       expected:
-        "heapq.heappush(self.small, -num)\nheapq.heappush(self.large, -heapq.heappop(self.small))",
+        "import heapq\ndef add_lower(small, large, num):\n    heapq.heappush(small, -num)\n    heapq.heappush(large, -heapq.heappop(small))\n    return small, large",
       hints: [
         "heapq only gives a min-heap.",
         "Negate values to simulate a max-heap.",
@@ -203,11 +203,11 @@ export const twoHeapsPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "cb75838b74c6ac49",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "61aba0d75abf2aef",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

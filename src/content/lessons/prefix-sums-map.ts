@@ -118,9 +118,9 @@ This is a crucial pattern-recognition contrast from the Arrays topic: **fixed-si
     {
       id: "psm-fix-1",
       kind: "fix-mistake",
-      prompt: "This misses subarrays that start at index 0. Fix the seed.",
-      starterCode: "count = 0\nprefix = 0\nseen = {}\nfor x in nums:\n    prefix += x\n    count += seen.get(prefix - k, 0)\n    seen[prefix] = seen.get(prefix, 0) + 1",
-      expected: "count = 0\nprefix = 0\nseen = {0: 1}\nfor x in nums:\n    prefix += x\n    count += seen.get(prefix - k, 0)\n    seen[prefix] = seen.get(prefix, 0) + 1",
+      prompt: "Complete `count_subarrays(nums, k)`: count subarrays summing to k. The seen map misses subarrays that start at index 0 — fix the seed.",
+      starterCode: "def count_subarrays(nums, k):\n    count = 0\n    prefix = 0\n    seen = {}\n    for x in nums:\n        prefix += x\n        count += seen.get(prefix - k, 0)\n        seen[prefix] = seen.get(prefix, 0) + 1\n    return count",
+      expected: "def count_subarrays(nums, k):\n    count = 0\n    prefix = 0\n    seen = {0: 1}\n    for x in nums:\n        prefix += x\n        count += seen.get(prefix - k, 0)\n        seen[prefix] = seen.get(prefix, 0) + 1\n    return count",
       hints: ["What prefix corresponds to a subarray starting at index 0?", "The empty prefix has sum 0.", "Seed seen = {0: 1}."],
     },
     {
@@ -157,11 +157,11 @@ This is a crucial pattern-recognition contrast from the Arrays topic: **fixed-si
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "57a9438955b80cea",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "815d590f97df4f4a",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

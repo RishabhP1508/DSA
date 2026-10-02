@@ -184,11 +184,11 @@ export const slidingWindowPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "78b424d3a1cb8d6d",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "38962136c5a8adcf",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

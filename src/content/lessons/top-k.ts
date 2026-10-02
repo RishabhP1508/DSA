@@ -135,9 +135,9 @@ Python's \`heapq.nlargest(k, nums)\` does exactly this internally and returns th
     {
       id: "topk-fix-1",
       kind: "fix-mistake",
-      prompt: "This is meant to keep the k largest but keeps the k smallest. Fix the overflow handling (it should keep a min-heap and pop the smallest).",
-      starterCode: "h = []\nfor x in nums:\n    heapq.heappush(h, -x)\n    if len(h) > k:\n        heapq.heappop(h)",
-      expected: "h = []\nfor x in nums:\n    heapq.heappush(h, x)\n    if len(h) > k:\n        heapq.heappop(h)",
+      prompt: "Complete `top_k(nums, k)`: return the k largest values (sorted). This version negates values and keeps the k SMALLEST — fix the overflow handling so a size-k min-heap retains the largest.",
+      starterCode: "import heapq\ndef top_k(nums, k):\n    h = []\n    for x in nums:\n        heapq.heappush(h, -x)\n        if len(h) > k:\n            heapq.heappop(h)\n    return sorted(h)",
+      expected: "import heapq\ndef top_k(nums, k):\n    h = []\n    for x in nums:\n        heapq.heappush(h, x)\n        if len(h) > k:\n            heapq.heappop(h)\n    return sorted(h)",
       hints: ["Negating makes it behave like a max-heap, so popping removes the largest.", "For the k LARGEST you want a plain min-heap.", "Push x (not -x) so heappop drops the smallest."],
     },
   ],
@@ -167,11 +167,11 @@ Python's \`heapq.nlargest(k, nums)\` does exactly this internally and returns th
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "5f680c436688f8ae",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "001c9496cc55326e",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

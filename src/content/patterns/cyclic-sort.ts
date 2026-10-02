@@ -135,11 +135,11 @@ export const cyclicSortPattern: PatternDefinition = {
       id: "pat-cs-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This loops forever when the array has duplicates. Add the guard that prevents it.",
+        "`cyclic_sort(nums)` places each value `v` (with `0 <= v < len(nums)`) at index `v` and returns the array. This loops forever when the array has duplicates. Add the guard that prevents it.",
       starterCode:
-        "i = 0\nwhile i < len(nums):\n    j = nums[i]\n    if j < len(nums):\n        nums[i], nums[j] = nums[j], nums[i]\n    else:\n        i += 1",
+        "def cyclic_sort(nums):\n    i = 0\n    while i < len(nums):\n        j = nums[i]\n        if j < len(nums):\n            nums[i], nums[j] = nums[j], nums[i]\n        else:\n            i += 1\n    return nums",
       expected:
-        "i = 0\nwhile i < len(nums):\n    j = nums[i]\n    if j < len(nums) and nums[i] != nums[j]:\n        nums[i], nums[j] = nums[j], nums[i]\n    else:\n        i += 1",
+        "def cyclic_sort(nums):\n    i = 0\n    while i < len(nums):\n        j = nums[i]\n        if j < len(nums) and nums[i] != nums[j]:\n            nums[i], nums[j] = nums[j], nums[i]\n        else:\n            i += 1\n    return nums",
       hints: [
         "If nums[i] already equals nums[j], swapping does nothing but repeats forever.",
         "Only swap when the target slot holds a different value.",
@@ -185,11 +185,11 @@ export const cyclicSortPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "d2fd863554d64d88",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "7f587b2f1f087356",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

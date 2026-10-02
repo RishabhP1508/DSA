@@ -163,11 +163,11 @@ export const graphDfsComponentsPattern: PatternDefinition = {
       id: "pat-gdc-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This DFS loops forever on a cyclic graph. Add the missing guard.",
+        "`count_components(n, edges)` returns the number of connected components of an undirected graph on nodes `0..n-1`. Its inner DFS loops forever on a cyclic graph. Add the missing guard.",
       starterCode:
-        "def dfs(node):\n    for nb in adj[node]:\n        dfs(nb)",
+        "def count_components(n, edges):\n    adj = {i: [] for i in range(n)}\n    for u, v in edges:\n        adj[u].append(v)\n        adj[v].append(u)\n    seen = set()\n    def dfs(node):\n        for nb in adj[node]:\n            dfs(nb)\n    count = 0\n    for i in range(n):\n        if i not in seen:\n            count += 1\n            dfs(i)\n    return count",
       expected:
-        "def dfs(node):\n    seen.add(node)\n    for nb in adj[node]:\n        if nb not in seen:\n            dfs(nb)",
+        "def count_components(n, edges):\n    adj = {i: [] for i in range(n)}\n    for u, v in edges:\n        adj[u].append(v)\n        adj[v].append(u)\n    seen = set()\n    def dfs(node):\n        seen.add(node)\n        for nb in adj[node]:\n            if nb not in seen:\n                dfs(nb)\n    count = 0\n    for i in range(n):\n        if i not in seen:\n            count += 1\n            dfs(i)\n    return count",
       hints: [
         "Cycles cause infinite recursion.",
         "Mark nodes visited on entry.",
@@ -200,11 +200,11 @@ export const graphDfsComponentsPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "ffcc920d66558bc2",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "84fd52d37226f611",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 5,
   },
 };

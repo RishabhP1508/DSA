@@ -139,11 +139,11 @@ Both are **O(log n)** (they are binary searches) and operate on a sorted array. 
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "1716bd90dcb9bf8d",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "c1576a274792801e",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

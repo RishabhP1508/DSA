@@ -133,9 +133,9 @@ The magic of the O(n) bound: although there is a \`while\` inside the \`for\`, *
     {
       id: "mono-fix-1",
       kind: "fix-mistake",
-      prompt: "This stores values, but the problem needs the day-gap (indices). Fix it to store indices.",
-      starterCode: "stack = []\nfor i in range(len(nums)):\n    while stack and stack[-1] < nums[i]:\n        stack.pop()\n    stack.append(nums[i])",
-      expected: "stack = []\nfor i in range(len(nums)):\n    while stack and nums[stack[-1]] < nums[i]:\n        stack.pop()\n    stack.append(i)",
+      prompt: "`mono_stack(nums)` should return the monotonic stack of INDICES left after one pass (pop while the top's value is smaller than the current value, then push the current index). This version pushes the VALUES instead, so you cannot recover positions. Fix it to store and compare by indices.",
+      starterCode: "def mono_stack(nums):\n    stack = []\n    for i in range(len(nums)):\n        while stack and stack[-1] < nums[i]:\n            stack.pop()\n        stack.append(nums[i])\n    return stack",
+      expected: "def mono_stack(nums):\n    stack = []\n    for i in range(len(nums)):\n        while stack and nums[stack[-1]] < nums[i]:\n            stack.pop()\n        stack.append(i)\n    return stack",
       hints: ["To compute gaps you need positions, not values.", "Push i and compare via nums[stack[-1]].", "Store indices; index the array when comparing."],
     },
     {
@@ -172,11 +172,11 @@ The magic of the O(n) bound: although there is a \`while\` inside the \`for\`, *
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "5ca8e54606f871f9",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "524ac9ad0034777b",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

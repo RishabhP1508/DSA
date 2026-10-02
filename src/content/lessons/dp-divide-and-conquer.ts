@@ -160,11 +160,11 @@ The cost follows the classic recurrence **T(n) = 2·T(n/2) + O(n)**: two half-si
     {
       id: "dpdc-complete-1",
       kind: "complete-code",
-      prompt: "Complete the return so it considers all three cases.",
+      prompt: "Complete `max_subarray(nums)` (divide & conquer): return the maximum subarray sum. Fill the combine step that returns the best of left-only, right-only, and crossing.",
       starterCode:
-        "left = helper(lo, mid)\nright = helper(mid + 1, hi)\ncross = left_best + right_best\n# TODO: return the best of the three cases\n",
+        "def max_subarray(nums):\n    def helper(lo, hi):\n        if lo == hi:\n            return nums[lo]\n        mid = (lo + hi) // 2\n        left = helper(lo, mid)\n        right = helper(mid + 1, hi)\n        # crossing sum through the middle\n        s = 0; left_best = nums[mid]\n        for k in range(mid, lo - 1, -1):\n            s += nums[k]; left_best = max(left_best, s)\n        s = 0; right_best = nums[mid + 1]\n        for k in range(mid + 1, hi + 1):\n            s += nums[k]; right_best = max(right_best, s)\n        cross = left_best + right_best\n        # TODO: return the best of the three cases\n        pass\n    return helper(0, len(nums) - 1)",
       expected:
-        "left = helper(lo, mid)\nright = helper(mid + 1, hi)\ncross = left_best + right_best\nreturn max(left, right, cross)",
+        "def max_subarray(nums):\n    def helper(lo, hi):\n        if lo == hi:\n            return nums[lo]\n        mid = (lo + hi) // 2\n        left = helper(lo, mid)\n        right = helper(mid + 1, hi)\n        # crossing sum through the middle\n        s = 0; left_best = nums[mid]\n        for k in range(mid, lo - 1, -1):\n            s += nums[k]; left_best = max(left_best, s)\n        s = 0; right_best = nums[mid + 1]\n        for k in range(mid + 1, hi + 1):\n            s += nums[k]; right_best = max(right_best, s)\n        cross = left_best + right_best\n        return max(left, right, cross)\n    return helper(0, len(nums) - 1)",
       hints: [
         "Three candidates: left-only, right-only, crossing.",
         "Return the largest.",
@@ -225,11 +225,11 @@ The cost follows the classic recurrence **T(n) = 2·T(n/2) + O(n)**: two half-si
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "00e75e6c611fc44b",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "d1e42672370684d5",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

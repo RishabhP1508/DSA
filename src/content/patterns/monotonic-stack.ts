@@ -144,11 +144,11 @@ export const monotonicStackPattern: PatternDefinition = {
       id: "pat-ms-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This 'next greater' uses the wrong comparison and leaves answers unresolved. Fix the while condition.",
+        "`next_greater(nums)` returns a list where each position holds the next strictly greater element to its right, or -1 if none. This uses the wrong comparison and leaves answers unresolved. Fix the while condition.",
       starterCode:
-        "for i, x in enumerate(nums):\n    while stack and nums[stack[-1]] > x:\n        res[stack.pop()] = x\n    stack.append(i)",
+        "def next_greater(nums):\n    res = [-1] * len(nums)\n    stack = []\n    for i, x in enumerate(nums):\n        while stack and nums[stack[-1]] > x:\n            res[stack.pop()] = x\n        stack.append(i)\n    return res",
       expected:
-        "for i, x in enumerate(nums):\n    while stack and nums[stack[-1]] < x:\n        res[stack.pop()] = x\n    stack.append(i)",
+        "def next_greater(nums):\n    res = [-1] * len(nums)\n    stack = []\n    for i, x in enumerate(nums):\n        while stack and nums[stack[-1]] < x:\n            res[stack.pop()] = x\n        stack.append(i)\n    return res",
       hints: [
         "x resolves stacked elements that are SMALLER than it.",
         "The stack should stay decreasing for 'next greater'.",
@@ -182,11 +182,11 @@ export const monotonicStackPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "819741f643ed2285",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "40f1025db88b01b7",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

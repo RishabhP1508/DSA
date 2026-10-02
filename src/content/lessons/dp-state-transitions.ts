@@ -143,11 +143,11 @@ This is DP with the table compressed to a **constant number of rolling variables
     {
       id: "dpst-complete-1",
       kind: "complete-code",
-      prompt: "Complete the two transitions using the rolling state.",
+      prompt: "Complete `max_profit(prices)`: best profit from one buy then one later sell (0 if none).",
       starterCode:
-        "min_price = prices[0]\nbest = 0\nfor p in prices[1:]:\n    # TODO: update best, then min_price\n    pass\nreturn best",
+        "def max_profit(prices):\n    if not prices:\n        return 0\n    min_price = prices[0]\n    best = 0\n    for p in prices[1:]:\n        # TODO: update best, then min_price\n        pass\n    return best",
       expected:
-        "min_price = prices[0]\nbest = 0\nfor p in prices[1:]:\n    best = max(best, p - min_price)\n    min_price = min(min_price, p)\nreturn best",
+        "def max_profit(prices):\n    if not prices:\n        return 0\n    min_price = prices[0]\n    best = 0\n    for p in prices[1:]:\n        best = max(best, p - min_price)\n        min_price = min(min_price, p)\n    return best",
       hints: [
         "First ask: sell today for p - min_price?",
         "Then update the cheapest buy point.",
@@ -207,11 +207,11 @@ This is DP with the table compressed to a **constant number of rolling variables
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "6b8bf29b7a8008fb",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "6e2ae95492bbc0d6",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

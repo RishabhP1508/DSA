@@ -108,10 +108,10 @@ The cost is linear in the total number of characters: \`split\` scans the whole 
     {
       id: "sp-complete-1",
       kind: "complete-code",
-      prompt: "Parse a space-separated line of integers into a list and print their maximum.",
-      starterCode: "line = '3 9 2 7'\n# TODO: split, convert to ints, print the max\n",
-      expected: "line = '3 9 2 7'\nnums = [int(p) for p in line.split()]\nprint(max(nums))",
-      hints: ["split() with no argument splits on whitespace.", "Convert each token with int in a comprehension.", "print(max(nums))"],
+      prompt: "Complete `parse_max(line)` so it parses a space-separated line of integers and returns their maximum.",
+      starterCode: "def parse_max(line):\n    # TODO: split, convert to ints, return the max\n    pass",
+      expected: "def parse_max(line):\n    nums = [int(p) for p in line.split()]\n    return max(nums)",
+      hints: ["split() with no argument splits on whitespace.", "Convert each token with int in a comprehension.", "return max(nums)"],
     },
     {
       id: "sp-choose-1",
@@ -147,11 +147,11 @@ The cost is linear in the total number of characters: \`split\` scans the whole 
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "64a5b2cab101bb4a",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "71f840907ba25166",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

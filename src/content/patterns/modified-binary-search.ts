@@ -166,11 +166,11 @@ export const modifiedBinarySearchPattern: PatternDefinition = {
       id: "pat-mbs-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This 'first occurrence' search returns any match instead of the first. Fix it to keep searching left.",
+        "`first_occurrence(nums, target)` returns the index of the FIRST occurrence of target in a sorted array, or -1. This returns any match. Fix it to keep searching left.",
       starterCode:
-        "lo, hi = 0, len(nums) - 1\nres = -1\nwhile lo <= hi:\n    mid = (lo + hi) // 2\n    if nums[mid] == target:\n        return mid\n    elif nums[mid] < target:\n        lo = mid + 1\n    else:\n        hi = mid - 1\nreturn res",
+        "def first_occurrence(nums, target):\n    lo, hi = 0, len(nums) - 1\n    res = -1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if nums[mid] == target:\n            return mid\n        elif nums[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return res",
       expected:
-        "lo, hi = 0, len(nums) - 1\nres = -1\nwhile lo <= hi:\n    mid = (lo + hi) // 2\n    if nums[mid] == target:\n        res = mid\n        hi = mid - 1\n    elif nums[mid] < target:\n        lo = mid + 1\n    else:\n        hi = mid - 1\nreturn res",
+        "def first_occurrence(nums, target):\n    lo, hi = 0, len(nums) - 1\n    res = -1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if nums[mid] == target:\n            res = mid\n            hi = mid - 1\n        elif nums[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return res",
       hints: [
         "Returning on the first match may skip earlier occurrences.",
         "Record the match, then keep searching to the left.",
@@ -202,11 +202,11 @@ export const modifiedBinarySearchPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "199e2189f6d57d0b",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "6b6208893bd7e5f3",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

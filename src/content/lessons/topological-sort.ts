@@ -135,10 +135,10 @@ It runs in **O(V + E)** — each vertex is queued once and each edge relaxes one
     {
       id: "topo-complete-1",
       kind: "complete-code",
-      prompt: "Complete the in-degree update inside Kahn's main loop.",
-      starterCode: "for nb in adj[node]:\n    # TODO: one prerequisite of nb is done; queue nb if ready\n    pass",
-      expected: "for nb in adj[node]:\n    indeg[nb] -= 1\n    if indeg[nb] == 0:\n        q.append(nb)",
-      hints: ["Decrement the neighbour's in-degree.", "If it reaches 0, all prerequisites are met.", "indeg[nb] -= 1; if indeg[nb] == 0: q.append(nb)"],
+      prompt: "Complete `kahn(adj, indeg)`: return a topological order via Kahn's algorithm. Fill in the in-degree update inside the main loop.",
+      starterCode: "from collections import deque\ndef kahn(adj, indeg):\n    q = deque([v for v in indeg if indeg[v] == 0])\n    order = []\n    while q:\n        node = q.popleft()\n        order.append(node)\n        # TODO: one prerequisite of each neighbour is done; queue it if ready\n        pass\n    return order",
+      expected: "from collections import deque\ndef kahn(adj, indeg):\n    q = deque([v for v in indeg if indeg[v] == 0])\n    order = []\n    while q:\n        node = q.popleft()\n        order.append(node)\n        for nb in adj[node]:\n            indeg[nb] -= 1\n            if indeg[nb] == 0:\n                q.append(nb)\n    return order",
+      hints: ["Decrement each neighbour's in-degree.", "If it reaches 0, all prerequisites are met — queue it.", "for nb in adj[node]: indeg[nb] -= 1; if indeg[nb] == 0: q.append(nb)"],
     },
     {
       id: "topo-choose-1",
@@ -174,11 +174,11 @@ It runs in **O(V + E)** — each vertex is queued once and each edge relaxes one
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "5959887f6a3ab874",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "d50a8d26897310c9",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 5,
   },
 };

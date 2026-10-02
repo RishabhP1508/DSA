@@ -140,9 +140,9 @@ This pattern is everywhere in grid problems: "rotting oranges" (all rotten cells
     {
       id: "msbfs-fix-1",
       kind: "fix-mistake",
-      prompt: "This seeds only the first source, so distances are wrong. Fix it to seed all sources.",
-      starterCode: "dist = [-1] * n\nq = deque()\ndist[sources[0]] = 0\nq.append(sources[0])",
-      expected: "dist = [-1] * n\nq = deque()\nfor s in sources:\n    dist[s] = 0\n    q.append(s)",
+      prompt: "Complete `seed_sources(n, sources)`: return the initial `(dist, queue)` for multi-source BFS over n vertices. This seeds only the first source — fix it to seed all sources.",
+      starterCode: "from collections import deque\ndef seed_sources(n, sources):\n    dist = [-1] * n\n    q = deque()\n    dist[sources[0]] = 0\n    q.append(sources[0])\n    return dist, list(q)",
+      expected: "from collections import deque\ndef seed_sources(n, sources):\n    dist = [-1] * n\n    q = deque()\n    for s in sources:\n        dist[s] = 0\n        q.append(s)\n    return dist, list(q)",
       hints: ["Multi-source means ALL sources start at distance 0.", "Loop over every source.", "for s in sources: dist[s] = 0; q.append(s)"],
     },
   ],
@@ -172,11 +172,11 @@ This pattern is everywhere in grid problems: "rotting oranges" (all rotten cells
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "c96edf1aa43e6cc3",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "a2e13b9ebb57d72f",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 5,
   },
 };

@@ -179,11 +179,11 @@ export const dynamicProgrammingPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "6c9173ebc66b7c96",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "9a432504f5b89f1d",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

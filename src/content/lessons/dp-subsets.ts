@@ -206,11 +206,11 @@ Recording \`path[:]\` (a **copy**) rather than \`path\` itself is essential: \`p
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "ac7949d9001b72dd",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "81b7c15935bfc244",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

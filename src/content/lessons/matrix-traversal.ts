@@ -112,9 +112,9 @@ Row/column pointers in the visualization highlight the current cell so you can s
     {
       id: "mat-complete-1",
       kind: "complete-code",
-      prompt: "Complete the nested loops to sum every value in the grid.",
-      starterCode: "grid = [[1, 2, 3], [4, 5, 6]]\ntotal = 0\nfor r in range(len(grid)):\n    for c in range(len(grid[r])):\n        # TODO: add grid[r][c] to total\n        pass\nprint(total)",
-      expected: "grid = [[1, 2, 3], [4, 5, 6]]\ntotal = 0\nfor r in range(len(grid)):\n    for c in range(len(grid[r])):\n        total = total + grid[r][c]\nprint(total)",
+      prompt: "Complete `grid_sum(grid)` with nested loops so it returns the sum of every value in the grid.",
+      starterCode: "def grid_sum(grid):\n    total = 0\n    for r in range(len(grid)):\n        for c in range(len(grid[r])):\n            # TODO: add grid[r][c] to total\n            pass\n    return total",
+      expected: "def grid_sum(grid):\n    total = 0\n    for r in range(len(grid)):\n        for c in range(len(grid[r])):\n            total = total + grid[r][c]\n    return total",
       hints: ["Access the cell with grid[r][c].", "Add it to the accumulator.", "total = total + grid[r][c]"],
     },
     {
@@ -151,11 +151,11 @@ Row/column pointers in the visualization highlight the current cell so you can s
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "0706cb68dea95a7a",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "3f258932430a5b4e",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

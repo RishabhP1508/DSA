@@ -153,11 +153,11 @@ export const knapsackPattern: PatternDefinition = {
       id: "pat-ks-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This subset-sum accidentally allows reusing an item. Fix the capacity loop direction.",
+        "`subset_sum(nums, target)` returns whether some subset of `nums` sums to `target`, using each item at most once. This accidentally allows reusing an item. Fix the capacity loop direction.",
       starterCode:
-        "for num in nums:\n    for s in range(num, target + 1):\n        dp[s] = dp[s] or dp[s - num]",
+        "def subset_sum(nums, target):\n    dp = [False] * (target + 1)\n    dp[0] = True\n    for num in nums:\n        for s in range(num, target + 1):\n            dp[s] = dp[s] or dp[s - num]\n    return dp[target]",
       expected:
-        "for num in nums:\n    for s in range(target, num - 1, -1):\n        dp[s] = dp[s] or dp[s - num]",
+        "def subset_sum(nums, target):\n    dp = [False] * (target + 1)\n    dp[0] = True\n    for num in nums:\n        for s in range(target, num - 1, -1):\n            dp[s] = dp[s] or dp[s - num]\n    return dp[target]",
       hints: [
         "Going upward lets the same item be counted again this pass.",
         "For 0/1, iterate capacity from high to low.",
@@ -192,11 +192,11 @@ export const knapsackPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "d94fa36ddbc91839",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "0f81566bd46d687a",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

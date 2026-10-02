@@ -150,11 +150,11 @@ Reporting a bound **without saying which case** is ambiguous, so always state it
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "1209e895786f399f",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "1f31f7d42bd2adc4",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 1,
   },
 };

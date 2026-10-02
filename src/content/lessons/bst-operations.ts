@@ -190,11 +190,11 @@ Here's the crucial nuance the complexity panel makes explicit: **h depends on sh
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "4d3da813c2e5a8e4",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "1e93a995ea37bc01",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 5,
   },
 };

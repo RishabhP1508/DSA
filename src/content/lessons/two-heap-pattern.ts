@@ -128,9 +128,9 @@ This pattern powers more than medians: **IPO / maximize capital** (a max-heap of
     {
       id: "twoheap-fix-1",
       kind: "fix-mistake",
-      prompt: "This insert skips the rebalance, so the boundary can drift off the roots. Add the missing step.",
-      starterCode: "heapq.heappush(small, -x)\nheapq.heappush(large, -heapq.heappop(small))",
-      expected: "heapq.heappush(small, -x)\nheapq.heappush(large, -heapq.heappop(small))\nif len(large) > len(small):\n    heapq.heappush(small, -heapq.heappop(large))",
+      prompt: "Complete `insert(small, large, x)`: push x into the two-heap structure (small is a max-heap via negation, large a min-heap). This skips the rebalance, so the boundary drifts off the roots. Add the missing step.",
+      starterCode: "import heapq\ndef insert(small, large, x):\n    heapq.heappush(small, -x)\n    heapq.heappush(large, -heapq.heappop(small))",
+      expected: "import heapq\ndef insert(small, large, x):\n    heapq.heappush(small, -x)\n    heapq.heappush(large, -heapq.heappop(small))\n    if len(large) > len(small):\n        heapq.heappush(small, -heapq.heappop(large))",
       hints: ["After the shift, large may be larger than small.", "Restore the size invariant.", "If len(large) > len(small): move large's min back to small."],
     },
   ],
@@ -160,11 +160,11 @@ This pattern powers more than medians: **IPO / maximize capital** (a max-heap of
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "a68b17d8ed2109fb",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "69ce10c77bb4adfb",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

@@ -150,11 +150,11 @@ export const fastSlowPointersPattern: PatternDefinition = {
       id: "pat-fs-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This crashes with a NoneType error on even-length or acyclic lists. Fix the loop condition.",
+        "`has_cycle(head)` returns whether the linked list has a cycle. This crashes on even-length/acyclic lists. Fix the loop condition.",
       starterCode:
-        "slow = fast = head\nwhile fast:\n    slow = slow.next\n    fast = fast.next.next\n    if slow is fast:\n        return True\nreturn False",
+        "def has_cycle(head):\n    slow = fast = head\n    while fast:\n        slow = slow.next\n        fast = fast.next.next\n        if slow is fast:\n            return True\n    return False",
       expected:
-        "slow = fast = head\nwhile fast and fast.next:\n    slow = slow.next\n    fast = fast.next.next\n    if slow is fast:\n        return True\nreturn False",
+        "def has_cycle(head):\n    slow = fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        if slow is fast:\n            return True\n    return False",
       hints: [
         "fast.next.next reads two links ahead.",
         "Both fast and fast.next must exist before stepping twice.",
@@ -202,11 +202,11 @@ export const fastSlowPointersPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "425433b5f53ab15b",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "407c76101b334c0b",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

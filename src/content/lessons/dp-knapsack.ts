@@ -155,11 +155,11 @@ This is **O(n·cap)** time and space — it fills an (n+1)×(cap+1) table once. 
     {
       id: "dpks-complete-1",
       kind: "complete-code",
-      prompt: "Complete the take/skip transition for 0/1 knapsack.",
+      prompt: "Complete `knapsack(weights, values, capacity)` for the 0/1 knapsack: return the maximum total value of a subset of items whose weights fit in `capacity`. Fill in the take/skip transition.",
       starterCode:
-        "dp[i][w] = dp[i - 1][w]\nif weights[i - 1] <= w:\n    # TODO: compute the 'take' value and keep the better option\n    pass",
+        "def knapsack(weights, values, capacity):\n    n = len(weights)\n    dp = [[0] * (capacity + 1) for _ in range(n + 1)]\n    for i in range(1, n + 1):\n        for w in range(capacity + 1):\n            dp[i][w] = dp[i - 1][w]\n            if weights[i - 1] <= w:\n                # TODO: compute the 'take' value and keep the better option\n                pass\n    return dp[n][capacity]",
       expected:
-        "dp[i][w] = dp[i - 1][w]\nif weights[i - 1] <= w:\n    take = dp[i - 1][w - weights[i - 1]] + values[i - 1]\n    if take > dp[i][w]:\n        dp[i][w] = take",
+        "def knapsack(weights, values, capacity):\n    n = len(weights)\n    dp = [[0] * (capacity + 1) for _ in range(n + 1)]\n    for i in range(1, n + 1):\n        for w in range(capacity + 1):\n            dp[i][w] = dp[i - 1][w]\n            if weights[i - 1] <= w:\n                take = dp[i - 1][w - weights[i - 1]] + values[i - 1]\n                if take > dp[i][w]:\n                    dp[i][w] = take\n    return dp[n][capacity]",
       hints: [
         "Taking item i uses w - weights[i-1] capacity for earlier items.",
         "Add its value to that best.",
@@ -220,11 +220,11 @@ This is **O(n·cap)** time and space — it fills an (n+1)×(cap+1) table once. 
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "c77a488534b0dbdf",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "45a051feddd996fd",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

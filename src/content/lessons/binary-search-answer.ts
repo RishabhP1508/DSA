@@ -143,9 +143,9 @@ Here we find the minimum ship capacity to deliver all packages within \`days\`. 
     {
       id: "bsa-fix-1",
       kind: "fix-mistake",
-      prompt: "This answer-search loops forever. Fix the boundary update so it converges.",
-      starterCode: "while lo < hi:\n    mid = (lo + hi) // 2\n    if can_ship(mid):\n        hi = mid\n    else:\n        lo = mid",
-      expected: "while lo < hi:\n    mid = (lo + hi) // 2\n    if can_ship(mid):\n        hi = mid\n    else:\n        lo = mid + 1",
+      prompt: "`search_answer(can_ship, lo, hi)` binary-searches for the smallest feasible value in [lo, hi] (can_ship is monotonic: once True it stays True). This version loops forever because the infeasible branch doesn't advance. Fix the boundary update so it converges and returns that smallest feasible value.",
+      starterCode: "def search_answer(can_ship, lo, hi):\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if can_ship(mid):\n            hi = mid\n        else:\n            lo = mid\n    return lo",
+      expected: "def search_answer(can_ship, lo, hi):\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if can_ship(mid):\n            hi = mid\n        else:\n            lo = mid + 1\n    return lo",
       hints: ["When mid is infeasible, mid itself can't be the answer.", "lo = mid does not make progress when lo and mid are equal.", "Use lo = mid + 1 in the infeasible branch."],
     },
   ],
@@ -175,11 +175,11 @@ Here we find the minimum ship capacity to deliver all packages within \`days\`. 
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "12891e8de1aaae8b",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "12535c306ff67694",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

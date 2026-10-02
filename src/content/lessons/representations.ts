@@ -142,11 +142,11 @@ The lesson's takeaway: **choose the representation to match your operations.** L
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "234fdd7bef71bb6e",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "48a6032810b90a2f",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 1,
   },
 };

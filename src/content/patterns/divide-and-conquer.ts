@@ -155,11 +155,11 @@ export const divideAndConquerPattern: PatternDefinition = {
       id: "pat-dac-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This merge sort drops leftover elements after one half empties. Fix the combine step.",
+        "`merge(left, right)` merges two sorted lists into one sorted list. This drops leftovers after one side empties. Fix the combine step.",
       starterCode:
-        "out = []\ni = j = 0\nwhile i < len(left) and j < len(right):\n    if left[i] <= right[j]:\n        out.append(left[i]); i += 1\n    else:\n        out.append(right[j]); j += 1\nreturn out",
+        "def merge(left, right):\n    out = []\n    i = j = 0\n    while i < len(left) and j < len(right):\n        if left[i] <= right[j]:\n            out.append(left[i]); i += 1\n        else:\n            out.append(right[j]); j += 1\n    # TODO: append whatever remains\n    return out",
       expected:
-        "out = []\ni = j = 0\nwhile i < len(left) and j < len(right):\n    if left[i] <= right[j]:\n        out.append(left[i]); i += 1\n    else:\n        out.append(right[j]); j += 1\nout.extend(left[i:])\nout.extend(right[j:])\nreturn out",
+        "def merge(left, right):\n    out = []\n    i = j = 0\n    while i < len(left) and j < len(right):\n        if left[i] <= right[j]:\n            out.append(left[i]); i += 1\n        else:\n            out.append(right[j]); j += 1\n    out.extend(left[i:])\n    out.extend(right[j:])\n    return out",
       hints: [
         "When the loop ends, one half may still have elements.",
         "Those remaining elements are already sorted.",
@@ -192,11 +192,11 @@ export const divideAndConquerPattern: PatternDefinition = {
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "166f5a5629254054",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "6cc2454aae4c2847",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

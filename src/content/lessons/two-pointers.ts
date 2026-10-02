@@ -115,9 +115,9 @@ The other common form is the **fast/slow** or **same-direction** two pointers (e
     {
       id: "tp-fix-1",
       kind: "fix-mistake",
-      prompt: "This reversal loops forever. Fix it.",
-      starterCode: "arr = [1, 2, 3]\nlo = 0\nhi = len(arr) - 1\nwhile lo < hi:\n    arr[lo], arr[hi] = arr[hi], arr[lo]",
-      expected: "arr = [1, 2, 3]\nlo = 0\nhi = len(arr) - 1\nwhile lo < hi:\n    arr[lo], arr[hi] = arr[hi], arr[lo]\n    lo = lo + 1\n    hi = hi - 1",
+      prompt: "`reverse_in_place(arr)` should reverse arr using two pointers and return it, but this version loops forever because the pointers never move. Fix it.",
+      starterCode: "def reverse_in_place(arr):\n    lo = 0\n    hi = len(arr) - 1\n    while lo < hi:\n        arr[lo], arr[hi] = arr[hi], arr[lo]\n    return arr",
+      expected: "def reverse_in_place(arr):\n    lo = 0\n    hi = len(arr) - 1\n    while lo < hi:\n        arr[lo], arr[hi] = arr[hi], arr[lo]\n        lo = lo + 1\n        hi = hi - 1\n    return arr",
       hints: ["What must change each pass for lo < hi to become False?", "Both pointers must move toward the middle.", "Add lo = lo + 1 and hi = hi - 1."],
     },
     {
@@ -154,11 +154,11 @@ The other common form is the **fast/slow** or **same-direction** two pointers (e
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "f3ef9a86ea18c1d1",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "7f8a0a3f14315a75",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

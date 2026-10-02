@@ -25,6 +25,30 @@
  */
 import { createHash } from "node:crypto";
 
+/**
+ * R6 (corrected) — project an exercise to its content-hashed fields.
+ *
+ * ONLY the machine-VERIFICATION harness is excluded: `tests` (Python assertions
+ * run by scripts/verify_exercise_tests.mjs) and `preludeCode` (a scaffold that
+ * wraps a fragment into a runnable program). Those are executable checks, not
+ * prose a human reviews for the correctness of a taught CLAIM.
+ *
+ * Everything a learner READS as a claim IS hashed — including `hints` (the
+ * 6-stage progression states approaches, properties, pseudocode and the
+ * solution) and the ENTIRE `recognition` block (scenario, approach/reason
+ * labels, acceptable approaches, feedback, model explanation). So changing any
+ * hint, recognition reason, or feedback string changes the content hash and
+ * therefore invalidates the item's semantic-review evidence until a human
+ * re-reads it and re-records the ledger. Machine verification (tests/evidence
+ * checks) and human semantic review stay distinct: the former proves behaviour,
+ * the latter is a recorded human claim gated on an unchanged hash.
+ */
+function exerciseClaimFields(ex) {
+  if (!ex || typeof ex !== "object") return ex;
+  const { tests: _t, preludeCode: _p, ...claim } = ex;
+  return claim;
+}
+
 function canonical(value) {
   if (Array.isArray(value)) return value.map(canonical);
   if (value && typeof value === "object") {
@@ -54,7 +78,7 @@ function lessonProjection(l) {
     // both the summary complexity table AND the structured explanation
     complexity: l.complexity ?? null,
     complexityExplanation: l.complexityExplanation ?? null,
-    exercises: l.exercises,
+    exercises: (l.exercises ?? []).map(exerciseClaimFields),
     experiments: l.experiments ?? null,
     prediction: l.prediction,
     references: l.references,
@@ -80,7 +104,7 @@ function patternProjection(p) {
     conditions: p.conditions,
     alternatives: p.alternatives,
     counterexamples: p.counterexamples,
-    exercises: p.exercises,
+    exercises: (p.exercises ?? []).map(exerciseClaimFields),
     // both the short complexity note AND the structured explanation
     complexityNote: p.complexityNote ?? null,
     complexityExplanation: p.complexityExplanation ?? null,

@@ -149,11 +149,11 @@ This is **O(m·n)** time and space — one fill of an (m+1)×(n+1) grid. Two tak
     {
       id: "dplcs-complete-1",
       kind: "complete-code",
-      prompt: "Complete the match/mismatch transition for LCS.",
+      prompt: "Complete `lcs(a, b)`: the length of the longest common subsequence. Fill the match/mismatch transition inside the loop.",
       starterCode:
-        "if a[i - 1] == b[j - 1]:\n    # TODO: extend the diagonal\n    pass\nelse:\n    # TODO: take the better neighbor\n    pass",
+        "def lcs(a, b):\n    m, n = len(a), len(b)\n    dp = [[0] * (n + 1) for _ in range(m + 1)]\n    for i in range(1, m + 1):\n        for j in range(1, n + 1):\n            if a[i - 1] == b[j - 1]:\n                # TODO: extend the diagonal\n                pass\n            else:\n                # TODO: take the better neighbor\n                pass\n    return dp[m][n]",
       expected:
-        "if a[i - 1] == b[j - 1]:\n    dp[i][j] = dp[i - 1][j - 1] + 1\nelse:\n    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])",
+        "def lcs(a, b):\n    m, n = len(a), len(b)\n    dp = [[0] * (n + 1) for _ in range(m + 1)]\n    for i in range(1, m + 1):\n        for j in range(1, n + 1):\n            if a[i - 1] == b[j - 1]:\n                dp[i][j] = dp[i - 1][j - 1] + 1\n            else:\n                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])\n    return dp[m][n]",
       hints: [
         "Match extends the diagonal cell by 1.",
         "Mismatch takes the max of top and left.",
@@ -214,11 +214,11 @@ This is **O(m·n)** time and space — one fill of an (m+1)×(n+1) grid. Two tak
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "37cee5ef9dd92716",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "85766dff28e403ea",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

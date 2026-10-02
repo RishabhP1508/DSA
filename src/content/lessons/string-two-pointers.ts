@@ -151,11 +151,11 @@ The early \`break\` gives a good best case (a mismatch at the very first pair is
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "0c5053ccf16d1910",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "97f09f0ace0f54e5",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

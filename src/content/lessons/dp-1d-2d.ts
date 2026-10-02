@@ -145,11 +145,11 @@ This is **O(m·n)** time (fill every cell once) and **O(m·n)** space for the gr
     {
       id: "dp12-complete-1",
       kind: "complete-code",
-      prompt: "Complete the 2D transition for counting grid paths.",
+      prompt: "Complete `count_paths(m, n)`: number of unique paths in an m×n grid moving only right or down.",
       starterCode:
-        "for i in range(1, m):\n    for j in range(1, n):\n        # TODO: paths from above plus paths from the left\n        pass\nreturn dp[m - 1][n - 1]",
+        "def count_paths(m, n):\n    dp = [[1] * n for _ in range(m)]\n    for i in range(1, m):\n        for j in range(1, n):\n            # TODO: paths from above plus paths from the left\n            pass\n    return dp[m - 1][n - 1]",
       expected:
-        "for i in range(1, m):\n    for j in range(1, n):\n        dp[i][j] = dp[i - 1][j] + dp[i][j - 1]\nreturn dp[m - 1][n - 1]",
+        "def count_paths(m, n):\n    dp = [[1] * n for _ in range(m)]\n    for i in range(1, m):\n        for j in range(1, n):\n            dp[i][j] = dp[i - 1][j] + dp[i][j - 1]\n    return dp[m - 1][n - 1]",
       hints: [
         "You can only arrive from above or from the left.",
         "Add those two cell counts.",
@@ -210,11 +210,11 @@ This is **O(m·n)** time (fill every cell once) and **O(m·n)** space for the gr
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "010df59c32e2771e",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "d7593068518b5474",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

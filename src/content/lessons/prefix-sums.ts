@@ -159,11 +159,11 @@ We use a leading \`0\` (\`prefix[0] = 0\`) so the formula \`prefix[b] - prefix[a
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "fc196b7aeb3fab57",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "02e41557e391e579",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

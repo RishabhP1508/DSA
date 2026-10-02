@@ -148,11 +148,11 @@ The lesson's takeaway is a warning as much as a technique: generating all substr
     },
   ],
   evidence: {
-    inventoryVersion: 18,
-    contentHash: "7ef2dc4db9e7a9fb",
-    verifiedAt: "2026-09-20",
+    inventoryVersion: 19,
+    contentHash: "a2f95d2f3a339e53",
+    verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

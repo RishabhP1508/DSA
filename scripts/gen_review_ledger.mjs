@@ -18,10 +18,48 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import path from "node:path";
 import { loadCurriculum } from "./lib/load-curriculum.mjs";
 import { contentHashOf } from "./lib/content-hash.mjs";
+import { ledgerEntryFor, assertIsoDate } from "./lib/review-ledger-core.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const NOW = "2026-09-20";
+// The date to stamp on items being signed off NOW. There is NO hard-coded
+// "today": a human running this with REVIEWED_NOW must pass a validated ISO
+// SIGNOFF_DATE (e.g. SIGNOFF_DATE=2026-09-22). It is only consulted for items in
+// REVIEWED_NOW; if none are being signed off, the date is irrelevant.
+const RAW_SIGNOFF = process.env.SIGNOFF_DATE ?? "";
 const { lessons, patterns } = await loadCurriculum();
+
+// This script records a HUMAN review at the CURRENT content hash. It must never
+// fabricate a review: by default it PRESERVES each existing ledger entry exactly
+// (its recorded reviewedHash + date). An item whose live hash no longer matches
+// its recorded reviewedHash therefore stays PENDING (the evidence codemod grants
+// semanticReview only on a hash match) until a human genuinely re-reads it and
+// adds its id to REVIEWED_NOW below. New items with no prior entry are also
+// recorded at NOW only when listed in REVIEWED_NOW; otherwise they are recorded
+// with the current hash but flagged pending via a sentinel date is NOT done —
+// instead they simply carry NOW and must be in REVIEWED_NOW to count.
+let priorByKey = new Map();
+try {
+  const mod = await import(pathToFileURL(path.join(ROOT, "src/content/review-ledger.ts")).href);
+  priorByKey = mod.REVIEW_LEDGER_BY_KEY ?? new Map();
+} catch {
+  priorByKey = new Map();
+}
+
+/**
+ * The set of "<kind>:<id>" the human running this script has ACTUALLY re-read at
+ * the current content and is signing off on NOW. Only these are (re)stamped at
+ * the live hash; everything else keeps its prior recorded hash/date (so a
+ * content edit it covers correctly reverts that item to pending). Passed via
+ * REVIEWED_NOW env var as a comma-separated list, or edited here for a batch.
+ */
+const REVIEWED_NOW = new Set(
+  (process.env.REVIEWED_NOW ?? "").split(",").map((s) => s.trim()).filter(Boolean),
+);
+
+// A validated sign-off date is REQUIRED when (and only when) items are being
+// signed off now — never a silent hard-coded date.
+const SIGNOFF_DATE =
+  REVIEWED_NOW.size > 0 ? assertIsoDate(RAW_SIGNOFF) : (RAW_SIGNOFF || "unused");
 
 const LESSON_AREA_TO_BATCH = {
   "Programming foundations": 1, "DSA foundations": 1,
@@ -38,16 +76,32 @@ const PATTERN_CATEGORY_TO_BATCH = {
   "Graphs & trees": 5, "Recursion & search": 6, "Dynamic programming": 6,
 };
 
+function entryFor(kind, item, batch) {
+  // Delegate to the pure, unit-tested core (scripts/lib/review-ledger-core.mjs).
+  // A NEW item that is not explicitly signed off gets a SENTINEL reviewedHash
+  // that can never equal a real content hash, so it stays PENDING — it does NOT
+  // silently acquire a matching hash and semanticReview:true.
+  return ledgerEntryFor(
+    kind,
+    item,
+    batch,
+    contentHashOf(item),
+    priorByKey.get(kind + ":" + item.id),
+    REVIEWED_NOW,
+    SIGNOFF_DATE,
+  );
+}
+
 const entries = [];
 for (const l of lessons) {
   const batch = LESSON_AREA_TO_BATCH[l.area];
   if (batch === undefined) throw new Error(`no batch for lesson area ${l.area}`);
-  entries.push({ id: l.id, kind: "lesson", reviewedHash: contentHashOf(l), reviewedAt: NOW, batch });
+  entries.push(entryFor("lesson", l, batch));
 }
 for (const p of patterns) {
   const batch = PATTERN_CATEGORY_TO_BATCH[p.category];
   if (batch === undefined) throw new Error(`no batch for pattern category ${p.category}`);
-  entries.push({ id: p.id, kind: "pattern", reviewedHash: contentHashOf(p), reviewedAt: NOW, batch });
+  entries.push(entryFor("pattern", p, batch));
 }
 entries.sort((a, b) => a.kind.localeCompare(b.kind) || a.id.localeCompare(b.id));
 
