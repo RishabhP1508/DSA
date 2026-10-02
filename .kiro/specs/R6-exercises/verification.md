@@ -5,8 +5,9 @@
 Chromium (Playwright) on Linux.
 **Commands:** `npm run check:all` (exit 0) and `npm run test:browser`
 (12 passed / 5 skipped).
-**Tested commit:** recorded at amendment-commit time on `repair/r6-exercises`
-(see the PR head SHA, filled in by the amendment commit message / PR comment).
+**Tested commit (Amendment 2):** `e38346c69446f30eed78f4baf41e5066640a047e`
+on `repair/r6-exercises`. `npm run check:all` exit 0 and
+`npm run test:browser` (12 passed / 5 skipped) were run against this tree.
 
 ## Amendment 2 (this revision) — two correctness fixes, both test-first
 
