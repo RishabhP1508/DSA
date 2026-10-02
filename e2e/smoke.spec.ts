@@ -7,8 +7,9 @@ test("app boots and shows the primary navigation", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "DSA Visual Lab" })).toBeVisible();
   // Top-nav views must be present and switchable.
-  for (const label of ["Learn", "Patterns", "Practice", "Playground", "Backup"]) {
-    await expect(page.getByRole("button", { name: label })).toBeVisible();
+  for (const label of ["Learn", "Patterns", "Practice", "Playground", "Glossary", "Backup"]) {
+    // Exact match: the "Continue learning" action also contains "Learn".
+    await expect(page.getByRole("button", { name: label, exact: true })).toBeVisible();
   }
 });
 

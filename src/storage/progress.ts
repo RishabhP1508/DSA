@@ -259,12 +259,39 @@ export async function recordExerciseAttempt(uid: string, solved: boolean): Promi
   });
 }
 
-export type Draft = { source: string; savedAt: string };
+/**
+ * R8.3 — a draft now carries its stdin and an optional saved visual binding, not
+ * just source. `name` is a human label; the storage KEY is the slot id. Older
+ * drafts (source-only) still load — missing fields default safely.
+ */
+export type Draft = {
+  source: string;
+  savedAt: string;
+  /** Optional stdin fed to input() (R8.3). */
+  stdin?: string;
+  /** Human-readable draft name (R8.3). */
+  name?: string;
+  /** Optional saved custom visual binding (R8.3). */
+  binding?: unknown;
+};
 
-export async function saveDraft(slot: string, source: string): Promise<Draft> {
-  const draft: Draft = { source, savedAt: new Date().toISOString() };
+/** Save/update a draft at `slot`. Persists source, stdin, name and binding. */
+export async function saveDraft(
+  slot: string,
+  source: string,
+  opts: { stdin?: string; name?: string; binding?: unknown } = {},
+): Promise<Draft> {
+  const draft: Draft = {
+    source,
+    savedAt: new Date().toISOString(),
+    stdin: opts.stdin,
+    name: opts.name,
+    binding: opts.binding,
+  };
   await updateProgress((rec) => {
     rec.drafts[slot] = draft;
+    rec.preferences = rec.preferences ?? {};
+    rec.preferences.lastDraftSlot = slot; // restore the last selected draft
     return rec;
   });
   return draft;
@@ -272,7 +299,30 @@ export async function saveDraft(slot: string, source: string): Promise<Draft> {
 
 export async function loadDraft(slot: string): Promise<Draft | undefined> {
   const rec = await loadProgress();
-  return rec.drafts[slot];
+  return rec.drafts[slot] as Draft | undefined;
+}
+
+/** All drafts as {slot, draft} pairs, most-recently-saved first (R8.3). */
+export async function listDrafts(): Promise<{ slot: string; draft: Draft }[]> {
+  const rec = await loadProgress();
+  return Object.entries(rec.drafts)
+    .map(([slot, draft]) => ({ slot, draft: draft as Draft }))
+    .sort((a, b) => (b.draft.savedAt ?? "").localeCompare(a.draft.savedAt ?? ""));
+}
+
+/** The slot of the last draft the learner saved/selected, if any (R8.3). */
+export async function lastDraftSlot(): Promise<string | undefined> {
+  const rec = await loadProgress();
+  const slot = rec.preferences?.lastDraftSlot;
+  return typeof slot === "string" ? slot : undefined;
+}
+
+/** Delete a named draft (R8.3). */
+export async function deleteDraft(slot: string): Promise<void> {
+  await updateProgress((rec) => {
+    delete rec.drafts[slot];
+    return rec;
+  });
 }
 
 export async function setPreference(key: string, value: unknown): Promise<void> {

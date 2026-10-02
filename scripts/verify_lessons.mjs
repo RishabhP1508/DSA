@@ -14,11 +14,30 @@
  */
 import { loadCurriculum } from "./lib/load-curriculum.mjs";
 import { runProgram } from "./lib/pyodide-harness.mjs";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import path from "node:path";
 
 const { lessons, errors } = await loadCurriculum();
 
 let failures = errors.length;
 for (const e of errors) console.log(`  ✗ STRUCTURE: ${e}`);
+
+// R8.1 — validate the prerequisite graph (reject missing ids and cycles) so a
+// recommendation can never point at a non-existent or circular prerequisite.
+const R8_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const { validatePrerequisiteGraph } = await import(
+  pathToFileURL(path.join(R8_ROOT, "src/core/learning-path.ts")).href
+);
+const graphProblems = validatePrerequisiteGraph(
+  lessons.map((l) => ({ id: l.id, title: l.title, prerequisites: l.prerequisites ?? [] })),
+);
+for (const p of graphProblems) {
+  failures++;
+  console.log(`  ✗ PREREQ: ${p}`);
+}
+if (graphProblems.length === 0) {
+  console.log(`  ✓ prerequisite graph valid (no missing ids, no cycles)`);
+}
 
 for (const lesson of lessons) {
   const res = await runProgram(lesson.code, lesson.stdin ?? "");

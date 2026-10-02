@@ -12,7 +12,15 @@ import { CodeEditor } from "./CodeEditor";
 import { VariablesPanel } from "./VariablesPanel";
 import { VisualizeAs } from "./VisualizeAs";
 import { Visualizer } from "../visualizers";
-import { loadDraft, saveDraft } from "../storage/progress";
+import {
+  saveDraft,
+  listDrafts,
+  loadDraft,
+  deleteDraft,
+  lastDraftSlot,
+  type Draft,
+} from "../storage/progress";
+import { readPythonFile, exportPythonFile } from "./python-file";
 import type { VisualBinding } from "../core/types";
 
 const STARTER = `# Write any single-file Python here and press Run.
@@ -29,7 +37,11 @@ result = demo(nums)
 print(result)
 `;
 
-const SLOT = "playground";
+const DEFAULT_SLOT = "playground";
+
+function slotLabel(slot: string): string {
+  return slot === DEFAULT_SLOT ? "Scratchpad" : slot;
+}
 
 export function Playground() {
   const engine = useEngine("playground");
@@ -38,29 +50,104 @@ export function Playground() {
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [vizBinding, setVizBinding] = useState<VisualBinding | null>(null);
+  const [slot, setSlot] = useState<string>(DEFAULT_SLOT);
+  const [drafts, setDrafts] = useState<{ slot: string; draft: Draft }[]>([]);
+  const [status, setStatus] = useState<string | null>(null);
 
   // R4.1: the trace is stale once the editor source/stdin no longer matches the
   // result it was produced from.
   const stale = engine.isStale(source, stdin);
 
-  // Restore the last draft once.
+  const refreshDrafts = async () => setDrafts(await listDrafts());
+
+  // R8.3 — restore the LAST SELECTED draft once (falling back to the default
+  // slot), and load the draft list.
   useEffect(() => {
     let alive = true;
-    void loadDraft(SLOT).then((d) => {
-      if (alive && d) {
-        setSource(d.source);
-        setSavedAt(d.savedAt);
+    void (async () => {
+      const last = (await lastDraftSlot()) ?? DEFAULT_SLOT;
+      const d = await loadDraft(last);
+      if (alive) {
+        if (d) {
+          setSlot(last);
+          setSource(d.source);
+          setStdin(d.stdin ?? "");
+          setVizBinding((d.binding as VisualBinding | null) ?? null);
+          setSavedAt(d.savedAt);
+        }
+        await refreshDrafts();
+        setLoaded(true);
       }
-      if (alive) setLoaded(true);
-    });
+    })();
     return () => {
       alive = false;
     };
   }, []);
 
+  // R8.3 — save source + stdin + the current binding under the active slot.
   const save = async () => {
-    const d = await saveDraft(SLOT, source);
+    const name = drafts.find((x) => x.slot === slot)?.draft.name ?? slotLabel(slot);
+    const d = await saveDraft(slot, source, { stdin, name, binding: vizBinding ?? undefined });
     setSavedAt(d.savedAt);
+    setStatus(`Saved “${name}”.`);
+    await refreshDrafts();
+  };
+
+  const switchDraft = async (nextSlot: string) => {
+    const d = await loadDraft(nextSlot);
+    setSlot(nextSlot);
+    if (d) {
+      setSource(d.source);
+      setStdin(d.stdin ?? "");
+      setVizBinding((d.binding as VisualBinding | null) ?? null);
+      setSavedAt(d.savedAt);
+      setStatus(`Opened “${d.name ?? slotLabel(nextSlot)}”.`);
+    }
+  };
+
+  const newDraft = async () => {
+    const nextSlot = `draft-${Date.now()}`;
+    const name = `Draft ${drafts.length + 1}`;
+    await saveDraft(nextSlot, STARTER, { stdin: "", name });
+    setSlot(nextSlot);
+    setSource(STARTER);
+    setStdin("");
+    setVizBinding(null);
+    setStatus(`Created “${name}”.`);
+    await refreshDrafts();
+  };
+
+  const removeDraft = async () => {
+    await deleteDraft(slot);
+    setStatus(`Deleted this draft.`);
+    const remaining = (await listDrafts()).filter((x) => x.slot !== slot);
+    setDrafts(remaining);
+    if (remaining.length) await switchDraft(remaining[0].slot);
+    else {
+      setSlot(DEFAULT_SLOT);
+      setSource(STARTER);
+      setStdin("");
+    }
+  };
+
+  // R8.3 — import a Python file into a NEW draft (never overwriting another);
+  // the imported code runs only when the learner presses Run.
+  const importFile = async (file: File | null) => {
+    if (!file) return;
+    const res = await readPythonFile(file);
+    if (!res.ok) {
+      setStatus(`Import failed: ${res.error}`);
+      return;
+    }
+    const nextSlot = `import-${Date.now()}`;
+    const name = file.name.replace(/\.py$/i, "") || "Imported";
+    await saveDraft(nextSlot, res.source, { stdin: "", name });
+    setSlot(nextSlot);
+    setSource(res.source);
+    setStdin("");
+    setVizBinding(null);
+    setStatus(`Imported “${name}” into a new draft (press Run to execute).`);
+    await refreshDrafts();
   };
 
   // While stale, stop highlighting the old trace's line (it no longer maps to
@@ -121,6 +208,40 @@ export function Playground() {
                 <span className="spacer" />
                 <button onClick={save} disabled={!loaded}>💾 Save draft</button>
               </div>
+
+              {/* R8.3 — named drafts, import/export, clear save status. */}
+              <div className="toolbar draft-bar">
+                <label className="speed-control">
+                  Draft
+                  <select
+                    aria-label="Select draft"
+                    value={slot}
+                    onChange={(e) => void switchDraft(e.target.value)}
+                  >
+                    {drafts.length === 0 && <option value={DEFAULT_SLOT}>{slotLabel(DEFAULT_SLOT)}</option>}
+                    {drafts.map(({ slot: s, draft }) => (
+                      <option key={s} value={s}>{draft.name ?? slotLabel(s)}</option>
+                    ))}
+                  </select>
+                </label>
+                <button onClick={() => void newDraft()} disabled={!loaded}>＋ New draft</button>
+                <button onClick={() => void removeDraft()} disabled={!loaded || drafts.length === 0}>🗑 Delete</button>
+                <span className="spacer" />
+                <label className="import-btn">
+                  📂 Import .py
+                  <input
+                    type="file"
+                    accept=".py,text/x-python,text/plain"
+                    style={{ display: "none" }}
+                    onChange={(e) => {
+                      void importFile(e.target.files?.[0] ?? null);
+                      e.target.value = "";
+                    }}
+                  />
+                </label>
+                <button onClick={() => exportPythonFile(source, slotLabel(slot))}>💾 Export .py</button>
+              </div>
+              {status && <div className="dim tiny save-status" role="status">{status}</div>}
               {stale && engine.result && (
                 <div className="stale-banner" role="status">
                   ⚠ Source or input changed since this run — the trace below is outdated (it predates
