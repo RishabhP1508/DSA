@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import { useEngine, PLAYBACK_SPEEDS } from "./useEngine";
 import { CodeEditor } from "./CodeEditor";
 import { VariablesPanel } from "./VariablesPanel";
+import { PersonalComplexityPanel } from "./PersonalComplexityPanel";
+import { ComparisonLab } from "./ComparisonLab";
 import { VisualizeAs } from "./VisualizeAs";
 import { Visualizer } from "../visualizers";
 import { loadDraft, saveDraft } from "../storage/progress";
@@ -185,6 +187,12 @@ export function Playground() {
                   disable. The recorded trace stays available after an edit; the
                   banner just notes it predates the edit until re-run. */}
               <VariablesPanel event={engine.event} output={engine.outputSoFar} />
+              <PersonalComplexityPanel
+                result={engine.result}
+                currentIndex={engine.position}
+                stale={stale}
+              />
+              <ComparisonLab />
             </div>
           </div>
         </div>

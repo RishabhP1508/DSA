@@ -20,6 +20,7 @@ export function ComplexityPanel({
   result,
   onHighlightLines,
   fixedData,
+  currentIndex,
 }: {
   explanation: ComplexityExplanation;
   result: RunResult | null;
@@ -27,10 +28,19 @@ export function ComplexityPanel({
   onHighlightLines?: (lines: number[] | null) => void;
   /** Whether the lesson's code uses fixed literal data. */
   fixedData?: boolean;
+  /** Current playback event index, for cumulative-to-here metrics (R7.2). */
+  currentIndex?: number;
 }) {
   const observed = useMemo(
     () => (result ? computeObservedStats(result, explanation.counters ?? []) : null),
     [result, explanation.counters],
+  );
+  const atStep = useMemo(
+    () =>
+      result && currentIndex !== undefined
+        ? computeObservedStats(result, explanation.counters ?? [], currentIndex)
+        : null,
+    [result, explanation.counters, currentIndex],
   );
 
   return (
@@ -119,15 +129,45 @@ export function ComplexityPanel({
           <h5>Observed on this run</h5>
           <p className="dim cx-caveat">
             Evidence for this input only — not a proof of Big-O. Excludes tracing overhead.
+            {atStep && " The middle column is cumulative up to the current playback step."}
           </p>
           <table className="vars">
+            <thead>
+              <tr>
+                <th>metric</th>
+                {atStep && <th>at this step</th>}
+                <th>whole run</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>trace events</td><td>{observed.totalEvents}</td></tr>
-              <tr><td>max call depth</td><td>{observed.maxDepth}</td></tr>
-              <tr><td>function calls</td><td>{observed.totalCalls}</td></tr>
-              {observed.counters.map((c) => (
+              <tr>
+                <td title="All recorded trace events (every kind).">trace events</td>
+                {atStep && <td>{atStep.traceEvents}</td>}
+                <td>{observed.traceEvents}</td>
+              </tr>
+              <tr>
+                <td title="Executed line steps.">line entries</td>
+                {atStep && <td>{atStep.lineEntries}</td>}
+                <td>{observed.lineEntries}</td>
+              </tr>
+              <tr>
+                <td title="Calls to functions the learner wrote (module entry excluded).">
+                  user-function calls
+                </td>
+                {atStep && <td>{atStep.userFunctionCalls}</td>}
+                <td>{observed.userFunctionCalls}</td>
+              </tr>
+              <tr>
+                <td title="Deepest active user-call nesting (module frame excluded).">
+                  max call depth
+                </td>
+                {atStep && <td>{atStep.maxDepth}</td>}
+                <td>{observed.maxDepth}</td>
+              </tr>
+              {observed.counters.map((c, i) => (
                 <tr key={c.label}>
                   <td title={c.definition}>{c.label}</td>
+                  {atStep && <td>{atStep.counters[i]?.value}</td>}
                   <td>{c.value}</td>
                 </tr>
               ))}
