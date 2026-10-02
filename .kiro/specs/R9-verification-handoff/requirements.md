@@ -28,9 +28,13 @@ the handoff — and STOP before any UI redesign or packaging.
 - **R9.5.1** THE milestone SHALL STOP before UI redesign and before packaging.
 
 ## Acceptance
-- All verification layers pass on the integrated tree (R6–R8 merge cleanly).
+- All verification layers pass on the **canonical merged `main`** (R6–R9 all
+  merged; re-confirmed on `main` 30533a2, not just a local pre-merge tree).
 - Offline test passes.
 - The audit-recheck table and handoff exist and are honest about open items
-  (`P-RUNNER-ORIGIN`, 26 exercises, 87 recognition drills, FU-1/FU-2, Windows
-  browser gap).
+  (**human semantic review — 160 pending**, `P-RUNNER-ORIGIN`, FU-1/FU-2, Windows
+  browser gap). *(Resolved by the R6 amendment and no longer open: the former "26
+  non-runnable exercises" and "87 un-graded recognition drills".)*
+- The project is **NOT** marked "ready for UI review" while the human
+  semantic-review requirement is pending; that review is done in recorded batches.
 - No UI or packaging work is begun.

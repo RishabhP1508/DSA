@@ -1,11 +1,23 @@
 # R9 — Functional-repair handoff
 
-> **Status: functional repair complete; ready for UI review. UI redesign and
-> offline Windows packaging remain (separate milestones).**
+> **Status: functional repair verified on `main`; NOT YET ready for UI review.**
+> One functional-content requirement is still open: **human semantic review of
+> the learner-facing content is pending repo-wide (158 of 160 items
+> `semanticReview: false`; 2 agent-reviewed so far).** UI review must not start
+> until that is resolved in recorded batches (see §10). UI redesign and offline Windows packaging remain
+> separate later milestones.
 
 This is the gate before the UI redesign. It summarises the repaired behaviour,
 current counts, test evidence, and everything still open. It does NOT begin UI
 work or packaging.
+
+> **Reconciliation note (on-main close-out).** This document was first written on
+> the pre-merge `repair/r9-verification-handoff` branch, before the R6 amendment
+> (independently-authored faulty variants for all 161 coding exercises; honest
+> review ledger) landed. It has now been re-confirmed on the **canonical merged
+> `main`** and its counts corrected to the integrated post-amendment reality.
+> Superseded figures (e.g. "135/161 runnable", "77 recognition", "unit 625/37")
+> are called out inline where they appeared.
 
 ## 1. Summary of repaired behaviour (R0–R8)
 - **R0** cross-platform verification foundation; corrected stale "only Phase 5 /
@@ -22,9 +34,13 @@ work or packaging.
   families / Visualize-as.
 - **R5** curriculum reverified and completed; evidence-tied coverage; Notion
   external practice reconciled; ledger-backed semantic review.
-- **R6** 135/161 coding exercises runnable with a mistake-rejection harness; 77
-  authored recognition drills; full 6-stage hints on all 212 interactive
-  exercises; economical paginated Practice (no eager workers).
+- **R6** (incl. amendment on `main`) **161/161** coding exercises runnable with a
+  mistake-rejection harness that rejects the unfinished starter, the empty
+  program, and **three independently-authored faulty variants** (plausible-wrong
+  / early-exit / print-answer) per exercise; **164/164** recognition drills
+  graded; full 6-stage hints on all **325** interactive exercises; economical
+  paginated Practice (no eager workers). *(Superseded earlier draft: "135/161
+  runnable, 77 recognition, 212 interactive" — pre-amendment figures.)*
 - **R7** honest observed statistics; conservative AST complexity analysis with an
   explicit "not determined" state; personal-code panel + worksheet; baseline-vs-
   improved comparison experiments (operation counts, theory labelled separately).
@@ -33,37 +49,58 @@ work or packaging.
   practice; named Playground drafts with stdin/binding persistence and Python
   import/export.
 
-## 2. Current counts (integrated R0–R8)
+## 2. Current counts (integrated R0–R9 on `main` 30533a2)
 - Lessons **131**, patterns **29**, exercises **388** (choose-approach 164,
   complete-code 88, fix-mistake 73, predict-state 63).
-- Coding exercises **161**; **135 runnable** (model passes + starter/empty/
-  synthesised-variant rejection); 26 self-assessed (documented).
-- Recognition-graded **77** of 164 choose-approach.
-- Interactive exercises **212**, all with the full 6-stage hint progression.
-- Coverage entries **131**, all `verified` with current content-hash evidence.
+- Coding exercises **161**; **161 runnable** — every one has a passing model
+  solution and is rejected on the unfinished starter, the empty program, and
+  three **independently-authored** faulty variants (plausible-wrong / early-exit
+  / print-answer). *(Superseded: "135 runnable; 26 self-assessed" — the R6
+  amendment completed all 26 by converting single-input scripts to function
+  contracts and authoring real faulty variants.)*
+- Recognition-graded **164 of 164** choose-approach. *(Superseded: "77 of 164".)*
+- Interactive exercises **325**, all with the full 6-stage hint progression.
+  *(Superseded: "212".)*
+- Coverage entries **131**, all `verified` with current content-hash evidence
+  (machine checks). This is machine verification only — see §10 for human review.
 - External practice: 79 occurrences reconciled (77 mapped, 2 unresolved = FU-1/2).
+- **Human semantic review: 2 of 160 signed off (158 pending).** Open requirement,
+  tracked in §10 — the project is NOT ready for UI review while this is open.
 
-## 3. Required vs executed test counts (integrated)
-- `npm run check:all` → **exit 0**. Unit **625/625** across **37 files**.
+## 3. Required vs executed test counts (re-run on `main` 30533a2)
+- `npm run check:all` → **exit 0**. Unit **476/476** across **38 files**.
   Curriculum: 131 lessons, 29 patterns, 131 complexity panels, line-explanations
   (131+29), example-model (131+29), coverage-evidence (131 verified / 0 not-yet),
-  semantic-consistency (0 failures / 7 advisory), complexity-analysis (9),
-  comparisons (2), prerequisite graph valid. Exercises: runnable **135/135**,
-  recognition **77**, hints **212** full 6-stage.
-- `npm run test:browser` → **17 passed / 5 skipped**. The 5 skips are the
-  `P-RUNNER-ORIGIN` packaging gate.
+  semantic-consistency (0 failures / 7 advisory), complexity-analysis,
+  comparisons, prerequisite graph valid. Exercises: **model solutions 161/161**;
+  R6.4 mistake-rejection all five categories **161/161** (starter / empty /
+  plausible-wrong / early-exit / print-answer); recognition **164**; hints
+  **325** full 6-stage. *(Superseded: "unit 625/37; runnable 135/135;
+  recognition 77; hints 212" — those were measured on the pre-merge R9 branch,
+  not canonical `main`.)*
+- `npm run test:browser` → **18 passed / 5 skipped**. The 5 skips are the
+  `P-RUNNER-ORIGIN` packaging gate. *(Superseded: "17 passed" — R7–R8 added
+  specs.)*
 - Offline: with all non-loopback requests blocked, the app boots and runs real
   Python (`e2e/offline.spec.ts`) — the built app uses local assets only.
 
 ## 4. Failed or blocked acceptance criteria
+- **Human semantic review pending repo-wide** — 160/160 content items
+  `semanticReview: false`. The R6 amendment added hints/recognition prose and
+  converted exercises, so every item's content hash moved past its last recorded
+  human-review hash; the ledger correctly reverted all to pending. This is a
+  functional-content requirement, NOT a UI concern — it must be closed in
+  recorded batches (§10) before UI review. *Not release-blocking for packaging,
+  but blocking for the "ready for UI review" status.*
 - **`P-RUNNER-ORIGIN`** — real two-origin runner topology + CSP on Windows
   Chrome/Edge NOT proven (5 skipped specs). Release-blocking; belongs to
   packaging.
-- **26 coding exercises** not machine-runnable (module-level-`return`/`continue`
-  fragments; one performance-only fix). Taught + self-assessed; listed in R6.
-- **87 recognition exercises** not yet authored with structured grading.
 - **FU-1 / FU-2** curriculum follow-ups unresolved (Task Scheduler cooldown
   scheduling; Meeting Rooms II concurrent-overlap counting).
+
+*(Resolved by the R6 amendment, no longer open: the previously-listed "26 coding
+exercises not machine-runnable" — now 161/161 runnable — and "87 recognition
+exercises not yet authored" — now 164/164 graded.)*
 
 ## 5. Browser / runtime versions tested
 - Headless **Chromium** (Playwright) on **Linux**; bundled **Pyodide 314.0.7 /
@@ -88,17 +125,75 @@ work or packaging.
   server topology; license notices + startup docs.
 
 ## 9. Exact commit reviewed
-- Base `main` tip at audit: `f754e75` (R0–R5 merged).
-- Integrated audit tree: `main` + `repair/r6-exercises` (#18) +
-  `repair/r7-complexity` (#19) + `repair/r8-learning-path-playground` (#20),
-  merged locally on `repair/r9-verification-handoff` (they merge cleanly; no
-  conflicts). **Re-run this audit on `main` once #18/#19/#20 merge** to close out
-  on the canonical history.
+- Original pre-merge audit base `main` tip: `f754e75` (R0–R5 merged); integrated
+  audit tree was assembled locally on `repair/r9-verification-handoff`.
+- **On-main close-out (this reconciliation):** all of R6 (#18), R7 (#19), R8
+  (#20), and R9 (#21) are now **merged** into `main`. The canonical integrated
+  tree re-verified here is **`main` = `30533a22bfa90a429a1c97fae4c17ae23c403af2`**.
+  `npm run check:all` (exit 0) and `npm run test:browser` (18 passed / 5 skipped)
+  were run against this exact commit after a clean `npm ci`. The earlier
+  "re-run on main once #18/#19/#20 merge" instruction is hereby discharged.
+
+## 10. OPEN REQUIREMENT — human semantic review (160 pending)
+
+**Machine verification of R0–R9 is complete and green on `main` 30533a2.** Human
+semantic review of the learner-facing content is a **separate, still-open**
+functional requirement and is **not** satisfied by any passing test.
+
+- **State:** 158 of 160 content items (131 lessons + 29 patterns) carry
+  `semanticReview: false`; **2** (`lesson:io`, `lesson:errors`) have been
+  agent-reviewed and signed off at their current hash (see the progress ledger). The review ledger (`src/content/review-ledger.ts`)
+  grants `semanticReview: true` for an item ONLY when a human has recorded a
+  sign-off at the item's *current* content hash (`gen_review_ledger.mjs` with
+  `REVIEWED_NOW` + a validated `SIGNOFF_DATE`). Because R6–R8 changed
+  learner-facing prose (hints, recognition blocks, converted exercise contracts),
+  every item's hash moved past its last recorded review hash, so all reverted to
+  pending. This is the designed anti-stale behaviour — a review claim cannot
+  outlive the content it was made against.
+- **What closing it requires (do NOT bulk-sign):** a human re-reads the changed
+  learner-facing content **in recorded batches** and signs off only the items
+  actually read, by running
+  `gen_review_ledger.mjs REVIEWED_NOW="<kind:id,...>" SIGNOFF_DATE=<yyyy-mm-dd>`
+  then regenerating evidence (`codemod_add_evidence.mjs`) and committing. Items
+  not yet re-read stay `false`.
+- **Suggested batching** (mirrors the R5.3 review batches by area): B1
+  foundations; B2 arrays/strings/hashing/bits; B3 searching/sorting; B4 linear
+  structures/stacks/queues/heaps; B5 trees/tries/graphs/range; B6 DP & recursion;
+  B7 all 29 patterns. Record, per batch, the exact ids reviewed and the date.
+- **Who may sign off:** a reviewer who has actually re-read the full
+  learner-facing content of an item (explanation, vocabulary, concepts, hints,
+  recognition block, exercise prompts, `expectedOutput`) and checked it against
+  the AGENTS.md correctness bar. Sign off *only* those items; never bulk-stamp.
+- **Progress ledger:**
+
+  | Batch | Area | Items reviewed (ids) | Reviewed on | Reviewer | Signed off |
+  |---|---|---|---|---|---|
+  | B1 (partial) | Programming foundations | `lesson:io`, `lesson:errors` | 2026-09-21 | AI agent (full re-read, see note) | **2** |
+  | remaining | all other areas | — | — | — | **0** |
+  | **Total** | | | | | **2 / 160 (158 pending)** |
+
+  **Note on the 2 signed-off items.** These two were re-read in full by the AI
+  agent doing the reconciliation and judged correct: `io` (input() returns str,
+  the `"5"*2` trap, O(L) reasoning, converted `io-fix-1`/`io-predict-1`,
+  `expectedOutput` "Name: Number: Hello Ada\n10\n") and `errors` (try/except
+  semantics, specific-exception guidance, O(1) reasoning, `err-complete-1`
+  safe_div / `err-choose-1`, `expectedOutput` "caught: index out of
+  range\nafter\n"). If your process requires a *human* (not agent) sign-off, treat
+  these two as agent-reviewed and re-confirm them; the mechanism and the honest
+  2-of-160 state are what this demonstrates. The other **158 remain pending** and
+  were deliberately NOT signed off.
 
 ## Verdict
-With R6–R8 merged, the functional-repair gate is met **except** the
-release-blocking `P-RUNNER-ORIGIN` topology and the documented content
-follow-ups (26 exercises, 87 recognition drills, FU-1/FU-2), all of which are
-tracked and visible. The status is **functional repair complete; ready for UI
-review** — UI redesign and Windows packaging are the next, separate milestones
-and are **not** started here.
+Machine verification of the functional repair (R0–R9) is **complete and green on
+`main` `30533a2`** — `check:all` exit 0 (unit 476/476), `test:browser` 18 passed
+/ 5 skipped. **The project is NOT yet ready for UI review.** Two things remain
+before that status can be claimed:
+
+1. **Human semantic review (160 pending)** — §10. Must be closed in recorded
+   batches; items genuinely re-read are signed off, the rest stay pending.
+2. The release-blocking **`P-RUNNER-ORIGIN`** packaging topology and the **FU-1 /
+   FU-2** curriculum follow-ups remain tracked and open.
+
+UI redesign and offline Windows packaging are separate later milestones and are
+**not** started here. Do not mark the project "ready for UI review" while the
+semantic-review requirement in §10 is still pending.

@@ -361,8 +361,8 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "errors",
     "kind": "lesson",
-    "reviewedHash": "ebcb0f13434b9c81",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "c144f84f8a9c03e1",
+    "reviewedAt": "2026-09-21",
     "batch": 1
   },
   {
@@ -487,8 +487,8 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "io",
     "kind": "lesson",
-    "reviewedHash": "6f85c9e72a228543",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "9ec7390e15aa8128",
+    "reviewedAt": "2026-09-21",
     "batch": 1
   },
   {

@@ -1,12 +1,12 @@
 # R9.3 — Audit-finding recheck
 
 Every finding from `.kiro/specs/R0-baseline/findings.md` (audit of commit
-`249a2f8`), rechecked against the **integrated** repair work (R0–R8). "Fix lives
+`249a2f8`), rechecked against the **integrated** repair work (R0–R9). "Fix lives
 on" names the spec/PR; a finding is only **Passed** when a regression test
-guards it. R6–R8 are complete on their branches/PRs (verified green) and merge
-cleanly together; this table reflects that integrated state. **The final
-close-out must be re-confirmed on `main` after R6 (#18), R7 (#19), and R8 (#20)
-merge.**
+guards it. **Re-confirmed on canonical `main` = `30533a22bfa90a429a1c97fae4c17ae23c403af2`**
+(R6 #18, R7 #19, R8 #20, R9 #21 all merged); `check:all` exit 0 and
+`test:browser` 18 passed / 5 skipped against that commit. Rows below are updated
+to the post-R6-amendment reality (161/161 coding runnable; 164/164 recognition).
 
 | Finding | Original reproduction | Repair | Regression test | Result | Fix lives on |
 |---|---|---|---|---|---|
@@ -29,9 +29,9 @@ merge.**
 | **R0-A** Windows-invalid dynamic import | bare absolute path ESM import | `pathToFileURL` everywhere | all verify scripts run cross-platform | Passed | R0 (main) |
 | **R0-B** silent-skip regex extraction | reformatted lesson silently dropped | real registry load; a missing/malformed item fails | `load-curriculum` structural checks | Passed | R0 (main) |
 | **R0-C** bash/nvm/pyenv-only instructions | `AGENTS.md` hardcoded nvm/pyenv | Node-only cross-platform commands; AGENTS.md corrected | n/a (docs) | Passed | R0 (main) |
-| **Only 3 of 161 coding exercises runnable** | 3 had `tests` | 135/161 now runnable with model-passes + mistake-rejection harness | `verify_exercise_tests.mjs` (135/135) | **Passed (135/161)**; 26 documented | **R6 (#18)** |
+| **Only 3 of 161 coding exercises runnable** | 3 had `tests` | **161/161** runnable: model passes + rejection of starter / empty / three independently-authored faulty variants (plausible-wrong / early-exit / print-answer) | `verify_exercise_tests.mjs` (model 161/161; all five rejection categories 161/161) | **Passed (161/161)** | **R6 + amendment (#18, on main)** |
 | **0 external practice mappings** | no `externalPractice` | 77 occurrences reconciled (R5) + surfaced per-lesson (R8) | `notion-practice` tests | Passed | R5 (main) + R8 (#20) |
-| **No recognition grading** | `correctPatternId` display-only | authored `RecognitionGrading` + grader; 77 graded | `recognition-grading` tests + verifier | **Passed (77 of 164)** | **R6 (#18)** |
+| **No recognition grading** | `correctPatternId` display-only | authored `RecognitionGrading` + grader; **164 graded** | `recognition-grading` tests + verifier (164/164 `ALL RECOGNITION OK`) | **Passed (164 of 164)** | **R6 + amendment (#18, on main)** |
 | **"130/130 verified" = sample output only** | status flag not evidence | evidence-tied coverage (content hash + checks) | `coverage-evidence` tests (131 verified) | Passed | R5 (main) |
 | **No conservative personal-code analysis** | type stub unused | AST analyzer with explicit not-determined | `verify_complexity_analysis.mjs` (9) + browser | **Passed** | **R7 (#19)** |
 | **Observed "function calls" counted module entry** | — | module-entry excluded; categories separated; per-step metrics | `complexity.test.ts` (5) | **Passed** | **R7 (#19)** |
@@ -39,15 +39,20 @@ merge.**
 | **Single source-only Playground draft** | one slot, source only | named drafts (source+stdin+binding), import/export | `python-file.test.ts` (6) + browser | **Passed** | **R8 (#20)** |
 
 ## Carried-forward / open (not closed)
+- **Human semantic review — 158 of 160 pending** (2 agent-reviewed: `lesson:io`,
+  `lesson:errors`; the rest `semanticReview: false`). Machine verification is complete; human re-reading of
+  the R6–R8-changed learner-facing content has NOT been done. Must be closed in
+  recorded batches (handoff.md §10) before the project is "ready for UI review".
+  **Blocks the UI-review status** (not packaging).
 - **`P-RUNNER-ORIGIN`** (R2-D): real two-origin runner topology + CSP on Windows
   Chrome/Edge not proven — 5 skipped Playwright specs. **Belongs to packaging.**
-- **26 coding exercises** remain self-assessed (module-level-`return`/`continue`
-  fragments; performance-only fixes) — listed in R6 `verification.md`.
-- **87 recognition exercises** (non-flagship lesson `choose-approach`) remain
-  self-assessed — follow-up authoring.
 - **FU-1** (Task Scheduler / cooldown scheduling lesson) and **FU-2** (Meeting
   Rooms II / concurrent-overlap-count lesson) remain `unresolved` in the external
   practice manifest.
 - Headless Chromium ≠ Windows Chrome/Edge (R9 OS/engine gap).
 - Per-family rendered-pixel snapshots asserted at trace-shape level + a
   representative browser render, not full visual snapshots.
+
+*(Closed by the R6 amendment, previously listed here: "26 coding exercises
+self-assessed" → now 161/161 runnable with authored faulty variants; "87
+recognition exercises self-assessed" → now 164/164 graded.)*
