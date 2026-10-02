@@ -13,15 +13,17 @@ differ only in R9 documentation (no source, content, ledger, or test changes):
 
 | Run | `check:all` | `test:browser` | Commit |
 |---|---|---|---|
-| On canonical merged main | exit 0 (unit 476/476) | 18 passed / 5 skipped | **`30533a2`** (= `30533a22bfa90a429a1c97fae4c17ae23c403af2`) — base |
-| On this PR's tip (final closeout) | exit 0 (unit 476/476) | 18 passed / 5 skipped | **`2bd9749`** (= `2bd97492d9c3cae2718be345540e682aaa97769d`) |
+| On canonical merged main | exit 0 (unit 476/476) | 18 passed / 5 skipped | **`30533a2`** (= `30533a22bfa90a429a1c97fae4c17ae23c403af2`) — merged-main base |
+| On the tested PR commit (final closeout) | exit 0 (unit 476/476) | 18 passed / 5 skipped | **`2bd9749`** (= `2bd97492d9c3cae2718be345540e682aaa97769d`) |
 
 `2bd9749` is a **docs-only descendant of its merged-main base `30533a2`**
 (`git diff --stat 30533a2..2bd9749` touches only `.kiro/` markdown — see the PR).
 Because the two trees are code-identical, the verification numbers below apply to
 both; where a document names `30533a2` it refers to the merged-main base, and the
-PR branch tip actually re-run is `2bd9749`. **The difference between them is
-documentation only.**
+tested PR commit is `2bd9749`. **The difference between them is documentation
+only.** (The current PR branch tip is `e61dc90`, itself a documentation-only
+descendant of `2bd9749`; no rerun was needed for the wording-only edits since
+`2bd9749`.)
 
 ## R9.1 — all verification layers (on `main` 30533a2)
 `npm run check:all` → **exit 0**:
@@ -86,7 +88,7 @@ packaging work, and the exact commit basis.
 - The "re-run on `main` after #18/#19/#20 merge" item is **discharged**: done here
   on `main` 30533a2.
 
-**Tested commits:** PR branch tip `2bd9749`
+**Tested commits:** tested PR commit `2bd9749`
 (`2bd97492d9c3cae2718be345540e682aaa97769d`), whose merged-main base is
 `30533a2` (`30533a22bfa90a429a1c97fae4c17ae23c403af2`). Both were run with
 identical results; they differ by documentation only. See "Test evidence" above.

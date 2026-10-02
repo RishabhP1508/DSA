@@ -131,13 +131,14 @@ exercises not yet authored" — now 164/164 graded.)*
   (#20), and R9 (#21) are now **merged** into `main`. The canonical merged-main
   base is **`30533a2` (`30533a22bfa90a429a1c97fae4c17ae23c403af2`)**.
   `npm run check:all` (exit 0) and `npm run test:browser` (18 passed / 5 skipped)
-  were run — with identical results — on that base **and** on this PR's branch
-  tip **`2bd9749` (`2bd97492d9c3cae2718be345540e682aaa97769d`)**, a docs-only
-  descendant of `30533a2` (the diff is `.kiro/` markdown only). The exact
-  tested tip is `2bd9749`; `30533a2` is its merged-main base, and the difference
-  between them is documentation only. See `verification.md` → "Test evidence".
-  The earlier "re-run on main once #18/#19/#20 merge" instruction is hereby
-  discharged.
+  were run — with identical results — on that base **and** on the tested PR commit
+  **`2bd9749` (`2bd97492d9c3cae2718be345540e682aaa97769d`)**, a docs-only
+  descendant of `30533a2` (the diff is `.kiro/` markdown only). The exact tested
+  PR commit is `2bd9749`; `30533a2` is its merged-main base, and the difference
+  between them is documentation only. (The current PR branch tip is `e61dc90`, a
+  documentation-only descendant of `2bd9749`; the wording-only edits since
+  `2bd9749` needed no rerun.) See `verification.md` → "Test evidence". The earlier
+  "re-run on main once #18/#19/#20 merge" instruction is hereby discharged.
 
 ## 10. OPEN REQUIREMENT — human semantic review (160 pending)
 
@@ -198,7 +199,7 @@ functional requirement and is **not** satisfied by any passing test.
 
 ## Verdict
 Machine verification of the functional repair (R0–R9) is **complete and green on
-`main` base `30533a2` (tested tip `2bd9749`, docs-only descendant)** —
+`main` base `30533a2` (tested PR commit `2bd9749`, docs-only descendant)** —
 `check:all` exit 0 (unit 476/476), `test:browser` 18 passed / 5 skipped. **The
 project is NOT yet ready for UI review.** Two things remain before that status
 can be claimed:
