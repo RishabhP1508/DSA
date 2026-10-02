@@ -165,11 +165,11 @@ export const matrixTraversalPattern: PatternDefinition = {
       id: "pat-mt-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This spiral double-visits cells in single-row/column matrices. Add the missing boundary guards.",
+        "`spiral(matrix)` returns the cells of `matrix` in clockwise spiral order. This spiral double-visits cells in single-row/column matrices. Add the missing boundary guards.",
       starterCode:
-        "while top <= bottom and left <= right:\n    for c in range(left, right + 1):\n        res.append(matrix[top][c])\n    top += 1\n    for r in range(top, bottom + 1):\n        res.append(matrix[r][right])\n    right -= 1\n    for c in range(right, left - 1, -1):\n        res.append(matrix[bottom][c])\n    bottom -= 1\n    for r in range(bottom, top - 1, -1):\n        res.append(matrix[r][left])\n    left += 1",
+        "def spiral(matrix):\n    if not matrix:\n        return []\n    res = []\n    top, bottom = 0, len(matrix) - 1\n    left, right = 0, len(matrix[0]) - 1\n    while top <= bottom and left <= right:\n        for c in range(left, right + 1):\n            res.append(matrix[top][c])\n        top += 1\n        for r in range(top, bottom + 1):\n            res.append(matrix[r][right])\n        right -= 1\n        for c in range(right, left - 1, -1):\n            res.append(matrix[bottom][c])\n        bottom -= 1\n        for r in range(bottom, top - 1, -1):\n            res.append(matrix[r][left])\n        left += 1\n    return res",
       expected:
-        "while top <= bottom and left <= right:\n    for c in range(left, right + 1):\n        res.append(matrix[top][c])\n    top += 1\n    for r in range(top, bottom + 1):\n        res.append(matrix[r][right])\n    right -= 1\n    if top <= bottom:\n        for c in range(right, left - 1, -1):\n            res.append(matrix[bottom][c])\n        bottom -= 1\n    if left <= right:\n        for r in range(bottom, top - 1, -1):\n            res.append(matrix[r][left])\n        left += 1",
+        "def spiral(matrix):\n    if not matrix:\n        return []\n    res = []\n    top, bottom = 0, len(matrix) - 1\n    left, right = 0, len(matrix[0]) - 1\n    while top <= bottom and left <= right:\n        for c in range(left, right + 1):\n            res.append(matrix[top][c])\n        top += 1\n        for r in range(top, bottom + 1):\n            res.append(matrix[r][right])\n        right -= 1\n        if top <= bottom:\n            for c in range(right, left - 1, -1):\n                res.append(matrix[bottom][c])\n            bottom -= 1\n        if left <= right:\n            for r in range(bottom, top - 1, -1):\n                res.append(matrix[r][left])\n            left += 1\n    return res",
       hints: [
         "After moving top/right in, the region may be empty in one dimension.",
         "Guard the bottom row and left column passes.",
@@ -203,7 +203,7 @@ export const matrixTraversalPattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "0a01f79b34578cd1",
+    contentHash: "b73165f4430d3e97",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

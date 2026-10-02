@@ -154,11 +154,11 @@ export const bfsShortestPathPattern: PatternDefinition = {
       id: "pat-bfs-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This uses a stack, so it explores depth-first and reports wrong distances. Make it BFS.",
+        "`bfs_dist(adj, start)` returns a dict of shortest-hop distances from `start`. This uses a stack, so it explores depth-first and reports wrong distances. Make it BFS.",
       starterCode:
-        "stack = [start]\ndist = {start: 0}\nwhile stack:\n    node = stack.pop()\n    for nb in adj[node]:\n        if nb not in dist:\n            dist[nb] = dist[node] + 1\n            stack.append(nb)",
+        "def bfs_dist(adj, start):\n    stack = [start]\n    dist = {start: 0}\n    while stack:\n        node = stack.pop()\n        for nb in adj[node]:\n            if nb not in dist:\n                dist[nb] = dist[node] + 1\n                stack.append(nb)\n    return dist",
       expected:
-        "from collections import deque\nq = deque([start])\ndist = {start: 0}\nwhile q:\n    node = q.popleft()\n    for nb in adj[node]:\n        if nb not in dist:\n            dist[nb] = dist[node] + 1\n            q.append(nb)",
+        "from collections import deque\ndef bfs_dist(adj, start):\n    q = deque([start])\n    dist = {start: 0}\n    while q:\n        node = q.popleft()\n        for nb in adj[node]:\n            if nb not in dist:\n                dist[nb] = dist[node] + 1\n                q.append(nb)\n    return dist",
       hints: [
         "pop() from a list is LIFO — that's DFS.",
         "Shortest paths need FIFO order.",
@@ -192,7 +192,7 @@ export const bfsShortestPathPattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "bb74bcb37a0f48b8",
+    contentHash: "5cace3e09c90236b",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

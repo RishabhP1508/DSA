@@ -100,9 +100,9 @@ Because a Python list is backed by a contiguous array, reading \`nums[i]\` is **
     {
       id: "arr-trav-complete-1",
       kind: "complete-code",
-      prompt: "Complete the loop to sum all elements of nums.",
-      starterCode: "nums = [5, 2, 9, 1]\ntotal = 0\nfor i in range(len(nums)):\n    # TODO: add nums[i] to total\n    pass\nprint(total)",
-      expected: "nums = [5, 2, 9, 1]\ntotal = 0\nfor i in range(len(nums)):\n    total = total + nums[i]\nprint(total)",
+      prompt: "Complete `sum_all(nums)` so it returns the sum of all elements by indexing with a loop.",
+      starterCode: "def sum_all(nums):\n    total = 0\n    for i in range(len(nums)):\n        # TODO: add nums[i] to total\n        pass\n    return total",
+      expected: "def sum_all(nums):\n    total = 0\n    for i in range(len(nums)):\n        total = total + nums[i]\n    return total",
       hints: ["Access the element with nums[i].", "Add it into the accumulator.", "total = total + nums[i]"],
     },
     {
@@ -140,7 +140,7 @@ Because a Python list is backed by a contiguous array, reading \`nums[i]\` is **
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "53d47a81e3caa009",
+    contentHash: "9cde78ecbf655d74",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

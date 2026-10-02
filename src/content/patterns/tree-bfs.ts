@@ -173,11 +173,11 @@ export const treeBfsPattern: PatternDefinition = {
       id: "pat-tbfs-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This merges all nodes into one level because it doesn't snapshot the level size. Fix it.",
+        "`level_order(root)` returns the tree's values grouped by level (a list of lists, top to bottom). This merges all nodes into one level because it doesn't snapshot the level size. Fix it.",
       starterCode:
-        "q = deque([root])\nwhile q:\n    level = []\n    node = q.popleft()\n    level.append(node.val)\n    if node.left: q.append(node.left)\n    if node.right: q.append(node.right)\n    res.append(level)",
+        "from collections import deque\ndef level_order(root):\n    if not root:\n        return []\n    res = []\n    q = deque([root])\n    while q:\n        level = []\n        node = q.popleft()\n        level.append(node.val)\n        if node.left: q.append(node.left)\n        if node.right: q.append(node.right)\n        res.append(level)\n    return res",
       expected:
-        "q = deque([root])\nwhile q:\n    level = []\n    for _ in range(len(q)):\n        node = q.popleft()\n        level.append(node.val)\n        if node.left: q.append(node.left)\n        if node.right: q.append(node.right)\n    res.append(level)",
+        "from collections import deque\ndef level_order(root):\n    if not root:\n        return []\n    res = []\n    q = deque([root])\n    while q:\n        level = []\n        for _ in range(len(q)):\n            node = q.popleft()\n            level.append(node.val)\n            if node.left: q.append(node.left)\n            if node.right: q.append(node.right)\n        res.append(level)\n    return res",
       hints: [
         "You must process exactly one level per outer iteration.",
         "Capture the level's node count first.",
@@ -211,7 +211,7 @@ export const treeBfsPattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "d87f55730690fc7d",
+    contentHash: "ebcd029a5568ce3a",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

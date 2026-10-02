@@ -187,11 +187,11 @@ The loop condition \`prev.next is not None and prev.next.next is not None\` chec
     {
       id: "llpm-complete-1",
       kind: "complete-code",
-      prompt: "Fill in the three rewiring lines (in the correct order) to swap the current pair.",
+      prompt: "Complete `swap_pairs(head)` so it swaps every adjacent pair of nodes and returns the new head. Fill in the three rewiring lines (in the correct order) to swap the current pair.",
       starterCode:
-        "while prev.next is not None and prev.next.next is not None:\n    first = prev.next\n    second = first.next\n    # TODO: three rewiring lines\n    prev = first",
+        "def swap_pairs(head):\n    dummy = Node(0, head)\n    prev = dummy\n    while prev.next is not None and prev.next.next is not None:\n        first = prev.next\n        second = first.next\n        # TODO: three rewiring lines\n        prev = first\n    return dummy.next",
       expected:
-        "while prev.next is not None and prev.next.next is not None:\n    first = prev.next\n    second = first.next\n    first.next = second.next\n    second.next = first\n    prev.next = second\n    prev = first",
+        "def swap_pairs(head):\n    dummy = Node(0, head)\n    prev = dummy\n    while prev.next is not None and prev.next.next is not None:\n        first = prev.next\n        second = first.next\n        first.next = second.next\n        second.next = first\n        prev.next = second\n        prev = first\n    return dummy.next",
       hints: [
         "Remember what follows the pair first.",
         "Then swap: second.next = first.",
@@ -201,11 +201,11 @@ The loop condition \`prev.next is not None and prev.next.next is not None\` chec
     {
       id: "llpm-fix-1",
       kind: "fix-mistake",
-      prompt: "After swapping, this advances prev to the wrong node, corrupting the next pair. Fix it.",
+      prompt: "`swap_pairs(head)` swaps every adjacent pair and returns the new head. After swapping, this advances prev to the wrong node, corrupting the next pair. Fix it.",
       starterCode:
-        "first.next = second.next\nsecond.next = first\nprev.next = second\nprev = second",
+        "def swap_pairs(head):\n    dummy = Node(0, head)\n    prev = dummy\n    while prev.next is not None and prev.next.next is not None:\n        first = prev.next\n        second = first.next\n        first.next = second.next\n        second.next = first\n        prev.next = second\n        prev = second\n    return dummy.next",
       expected:
-        "first.next = second.next\nsecond.next = first\nprev.next = second\nprev = first",
+        "def swap_pairs(head):\n    dummy = Node(0, head)\n    prev = dummy\n    while prev.next is not None and prev.next.next is not None:\n        first = prev.next\n        second = first.next\n        first.next = second.next\n        second.next = first\n        prev.next = second\n        prev = first\n    return dummy.next",
       hints: [
         "After the swap, which node is the tail of the pair?",
         "second is now the front, first is the back.",
@@ -256,7 +256,7 @@ The loop condition \`prev.next is not None and prev.next.next is not None\` chec
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "98cb7b06e6f38ed1",
+    contentHash: "2fa87533362e52eb",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

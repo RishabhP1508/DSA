@@ -124,9 +124,9 @@ A subtle contrast: selection sort's comparison count is **the same regardless of
     {
       id: "sel-complete-1",
       kind: "complete-code",
-      prompt: "Complete the minimum-finding inner loop.",
-      starterCode: "for i in range(n):\n    m = i\n    for j in range(i + 1, n):\n        # TODO: update m if a[j] is smaller\n        pass\n    a[i], a[m] = a[m], a[i]",
-      expected: "for i in range(n):\n    m = i\n    for j in range(i + 1, n):\n        if a[j] < a[m]:\n            m = j\n    a[i], a[m] = a[m], a[i]",
+      prompt: "Complete the minimum-finding inner loop in `selection_sort(a)` so it sorts the list in place and returns it.",
+      starterCode: "def selection_sort(a):\n    n = len(a)\n    for i in range(n):\n        m = i\n        for j in range(i + 1, n):\n            # TODO: update m if a[j] is smaller\n            pass\n        a[i], a[m] = a[m], a[i]\n    return a",
+      expected: "def selection_sort(a):\n    n = len(a)\n    for i in range(n):\n        m = i\n        for j in range(i + 1, n):\n            if a[j] < a[m]:\n                m = j\n        a[i], a[m] = a[m], a[i]\n    return a",
       hints: ["Track the index of the smallest seen.", "Compare a[j] to a[m].", "if a[j] < a[m]: m = j"],
     },
     {
@@ -155,7 +155,7 @@ A subtle contrast: selection sort's comparison count is **the same regardless of
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "70b36e31f1ad5300",
+    contentHash: "9781bfd263fdb0fd",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

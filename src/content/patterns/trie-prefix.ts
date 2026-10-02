@@ -175,15 +175,15 @@ export const triePrefixPattern: PatternDefinition = {
       id: "pat-trie-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This search treats a mere prefix as a stored word. Fix it to check only full words (use is_end).",
+        "`search(words, query)` inserts every word in `words` into a trie, then returns whether `query` is a STORED word (not merely a prefix of one). This treats a mere prefix as a stored word. Fix it to check the end-of-word marker.",
       starterCode:
-        "def search(self, word):\n    node = self.root\n    for ch in word:\n        if ch not in node.children:\n            return False\n        node = node.children[ch]\n    return True",
+        "def search(words, query):\n    root = {}\n    for word in words:\n        node = root\n        for ch in word:\n            node = node.setdefault(ch, {})\n        node['$'] = True\n    node = root\n    for ch in query:\n        if ch not in node:\n            return False\n        node = node[ch]\n    return True",
       expected:
-        "def search(self, word):\n    node = self.root\n    for ch in word:\n        if ch not in node.children:\n            return False\n        node = node.children[ch]\n    return node.is_end",
+        "def search(words, query):\n    root = {}\n    for word in words:\n        node = root\n        for ch in word:\n            node = node.setdefault(ch, {})\n        node['$'] = True\n    node = root\n    for ch in query:\n        if ch not in node:\n            return False\n        node = node[ch]\n    return '$' in node",
       hints: [
         "Reaching the end of the path isn't the same as a stored word.",
-        "A word must have been marked at that node.",
-        "return node.is_end",
+        "A word must have been marked at that node (the '$' end marker).",
+        "return '$' in node",
       ],
     },
   ],
@@ -213,7 +213,7 @@ export const triePrefixPattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "898cb5401e1d6c33",
+    contentHash: "a2d08353ff614631",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

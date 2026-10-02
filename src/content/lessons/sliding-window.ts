@@ -133,9 +133,9 @@ This is the **fixed-size** window (the width k never changes). A later variant i
     {
       id: "sw-complete-1",
       kind: "complete-code",
-      prompt: "Complete the O(1) slide update for a fixed window of width k.",
-      starterCode: "for i in range(k, len(nums)):\n    # TODO: add entering nums[i], subtract leaving nums[i-k]\n    pass",
-      expected: "for i in range(k, len(nums)):\n    window = window + nums[i] - nums[i - k]",
+      prompt: "`final_window(nums, k)` seeds `window` with the sum of the first k items, then slides to the end. Complete the O(1) slide update so it returns the sum of the LAST k items.",
+      starterCode: "def final_window(nums, k):\n    window = sum(nums[:k])\n    for i in range(k, len(nums)):\n        # TODO: add entering nums[i], subtract leaving nums[i-k]\n        pass\n    return window",
+      expected: "def final_window(nums, k):\n    window = sum(nums[:k])\n    for i in range(k, len(nums)):\n        window = window + nums[i] - nums[i - k]\n    return window",
       hints: ["One element enters on the right, one leaves on the left.", "Entering is nums[i]; leaving is nums[i-k].", "window = window + nums[i] - nums[i-k]"],
     },
     {
@@ -173,7 +173,7 @@ This is the **fixed-size** window (the width k never changes). A later variant i
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "575dc8d135ac5d40",
+    contentHash: "b929cc47a4db28a0",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

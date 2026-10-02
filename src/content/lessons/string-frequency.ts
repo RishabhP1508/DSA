@@ -104,9 +104,9 @@ This "one pass building a map" shape is everywhere: it turns "how many / does it
     {
       id: "sf-complete-1",
       kind: "complete-code",
-      prompt: "Complete the loop to build a frequency map of the characters in s.",
-      starterCode: "s = 'apple'\nfreq = {}\nfor ch in s:\n    # TODO: increment the count for ch\n    pass\nprint(freq)",
-      expected: "s = 'apple'\nfreq = {}\nfor ch in s:\n    freq[ch] = freq.get(ch, 0) + 1\nprint(freq)",
+      prompt: "Complete `char_freq(s)` so it returns a dict mapping each character of s to how many times it appears.",
+      starterCode: "def char_freq(s):\n    freq = {}\n    for ch in s:\n        # TODO: increment the count for ch\n        pass\n    return freq",
+      expected: "def char_freq(s):\n    freq = {}\n    for ch in s:\n        freq[ch] = freq.get(ch, 0) + 1\n    return freq",
       hints: ["Read the current count safely.", "Use get with a default of 0.", "freq[ch] = freq.get(ch, 0) + 1"],
     },
     {
@@ -144,7 +144,7 @@ This "one pass building a map" shape is everywhere: it turns "how many / does it
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "eff1d292f0dbb204",
+    contentHash: "da860bb3f3672121",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

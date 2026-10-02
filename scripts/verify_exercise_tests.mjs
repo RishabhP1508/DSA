@@ -18,27 +18,31 @@
  *
  * A "pass" means the tracer reports `status === "completed"` (no assertion or
  * error fired). A rejection means any non-completed status (error/AssertionError
- * /timeout/limit). Variants that cannot be synthesised for a given exercise are
- * reported "n/a" — never counted as a silent success. Every runnable exercise
- * MUST reject the unfinished starter AND at least one additional variant, so no
- * exercise is "runnable" with hollow tests.
+ * /timeout/limit).
+ *
+ * R6.4 (amended): every CODING exercise (complete-code / fix-mistake) MUST carry
+ * an INDEPENDENTLY AUTHORED faulty-variant set in
+ * src/content/exercise-faulty-variants.ts — plausibleWrong, earlyExit, and
+ * printAnswer — and the tests MUST reject the unfinished starter AND all three
+ * authored variants plus the empty program. A missing authored variant, or any
+ * variant that passes, is a HARD FAILURE. Synthesised variants and "n/a" no
+ * longer count toward satisfying a required case.
  *
  * Run: node --experimental-strip-types --import ./scripts/lib/ts-register.mjs \
  *        scripts/verify_exercise_tests.mjs
  */
 import { loadCurriculum, collectExercises } from "./lib/load-curriculum.mjs";
 import { runProgram } from "./lib/pyodide-harness.mjs";
-import {
-  synthPrintAnswer,
-  synthEarlyExit,
-  synthPlausibleWrong,
-  synthEmpty,
-} from "./lib/mistake-variants.mjs";
+import { synthEmpty } from "./lib/mistake-variants.mjs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import path from "node:path";
 const R6_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const { validateRecognition, gradeRecognition } = await import(
   pathToFileURL(path.join(R6_ROOT, "src/core/recognition-grading.ts")).href
+);
+// R6.4 — INDEPENDENTLY AUTHORED faulty variants, one set per coding exercise.
+const { EXERCISE_FAULTY } = await import(
+  pathToFileURL(path.join(R6_ROOT, "src/content/exercise-faulty-variants.ts")).href
 );
 
 const curriculum = await loadCurriculum();
@@ -67,6 +71,8 @@ async function passes(code, tests, prelude) {
 }
 
 let modelOk = 0;
+// R6.4 per-variant rejection tallies (coding exercises only).
+const tally = { coding: 0, starter: 0, empty: 0, plausibleWrong: 0, earlyExit: 0, printAnswer: 0 };
 for (const { ownerKind, ownerId, exercise } of runnable) {
   const uid = `${ownerKind}:${ownerId}:${exercise.id}`;
   const tests = exercise.tests;
@@ -97,34 +103,52 @@ for (const { ownerKind, ownerId, exercise } of runnable) {
       continue;
     }
     results.push("starter✗");
+    tally.starter++;
   } else {
     failures++;
     console.log(`  ✗ ${uid} — no starterCode to prove starter-rejection`);
     continue;
   }
 
-  // 3–6. Variants: each synthesisable variant MUST be rejected (a variant that
-  // passes means the tests are too weak). The empty program is a universal
-  // floor; print-answer/early-exit/plausible-wrong apply where synthesisable.
+  // 3. Empty program must be rejected (universal floor).
   let exerciseFailed = false;
-  const variants = [
-    ["empty", synthEmpty()],
-    ["print-answer", synthPrintAnswer(exercise)],
-    ["early-exit", synthEarlyExit(exercise)],
-    ["plausible-wrong", synthPlausibleWrong(exercise)],
-  ];
-  for (const [label, variant] of variants) {
-    if (!variant) {
-      results.push(`${label}:n/a`);
-      continue;
-    }
-    const vPass = await passes(variant, tests, prelude);
-    if (vPass) {
+  if (await passes(synthEmpty(), tests, prelude)) {
+    failures++;
+    exerciseFailed = true;
+    console.log(`  ✗ ${uid} — empty program incorrectly PASSES (hollow tests)`);
+  } else {
+    results.push("empty✗");
+    tally.empty++;
+  }
+
+  // 4–6. INDEPENDENTLY AUTHORED faulty variants (R6.4). Every CODING exercise
+  // MUST provide all three; each MUST be rejected. No synthesis, no n/a.
+  const isCoding = exercise.kind === "complete-code" || exercise.kind === "fix-mistake";
+  if (isCoding) {
+    tally.coding++;
+    const faulty = EXERCISE_FAULTY[uid];
+    if (!faulty) {
       failures++;
       exerciseFailed = true;
-      console.log(`  ✗ ${uid} — ${label} variant incorrectly PASSES (tests do not catch it)`);
+      console.log(`  ✗ ${uid} — coding exercise has NO authored faulty variants (R6.4 requires plausibleWrong/earlyExit/printAnswer)`);
     } else {
-      results.push(`${label}✗`);
+      for (const label of ["plausibleWrong", "earlyExit", "printAnswer"]) {
+        const variant = faulty[label];
+        if (typeof variant !== "string" || variant.length === 0) {
+          failures++;
+          exerciseFailed = true;
+          console.log(`  ✗ ${uid} — missing authored '${label}' variant`);
+          continue;
+        }
+        if (await passes(variant, tests, prelude)) {
+          failures++;
+          exerciseFailed = true;
+          console.log(`  ✗ ${uid} — authored '${label}' variant incorrectly PASSES (tests do not catch it)`);
+        } else {
+          results.push(`${label}✗`);
+          tally[label]++;
+        }
+      }
     }
   }
   if (exerciseFailed) continue;
@@ -135,6 +159,16 @@ for (const { ownerKind, ownerId, exercise } of runnable) {
 console.log(
   `\nModel solutions passing: ${modelOk}/${runnable.length}. ` +
     (failures === 0 ? "ALL RUNNABLE EXERCISES OK" : `${failures} FAILURE(S)`),
+);
+// R6.4 per-variant rejection totals (coding exercises). Each count is the number
+// of coding exercises whose tests rejected that AUTHORED variant.
+console.log(
+  `R6.4 mistake-rejection (coding=${tally.coding}): ` +
+    `starter-rejected ${tally.starter}/${tally.coding}, ` +
+    `empty-rejected ${tally.empty}/${tally.coding}, ` +
+    `plausible-wrong-rejected ${tally.plausibleWrong}/${tally.coding}, ` +
+    `early-exit-rejected ${tally.earlyExit}/${tally.coding}, ` +
+    `print-answer-rejected ${tally.printAnswer}/${tally.coding}.`,
 );
 
 // ── R6.4: validate every authored recognition-grading block ────────────────

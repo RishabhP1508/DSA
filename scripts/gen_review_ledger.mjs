@@ -18,9 +18,14 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import path from "node:path";
 import { loadCurriculum } from "./lib/load-curriculum.mjs";
 import { contentHashOf } from "./lib/content-hash.mjs";
+import { ledgerEntryFor, assertIsoDate } from "./lib/review-ledger-core.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const NOW = "2026-09-21";
+// The date to stamp on items being signed off NOW. There is NO hard-coded
+// "today": a human running this with REVIEWED_NOW must pass a validated ISO
+// SIGNOFF_DATE (e.g. SIGNOFF_DATE=2026-09-22). It is only consulted for items in
+// REVIEWED_NOW; if none are being signed off, the date is irrelevant.
+const RAW_SIGNOFF = process.env.SIGNOFF_DATE ?? "";
 const { lessons, patterns } = await loadCurriculum();
 
 // This script records a HUMAN review at the CURRENT content hash. It must never
@@ -51,6 +56,11 @@ const REVIEWED_NOW = new Set(
   (process.env.REVIEWED_NOW ?? "").split(",").map((s) => s.trim()).filter(Boolean),
 );
 
+// A validated sign-off date is REQUIRED when (and only when) items are being
+// signed off now — never a silent hard-coded date.
+const SIGNOFF_DATE =
+  REVIEWED_NOW.size > 0 ? assertIsoDate(RAW_SIGNOFF) : (RAW_SIGNOFF || "unused");
+
 const LESSON_AREA_TO_BATCH = {
   "Programming foundations": 1, "DSA foundations": 1,
   "Arrays": 2, "Strings": 2, "Hashing": 2, "Bit manipulation": 2,
@@ -67,23 +77,19 @@ const PATTERN_CATEGORY_TO_BATCH = {
 };
 
 function entryFor(kind, item, batch) {
-  const key = kind + ":" + item.id;
-  const liveHash = contentHashOf(item);
-  const prior = priorByKey.get(key);
-  // Items the human is signing off NOW are stamped at the live hash + today.
-  if (REVIEWED_NOW.has(key)) {
-    return { id: item.id, kind, reviewedHash: liveHash, reviewedAt: NOW, batch };
-  }
-  // Otherwise PRESERVE the prior recorded entry verbatim (hash + date). If the
-  // live content changed, prior.reviewedHash ≠ liveHash and the item correctly
-  // reverts to PENDING (the codemod grants semanticReview only on a match). A
-  // brand-new item with no prior entry gets the live hash + today ONLY as a
-  // placeholder; it will still be pending unless also listed in REVIEWED_NOW.
-  if (prior) {
-    return { id: item.id, kind, reviewedHash: prior.reviewedHash, reviewedAt: prior.reviewedAt, batch };
-  }
-  const reviewedAt = NOW;
-  return { id: item.id, kind, reviewedHash: liveHash, reviewedAt, batch };
+  // Delegate to the pure, unit-tested core (scripts/lib/review-ledger-core.mjs).
+  // A NEW item that is not explicitly signed off gets a SENTINEL reviewedHash
+  // that can never equal a real content hash, so it stays PENDING — it does NOT
+  // silently acquire a matching hash and semanticReview:true.
+  return ledgerEntryFor(
+    kind,
+    item,
+    batch,
+    contentHashOf(item),
+    priorByKey.get(kind + ":" + item.id),
+    REVIEWED_NOW,
+    SIGNOFF_DATE,
+  );
 }
 
 const entries = [];

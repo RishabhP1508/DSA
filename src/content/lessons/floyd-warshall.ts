@@ -132,9 +132,9 @@ The cost is three nested loops over all vertices: **O(V³)** time and **O(V²)**
     {
       id: "fw-fix-1",
       kind: "fix-mistake",
-      prompt: "This has the intermediate loop k innermost, giving wrong distances. Fix the loop order so k is outermost.",
-      starterCode: "for i in range(n):\n    for j in range(n):\n        for k in range(n):\n            if d[i][k] + d[k][j] < d[i][j]:\n                d[i][j] = d[i][k] + d[k][j]",
-      expected: "for k in range(n):\n    for i in range(n):\n        for j in range(n):\n            if d[i][k] + d[k][j] < d[i][j]:\n                d[i][j] = d[i][k] + d[k][j]",
+      prompt: "`floyd_warshall(d, n)` returns the all-pairs shortest-distance matrix (d is the initial distance matrix, n the vertex count). This has the intermediate loop k innermost, giving wrong distances. Fix the loop order so k is outermost.",
+      starterCode: "def floyd_warshall(d, n):\n    for i in range(n):\n        for j in range(n):\n            for k in range(n):\n                if d[i][k] + d[k][j] < d[i][j]:\n                    d[i][j] = d[i][k] + d[k][j]\n    return d",
+      expected: "def floyd_warshall(d, n):\n    for k in range(n):\n        for i in range(n):\n            for j in range(n):\n                if d[i][k] + d[k][j] < d[i][j]:\n                    d[i][j] = d[i][k] + d[k][j]\n    return d",
       hints: ["k is the intermediate vertex.", "It must enclose i and j.", "Move the k loop to be the outermost."],
     },
   ],
@@ -165,7 +165,7 @@ The cost is three nested loops over all vertices: **O(V³)** time and **O(V²)**
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "b830dc158c03d274",
+    contentHash: "30e73ca8dd1451e1",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

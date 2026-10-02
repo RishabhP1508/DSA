@@ -135,9 +135,9 @@ The trade: it only works on data with a **digit/place structure** (integers, fix
     {
       id: "rad-complete-1",
       kind: "complete-code",
-      prompt: "Complete the digit-extraction that places x into the right bucket for the current place `exp`.",
-      starterCode: "for x in out:\n    # TODO: append x to the bucket for its current digit\n    pass",
-      expected: "for x in out:\n    buckets[(x // exp) % 10].append(x)",
+      prompt: "Complete `bucketize(nums, exp)` so it returns 10 buckets (lists), placing each x into the bucket for its digit at place `exp`, preserving input order within a bucket.",
+      starterCode: "def bucketize(nums, exp):\n    buckets = [[] for _ in range(10)]\n    for x in nums:\n        # TODO: append x to the bucket for its current digit\n        pass\n    return buckets",
+      expected: "def bucketize(nums, exp):\n    buckets = [[] for _ in range(10)]\n    for x in nums:\n        buckets[(x // exp) % 10].append(x)\n    return buckets",
       hints: ["Extract the digit at place exp.", "(x // exp) gives the number without lower digits; % 10 gives the digit.", "buckets[(x // exp) % 10].append(x)"],
     },
   ],
@@ -168,7 +168,7 @@ The trade: it only works on data with a **digit/place structure** (integers, fix
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "9e7952e79a8a213d",
+    contentHash: "aebb5b21a86df481",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

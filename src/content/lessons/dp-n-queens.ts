@@ -171,11 +171,11 @@ Those diagonal keys are the clever bit worth remembering: encoding a constraint 
     {
       id: "dpnq-fix-1",
       kind: "fix-mistake",
-      prompt: "This never frees the diagonals on backtrack, so conflicts leak. Fix it.",
+      prompt: "`count_n_queens(n)` counts non-attacking placements. This never frees the diagonals on backtrack, so conflicts leak. Fix it.",
       starterCode:
-        "cols.add(col); diag1.add(row - col); diag2.add(row + col)\nbt(row + 1)\ncols.remove(col)\n# bug: diagonals not removed",
+        "def count_n_queens(n):\n    cols = set(); diag1 = set(); diag2 = set()\n    count = 0\n    def bt(row):\n        nonlocal count\n        if row == n:\n            count += 1\n            return\n        for col in range(n):\n            if col in cols or (row - col) in diag1 or (row + col) in diag2:\n                continue\n            cols.add(col); diag1.add(row - col); diag2.add(row + col)\n            bt(row + 1)\n            cols.remove(col)\n            # bug: diagonals not removed\n    bt(0)\n    return count",
       expected:
-        "cols.add(col); diag1.add(row - col); diag2.add(row + col)\nbt(row + 1)\ncols.remove(col); diag1.remove(row - col); diag2.remove(row + col)",
+        "def count_n_queens(n):\n    cols = set(); diag1 = set(); diag2 = set()\n    count = 0\n    def bt(row):\n        nonlocal count\n        if row == n:\n            count += 1\n            return\n        for col in range(n):\n            if col in cols or (row - col) in diag1 or (row + col) in diag2:\n                continue\n            cols.add(col); diag1.add(row - col); diag2.add(row + col)\n            bt(row + 1)\n            cols.remove(col); diag1.remove(row - col); diag2.remove(row + col)\n    bt(0)\n    return count",
       hints: [
         "Every add needs a matching remove on backtrack.",
         "The diagonals were added too.",
@@ -226,7 +226,7 @@ Those diagonal keys are the clever bit worth remembering: encoding a constraint 
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "6f170b6a4323295a",
+    contentHash: "e136c772c38d00dc",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

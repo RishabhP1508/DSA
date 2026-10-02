@@ -237,15 +237,15 @@ Choosing a variant is a **tradeoff**: singly is leanest; doubly buys backward tr
     {
       id: "llv-complete-1",
       kind: "complete-code",
-      prompt: "Complete the doubly linked append so both links are set.",
+      prompt: "Complete `append(tail, node)` for a doubly linked list: attach `node` after `tail` (or start the list if tail is None) by setting BOTH links, then return the new tail. ",
       starterCode:
-        "else:\n    # TODO: link old tail and new node both ways, then move tail\n    tail = node",
+        "def append(tail, node):\n    if tail is None:\n        return node\n    # TODO: link old tail and new node both ways, then return the new tail\n    return tail",
       expected:
-        "else:\n    tail.next = node\n    node.prev = tail\n    tail = node",
+        "def append(tail, node):\n    if tail is None:\n        return node\n    tail.next = node\n    node.prev = tail\n    return node",
       hints: [
         "Forward: old tail's next is the new node.",
         "Backward: new node's prev is the old tail.",
-        "tail.next = node; node.prev = tail; tail = node",
+        "tail.next = node; node.prev = tail; return node",
       ],
     },
     {
@@ -304,7 +304,7 @@ Choosing a variant is a **tradeoff**: singly is leanest; doubly buys backward tr
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "4079d806987a25a9",
+    contentHash: "bf6b7f9408e3afd5",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

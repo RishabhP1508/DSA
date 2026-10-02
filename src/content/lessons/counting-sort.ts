@@ -128,9 +128,9 @@ Counting sort is the foundation of **radix sort** (which applies it digit by dig
     {
       id: "cnt-complete-1",
       kind: "complete-code",
-      prompt: "Complete the tally loop for counting sort.",
-      starterCode: "counts = [0] * (hi + 1)\nfor x in a:\n    # TODO: tally x\n    pass",
-      expected: "counts = [0] * (hi + 1)\nfor x in a:\n    counts[x] += 1",
+      prompt: "Complete `tally(a, hi)` so it returns a counts list of length hi+1 where counts[v] is how many times value v appears in a.",
+      starterCode: "def tally(a, hi):\n    counts = [0] * (hi + 1)\n    for x in a:\n        # TODO: tally x\n        pass\n    return counts",
+      expected: "def tally(a, hi):\n    counts = [0] * (hi + 1)\n    for x in a:\n        counts[x] += 1\n    return counts",
       hints: ["Use x as the index into counts.", "Increment that bucket.", "counts[x] += 1"],
     },
   ],
@@ -161,7 +161,7 @@ Counting sort is the foundation of **radix sort** (which applies it digit by dig
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "8035f5df1454ef75",
+    contentHash: "0cd5c4cabcb4a509",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

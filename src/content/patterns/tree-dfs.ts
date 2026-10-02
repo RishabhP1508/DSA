@@ -167,11 +167,11 @@ export const treeDfsPattern: PatternDefinition = {
       id: "pat-tdfs-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This leaks path state across subtrees. Add the missing backtracking step.",
+        "`root_to_leaf(root)` returns every root-to-leaf path (each a list of values). This leaks path state across subtrees. Add the missing backtracking step.",
       starterCode:
-        "def dfs(node, path):\n    if not node:\n        return\n    path.append(node.val)\n    if not node.left and not node.right:\n        res.append(path[:])\n    dfs(node.left, path)\n    dfs(node.right, path)\n    # bug: path not restored",
+        "def root_to_leaf(root):\n    res = []\n    def dfs(node, path):\n        if not node:\n            return\n        path.append(node.val)\n        if not node.left and not node.right:\n            res.append(path[:])\n        dfs(node.left, path)\n        dfs(node.right, path)\n        # bug: path not restored\n    dfs(root, [])\n    return res",
       expected:
-        "def dfs(node, path):\n    if not node:\n        return\n    path.append(node.val)\n    if not node.left and not node.right:\n        res.append(path[:])\n    dfs(node.left, path)\n    dfs(node.right, path)\n    path.pop()",
+        "def root_to_leaf(root):\n    res = []\n    def dfs(node, path):\n        if not node:\n            return\n        path.append(node.val)\n        if not node.left and not node.right:\n            res.append(path[:])\n        dfs(node.left, path)\n        dfs(node.right, path)\n        path.pop()\n    dfs(root, [])\n    return res",
       hints: [
         "After exploring a node's subtrees, undo its append.",
         "Otherwise the sibling path keeps this node.",
@@ -205,7 +205,7 @@ export const treeDfsPattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "fa84e5430e96b72c",
+    contentHash: "c0305f805f467c9a",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

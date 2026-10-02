@@ -150,25 +150,25 @@ The output for \`[1,2,3]\` is all 6 orderings in depth-first order: \`[[1,2,3],[
     {
       id: "dpperm-complete-1",
       kind: "complete-code",
-      prompt: "Complete the choose/explore/un-choose block using the used array.",
+      prompt: "Complete `permutations(nums)` so it returns every ordering of nums (as a list of lists). Fill in the choose/explore/un-choose block using the `used` array.",
       starterCode:
-        "for i in range(len(nums)):\n    if used[i]:\n        continue\n    # TODO: choose, explore, un-choose\n",
+        "def permutations(nums):\n    res = []\n    path = []\n    used = [False] * len(nums)\n    def bt():\n        if len(path) == len(nums):\n            res.append(path[:])\n            return\n        for i in range(len(nums)):\n            if used[i]:\n                continue\n            # TODO: choose, explore, un-choose\n            pass\n    bt()\n    return res",
       expected:
-        "for i in range(len(nums)):\n    if used[i]:\n        continue\n    used[i] = True\n    path.append(nums[i])\n    bt(path, used)\n    path.pop()\n    used[i] = False",
+        "def permutations(nums):\n    res = []\n    path = []\n    used = [False] * len(nums)\n    def bt():\n        if len(path) == len(nums):\n            res.append(path[:])\n            return\n        for i in range(len(nums)):\n            if used[i]:\n                continue\n            used[i] = True\n            path.append(nums[i])\n            bt()\n            path.pop()\n            used[i] = False\n    bt()\n    return res",
       hints: [
         "Mark used and append before recursing.",
         "After recursing, undo both.",
-        "used[i]=True; path.append(...); bt(...); path.pop(); used[i]=False",
+        "used[i]=True; path.append(...); bt(); path.pop(); used[i]=False",
       ],
     },
     {
       id: "dpperm-fix-1",
       kind: "fix-mistake",
-      prompt: "This forgets to clear the used flag, producing truncated results. Fix it.",
+      prompt: "`permutations(nums)` returns every ordering of nums. This forgets to clear the used flag on backtrack, producing truncated results. Fix it.",
       starterCode:
-        "used[i] = True\npath.append(nums[i])\nbt(path, used)\npath.pop()\n# bug: used[i] stays True",
+        "def permutations(nums):\n    res = []\n    path = []\n    used = [False] * len(nums)\n    def bt():\n        if len(path) == len(nums):\n            res.append(path[:])\n            return\n        for i in range(len(nums)):\n            if used[i]:\n                continue\n            used[i] = True\n            path.append(nums[i])\n            bt()\n            path.pop()\n            # bug: used[i] stays True\n    bt()\n    return res",
       expected:
-        "used[i] = True\npath.append(nums[i])\nbt(path, used)\npath.pop()\nused[i] = False",
+        "def permutations(nums):\n    res = []\n    path = []\n    used = [False] * len(nums)\n    def bt():\n        if len(path) == len(nums):\n            res.append(path[:])\n            return\n        for i in range(len(nums)):\n            if used[i]:\n                continue\n            used[i] = True\n            path.append(nums[i])\n            bt()\n            path.pop()\n            used[i] = False\n    bt()\n    return res",
       hints: [
         "After backtracking, element i must be available again.",
         "Undo the used flag too.",
@@ -219,7 +219,7 @@ The output for \`[1,2,3]\` is all 6 orderings in depth-first order: \`[[1,2,3],[
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "c40bbbcfe6682346",
+    contentHash: "e33e2bdf5a8cdd2a",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

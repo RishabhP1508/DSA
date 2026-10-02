@@ -196,11 +196,11 @@ Using \`<=\` (not \`<\`) keeps the merge **stable**: equal values keep their ori
     {
       id: "llm-complete-1",
       kind: "complete-code",
-      prompt: "Complete the merge loop body so the smaller front node is spliced each time.",
+      prompt: "Complete `merge(a, b)` so it merges two sorted linked lists into one sorted list and returns its head. Each pass must splice the smaller front node (ties keep the left node first), then attach whatever list is left over.",
       starterCode:
-        "while a is not None and b is not None:\n    if a.val <= b.val:\n        # TODO: attach a, advance a\n        pass\n    else:\n        # TODO: attach b, advance b\n        pass\n    tail = tail.next",
+        "def merge(a, b):\n    dummy = Node(0)\n    tail = dummy\n    while a is not None and b is not None:\n        if a.val <= b.val:\n            # TODO: attach a, advance a\n            pass\n        else:\n            # TODO: attach b, advance b\n            pass\n        tail = tail.next\n    tail.next = a if a is not None else b\n    return dummy.next",
       expected:
-        "while a is not None and b is not None:\n    if a.val <= b.val:\n        tail.next = a\n        a = a.next\n    else:\n        tail.next = b\n        b = b.next\n    tail = tail.next",
+        "def merge(a, b):\n    dummy = Node(0)\n    tail = dummy\n    while a is not None and b is not None:\n        if a.val <= b.val:\n            tail.next = a\n            a = a.next\n        else:\n            tail.next = b\n            b = b.next\n        tail = tail.next\n    tail.next = a if a is not None else b\n    return dummy.next",
       hints: [
         "Attach the chosen node with tail.next = ...",
         "Then advance that list's pointer.",
@@ -265,7 +265,7 @@ Using \`<=\` (not \`<\`) keeps the merge **stable**: equal values keep their ori
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "b69817a588713381",
+    contentHash: "58351b0a1dbfa8af",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

@@ -163,11 +163,11 @@ export const topologicalSortPattern: PatternDefinition = {
       id: "pat-topo-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This enqueues neighbors too early (before their prerequisites clear). Fix the enqueue condition.",
+        "`topo_order(adj, indeg)` returns a topological order of a DAG via Kahn's algorithm (empty list if the graph has a cycle). This enqueues neighbors too early (before their prerequisites clear). Fix the enqueue condition.",
       starterCode:
-        "while q:\n    node = q.popleft()\n    order.append(node)\n    for nb in adj[node]:\n        indeg[nb] -= 1\n        q.append(nb)",
+        "from collections import deque\ndef topo_order(adj, indeg):\n    q = deque([v for v in indeg if indeg[v] == 0])\n    order = []\n    while q:\n        node = q.popleft()\n        order.append(node)\n        for nb in adj[node]:\n            indeg[nb] -= 1\n            q.append(nb)\n    return order",
       expected:
-        "while q:\n    node = q.popleft()\n    order.append(node)\n    for nb in adj[node]:\n        indeg[nb] -= 1\n        if indeg[nb] == 0:\n            q.append(nb)",
+        "from collections import deque\ndef topo_order(adj, indeg):\n    q = deque([v for v in indeg if indeg[v] == 0])\n    order = []\n    while q:\n        node = q.popleft()\n        order.append(node)\n        for nb in adj[node]:\n            indeg[nb] -= 1\n            if indeg[nb] == 0:\n                q.append(nb)\n    return order",
       hints: [
         "A node is ready only when ALL its prerequisites are done.",
         "That means its in-degree hits 0.",
@@ -203,7 +203,7 @@ export const topologicalSortPattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "e4b845c7c7fa271d",
+    contentHash: "abb85bb2e8976815",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

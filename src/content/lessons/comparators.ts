@@ -106,9 +106,9 @@ For **multi-level** ordering, return a **tuple** key: \`key=lambda p: (p.age, p.
     {
       id: "cmp-complete-1",
       kind: "complete-code",
-      prompt: "Sort people (tuples of (name, age)) by age ascending, breaking ties by name.",
-      starterCode: "people = [('Bo', 30), ('Al', 30), ('Cy', 25)]\n# TODO: sort by age, then name\nprint(sorted(people, key=None))",
-      expected: "people = [('Bo', 30), ('Al', 30), ('Cy', 25)]\nprint(sorted(people, key=lambda p: (p[1], p[0])))",
+      prompt: "Complete `sort_people(people)` so it returns the (name, age) tuples sorted by age ascending, breaking ties by name.",
+      starterCode: "def sort_people(people):\n    # TODO: sort by age, then name\n    return sorted(people, key=None)",
+      expected: "def sort_people(people):\n    return sorted(people, key=lambda p: (p[1], p[0]))",
       hints: ["Sort by two fields with a tuple key.", "First element of the tuple is the primary sort key.", "key=lambda p: (p[1], p[0]) — age then name."],
     },
     {
@@ -146,7 +146,7 @@ For **multi-level** ordering, return a **tuple** key: \`key=lambda p: (p.age, p.
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "0e92b3238b14dfa3",
+    contentHash: "354d5c5dfed40179",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

@@ -142,11 +142,11 @@ export const backtrackingPattern: PatternDefinition = {
       id: "pat-bt-fix-1",
       kind: "fix-mistake",
       prompt:
-        "Every recorded subset comes out as [] because of an aliasing bug. Fix it.",
+        "`subsets(nums)` returns every subset of `nums` (as lists). Every recorded subset comes out as [] because of an aliasing bug. Fix it.",
       starterCode:
-        "def bt(start, path):\n    res.append(path)\n    for i in range(start, len(nums)):\n        path.append(nums[i])\n        bt(i + 1, path)\n        path.pop()",
+        "def subsets(nums):\n    res = []\n    def bt(start, path):\n        res.append(path)\n        for i in range(start, len(nums)):\n            path.append(nums[i])\n            bt(i + 1, path)\n            path.pop()\n    bt(0, [])\n    return res",
       expected:
-        "def bt(start, path):\n    res.append(path[:])\n    for i in range(start, len(nums)):\n        path.append(nums[i])\n        bt(i + 1, path)\n        path.pop()",
+        "def subsets(nums):\n    res = []\n    def bt(start, path):\n        res.append(path[:])\n        for i in range(start, len(nums)):\n            path.append(nums[i])\n            bt(i + 1, path)\n            path.pop()\n    bt(0, [])\n    return res",
       hints: [
         "path is one mutable list reused across the search.",
         "Storing it directly makes all results alias the same list.",
@@ -181,7 +181,7 @@ export const backtrackingPattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "35bfb32e8f749c05",
+    contentHash: "256cba6844225d0e",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

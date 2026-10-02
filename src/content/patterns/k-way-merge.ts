@@ -152,11 +152,11 @@ export const kWayMergePattern: PatternDefinition = {
       id: "pat-kwm-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This heap can crash comparing equal values because it lacks a tiebreaker. Fix the tuple.",
+        "`seed_heap(lists)` builds the initial heap for a k-way merge, one entry per non-empty list. This heap can crash comparing equal values because it lacks a tiebreaker. Fix the tuple so each entry is `(value, list_index, element_index)`.",
       starterCode:
-        "for i, lst in enumerate(lists):\n    if lst:\n        heapq.heappush(heap, (lst[0], lst))\n# ...pop (val, lst) and try to advance",
+        "import heapq\ndef seed_heap(lists):\n    heap = []\n    for i, lst in enumerate(lists):\n        if lst:\n            heapq.heappush(heap, (lst[0], lst))\n    return heap",
       expected:
-        "for i, lst in enumerate(lists):\n    if lst:\n        heapq.heappush(heap, (lst[0], i, 0))\n# pop (val, i, j) and push (lists[i][j+1], i, j+1)",
+        "import heapq\ndef seed_heap(lists):\n    heap = []\n    for i, lst in enumerate(lists):\n        if lst:\n            heapq.heappush(heap, (lst[0], i, 0))\n    return heap",
       hints: [
         "Comparing lists as a tiebreaker is invalid/ambiguous.",
         "Include the list index and position instead.",
@@ -190,7 +190,7 @@ export const kWayMergePattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "7c9191e77472b4eb",
+    contentHash: "6ff6a2f166757a35",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

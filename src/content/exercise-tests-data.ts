@@ -16,14 +16,14 @@ export const EXERCISE_TESTS: Record<string, string> = {
     "assert a == [1, 2, 3], f'a should be unchanged, got {a}'\nassert b == [1, 2, 3, 4], f'b should have the appended item, got {b}'\nassert a is not b, 'a and b must be independent lists'\nprint('OK')",
 
   "lesson:loops:loop-fix-1":
-    "# The fixed loop must terminate and i must reach 3.\nassert i == 3, f'loop should end with i == 3, got {i}'\nprint('OK')",
+    "assert count_up(3) == 3, f'should reach 3, got {count_up(3)}'\nassert count_up(0) == 0, 'no iterations: stays 0'\nassert count_up(5) == 5\nassert count_up(1) == 1\nprint('OK')",
   "lesson:loops:loop-complete-1":
-    "assert count == 2, f'expected 2 evens in [4,7,10,3], got {count}'\nprint('OK')",
+    "assert count_evens([4, 7, 10, 3]) == 2, f'2 evens, got {count_evens([4,7,10,3])}'\nassert count_evens([]) == 0, 'empty list has no evens'\nassert count_evens([1, 3, 5]) == 0, 'all odd'\nassert count_evens([2, 4, 6]) == 3, 'all even'\nprint('OK')",
   "lesson:functions:func-complete-1":
     "assert square(6) == 36\nassert square(0) == 0\nassert square(-3) == 9\nprint('OK')",
 
   "lesson:references-mutation:ref-fix-1":
-    "src = [1, 2, 3]\nout = doubled(src)\nassert src == [1, 2, 3], f'caller list must be intact, got {src}'\nassert out == [1, 2, 3, 3], f'result should append the last element, got {out}'\nassert out is not src\nprint('OK')",
+    "src = [1, 2, 3]\nout = doubled(src)\nassert src == [1, 2, 3], f'caller list must be intact, got {src}'\nassert out == [1, 2, 3, 3], f'result should append the last element, got {out}'\nassert out is not src\n# A second, different input so a hard-coded return cannot pass.\nsrc2 = [9, 8]\nout2 = doubled(src2)\nassert src2 == [9, 8], f'caller list must be intact, got {src2}'\nassert out2 == [9, 8, 8], f'result should append the last element, got {out2}'\nassert out2 is not src2\nprint('OK')",
   "lesson:classes:class-complete-1":
     "c = Counter(5)\nassert c.value == 5\nc.reset()\nassert c.value == 0, f'reset should zero value, got {c.value}'\nc2 = Counter(0)\nc2.reset()\nassert c2.value == 0\nprint('OK')",
 
@@ -32,9 +32,9 @@ export const EXERCISE_TESTS: Record<string, string> = {
 
   // ── Arrays ─────────────────────────────────────────────────────────────
   "lesson:array-traversal:arr-trav-complete-1":
-    "assert total == 17, f'5+2+9+1 == 17, got {total}'\nprint('OK')",
+    "assert sum_all([5, 2, 9, 1]) == 17, f'5+2+9+1 == 17, got {sum_all([5,2,9,1])}'\nassert sum_all([]) == 0, 'empty sum is 0'\nassert sum_all([42]) == 42\nassert sum_all([-1, 1, -2, 2]) == 0\nprint('OK')",
   "lesson:two-pointers:tp-fix-1":
-    "assert arr == [3, 2, 1], f'array should be reversed, got {arr}'\nprint('OK')",
+    "assert reverse_in_place([1, 2, 3]) == [3, 2, 1], 'reverses odd-length'\nassert reverse_in_place([1, 2, 3, 4]) == [4, 3, 2, 1], 'reverses even-length'\nassert reverse_in_place([]) == [], 'empty stays empty'\nassert reverse_in_place([7]) == [7], 'single element unchanged'\nprint('OK')",
   "lesson:prefix-sums:ps-complete-1":
     "# prefix[i] = sum of first i elements. For nums=[2,4,1,3] prefix=[0,2,6,7,10].\nprefix = [0, 2, 6, 7, 10]\nassert range_sum(prefix, 1, 3) == 5, 'nums[1:3] = 4+1 = 5'\nassert range_sum(prefix, 0, 4) == 10\nassert range_sum(prefix, 2, 2) == 0\nprint('OK')",
 
@@ -43,19 +43,19 @@ export const EXERCISE_TESTS: Record<string, string> = {
   "lesson:in-place-modification:ip-complete-1":
     "nums = [3, 2, 2, 3]\nn = remove_val(nums, 3)\nassert n == 2, f'two non-3 values remain, got {n}'\nassert sorted(nums[:n]) == [2, 2]\nnums2 = [1]\nassert remove_val(nums2, 1) == 0\nprint('OK')",
   "lesson:matrix-traversal:mat-complete-1":
-    "assert total == 21, f'sum of 1..6 == 21, got {total}'\nprint('OK')",
+    "assert grid_sum([[1, 2, 3], [4, 5, 6]]) == 21, f'sum of 1..6 == 21, got {grid_sum([[1,2,3],[4,5,6]])}'\nassert grid_sum([[5]]) == 5, 'single cell'\nassert grid_sum([[1, 1], [1, 1], [1, 1]]) == 6, 'ragged? no — 3x2 of ones'\nassert grid_sum([[0, 0], [0, 0]]) == 0\nprint('OK')",
   "lesson:intervals:int-fix-1":
     "out = merge([[2, 3], [1, 5], [4, 6]])\nnorm = [list(x) for x in out]\nassert norm == [[1, 6]], f'overlapping intervals merge to [1,6], got {norm}'\nout2 = merge([[1, 2], [5, 6]])\nassert [list(x) for x in out2] == [[1, 2], [5, 6]]\n# touching intervals [1,3],[3,5] must merge (needs <= and the sort): a version\n# using strict < would leave them separate.\nout3 = merge([[3, 5], [1, 3]])\nassert [list(x) for x in out3] == [[1, 5]], f'touching intervals should merge, got {out3}'\nprint('OK')",
 
   // ── Strings ────────────────────────────────────────────────────────────
   "lesson:string-frequency:sf-complete-1":
-    "# Script contract: the learner's final `freq` dict is in scope.\nassert freq == {'a': 1, 'p': 2, 'l': 1, 'e': 1}, f'apple frequency wrong, got {freq}'\nassert freq['p'] == 2, f'two p in apple, got {freq.get(\"p\")}'\nassert sum(freq.values()) == 5, f'total chars must equal len(s)=5, got {sum(freq.values())}'\nprint('OK')",
+    "assert char_freq('apple') == {'a': 1, 'p': 2, 'l': 1, 'e': 1}, f'apple frequency wrong, got {char_freq(\"apple\")}'\nassert char_freq('') == {}, 'empty string has no characters'\nassert char_freq('aaa') == {'a': 3}, 'all same char'\nassert char_freq('abc') == {'a': 1, 'b': 1, 'c': 1}\nprint('OK')",
   "lesson:string-two-pointers:stp-complete-1":
     "assert is_palindrome('racecar') is True, 'racecar is a palindrome'\nassert is_palindrome('abca') is False, 'abca is not a palindrome'\nassert is_palindrome('') is True, 'empty string is a palindrome'\nassert is_palindrome('a') is True, 'single char is a palindrome'\nassert is_palindrome('ab') is False, 'ab is not a palindrome'\nprint('OK')",
   "lesson:string-parsing:sp-complete-1":
-    "# Script contract: the learner builds `nums` from the line.\nassert nums == [3, 9, 2, 7], f'parsed ints wrong, got {nums}'\nassert all(isinstance(x, int) for x in nums), f'values must be ints, got {nums}'\nassert max(nums) == 9, f'max should be 9, got {max(nums)}'\nprint('OK')",
+    "assert parse_max('3 9 2 7') == 9, f'max should be 9, got {parse_max(\"3 9 2 7\")}'\nassert parse_max('5') == 5, 'single token'\nassert parse_max('-1 -4 -2') == -1, 'all negative'\nassert parse_max('10 2 10') == 10, 'duplicate max'\nprint('OK')",
   "lesson:palindromes:pal-complete-1":
-    "assert is_palindrome('racecar') is True\nassert is_palindrome('hello') is False\nassert is_palindrome('') is True, 'empty string is a palindrome'\nassert is_palindrome('x') is True\nassert is_palindrome('ab') is False\nprint('OK')",
+    "assert is_palindrome('racecar') is True\nassert is_palindrome('hello') is False\nassert is_palindrome('') is True, 'empty string is a palindrome'\nassert is_palindrome('x') is True\nassert is_palindrome('ab') is False\n# first and last match but the middle differs: must compare the WHOLE reverse,\n# not just the ends.\nassert is_palindrome('abca') is False, 'ends match but not a palindrome'\nassert is_palindrome('abba') is True\nprint('OK')",
   "lesson:anagrams:ana-complete-1":
     "assert is_anagram('listen', 'silent') is True, 'listen/silent are anagrams'\nassert is_anagram('rat', 'car') is False, 'rat/car are not anagrams'\nassert is_anagram('', '') is True, 'two empty strings are anagrams'\nassert is_anagram('a', 'aa') is False, 'different lengths cannot be anagrams'\nassert is_anagram('aab', 'abb') is False, 'counts must match, not just letter set'\nprint('OK')",
 
@@ -143,7 +143,7 @@ export const EXERCISE_TESTS: Record<string, string> = {
   "lesson:graph-representations:grep-complete-1":
     "# Directed adjacency list: edge u->v adds v to adj[u] only, not the reverse.\nadj = build([(0, 1), (0, 2), (1, 2)])\nassert sorted(adj[0]) == [1, 2], f'0 points to 1 and 2, got {adj[0]}'\nassert adj[1] == [2], f'1 points to 2, got {adj[1]}'\nassert adj[2] == [], f'2 has no out-edges (directed), got {adj[2]}'\n# Directed means the reverse edge is absent: 1 must NOT appear in adj under 2.\nassert 0 not in adj[1], 'edge is one-way: no back-edge to 0'\nassert build([]) == {} or list(build([]).items()) == [], 'no edges -> empty'\nprint('OK')",
   "lesson:adjacency-lists:adj-complete-1":
-    "# Weighted undirected: each edge (u,v,w) appears in BOTH u and v lists.\nadj = build([(0, 1, 5), (1, 2, 3)])\nassert (1, 5) in adj[0], f'0 links to 1 with weight 5, got {adj[0]}'\nassert (0, 5) in adj[1], f'undirected: 1 links back to 0, got {adj[1]}'\nassert (2, 3) in adj[1] and (1, 3) in adj[2], 'both directions of the 1-2 edge'\nassert len(adj[1]) == 2, f'vertex 1 has two incident edges, got {adj[1]}'\nassert sorted(w for _, w in adj[0]) == [5], 'weight preserved on the stored tuple'\nprint('OK')",
+    "# Weighted undirected: each edge (u,v,w) appears in BOTH u and v lists.\nadj = build([(0, 1, 5), (1, 2, 3)])\nassert (1, 5) in adj[0], f'0 links to 1 with weight 5, got {adj[0]}'\nassert (0, 5) in adj[1], f'undirected: 1 links back to 0, got {adj[1]}'\nassert (2, 3) in adj[1] and (1, 3) in adj[2], 'both directions of the 1-2 edge'\nassert len(adj[1]) == 2, f'vertex 1 has two incident edges, got {adj[1]}'\nassert sorted(w for _, w in adj[0]) == [5], 'weight preserved on the stored tuple'\n# A lone edge must still appear from both endpoints.\nsa = build([(3, 4, 9)])\nassert (4, 9) in sa[3] and (3, 9) in sa[4], 'single edge recorded both ways'\n# No edges -> empty adjacency.\nassert build([]) == {} or list(build([]).items()) == [], 'no edges -> empty'\n# A star: center 0 linked to 1 and 2, each back to 0.\nst = build([(0, 1, 2), (0, 2, 7)])\nassert len(st[0]) == 2 and (0, 2) in st[1] and (0, 7) in st[2], 'star recorded both ways'\nprint('OK')",
   "lesson:graph-bfs:gbfs-complete-1":
     "from collections import defaultdict\nadj = defaultdict(list, {0: [1, 2], 1: [0, 3], 2: [0], 3: [1], 4: [5], 5: [4]})\nr = reachable(adj, 0)\nassert r == {0, 1, 2, 3}, f'component of 0 is {{0,1,2,3}}, got {r}'\nassert 4 not in r and 5 not in r, 'disconnected component 4-5 is unreachable'\nassert reachable(adj, 4) == {4, 5}, 'the other component'\nsolo = defaultdict(list, {7: []})\nassert reachable(solo, 7) == {7}, 'isolated vertex reaches only itself'\nprint('OK')",
   "lesson:graph-dfs:gdfs-complete-1":
@@ -153,7 +153,7 @@ export const EXERCISE_TESTS: Record<string, string> = {
   "lesson:graph-cycle-detection:cyc-fix-1":
     "from collections import defaultdict\n# The fragment defines dfs(node, parent) using globals `seen` and `adj`.\n# Tree (no cycle): 0-1, 0-2. The buggy version wrongly reports the arrival\n# edge (child seeing its parent) as a cycle; the fixed one excludes the parent.\nadj = defaultdict(list, {0: [1, 2], 1: [0], 2: [0]})\nseen = set()\nassert dfs(0, -1) is False, 'a tree has no cycle (parent edge must be excluded)'\n# Real cycle: triangle 0-1-2-0.\nadj = defaultdict(list, {0: [1, 2], 1: [0, 2], 2: [0, 1]})\nseen = set()\nassert dfs(0, -1) is True, 'triangle contains a cycle'\nprint('OK')",
   "lesson:shortest-paths-unweighted:spu-complete-1":
-    "from collections import defaultdict\nadj = defaultdict(list, {0: [1, 2], 1: [0, 3], 2: [0, 3], 3: [1, 2]})\ndist, parent = bfs_parents(adj, 0)\nassert dist == {0: 0, 1: 1, 2: 1, 3: 2}, f'BFS layer distances wrong, got {dist}'\nassert parent[0] is None, 'start has no parent'\nassert parent[1] == 0 and parent[2] == 0, 'both discovered directly from 0'\nassert parent[3] in (1, 2), f'3 discovered from a distance-1 node, got {parent[3]}'\n# Reconstruct the path 3 -> ... -> 0 and check it ends at the start.\nnode, path = 3, []\nwhile node is not None:\n    path.append(node)\n    node = parent[node]\nassert path[-1] == 0 and len(path) == 3, f'path has 3 hops back to 0, got {path}'\nprint('OK')",
+    "from collections import defaultdict\nadj = defaultdict(list, {0: [1, 2], 1: [0, 3], 2: [0, 3], 3: [1, 2]})\ndist, parent = bfs_parents(adj, 0)\nassert dist == {0: 0, 1: 1, 2: 1, 3: 2}, f'BFS layer distances wrong, got {dist}'\nassert parent[0] is None, 'start has no parent'\nassert parent[1] == 0 and parent[2] == 0, 'both discovered directly from 0'\nassert parent[3] in (1, 2), f'3 discovered from a distance-1 node, got {parent[3]}'\n# Reconstruct the path 3 -> ... -> 0 and check it ends at the start.\nnode, path = 3, []\nwhile node is not None:\n    path.append(node)\n    node = parent[node]\nassert path[-1] == 0 and len(path) == 3, f'path has 3 hops back to 0, got {path}'\n# A line 0-1-2: distances step up by one and parents chain back.\nline = defaultdict(list, {0: [1], 1: [0, 2], 2: [1]})\nd2, p2 = bfs_parents(line, 0)\nassert d2 == {0: 0, 1: 1, 2: 2}, f'line distances wrong, got {d2}'\nassert p2[0] is None and p2[1] == 0 and p2[2] == 1, f'line parents wrong, got {p2}'\n# An isolated start reaches only itself.\nsolo = defaultdict(list, {5: []})\nd3, p3 = bfs_parents(solo, 5)\nassert d3 == {5: 0} and p3 == {5: None}, 'isolated start'\nprint('OK')",
   "lesson:union-find:uf-complete-1":
     "# find(self, x) is a method fragment; call it on a host exposing `parent`.\nclass _UF:\n    def __init__(self, parent):\n        self.parent = parent\n# Chain 0<-1<-2<-3 (each points to the one below). find must reach root 0.\nu = _UF([0, 0, 1, 2])\nassert find(u, 3) == 0, f'root of the chain is 0, got {find(u, 3)}'\nassert find(u, 0) == 0, 'root points to itself'\n# Path compression: after find(3) the deep node must point nearer the root\n# (grandparent hop), so parent[3] is no longer 2.\nu2 = _UF([0, 0, 1, 2])\nfind(u2, 3)\nassert u2.parent[3] != 3, 'find still returns via the chain'\nassert u2.parent[3] == 1, f'grandparent compression: parent[3] becomes 1, got {u2.parent[3]}'\nprint('OK')",
 
@@ -171,7 +171,7 @@ export const EXERCISE_TESTS: Record<string, string> = {
   "lesson:linked-list-dummy-nodes:lldn-fix-1":
     "class Node:\n    def __init__(self, val, nxt=None):\n        self.val = val\n        self.next = nxt\ndef build(vals):\n    head = None\n    for v in reversed(vals):\n        head = Node(v, head)\n    return head\ndef to_list(head):\n    out = []\n    while head is not None:\n        out.append(head.val)\n        head = head.next\n    return out\n# The bug returns `head` (stale) when the first node is deleted; the fix returns\n# dummy.next. This case distinguishes them: removing the leading 6 must drop it.\nassert to_list(remove_all(build([6, 1, 2]), 6)) == [1, 2], 'leading node removed -> new head'\nassert to_list(remove_all(build([6, 6, 3]), 6)) == [3], 'multiple leading removals'\nassert to_list(remove_all(build([1, 6, 2]), 6)) == [1, 2], 'interior removal still works'\nassert to_list(remove_all(build([1, 2]), 9)) == [1, 2], 'no match -> unchanged'\nprint('OK')",
   "lesson:linked-list-deques:lldq-complete-1":
-    "# Script contract: FIFO use of a deque. After enqueue 1,2,3 the front is 1.\nassert first == 1, f'FIFO dequeue returns the earliest item, got {first}'\nassert list(q) == [2, 3], f'front removed, 2 and 3 remain in order, got {list(q)}'\nprint('OK')",
+    "# FIFO use of a deque: the earliest enqueued item comes out first.\nfirst, rest = dequeue_front([1, 2, 3])\nassert first == 1, f'FIFO dequeue returns the earliest item, got {first}'\nassert rest == [2, 3], f'front removed, 2 and 3 remain in order, got {rest}'\n# A different input so a hard-coded answer cannot pass.\nf2, r2 = dequeue_front([9, 8, 7, 6])\nassert f2 == 9, f'earliest is 9, got {f2}'\nassert r2 == [8, 7, 6], f'remaining in order, got {r2}'\n# Single item leaves an empty queue.\nf3, r3 = dequeue_front([42])\nassert f3 == 42 and r3 == [], 'single item -> empty remainder'\nprint('OK')",
 
   // ── Dynamic programming & recursion ────────────────────────────────
   "lesson:dp-base-cases:dpbc-complete-1":
@@ -185,7 +185,7 @@ export const EXERCISE_TESTS: Record<string, string> = {
   "lesson:dp-subsets:dpss-complete-1":
     "nums = [1, 2, 3]\nres = []\nbt(0, [])\ngot = sorted(tuple(x) for x in res)\nexpected = sorted([(), (1,), (1, 2), (1, 2, 3), (1, 3), (2,), (2, 3), (3,)])\nassert got == expected, f'all 8 subsets, got {got}'\nassert len(res) == 8, f'2**3 subsets, got {len(res)}'\nnums = [7]\nres = []\nbt(0, [])\nassert sorted(tuple(x) for x in res) == [(), (7,)], 'singleton -> empty and itself'\nprint('OK')",
   "lesson:dp-subsets:dpss-fix-1":
-    "# The bug stores the live `path` (alias), so every recorded subset ends as [].\nnums = [1, 2, 3]\nres = []\nbt(0, [])\ngot = sorted(tuple(x) for x in res)\nexpected = sorted([(), (1,), (1, 2), (1, 2, 3), (1, 3), (2,), (2, 3), (3,)])\nassert got == expected, f'snapshots must be independent copies, got {got}'\nassert sum(len(s) for s in res) == 12, f'total elements across subsets is 12, got {sum(len(s) for s in res)}'\nprint('OK')",
+    "# The bug stores the live `path` (alias), so every recorded subset ends as [].\nnums = [1, 2, 3]\nres = []\nbt(0, [])\ngot = sorted(tuple(x) for x in res)\nexpected = sorted([(), (1,), (1, 2), (1, 2, 3), (1, 3), (2,), (2, 3), (3,)])\nassert got == expected, f'snapshots must be independent copies, got {got}'\nassert sum(len(s) for s in res) == 12, f'total elements across subsets is 12, got {sum(len(s) for s in res)}'\n# A second, different input so a hard-coded result set cannot pass.\nnums = [7]\nres = []\nbt(0, [])\nassert sorted(tuple(x) for x in res) == [(), (7,)], f'singleton -> empty and itself, got {res}'\nprint('OK')",
   "lesson:dp-combinations:dpcomb-complete-1":
     "# bt(start, path) uses globals n and k to build k-combinations of 1..n.\nn = 4\nk = 2\nres = []\nbt(1, [])\ngot = sorted(tuple(x) for x in res)\nexpected = [(1, 2), (1, 3), (1, 4), (2, 3), (2, 4), (3, 4)]\nassert got == expected, f'C(4,2) == 6 combinations, got {got}'\nassert all(len(c) == 2 for c in res), 'each combination has size k'\nn = 3\nk = 3\nres = []\nbt(1, [])\nassert [tuple(x) for x in res] == [(1, 2, 3)], f'C(3,3) is one combination, got {res}'\nprint('OK')",
   "lesson:dp-memoization:dpmemo-complete-1":
@@ -200,117 +200,117 @@ export const EXERCISE_TESTS: Record<string, string> = {
 
   // ── R6 runnable fragments (indices 0-40 of remaining) ──────────────
   "lesson:io:io-fix-1":
-    "sys.stdout = _orig\n_out = _buf.getvalue().strip()\nassert _out == '14', f\"double of 7 should be 14, got {_out!r} (string version prints 77)\"\nprint('OK')",
+    "assert double('7') == 14, f'double of 7 should be 14, got {double(\"7\")!r} (string version gives 77)'\nassert double('3') == 6\nassert double('0') == 0\nassert double('-5') == -10\nprint('OK')",
   "lesson:errors:err-complete-1":
-    "sys.stdout = _orig\n_out = _buf.getvalue().strip()\nassert _out == 'undefined', f\"division by zero should print undefined, got {_out!r}\"\nprint('OK')",
+    "assert safe_div(10, 0) == 'undefined', f\"division by zero should return undefined, got {safe_div(10, 0)!r}\"\nassert safe_div(6, 2) == 3\nassert safe_div(9, 0) == 'undefined'\nassert safe_div(7, 2) == 3.5\nprint('OK')",
   "lesson:sliding-window:sw-complete-1":
-    "assert window == sum(nums[-k:]), f'after sliding, window should be sum of last k = {sum(nums[-k:])}, got {window}'\nassert window == 14, f'expected 14, got {window}'\nprint('OK')",
+    "assert final_window([1, 3, 5, 2, 8, 4], 3) == 14, f'sum of last 3 = 14, got {final_window([1,3,5,2,8,4],3)}'\nassert final_window([1, 2, 3, 4], 2) == 7, 'last two: 3+4'\nassert final_window([5, 5, 5], 3) == 15, 'whole array as the window'\nassert final_window([10, 1, 1, 1], 1) == 1, 'width-1 window ends on last element'\nprint('OK')",
   "lesson:binary-search-answer:bsa-fix-1":
-    "assert lo == 5, f'answer-search should converge to 5, got {lo}'\nassert lo == hi\nprint('OK')",
+    "assert search_answer(lambda c: c >= 5, 1, 10) == 5, 'smallest feasible is 5'\nassert search_answer(lambda c: c >= 1, 1, 10) == 1, 'everything feasible -> lo'\nassert search_answer(lambda c: c >= 10, 1, 10) == 10, 'only the top is feasible'\nassert search_answer(lambda c: c >= 7, 0, 100) == 7\nprint('OK')",
   "lesson:bubble-sort:bub-fix-1":
-    "assert a == [1, 2, 4, 5, 8], f'array should be sorted, got {a}'\nprint('OK')",
+    "assert bubble_sort([5, 1, 4, 2, 8]) == [1, 2, 4, 5, 8], 'sorts a mixed list'\nassert bubble_sort([]) == [], 'empty list'\nassert bubble_sort([1]) == [1], 'single element'\nassert bubble_sort([3, 2, 1]) == [1, 2, 3], 'reversed input'\nassert bubble_sort([2, 2, 1]) == [1, 2, 2], 'duplicates'\nprint('OK')",
   "lesson:selection-sort:sel-complete-1":
-    "assert a == [1, 2, 4, 5, 8], f'selection sort should sort, got {a}'\nprint('OK')",
+    "assert selection_sort([5, 1, 4, 2, 8]) == [1, 2, 4, 5, 8], 'sorts a mixed list'\nassert selection_sort([]) == [], 'empty list'\nassert selection_sort([1]) == [1], 'single element'\nassert selection_sort([3, 2, 1]) == [1, 2, 3], 'reversed input'\nassert selection_sort([4, 4, 2]) == [2, 4, 4], 'duplicates'\nprint('OK')",
   "lesson:insertion-sort:ins-fix-1":
-    "assert a == [1, 2, 4, 5, 8], f'insertion sort should sort, got {a}'\nprint('OK')",
+    "assert insertion_sort([5, 1, 4, 2, 8]) == [1, 2, 4, 5, 8], 'sorts a mixed list'\nassert insertion_sort([]) == [], 'empty list'\nassert insertion_sort([1]) == [1], 'single element'\nassert insertion_sort([3, 2, 1]) == [1, 2, 3], 'reversed input (max shifting)'\nassert insertion_sort([2, 1, 2]) == [1, 2, 2], 'duplicates'\nprint('OK')",
   "lesson:counting-sort:cnt-complete-1":
-    "assert counts == [1, 1, 2, 3], f'counts should tally each value, got {counts}'\nassert sum(counts) == len(a)\nprint('OK')",
+    "assert tally([2, 0, 2, 3, 1, 3, 3], 3) == [1, 1, 2, 3], f'tally wrong, got {tally([2,0,2,3,1,3,3],3)}'\nassert tally([], 0) == [0], 'empty input, hi=0'\nassert tally([0, 0, 0], 0) == [3], 'all zeros'\nassert tally([1, 1, 2], 2) == [0, 2, 1], 'nothing in bucket 0'\nprint('OK')",
   "lesson:radix-sort:rad-complete-1":
-    "assert buckets[0] == [40], f'ones digit 0 bucket, got {buckets[0]}'\nassert buckets[3] == [23], f'ones digit 3, got {buckets[3]}'\nassert buckets[5] == [45, 5], f'ones digit 5 in order, got {buckets[5]}'\nassert buckets[2] == [12]\nassert sum(len(b) for b in buckets) == len(out)\nprint('OK')",
+    "b = bucketize([23, 45, 12, 5, 40], 1)\nassert b[0] == [40] and b[3] == [23] and b[5] == [45, 5] and b[2] == [12], f'ones-digit buckets wrong, got {b}'\nassert sum(len(x) for x in b) == 5, 'every element placed once'\n# tens place: 23->2, 45->4, 12->1, 5->0, 40->4\nb2 = bucketize([23, 45, 12, 5, 40], 10)\nassert b2[2] == [23] and b2[4] == [45, 40] and b2[1] == [12] and b2[0] == [5], f'tens-digit buckets wrong, got {b2}'\nassert len(bucketize([], 1)) == 10, 'always 10 buckets'\nprint('OK')",
   "lesson:comparators:cmp-complete-1":
-    "sys.stdout = _orig\n_out = _buf.getvalue().strip()\nassert _out == str([('Cy', 25), ('Al', 30), ('Bo', 30)]), f'sort by age then name, got {_out!r}'\nprint('OK')",
+    "assert sort_people([('Bo', 30), ('Al', 30), ('Cy', 25)]) == [('Cy', 25), ('Al', 30), ('Bo', 30)], 'age then name'\nassert sort_people([]) == [], 'empty'\nassert sort_people([('Z', 1)]) == [('Z', 1)], 'single'\n# same age, reverse-alphabetical input must come out alphabetical by name\nassert sort_people([('Di', 40), ('An', 40)]) == [('An', 40), ('Di', 40)], 'tie broken by name'\nprint('OK')",
   "lesson:interval-sorting:isort-complete-1":
-    "sys.stdout = _orig\n_out = _buf.getvalue().strip()\nassert _out == str([[2, 3], [1, 5], [4, 6]]), f'sort by end time, got {_out!r}'\nprint('OK')",
+    "assert sort_by_end([[1, 5], [2, 3], [4, 6]]) == [[2, 3], [1, 5], [4, 6]], 'sort by end'\nassert sort_by_end([]) == [], 'empty'\nassert sort_by_end([[0, 9]]) == [[0, 9]], 'single'\nassert sort_by_end([[5, 8], [1, 2], [3, 4]]) == [[1, 2], [3, 4], [5, 8]], 'already end-ordered after sort'\nprint('OK')",
   "lesson:monotonic-stack:mono-fix-1":
-    "assert stack == [2, 3], f'stack should hold indices of a decreasing run ending at end, got {stack}'\n# All entries must be valid indices, not values (value-storing buggy version gives [1,5,3]).\nassert all(0 <= s < len(nums) for s in stack), f'stack must contain indices, got {stack}'\nprint('OK')",
+    "assert mono_stack([2, 1, 5, 3]) == [2, 3], f'indices of the decreasing run ending at end, got {mono_stack([2,1,5,3])}'\nassert mono_stack([]) == [], 'empty'\nassert mono_stack([1, 2, 3]) == [2], 'strictly increasing: only the last index survives'\nassert mono_stack([3, 2, 1]) == [0, 1, 2], 'strictly decreasing: all indices kept'\n# entries must be indices, not values (the value-storing bug gives [5, 3] here):\nassert all(0 <= s < 4 for s in mono_stack([2, 1, 5, 3]))\nprint('OK')",
   "lesson:expression-evaluation:expr-fix-1":
-    "assert stack == [2], f'5 - 3 should be 2 (correct operand order), got {stack}'\nprint('OK')",
+    "assert apply_sub([5, 3]) == [2], f'5 - 3 == 2, got {apply_sub([5, 3])}'\nassert apply_sub([3, 5]) == [-2], 'order matters: 3 - 5 == -2'\nassert apply_sub([10, 4, 1]) == [10, 3], 'operates on the TOP two, leaving the rest'\nassert apply_sub([7, 7]) == [0]\nprint('OK')",
   "lesson:bfs-queues:bfs-fix-1":
     "assert sorted(order) == [0, 1, 2, 3], f'BFS should visit each node, got {order}'\nassert len(order) == len(set(order)), f'no node visited twice, got {order}'\nassert order[0] == 0\n# The fixed version enqueues each of the 3 non-start nodes exactly once.\n# The buggy 'mark on dequeue' version enqueues a node once per in-edge (more).\nassert _appends['n'] == 3, f'each non-start node enqueued exactly once (buggy over-enqueues), got {_appends[\"n\"]}'\nprint('OK')",
   "lesson:prefix-sums-map:psm-fix-1":
-    "assert count == 2, f'subarrays summing to 3: [3] and [1,2] = 2 (buggy misses the prefix one), got {count}'\nprint('OK')",
+    "assert count_subarrays([3, 1, 2], 3) == 2, 'subarrays summing to 3: [3] and [1,2] (buggy seed {} misses the index-0 one)'\nassert count_subarrays([1, 1, 1], 2) == 2\nassert count_subarrays([1, 2, 3], 3) == 2, '[1,2] and [3]'\nassert count_subarrays([1, -1, 0], 0) == 3, 'handles negatives'\nassert count_subarrays([], 0) == 0, 'empty array'\nassert count_subarrays([5], 5) == 1, 'single matching element'\nprint('OK')",
   "lesson:top-k:topk-fix-1":
-    "assert sorted(h) == [4, 7, 8], f'heap should retain the k largest (buggy keeps smallest), got {sorted(h)}'\nassert len(h) == k\nprint('OK')",
+    "assert top_k([4, 1, 7, 3, 8, 2], 3) == [4, 7, 8], 'the three largest (buggy keeps the smallest)'\nassert top_k([5, 1, 4, 2, 3], 1) == [5], 'the single largest'\nassert top_k([3, 3, 3], 2) == [3, 3], 'duplicates allowed'\nassert top_k([2, 1], 5) == [1, 2], 'k larger than list returns all sorted'\nassert top_k([], 3) == [], 'empty input'\nprint('OK')",
   "lesson:two-heap-pattern:twoheap-fix-1":
-    "assert len(small) >= len(large), f'after rebalance small must not be smaller than large (buggy leaves large bigger), got small={small} large={large}'\nassert len(small) - len(large) <= 1\nassert len(small) + len(large) == 1\nprint('OK')",
+    "import heapq\ndef _median(small, large):\n    if len(small) == len(large):\n        return (-small[0] + large[0]) / 2\n    return float(-small[0])\n# A single insert must land in small with large empty.\nsm, lg = [], []\ninsert(sm, lg, 7)\nassert len(sm) == 1 and len(lg) == 0, f'one insert seeds small, got small={sm} large={lg}'\n# After each insert the heaps stay balanced (small never smaller than large).\nsm, lg = [], []\nfor v in [5, 15, 1, 3]:\n    insert(sm, lg, v)\n    assert len(sm) >= len(lg), f'small must not be smaller than large (buggy skips rebalance), got small={sm} large={lg}'\n    assert len(sm) - len(lg) <= 1, 'heaps differ by at most one'\nassert _median(sm, lg) == 4.0, f'median of [1,3,5,15] is 4.0, got {_median(sm, lg)}'\nsm2, lg2 = [], []\nfor v in [2, 1, 3]:\n    insert(sm2, lg2, v)\nassert _median(sm2, lg2) == 2.0, 'median of [1,2,3] is 2'\nprint('OK')",
   "lesson:topological-sort:topo-complete-1":
-    "assert indeg == {0: 0, 1: 0, 2: 0, 3: 2}, f'processing node 0 decrements indeg of 1 and 2, got {indeg}'\nassert list(q) == [1, 2], f'nodes that reached indeg 0 are queued, got {list(q)}'\nprint('OK')",
+    "order = kahn({0: [1, 2], 1: [3], 2: [3], 3: []}, {0: 0, 1: 1, 2: 1, 3: 2})\nassert order == [0, 1, 2, 3], f'Kahn order (buggy forgets to queue newly-zeroed nodes), got {order}'\nassert kahn({0: [1], 1: [2], 2: []}, {0: 0, 1: 1, 2: 1}) == [0, 1, 2], 'simple chain'\nassert len(kahn({0: [1], 1: [0]}, {0: 1, 1: 1})) == 0, 'a cycle emits no node'\nassert kahn({0: []}, {0: 0}) == [0], 'single node'\no4 = kahn({0: [2], 1: [2], 2: []}, {0: 0, 1: 0, 2: 2})\nassert sorted(o4) == [0, 1, 2] and o4[-1] == 2, f'two roots feed node 2 last, got {o4}'\nprint('OK')",
   "lesson:multi-source-bfs:msbfs-fix-1":
-    "assert dist == [0, -1, -1, -1, 0], f'all sources start at distance 0, got {dist}'\nassert sorted(q) == [0, 4], f'all sources enqueued, got {sorted(q)}'\nprint('OK')",
+    "dist, q = seed_sources(5, [0, 4])\nassert dist == [0, -1, -1, -1, 0], f'all sources start at distance 0 (buggy seeds only the first), got {dist}'\nassert sorted(q) == [0, 4], f'all sources enqueued, got {sorted(q)}'\ndist, q = seed_sources(3, [1])\nassert dist == [-1, 0, -1] and q == [1], 'single source'\ndist, q = seed_sources(4, [0, 1, 2, 3])\nassert dist == [0, 0, 0, 0] and sorted(q) == [0, 1, 2, 3], 'every vertex a source'\ndist, q = seed_sources(2, [])\nassert dist == [-1, -1] and q == [], 'no sources leaves all unreached'\nprint('OK')",
   "lesson:dijkstra:dij-fix-1":
     "assert dist == [0, 1, 2, 3], f'shortest distances from 0, got {dist}'\n# With the stale-skip each of the 4 nodes expands its neighbor list exactly once.\n# The buggy version also expands stale duplicate pops -> more than 4 expansions.\nassert _expand['n'] == 4, f'stale entries must be skipped (buggy over-expands), got {_expand[\"n\"]}'\nprint('OK')",
   "lesson:bellman-ford:bf-complete-1":
     "d = bellman_ford([(0, 1, 4), (0, 2, 5), (1, 2, -2), (2, 3, 3)], 4, 0)\nassert d == [0, 4, 2, 5], f'shortest distances, got {d}'\n# Negative cycle 0->1->0 with total -1 must be detected.\nassert bellman_ford([(0, 1, 1), (1, 0, -2)], 2, 0) is None, 'negative cycle -> None'\n# No-cycle single edge.\nassert bellman_ford([(0, 1, 7)], 2, 0) == [0, 7], 'simple two-node graph'\nprint('OK')",
   "lesson:floyd-warshall:fw-fix-1":
-    "assert d[0] == [0, 3, 5, 6], f'row 0 all-pairs shortest, got {d[0]}'\nassert d[1] == [5, 0, 2, 3], f'row 1, got {d[1]}'\nassert d[2] == [3, 6, 0, 1], f'row 2, got {d[2]}'\nassert d[3] == [2, 5, 7, 0], f'row 3, got {d[3]}'\nprint('OK')",
+    "INF = float('inf')\nd = floyd_warshall([[0, 3, INF, 7], [8, 0, 2, INF], [5, INF, 0, 1], [2, INF, INF, 0]], 4)\nassert d[0] == [0, 3, 5, 6], f'row 0 all-pairs shortest, got {d[0]}'\nassert d[1] == [5, 0, 2, 3], f'row 1, got {d[1]}'\nassert d[2] == [3, 6, 0, 1], f'row 2, got {d[2]}'\nassert d[3] == [2, 5, 7, 0], f'row 3, got {d[3]}'\n# A different graph so a hard-coded matrix cannot pass.\nd2 = floyd_warshall([[0, 1, INF], [INF, 0, 1], [1, INF, 0]], 3)\nassert d2[0] == [0, 1, 2], f'triangle row 0, got {d2[0]}'\nassert d2[1] == [2, 0, 1], f'triangle row 1, got {d2[1]}'\nassert d2[2] == [1, 2, 0], f'triangle row 2, got {d2[2]}'\n# Single vertex.\nassert floyd_warshall([[0]], 1) == [[0]], 'single vertex matrix unchanged'\nprint('OK')",
   "lesson:prim:prim-fix-1":
-    "assert all(visited), f'every vertex must be included, got {visited}'\nassert total == 6, f'MST weight is 0+1+2+3 = 6 (buggy revisits and overcounts), got {total}'\nprint('OK')",
+    "adj = {0: [(1, 1), (2, 4)], 1: [(0, 1), (2, 2), (3, 6)], 2: [(0, 4), (1, 2), (3, 3)], 3: [(1, 6), (2, 3)]}\nassert prim(adj, 4) == 6, f'MST weight is 1+2+3 = 6 (buggy revisits and overcounts), got {prim(adj, 4)}'\n# A different graph so a hard-coded total cannot pass.\nadj2 = {0: [(1, 10), (2, 1)], 1: [(0, 10), (2, 2)], 2: [(0, 1), (1, 2)]}\nassert prim(adj2, 3) == 3, f'MST weight is 1+2 = 3, got {prim(adj2, 3)}'\n# Single vertex: no edges, zero weight.\nassert prim({0: []}, 1) == 0, 'single vertex MST weight is 0'\nprint('OK')",
   "lesson:linked-list-traversal:ll-fix-1":
-    "sys.stdout = _orig\n_out = _buf.getvalue().split()\nassert _out == ['1', '2', '3'], f'traversal must print each value once and terminate, got {_out}'\nprint('OK')",
+    "class Node:\n    def __init__(self, val, nxt=None):\n        self.val = val\n        self.next = nxt\ndef build(vals):\n    head = None\n    for v in reversed(vals):\n        head = Node(v, head)\n    return head\nassert collect(build([1, 2, 3])) == [1, 2, 3], f'values in order, got {collect(build([1, 2, 3]))}'\nassert collect(None) == [], 'empty list collects nothing'\nassert collect(build([7])) == [7], 'single node'\nassert collect(build([5, 4, 3, 2, 1])) == [5, 4, 3, 2, 1], 'longer list in order'\nprint('OK')",
   "lesson:linked-list-slow-fast:llsf-fix-1":
-    "assert slow.val == 2, f'middle of [1,2,3] is 2 (buggy crashes on the None.next.next), got {slow.val}'\nprint('OK')",
+    "class Node:\n    def __init__(self, val, nxt=None):\n        self.val = val\n        self.next = nxt\ndef build(vals):\n    head = None\n    for v in reversed(vals):\n        head = Node(v, head)\n    return head\n# Odd length: exact centre.\nassert middle(build([1, 2, 3])).val == 2, f'middle of [1,2,3] is 2, got {middle(build([1,2,3])).val}'\n# Even length (buggy crashes on None.next.next): upper middle.\nassert middle(build([1, 2, 3, 4])).val == 3, f'even-length upper middle is 3, got {middle(build([1,2,3,4])).val}'\nassert middle(build([1])).val == 1, 'singleton is its own middle'\nassert middle(build([1, 2])).val == 2, 'two nodes -> second'\nprint('OK')",
   "lesson:linked-list-merging:llm-complete-1":
-    "# Both fronts tie at val 1; the stable merge (<=) splices the LEFT node first.\nfirst = dummy.next\nassert first is not None and first.val == 1, f'a node must be spliced, got {first}'\nassert first.src == 'L', f'on a tie the left list is taken first (needs <=), got {first.src!r}'\nprint('OK')",
+    "class Node:\n    def __init__(self, val, nxt=None, src=None):\n        self.val = val\n        self.next = nxt\n        self.src = src\ndef build(vals):\n    head = None\n    for v in reversed(vals):\n        head = Node(v, head)\n    return head\ndef to_list(h):\n    out = []\n    while h is not None:\n        out.append(h.val)\n        h = h.next\n    return out\nassert to_list(merge(build([1, 3, 5]), build([2, 4, 6]))) == [1, 2, 3, 4, 5, 6], 'interleaved merge'\n# Leftover tail must be attached: one list far longer than the other.\nassert to_list(merge(build([1]), build([2, 3, 4, 5]))) == [1, 2, 3, 4, 5], 'longer list tail kept'\nassert to_list(merge(None, build([1, 2]))) == [1, 2], 'empty left'\nassert to_list(merge(build([1, 2]), None)) == [1, 2], 'empty right'\nassert to_list(merge(None, None)) == [], 'both empty'\n# Stability: on a tie the LEFT node (needs <=) comes first.\nla = Node(1, None, 'L')\nlb = Node(1, None, 'R')\nmerged = merge(la, lb)\nassert merged is not None and merged.val == 1, 'a node must be spliced'\nassert merged.src == 'L', f'on a tie the left node comes first (needs <=), got {merged.src!r}'\nprint('OK')",
   "lesson:linked-list-pointer-manipulation:llpm-complete-1":
-    "vals = []\nnode = dummy.next\nwhile node is not None:\n    vals.append(node.val)\n    node = node.next\nassert vals == [2, 1, 4, 3], f'adjacent pairs swapped, got {vals}'\nprint('OK')",
+    "class Node:\n    def __init__(self, val, nxt=None):\n        self.val = val\n        self.next = nxt\ndef build(vals):\n    head = None\n    for v in reversed(vals):\n        head = Node(v, head)\n    return head\ndef to_list(h):\n    out = []\n    while h is not None:\n        out.append(h.val)\n        h = h.next\n    return out\nassert to_list(swap_pairs(build([1, 2, 3, 4]))) == [2, 1, 4, 3], f'adjacent pairs swapped, got {to_list(swap_pairs(build([1,2,3,4])))}'\n# Odd length: the trailing single node stays put.\nassert to_list(swap_pairs(build([1, 2, 3]))) == [2, 1, 3], 'odd tail stays'\nassert to_list(swap_pairs(build([1]))) == [1], 'single node unchanged'\nassert swap_pairs(None) is None, 'empty list'\nassert to_list(swap_pairs(build([1, 2, 3, 4, 5, 6]))) == [2, 1, 4, 3, 6, 5], 'three pairs'\nprint('OK')",
   "lesson:linked-list-pointer-manipulation:llpm-fix-1":
-    "# After swapping (1,2) -> (2,1), prev must advance to node 1 so the NEXT pair\n# (3,4) is processed. The buggy version sets prev=second (node 2), skipping node 1.\nassert prev.val == 1, f'prev must land on the trailing node of the swapped pair (1), got {prev.val}'\nassert prev.next.val == 3, f'the next pair starts at 3, got {prev.next.val}'\nprint('OK')",
+    "class Node:\n    def __init__(self, val, nxt=None):\n        self.val = val\n        self.next = nxt\ndef build(vals):\n    head = None\n    for v in reversed(vals):\n        head = Node(v, head)\n    return head\ndef to_list(h):\n    out = []\n    while h is not None:\n        out.append(h.val)\n        h = h.next\n    return out\n# The bug sets prev=second (the new front), skipping a node and corrupting the\n# next pair, so [1,2,3,4] does not become [2,1,4,3].\nassert to_list(swap_pairs(build([1, 2, 3, 4]))) == [2, 1, 4, 3], f'all pairs swapped, got {to_list(swap_pairs(build([1,2,3,4])))}'\nassert to_list(swap_pairs(build([1, 2, 3]))) == [2, 1, 3], 'odd tail stays'\nassert to_list(swap_pairs(build([1, 2]))) == [2, 1], 'single pair'\nassert swap_pairs(None) is None, 'empty list'\nassert to_list(swap_pairs(build([1, 2, 3, 4, 5, 6]))) == [2, 1, 4, 3, 6, 5], 'three pairs'\nprint('OK')",
   "lesson:linked-list-variants:llv-complete-1":
-    "assert tail.val == 2, f'tail advanced to the new node, got {tail.val}'\nassert tail.prev is not None and tail.prev.val == 1, f'new node links back to old tail, got {tail.prev}'\nassert tail.prev.next is tail, 'old tail links forward to the new node'\nprint('OK')",
+    "class Node:\n    def __init__(self, val):\n        self.val = val\n        self.next = None\n        self.prev = None\n# Append node 2 after tail node 1: both links must be set and the tail advances.\nt1 = Node(1)\nn2 = Node(2)\ntail = append(t1, n2)\nassert tail.val == 2, f'tail advanced to the new node, got {tail.val}'\nassert tail.prev is not None and tail.prev.val == 1, f'new node links back to old tail, got {tail.prev}'\nassert tail.prev.next is tail, 'old tail links forward to the new node'\n# Appending to an empty list: the node becomes the tail.\nn5 = Node(5)\nt = append(None, n5)\nassert t is n5 and t.prev is None, 'empty append -> node is the sole tail'\n# A second append chains correctly.\nn3 = Node(3)\ntail2 = append(tail, n3)\nassert tail2.val == 3 and tail2.prev.val == 2 and tail2.prev.next is tail2, 'chained append links both ways'\nprint('OK')",
   "lesson:dp-base-cases:dpbc-fix-1":
     "assert fact(0) == 1, '0! == 1 (base case)'\nassert fact(1) == 1, '1! == 1'\nassert fact(5) == 120, '5! == 120'\nassert fact(6) == 720\n_orig = fact\n_calls = [0]\ndef fact(n):\n    _calls[0] += 1\n    return _orig(n)\nassert fact(3) == 6, '3! == 6'\n# fact(3) -> fact(2) -> fact(1) stops: exactly 3 calls. A base case of n<1 would\n# recurse once more (down to fact(0)) giving 4 calls.\nassert _calls[0] == 3, f'base case must stop at n<=1 (3 calls for fact(3)), got {_calls[0]}'\nprint('OK')",
   "lesson:dp-permutations:dpperm-complete-1":
-    "got = sorted(tuple(p) for p in res)\nexpected = sorted([(1, 2, 3), (1, 3, 2), (2, 1, 3), (2, 3, 1), (3, 1, 2), (3, 2, 1)])\nassert got == expected, f'all 6 permutations, got {got}'\nassert all(len(p) == 3 for p in res), 'each permutation uses all elements'\nprint('OK')",
+    "got = sorted(tuple(p) for p in permutations([1, 2, 3]))\nexpected = sorted([(1, 2, 3), (1, 3, 2), (2, 1, 3), (2, 3, 1), (3, 1, 2), (3, 2, 1)])\nassert got == expected, f'all 6 permutations, got {got}'\nassert all(len(p) == 3 for p in permutations([1, 2, 3])), 'each permutation uses all elements'\n# A different-size input so a hard-coded result cannot pass.\nassert sorted(tuple(p) for p in permutations([1, 2])) == [(1, 2), (2, 1)], 'two-element permutations'\nassert permutations([7]) == [[7]], 'singleton'\nassert permutations([]) == [[]], 'empty input -> the empty permutation'\nprint('OK')",
   "lesson:dp-permutations:dpperm-fix-1":
-    "# The fragment runs one iteration (i=0): choose nums[0]=1, explore, then undo.\n# Exploring must populate res with the permutations that start with 1 (this fails\n# for the 'empty' submission, which never calls bt). The FIX also clears\n# used[0] on backtrack (the buggy version leaves it True).\ngot = sorted(tuple(p) for p in res)\nassert got == [(1, 2, 3), (1, 3, 2)], f'exploring i=0 yields perms starting with 1, got {got}'\nassert used[0] is False, f'used[0] must be cleared after backtracking (buggy leaves it True), got {used[0]}'\nassert path == [], f'path must be restored to empty, got {path}'\nprint('OK')",
+    "# The buggy version never clears used[i] on backtrack, so after taking the\n# first element every deeper slot stays blocked and most orderings are lost.\ngot = sorted(tuple(p) for p in permutations([1, 2, 3]))\nexpected = sorted([(1, 2, 3), (1, 3, 2), (2, 1, 3), (2, 3, 1), (3, 1, 2), (3, 2, 1)])\nassert got == expected, f'all 6 permutations (buggy truncates), got {got}'\nassert sorted(tuple(p) for p in permutations([1, 2])) == [(1, 2), (2, 1)], 'two-element permutations'\nassert permutations([7]) == [[7]], 'singleton'\nassert permutations([]) == [[]], 'empty input -> the empty permutation'\nprint('OK')",
   "lesson:dp-knapsack:dpks-complete-1":
-    "# Item index1 weighs 3, value 4. At capacity 3, take = dp[1][0]+4 = 4 beats skip = dp[1][3] = 3.\nassert dp[2][3] == 4, f'should take the better (take) option = 4, got {dp[2][3]}'\nprint('OK')",
+    "# weights [2,3], values [3,4], capacity 3: take item 2 (w3,v4) -> 4 beats item 1 (w2,v3).\nassert knapsack([2, 3], [3, 4], 3) == 4, f'best value at capacity 3 is 4, got {knapsack([2, 3], [3, 4], 3)}'\n# Larger capacity fits both items -> 3 + 4 = 7.\nassert knapsack([2, 3], [3, 4], 5) == 7, f'both items fit -> 7, got {knapsack([2, 3], [3, 4], 5)}'\n# Classic instance.\nassert knapsack([1, 3, 4, 5], [1, 4, 5, 7], 7) == 9, f'best is items w3+w4 -> 9, got {knapsack([1,3,4,5],[1,4,5,7],7)}'\n# Nothing fits.\nassert knapsack([5], [10], 3) == 0, 'item too heavy -> 0'\nassert knapsack([], [], 5) == 0, 'no items -> 0'\nprint('OK')",
   "lesson:dp-subsequences:dpsub-complete-1":
     "assert is_subsequence('abc', 'ahbgdc') is True, 'abc is a subsequence of ahbgdc'\nassert is_subsequence('axc', 'ahbgdc') is False, 'axc is not a subsequence'\nassert is_subsequence('', 'anything') is True, 'empty is always a subsequence'\nassert is_subsequence('abc', '') is False, 'non-empty cannot be a subsequence of empty'\nassert is_subsequence('aaa', 'aa') is False, 'needs three a but only two available'\nprint('OK')",
 
   // ── R6 runnable fragments (indices 41-80 of remaining) ─────────────
   "lesson:dp-grid-paths:dpgp-fix-1":
-    "# grid = [[1,3,1],[1,5,1],[4,2,1]]; min path sum top-left -> bottom-right is 7.\n# The buggy version leaves the top row / left column as zeros, so interior cells\n# read wrong predecessors and dp[m-1][n-1] is understated.\nassert dp[0][1] == 4, f'top-row prefix must be filled (1+3), got {dp[0][1]}'\nassert dp[1][0] == 2, f'left-column prefix must be filled (1+1), got {dp[1][0]}'\nassert dp[m - 1][n - 1] == 7, f'min path sum should be 7, got {dp[m - 1][n - 1]}'\nprint('OK')",
+    "assert min_path_sum([[1,3,1],[1,5,1],[4,2,1]]) == 7, 'path 1->3->1->1->1'\nassert min_path_sum([[1,2,3],[4,5,6]]) == 12\nassert min_path_sum([[5]]) == 5\nassert min_path_sum([[1,2,5],[3,2,1]]) == 6\nassert min_path_sum([[1,2],[1,1]]) == 3\nprint('OK')",
   "lesson:dp-lcs:dplcs-complete-1":
-    "# Match branch: a[0]==b[0]=='a', so dp[1][1] = dp[0][0] + 1 = 1.\nassert dp[1][1] == 1, f'matching chars extend the diagonal to 1, got {dp[1][1]}'\n# Mismatch branch: recompute with i,j pointing at differing chars.\ni, j = 1, 2\ndp = [[0, 0, 0], [0, 0, 2]]\n# a[0]='a', b[1]='b' differ -> take max(dp[0][2], dp[1][1]) = max(0, 0)... set up a\n# clear winner: left neighbour dp[1][1]=5, top dp[0][2]=3 -> should pick 5.\ndp = [[0, 0, 3], [0, 5, 0]]\nif a[i - 1] == b[j - 1]:\n    dp[i][j] = dp[i - 1][j - 1] + 1\nelse:\n    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])\nassert dp[1][2] == 5, f'mismatch takes the better neighbour (5), got {dp[1][2]}'\nprint('OK')",
+    "assert lcs('abcde', 'ace') == 3, 'ace'\nassert lcs('abc', 'abc') == 3\nassert lcs('abc', 'def') == 0\nassert lcs('', 'abc') == 0\nassert lcs('aggtab', 'gxtxayb') == 4, 'gtab'\nprint('OK')",
   "lesson:dp-n-queens:dpnq-fix-1":
-    "# One placement then backtrack must fully restore all three constraint sets.\n# The buggy version forgets to remove from diag1/diag2, leaking conflicts.\nassert cols == set(), f'cols must be restored empty, got {cols}'\nassert diag1 == set(), f'diag1 must be restored empty (buggy leaves the entry), got {diag1}'\nassert diag2 == set(), f'diag2 must be restored empty (buggy leaves the entry), got {diag2}'\nassert _bt_calls['n'] == 1, f'bt(row+1) must be called exactly once, got {_bt_calls[\"n\"]}'\nprint('OK')",
+    "assert count_n_queens(1) == 1\nassert count_n_queens(2) == 0\nassert count_n_queens(3) == 0\nassert count_n_queens(4) == 2\nassert count_n_queens(5) == 10\nprint('OK')",
   "pattern:kadane:pat-kadane-fix-1":
     "assert kadane([-2, -3, -1, -4]) == -1, 'all-negative: best is the single largest element (-1), not 0'\nassert kadane([1, 2, 3]) == 6, 'all-positive: whole array'\nassert kadane([-2, 1, -3, 4, -1, 2, 1, -5, 4]) == 6, 'classic mixed case'\nassert kadane([5]) == 5, 'single element'\nassert kadane([-7]) == -7, 'single negative element'\nprint('OK')",
   "pattern:bfs-shortest-path:pat-bfs-fix-1":
-    "# Diamond where DFS (a stack) discovers node 4 via the long branch first:\n# 0->1->4 is 2 hops, 0->2->3->4 is 3 hops. BFS gives dist[4]==2; a stack-based\n# walk labels 4 from node 3 (dist 3) before the short path is taken.\nassert dist[0] == 0, 'start distance is 0'\nassert dist[1] == 1 and dist[2] == 1, f'direct neighbours are 1 hop, got {dist}'\nassert dist[4] == 2, f'4 must be the true shortest distance 2 (a stack/DFS reports 3), got {dist[4]}'\nprint('OK')",
+    "assert bfs_dist({0: [1, 2], 1: [4], 2: [3], 3: [4], 4: []}, 0) == {0: 0, 1: 1, 2: 1, 3: 2, 4: 2}, 'BFS gives shortest hops; a stack/DFS reports dist[4]=3'\nassert bfs_dist({0: [1], 1: [2], 2: []}, 0) == {0: 0, 1: 1, 2: 2}, 'chain'\nassert bfs_dist({0: []}, 0) == {0: 0}, 'single node'\nassert bfs_dist({0: [1, 2], 1: [], 2: []}, 0) == {0: 0, 1: 1, 2: 1}, 'star'\nprint('OK')",
   "pattern:backtracking:pat-bt-fix-1":
-    "# Subsets of [1,2] via choose/explore/undo. The aliasing bug appends the SAME\n# list object repeatedly, so every recorded subset ends up [] after the pops.\nbt(0, path)\nassert res[0] == [], 'first recorded subset is the empty prefix'\ngot = sorted(res, key=lambda s: (len(s), s))\nassert got == [[], [1], [2], [1, 2]], f'all four subsets recorded as snapshots, got {got}'\nassert path == [], f'path fully unwound at the end, got {path}'\nprint('OK')",
+    "assert sorted(subsets([1, 2]), key=lambda s: (len(s), s)) == [[], [1], [2], [1, 2]]\nassert subsets([]) == [[]], 'only the empty subset'\nassert sorted(subsets([5]), key=len) == [[], [5]]\ng = sorted(subsets([1, 2, 3]), key=lambda s: (len(s), s))\nassert g == [[], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]], f'all 8 subsets, got {g}'\nprint('OK')",
   "pattern:two-heaps:pat-th-fix-1":
-    "# small starts as [-10] (a max-heap of negated values, representing 10) and\n# num=5. The FIX pushes -5, then moves the true MAXIMUM of the lower half (10)\n# up to large: small ends [-5] (representing 5), large ends [10].\n# The buggy version pushes the raw 5, so heappop returns -10 (a spurious min),\n# leaving small=[5] and large=[-10] -- a broken partition.\nassert self.large == [10], f'the largest of the lower half (10) must move up (needs negation); got large={self.large}'\nassert self.small == [-5], f'lower half keeps 5 as a negated max-heap; got small={self.small}'\nlower_vals = sorted(-v for v in self.small)\nupper_vals = sorted(self.large)\nassert all(lo <= up for lo in lower_vals for up in upper_vals), f'every lower <= every upper, got lower={lower_vals} upper={upper_vals}'\nprint('OK')",
+    "s, l = add_lower([-10], [], 5)\nassert l == [10], f'largest of lower half (10) moves up, got {l}'\nassert s == [-5], f'lower half keeps 5 as negated max-heap, got {s}'\ns, l = add_lower([], [], 3)\nassert l == [3] and s == [], f'first element flows up, got s={s} l={l}'\ns, l = add_lower([-7, -2], [], 9)\nassert l == [9], f'new max 9 moves up, got {l}'\nassert sorted(-v for v in s) == [2, 7], f'lower half keeps 2 and 7, got {s}'\nprint('OK')",
   "pattern:k-way-merge:pat-kwm-fix-1":
-    "# The fixed tuple carries (val, i, j) so equal front values break the tie on\n# the integer index i, never on the list object. The buggy (val, lst) stores\n# 2-tuples whose second element is a list.\nassert len(heap) == 2, f'both non-empty lists seeded, got {len(heap)}'\nassert all(len(e) == 3 for e in heap), f'entries must be (val, i, j) triples, not (val, lst) pairs, got {heap}'\nassert all(isinstance(e[1], int) and isinstance(e[2], int) for e in heap), f'the tiebreakers must be integer indices, got {heap}'\nfirst = heapq.heappop(heap)\nassert first == (1, 0, 0), f'smallest front is list 0 position 0, got {first}'\nsecond = heapq.heappop(heap)\nassert second == (1, 1, 0), f'the tie resolves to list 1 via the index tiebreaker, got {second}'\nprint('OK')",
+    "heap = seed_heap([[1, 4], [1, 5]])\nassert len(heap) == 2, f'both non-empty lists seeded, got {len(heap)}'\nassert all(len(e) == 3 and isinstance(e[1], int) and isinstance(e[2], int) for e in heap), f'entries must be (val, i, j) triples with int tiebreakers, got {heap}'\nimport heapq\nassert heapq.heappop(heap) == (1, 0, 0)\nassert heapq.heappop(heap) == (1, 1, 0), 'tie resolves on list index'\nheap2 = seed_heap([[], [3], [2]])\nassert sorted(heap2) == [(2, 2, 0), (3, 1, 0)], f'empty list skipped, got {heap2}'\nprint('OK')",
   "pattern:monotonic-stack:pat-ms-fix-1":
-    "# next greater element to the right; -1 where none. nums = [2, 1, 2, 4, 3].\nassert res == [4, 2, 4, -1, -1], f'next greater to the right, got {res}'\n# The buggy '>' comparison resolves the wrong entries, leaving values that\n# should have a greater-to-the-right unset (-1).\nassert res[0] == 4 and res[3] == -1, f'2 -> 4 and 4 -> none, got {res}'\nprint('OK')",
+    "assert next_greater([2, 1, 2, 4, 3]) == [4, 2, 4, -1, -1]\nassert next_greater([1, 2, 3]) == [2, 3, -1]\nassert next_greater([3, 2, 1]) == [-1, -1, -1]\nassert next_greater([5]) == [-1]\nassert next_greater([2, 7, 3, 5, 1]) == [7, -1, 5, -1, -1]\nprint('OK')",
   "pattern:merge-intervals:pat-mi-fix-1":
-    "# Sorting by START ([1,4],[2,3],[4,5]) merges all three into [1,5]: [2,3] is\n# contained, and [4,5] touches at 4 (needs the <= overlap test). Sorting by END\n# instead starts from [2,3] and yields [2,5] -- a different, wrong span, which\n# catches the wrong-key bug. A strict < overlap test would leave [4,5] separate.\nnorm = [list(x) for x in merged]\nassert norm == [[1, 5]], f'all three merge into [1,5] (needs sort-by-start AND the <= touch test), got {norm}'\nprint('OK')",
+    "assert merge_intervals([[1,4],[2,3],[4,5]]) == [[1,5]], 'overlap + touch'\nassert merge_intervals([[1,3],[2,6],[8,10],[15,18]]) == [[1,6],[8,10],[15,18]]\nassert merge_intervals([[1,2],[5,6]]) == [[1,2],[5,6]], 'disjoint'\nassert merge_intervals([]) == []\nassert merge_intervals([[1,10],[2,3]]) == [[1,10]], 'contained'\nprint('OK')",
   "pattern:cyclic-sort:pat-cs-fix-1":
-    "# With a duplicate the buggy version swaps 0<->0 forever. The guard advances i.\nassert nums == [0, 1, 2, 2], f'array settled with the duplicate in place, got {nums}'\nprint('OK')",
+    "assert cyclic_sort([2, 0, 2, 1]) == [0, 1, 2, 2], 'duplicate must not loop forever'\nassert cyclic_sort([3, 2, 1, 0]) == [0, 1, 2, 3]\nassert cyclic_sort([0]) == [0]\nassert cyclic_sort([1, 1, 1]) == [1, 1, 1], 'all duplicates'\nassert cyclic_sort([]) == []\nprint('OK')",
   "pattern:matrix-traversal:pat-mt-fix-1":
-    "# Single-row matrix: without the guards the bottom row (== top row) is walked\n# again, double-visiting cells. Expect each cell exactly once.\nassert res == [1, 2, 3], f'single row visited once each, got {res}'\nassert len(res) == len(set(res)), f'no cell double-visited, got {res}'\nprint('OK')",
+    "assert spiral([[1,2,3]]) == [1,2,3], 'single row: no double-visit'\nassert spiral([[1],[2],[3]]) == [1,2,3], 'single column'\nassert spiral([[1,2,3],[4,5,6],[7,8,9]]) == [1,2,3,6,9,8,7,4,5]\nassert spiral([[1,2],[3,4]]) == [1,2,4,3]\nr = spiral([[1,2,3],[4,5,6]])\nassert r == [1,2,3,6,5,4] and len(r) == len(set(r)), 'each cell once'\nprint('OK')",
   "pattern:tree-bfs:pat-tbfs-fix-1":
-    "# Level order must group by depth. Without snapshotting len(q) all values land\n# in one flat level.\nassert res == [[1], [2, 3], [4, 5]], f'nodes grouped by level, got {res}'\nprint('OK')",
+    "class _T:\n    def __init__(self, val, left=None, right=None):\n        self.val = val; self.left = left; self.right = right\nroot = _T(1, _T(2, _T(4), None), _T(3, None, _T(5)))\nassert level_order(root) == [[1], [2, 3], [4, 5]], 'grouped by depth, not flattened'\nassert level_order(None) == []\nassert level_order(_T(7)) == [[7]]\nassert level_order(_T(1, _T(2, _T(3)))) == [[1], [2], [3]], 'left-skewed, one node per level'\nprint('OK')",
   "pattern:tree-dfs:pat-tdfs-fix-1":
-    "class _T:\n    def __init__(self, val, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\nres = []\n# root 1 -> (2 -> 4,5), (3). Root-to-leaf paths: [1,2,4],[1,2,5],[1,3].\nroot = _T(1, _T(2, _T(4), _T(5)), _T(3))\ndfs(root, [])\ngot = sorted(res)\nassert got == [[1, 2, 4], [1, 2, 5], [1, 3]], f'root-to-leaf paths; missing path.pop() leaks state, got {got}'\nprint('OK')",
+    "class _T:\n    def __init__(self, val, left=None, right=None):\n        self.val = val; self.left = left; self.right = right\nroot = _T(1, _T(2, _T(4), _T(5)), _T(3))\nassert sorted(root_to_leaf(root)) == [[1, 2, 4], [1, 2, 5], [1, 3]], 'path.pop() must unwind between subtrees'\nassert root_to_leaf(None) == []\nassert root_to_leaf(_T(9)) == [[9]], 'single leaf'\nassert sorted(root_to_leaf(_T(1, _T(2), _T(3)))) == [[1, 2], [1, 3]]\nprint('OK')",
   "pattern:graph-dfs-components:pat-gdc-fix-1":
-    "# Cyclic graph 0-1-2-0. Without the seen-guard the DFS recurses forever;\n# with it every node is visited exactly once.\ndfs(0)\nassert seen == {0, 1, 2}, f'all reachable nodes visited once, got {seen}'\nprint('OK')",
+    "assert count_components(3, [[0, 1], [1, 2], [2, 0]]) == 1, 'cyclic triangle: one component, must not loop forever'\nassert count_components(5, [[0, 1], [2, 3]]) == 3, 'two edges + isolated 4'\nassert count_components(4, []) == 4, 'no edges: all isolated'\nassert count_components(1, []) == 1\nassert count_components(6, [[0, 1], [1, 2], [3, 4]]) == 3\nprint('OK')",
   "pattern:topological-sort:pat-topo-fix-1":
-    "# DAG 0->2, 1->2, 2->3. A valid topo order must place 2 after both 0 and 1,\n# and 3 last. Enqueuing before indeg hits 0 corrupts this.\npos = {v: k for k, v in enumerate(order)}\nassert set(order) == {0, 1, 2, 3}, f'every node ordered once, got {order}'\nassert pos[2] > pos[0] and pos[2] > pos[1], f'2 comes after its prerequisites, got {order}'\nassert pos[3] == 3, f'3 is last, got {order}'\nprint('OK')",
+    "o = topo_order({0: [2], 1: [2], 2: [3], 3: []}, {0: 0, 1: 0, 2: 2, 3: 1})\npos = {v: k for k, v in enumerate(o)}\nassert set(o) == {0, 1, 2, 3}, f'every node once, got {o}'\nassert pos[2] > pos[0] and pos[2] > pos[1], f'2 after its prerequisites, got {o}'\nassert pos[3] == 3, f'3 last, got {o}'\nassert topo_order({0: [1], 1: [2], 2: []}, {0: 0, 1: 1, 2: 1}) == [0, 1, 2], 'chain'\nassert topo_order({0: [1], 1: [0]}, {0: 1, 1: 1}) == [], 'a cycle emits no node'\nassert topo_order({0: []}, {0: 0}) == [0], 'single node'\nprint('OK')",
   "pattern:union-find:pat-uf-fix-1":
     "# find(self, x) is a method fragment; call it on a host exposing `parent`.\nclass _UF:\n    def __init__(self, parent):\n        self.parent = parent\n# Chain 0<-1<-2<-3. find must return root 0 for every node.\nu = _UF([0, 0, 1, 2])\nassert find(u, 3) == 0, f'root of the chain is 0, got {find(u, 3)}'\nassert find(u, 0) == 0, 'root points to itself'\n# Path compression: after find(3) the deep node hops nearer the root.\nu2 = _UF([0, 0, 1, 2])\nfind(u2, 3)\nassert u2.parent[3] != 2, f'compression must shorten parent[3] (no-compression leaves it 2), got {u2.parent[3]}'\nprint('OK')",
   "pattern:dijkstra:pat-dij-fix-1":
     "# Shortest paths from 0 on a small weighted graph.\nassert dist == [0, 1, 2, 3], f'shortest distances from 0, got {dist}'\n# With the stale-skip each node expands its neighbours at most once; the buggy\n# version reprocesses stale pops and over-expands.\nassert _expand['n'] == 4, f'stale entries skipped (buggy over-expands), got {_expand[\"n\"]}'\nprint('OK')",
   "pattern:trie-prefix:pat-trie-fix-1":
-    "# search(self, word) must return True only for STORED words, not mere prefixes.\nclass _N:\n    def __init__(self):\n        self.children = {}\n        self.is_end = False\nclass _Trie:\n    def __init__(self):\n        self.root = _N()\n    def add(self, word):\n        node = self.root\n        for ch in word:\n            node = node.children.setdefault(ch, _N())\n        node.is_end = True\nt = _Trie()\nt.add('app')\nassert search(t, 'app') is True, 'stored word is found'\nassert search(t, 'ap') is False, 'a prefix that was not stored is NOT a word (buggy returns True)'\nassert search(t, 'apple') is False, 'path breaks -> not found'\nprint('OK')",
+    "assert search(['app'], 'app') is True, 'stored word found'\nassert search(['app'], 'ap') is False, 'a prefix that is not a stored word'\nassert search(['app'], 'apple') is False, 'path breaks'\nassert search(['app', 'application'], 'application') is True, 'longer stored word found (defeats len-based guess)'\nassert search(['app', 'application'], 'appl') is False, 'intermediate prefix is not a word'\nassert search([], 'x') is False\nprint('OK')",
   "pattern:dynamic-programming:pat-dp-fix-1":
     "assert fib(0) == 0 and fib(1) == 1, 'base cases'\nassert fib(10) == 55, 'fib(10) == 55'\nassert fib(20) == 6765, 'fib(20) == 6765'\n# Memoization must make a large index return quickly (no exponential blow-up).\nassert fib(60) == 1548008755920, 'memoized fib(60) is exact and fast'\nprint('OK')",
   "pattern:knapsack:pat-ks-fix-1":
-    "# subset-sum: can we hit target with each item used at most once?\n# nums=[3], target=6: reusing 3 twice would wrongly say yes; correct is no.\nassert dp[6] is False, f'item 3 may be used only once -> 6 is unreachable, got {dp[6]}'\nassert dp[3] is True, f'3 alone reaches 3, got {dp[3]}'\nassert dp[0] is True, 'empty subset reaches 0'\nprint('OK')",
+    "assert subset_sum([3], 6) is False, 'each item used at most once'\nassert subset_sum([3], 3) is True\nassert subset_sum([1,2,3], 0) is True, 'empty subset'\nassert subset_sum([2,3,7,8,10], 11) is True, '3+8'\nassert subset_sum([1,2,5], 4) is False\nprint('OK')",
 };
 
 export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
@@ -1615,108 +1615,72 @@ export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
  * mistake variants fail — same verification gate as EXERCISE_TESTS.
  */
 export const EXERCISE_PRELUDE: Record<string, string> = {
-  "lesson:io:io-fix-1":
-    "import io, sys\ndef input(prompt=''):\n    return '7'\n_buf = io.StringIO()\n_orig = sys.stdout\nsys.stdout = _buf",
-  "lesson:errors:err-complete-1":
-    "import io, sys\n_buf = io.StringIO()\n_orig = sys.stdout\nsys.stdout = _buf",
-  "lesson:sliding-window:sw-complete-1":
-    "nums = [1, 3, 5, 2, 8, 4]\nk = 3\nwindow = sum(nums[:k])",
-  "lesson:binary-search-answer:bsa-fix-1":
-    "def can_ship(cap):\n    return cap >= 5\nlo, hi = 1, 10",
-  "lesson:bubble-sort:bub-fix-1":
-    "a = [5, 1, 4, 2, 8]\nn = len(a)",
-  "lesson:selection-sort:sel-complete-1":
-    "a = [5, 1, 4, 2, 8]\nn = len(a)",
-  "lesson:insertion-sort:ins-fix-1":
-    "a = [5, 1, 4, 2, 8]",
-  "lesson:counting-sort:cnt-complete-1":
-    "a = [2, 0, 2, 3, 1, 3, 3]\nhi = max(a)",
-  "lesson:radix-sort:rad-complete-1":
-    "out = [23, 45, 12, 5, 40]\nexp = 1\nbuckets = [[] for _ in range(10)]",
-  "lesson:comparators:cmp-complete-1":
-    "import io, sys\n_buf = io.StringIO()\n_orig = sys.stdout\nsys.stdout = _buf",
-  "lesson:interval-sorting:isort-complete-1":
-    "import io, sys\n_buf = io.StringIO()\n_orig = sys.stdout\nsys.stdout = _buf",
-  "lesson:monotonic-stack:mono-fix-1":
-    "nums = [2, 1, 5, 3]",
-  "lesson:expression-evaluation:expr-fix-1":
-    "stack = [5, 3]\nt = '-'",
   "lesson:bfs-queues:bfs-fix-1":
     "from collections import deque as _deque\n_appends = {'n': 0}\nclass deque(_deque):\n    def append(self, x):\n        _appends['n'] += 1\n        super().append(x)\ngraph = {0: [1, 2], 1: [0, 2, 3], 2: [0, 1], 3: [1]}\nstart = 0",
-  "lesson:prefix-sums-map:psm-fix-1":
-    "nums = [3, 1, 2]\nk = 3",
-  "lesson:top-k:topk-fix-1":
-    "import heapq\nnums = [4, 1, 7, 3, 8, 2]\nk = 3",
-  "lesson:two-heap-pattern:twoheap-fix-1":
-    "import heapq\nsmall = []\nlarge = []\nx = 5",
-  "lesson:topological-sort:topo-complete-1":
-    "from collections import deque\nadj = {0: [1, 2], 1: [3], 2: [3], 3: []}\nindeg = {0: 0, 1: 1, 2: 1, 3: 2}\nq = deque()\nnode = 0",
-  "lesson:multi-source-bfs:msbfs-fix-1":
-    "from collections import deque\nn = 5\nsources = [0, 4]",
   "lesson:dijkstra:dij-fix-1":
     "import heapq\n_expand = {'n': 0}\nclass _CountAdj(dict):\n    def __getitem__(self, k):\n        _expand['n'] += 1\n        return super().__getitem__(k)\nadj = _CountAdj({0: [(1, 1), (2, 4)], 1: [(2, 1), (3, 5)], 2: [(3, 1)], 3: []})\nn = 4\ndist = [float('inf')] * n\ndist[0] = 0\npq = [(0, 0)]",
   "lesson:bellman-ford:bf-complete-1":
     "",
   "lesson:floyd-warshall:fw-fix-1":
-    "INF = float('inf')\nn = 4\nd = [\n    [0, 3, INF, 7],\n    [8, 0, 2, INF],\n    [5, INF, 0, 1],\n    [2, INF, INF, 0],\n]",
+    "",
   "lesson:prim:prim-fix-1":
-    "import heapq\nadj = {0: [(1, 1), (2, 4)], 1: [(0, 1), (2, 2), (3, 6)], 2: [(0, 4), (1, 2), (3, 3)], 3: [(1, 6), (2, 3)]}\nn = 4\nvisited = [False] * n\ntotal = 0\npq = [(0, 0)]",
+    "",
   "lesson:linked-list-traversal:ll-fix-1":
-    "import io, sys\nclass Node:\n    def __init__(self, val, nxt=None):\n        self.val = val\n        self.next = nxt\nhead = Node(1, Node(2, Node(3)))\n_buf = io.StringIO()\n_orig = sys.stdout\nsys.stdout = _buf",
+    "",
   "lesson:linked-list-slow-fast:llsf-fix-1":
-    "class Node:\n    def __init__(self, val, nxt=None):\n        self.val = val\n        self.next = nxt\ndef build(vals):\n    head = None\n    for v in reversed(vals):\n        head = Node(v, head)\n    return head\nhead = build([1, 2, 3])\nslow = head\nfast = head",
+    "",
   "lesson:linked-list-merging:llm-complete-1":
-    "class Node:\n    def __init__(self, val, nxt=None, src=None):\n        self.val = val\n        self.next = nxt\n        self.src = src\na = Node(1, None, 'L')\nb = Node(1, None, 'R')\ndummy = Node(0)\ntail = dummy",
+    "",
   "lesson:linked-list-pointer-manipulation:llpm-complete-1":
-    "class Node:\n    def __init__(self, val, nxt=None):\n        self.val = val\n        self.next = nxt\ndef build(vals):\n    head = None\n    for v in reversed(vals):\n        head = Node(v, head)\n    return head\ndummy = Node(0, build([1, 2, 3, 4]))\nprev = dummy",
+    "",
   "lesson:linked-list-pointer-manipulation:llpm-fix-1":
-    "class Node:\n    def __init__(self, val, nxt=None):\n        self.val = val\n        self.next = nxt\ndummy = Node(0)\nfirst = Node(1)\nsecond = Node(2)\ntail = Node(3, Node(4))\ndummy.next = first\nfirst.next = second\nsecond.next = tail\nprev = dummy",
+    "",
   "lesson:linked-list-variants:llv-complete-1":
-    "class Node:\n    def __init__(self, val):\n        self.val = val\n        self.next = None\n        self.prev = None\ntail = Node(1)\nnode = Node(2)\nif tail is None:\n    head = node\n    tail = node",
+    "",
   "lesson:dp-base-cases:dpbc-fix-1":
     "",
   "lesson:dp-permutations:dpperm-complete-1":
-    "nums = [1, 2, 3]\nres = []\ndef bt(path, used):\n    if len(path) == len(nums):\n        res.append(path[:])\n        return\n    for i in range(len(nums)):\n        if used[i]:\n            continue\n        used[i] = True\n        path.append(nums[i])\n        bt(path, used)\n        path.pop()\n        used[i] = False\npath = []\nused = [False] * len(nums)",
+    "",
   "lesson:dp-permutations:dpperm-fix-1":
-    "nums = [1, 2, 3]\nres = []\ndef bt(path, used):\n    if len(path) == len(nums):\n        res.append(path[:])\n        return\n    for j in range(len(nums)):\n        if used[j]:\n            continue\n        used[j] = True\n        path.append(nums[j])\n        bt(path, used)\n        path.pop()\n        used[j] = False\npath = []\nused = [False] * len(nums)\ni = 0",
+    "",
   "lesson:dp-knapsack:dpks-complete-1":
-    "weights = [2, 3]\nvalues = [3, 4]\ndp = [[0, 0, 0, 0], [0, 0, 3, 3], [0, 0, 0, 0]]\ni = 2\nw = 3",
+    "",
   "lesson:dp-subsequences:dpsub-complete-1":
     "",
 
   // ── R6 runnable fragments (indices 41-80 of remaining) ─────────────
   "lesson:dp-grid-paths:dpgp-fix-1":
-    "grid = [[1, 3, 1], [1, 5, 1], [4, 2, 1]]\nm = len(grid)\nn = len(grid[0])\ndp = [[0] * n for _ in range(m)]",
+    "",
   "lesson:dp-lcs:dplcs-complete-1":
-    "a = 'ab'\nb = 'ab'\ndp = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]\ni = 1\nj = 1",
+    "",
   "lesson:dp-n-queens:dpnq-fix-1":
-    "cols = set()\ndiag1 = set()\ndiag2 = set()\nrow = 0\ncol = 0\n_bt_calls = {'n': 0}\ndef bt(r):\n    _bt_calls['n'] += 1",
+    "",
   "pattern:kadane:pat-kadane-fix-1":
     "",
   "pattern:bfs-shortest-path:pat-bfs-fix-1":
-    "adj = {0: [1, 2], 1: [4], 2: [3], 3: [4], 4: []}\nstart = 0",
+    "",
   "pattern:backtracking:pat-bt-fix-1":
-    "nums = [1, 2]\nres = []\npath = []",
+    "",
   "pattern:two-heaps:pat-th-fix-1":
-    "import heapq\nclass _H:\n    def __init__(self):\n        self.small = []\n        self.large = []\nself = _H()\n# small already holds 10 as a MAX-heap of negated values ([-10]).\nself.small = [-10]\nself.large = []\nnum = 5",
+    "",
   "pattern:k-way-merge:pat-kwm-fix-1":
-    "import heapq\n# Two lists share the same front value (1) so the tiebreaker matters.\nlists = [[1, 4], [1, 5]]\nheap = []",
+    "",
   "pattern:monotonic-stack:pat-ms-fix-1":
-    "nums = [2, 1, 2, 4, 3]\nstack = []\nres = [-1] * len(nums)",
+    "",
   "pattern:merge-intervals:pat-mi-fix-1":
-    "intervals = [[1, 4], [2, 3], [4, 5]]",
+    "",
   "pattern:cyclic-sort:pat-cs-fix-1":
-    "nums = [2, 0, 2, 1]",
+    "",
   "pattern:matrix-traversal:pat-mt-fix-1":
-    "matrix = [[1, 2, 3]]\nres = []\ntop = 0\nbottom = len(matrix) - 1\nleft = 0\nright = len(matrix[0]) - 1",
+    "",
   "pattern:tree-bfs:pat-tbfs-fix-1":
-    "from collections import deque\nclass _T:\n    def __init__(self, val, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\nroot = _T(1, _T(2, _T(4), None), _T(3, None, _T(5)))\nres = []",
+    "",
   "pattern:tree-dfs:pat-tdfs-fix-1":
-    "res = []",
+    "",
   "pattern:graph-dfs-components:pat-gdc-fix-1":
-    "adj = {0: [1, 2], 1: [0, 2], 2: [0, 1]}\nseen = set()",
+    "",
   "pattern:topological-sort:pat-topo-fix-1":
-    "from collections import deque\nadj = {0: [2], 1: [2], 2: [3], 3: []}\nindeg = {0: 0, 1: 0, 2: 2, 3: 1}\norder = []\nq = deque([0, 1])",
+    "",
   "pattern:union-find:pat-uf-fix-1":
     "",
   "pattern:dijkstra:pat-dij-fix-1":
@@ -1726,7 +1690,7 @@ export const EXERCISE_PRELUDE: Record<string, string> = {
   "pattern:dynamic-programming:pat-dp-fix-1":
     "",
   "pattern:knapsack:pat-ks-fix-1":
-    "nums = [3]\ntarget = 6\ndp = [False] * (target + 1)\ndp[0] = True",
+    "",
 };
 
 

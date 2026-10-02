@@ -120,9 +120,9 @@ It runs in **O(n)** time and **O(n)** space. Converting normal **infix** express
     {
       id: "expr-fix-1",
       kind: "fix-mistake",
-      prompt: "Subtraction gives the wrong sign. Fix the operand order.",
-      starterCode: "a = stack.pop()\nb = stack.pop()\nif t == '-':\n    stack.append(a - b)",
-      expected: "b = stack.pop()\na = stack.pop()\nif t == '-':\n    stack.append(a - b)",
+      prompt: "`apply_sub(stack)` evaluates a `-` operator in RPN: it should pop the two operands, subtract them in the right order (left minus right), push the result, and return the stack. This version swaps the operands and gets the wrong sign. Fix the operand order.",
+      starterCode: "def apply_sub(stack):\n    a = stack.pop()\n    b = stack.pop()\n    stack.append(a - b)\n    return stack",
+      expected: "def apply_sub(stack):\n    b = stack.pop()\n    a = stack.pop()\n    stack.append(a - b)\n    return stack",
       hints: ["Which operand is on top of the stack?", "The right operand is popped first.", "Pop b (right) first, then a (left); compute a - b."],
     },
     {
@@ -160,7 +160,7 @@ It runs in **O(n)** time and **O(n)** space. Converting normal **infix** express
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "4b22314fe90b166f",
+    contentHash: "d10226f435e28c41",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

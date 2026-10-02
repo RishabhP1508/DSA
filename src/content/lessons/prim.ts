@@ -144,9 +144,9 @@ Prim resembles Dijkstra structurally (heap of frontier candidates) but optimizes
     {
       id: "prim-fix-1",
       kind: "fix-mistake",
-      prompt: "This Prim adds edges to already-included vertices, forming cycles and overcounting. Add the visited skip.",
-      starterCode: "while pq:\n    w, node = heapq.heappop(pq)\n    visited[node] = True\n    total += w\n    for nb, w2 in adj[node]:\n        heapq.heappush(pq, (w2, nb))",
-      expected: "while pq:\n    w, node = heapq.heappop(pq)\n    if visited[node]:\n        continue\n    visited[node] = True\n    total += w\n    for nb, w2 in adj[node]:\n        if not visited[nb]:\n            heapq.heappush(pq, (w2, nb))",
+      prompt: "`prim(adj, n)` returns the total weight of a Minimum Spanning Tree (adj maps each vertex to a list of (neighbour, weight) pairs). This Prim adds edges to already-included vertices, forming cycles and overcounting. Add the visited skip.",
+      starterCode: "import heapq\ndef prim(adj, n):\n    visited = [False] * n\n    total = 0\n    pq = [(0, 0)]\n    while pq:\n        w, node = heapq.heappop(pq)\n        visited[node] = True\n        total += w\n        for nb, w2 in adj[node]:\n            heapq.heappush(pq, (w2, nb))\n    return total",
+      expected: "import heapq\ndef prim(adj, n):\n    visited = [False] * n\n    total = 0\n    pq = [(0, 0)]\n    while pq:\n        w, node = heapq.heappop(pq)\n        if visited[node]:\n            continue\n        visited[node] = True\n        total += w\n        for nb, w2 in adj[node]:\n            if not visited[nb]:\n                heapq.heappush(pq, (w2, nb))\n    return total",
       hints: ["A vertex may appear in the heap multiple times.", "Skip it if already in the tree.", "if visited[node]: continue"],
     },
   ],
@@ -177,7 +177,7 @@ Prim resembles Dijkstra structurally (heap of frontier candidates) but optimizes
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "5a90cb561dc2c045",
+    contentHash: "e21c11efb9db4d62",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

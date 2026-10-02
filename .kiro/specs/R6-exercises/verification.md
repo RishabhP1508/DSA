@@ -6,7 +6,82 @@ Chromium (Playwright) on Linux.
 **Commands:** `npm run check:all` (exit 0) and `npm run test:browser`
 (12 passed / 5 skipped).
 **Tested commit:** recorded at amendment-commit time on `repair/r6-exercises`
-(see the PR head SHA).
+(see the PR head SHA, filled in by the amendment commit message / PR comment).
+
+## Amendment 2 (this revision) — two correctness fixes, both test-first
+
+This revision replaces two things the previous revision claimed but did not fully
+earn, and adds failing-first regression evidence for each.
+
+### Fix A — `gen_review_ledger.mjs` honesty (ledger cannot auto-grant a new item)
+Previously a NEW lesson/pattern with no prior ledger entry was recorded at its
+live content hash, which the evidence codemod then matched → it silently acquired
+`semanticReview: true` with no human having read it. Now:
+- The pure, unit-tested core lives in `scripts/lib/review-ledger-core.mjs`
+  (`ledgerEntryFor`, `assertIsoDate`, `UNREVIEWED_SENTINEL`).
+- A new item that is **not** explicitly signed off is recorded with
+  `reviewedHash = "unreviewed-pending-human-signoff"` — a sentinel that can never
+  equal a real `contentHashOf` (16-hex), so the item stays **pending**.
+- An item is stamped at its live hash **only** when its `kind:id` is listed in the
+  `REVIEWED_NOW` env set, and only with a validated ISO `SIGNOFF_DATE`
+  (`assertIsoDate` enforces `yyyy-mm-dd` + a real calendar date). The old
+  hard-coded review date is gone; a sign-off date is required *only* when
+  something is actually being signed off.
+- **Failing-first evidence:** `src/content/review-ledger-core.test.ts` (7 tests)
+  asserts the OLD behaviour would have granted an unsigned new item and that the
+  sentinel path keeps it pending; `src/content/review-ledger.test.ts` (9 tests)
+  additionally proves a `hints` or `recognition` change flips the content hash
+  (so the claim reverts to pending) while adding `tests` does not. Run:
+  `npx vitest run src/content/review-ledger-core.test.ts src/content/review-ledger.test.ts` → 16/16.
+
+### Fix B — R6.4 independently-authored faulty variants for all 161 coding exercises
+The previous revision rejected the starter, the empty program, and *synthesised*
+mistake variants where derivable, and counted `n/a` where it could not. The
+repair plan requires, for **every** coding exercise, three **independently
+authored** faulty submissions suited to its contract — plausible-wrong,
+early-exit, and print-answer — each proven rejected. `n/a` and a synthesised
+variant alone no longer count.
+- Authored variants live in `src/content/exercise-faulty-variants.ts`
+  (`EXERCISE_FAULTY: Record<uid, {plausibleWrong, earlyExit, printAnswer}>`). This
+  file is **verification-only**: it is not shown in the UI and is excluded from
+  the content hash.
+- `scripts/verify_exercise_tests.mjs` now **requires** all three authored variants
+  per coding exercise and asserts each is rejected; the synthesised-variant
+  fallback and `n/a` acceptance were removed.
+- **Defeating print-answer:** a hard-coded answer trivially passes a single-input
+  bare-script exercise. Such exercises were **converted to function contracts**
+  (new learner-facing `prompt`/`starterCode`/`expected`, tests calling the
+  function with ≥3 inputs incl. edge cases, obsolete `EXERCISE_PRELUDE` cleared),
+  so a constant return now fails at least one input. A few genuine function
+  exercises had single-input tests strengthened instead;
+  `dijkstra:dij-fix-1` was kept as an instrumented bare script (its prelude counts
+  adjacency accesses, so a hard-coded distance array is caught).
+- **Failing-first evidence:** after the harness was tightened to require authored
+  variants, a full run reported **161 failures** ("coding exercise has NO authored
+  faulty variants"); authoring then drove every category to 161/161 (below).
+
+### Per-variant totals (exact, from `scripts/verify_exercise_tests.mjs`)
+Three consecutive clean runs, all identical:
+
+```
+Model solutions passing: 161/161. ALL RUNNABLE EXERCISES OK
+R6.4 mistake-rejection (coding=161): starter-rejected 161/161, empty-rejected 161/161,
+  plausible-wrong-rejected 161/161, early-exit-rejected 161/161, print-answer-rejected 161/161.
+```
+
+| Rejection category | Rejected / total |
+|---|---|
+| Unfinished starter | **161 / 161** |
+| Empty program | **161 / 161** |
+| Plausible-wrong (authored) | **161 / 161** |
+| Early-exit (authored) | **161 / 161** |
+| Print-answer (authored) | **161 / 161** |
+| Model solution passes | **161 / 161** |
+
+**Exceptions: none.** Every coding exercise supports all three authored checks;
+no exercise required an `n/a` or a synthesised stand-in. (Had any been unable to
+support a check, its uid + contract + reason would be listed here instead of a
+completion claim.)
 
 ## Acceptance criteria (repair plan §R6) — status
 
@@ -14,7 +89,7 @@ Chromium (Playwright) on Linux.
 |---|---|---|
 | Every coding exercise has working local evaluation | **MET** | 161/161 runnable |
 | Every model solution passes | **MET** | `Model solutions passing: 161/161` |
-| Every coding exercise has a meaningful rejection test (unfinished / plausible-wrong / early-exit / print-only fail) | **MET** | harness rejects starter + empty + every synthesisable variant per exercise |
+| Every coding exercise has a meaningful rejection test (unfinished / plausible-wrong / early-exit / print-only fail) | **MET** | harness rejects starter + empty + three **independently authored** variants per exercise; all five categories 161/161 (see Amendment 2) |
 | Recognition grading handles authored approaches, reasons, alternatives, feedback | **MET** | 164/164 choose-approach graded; `ALL RECOGNITION OK` |
 | Free-text reflections remain clearly ungraded | **MET** | `RecognitionPanel` reflection is never scored |
 | Six-stage hint progression for coding + recognition exercises | **MET** | 325/325 interactive exercises carry the full 6 stages |
@@ -26,8 +101,10 @@ Chromium (Playwright) on Linux.
 
 ### `check:all` — exit 0 (all green)
 - build; lint 0 errors / 9 warnings (unchanged advisory baseline).
-- **unit 446/446 across 34 files** (incl. `recognition-grading.test.ts`,
-  `review-ledger.test.ts` extended for the hash-of-hints/recognition check).
+- **unit 453/453 across 35 files** (incl. `recognition-grading.test.ts`,
+  `review-ledger.test.ts` extended for the hash-of-hints/recognition check, and
+  the new `review-ledger-core.test.ts` proving the ledger cannot auto-grant an
+  unsigned new item — Amendment 2 Fix A).
 - test:python pipeline + visualizers OK.
 - curriculum: 131 lessons, 29 patterns, 131 complexity panels, line-explanations
   (131+29), example-model (131+29), **coverage-evidence 131 verified / 0 not-yet**
@@ -35,12 +112,14 @@ Chromium (Playwright) on Linux.
   7 advisory.
 - exercises gate:
   - **Coding exercises: 161/161 runnable; 161/161 model solutions pass.** Each
-    rejects the unfinished starter, the empty program, and every synthesisable
-    mistake variant (print-answer / early-exit / plausible-wrong where
-    derivable). The one performance-only exercise
+    rejects the unfinished starter, the empty program, and **three independently
+    authored** faulty variants (plausible-wrong / early-exit / print-answer) — all
+    five categories at **161/161** (see Amendment 2 for the exact tally and the
+    failing-first evidence). The one performance-only exercise
     (`pattern:sliding-window:pat-sw-fix-1`) is graded by an **operation-cost
     check** (an instrumented list counts element reads and the test asserts the
-    solution stays O(n), rejecting the O(n·k) starter).
+    solution stays O(n), rejecting the O(n·k) starter); its authored variants are
+    rejected on the same cost basis.
   - **Recognition-graded exercises: 164/164 — ALL RECOGNITION OK** (each
     validates structurally AND grades the acceptable pair as accepted and a
     contradictory reason as rejected).
@@ -73,6 +152,16 @@ given deterministic tests. `kruskal:kru-fix-1` gained a real find/union body.
 `pattern:sliding-window:pat-sw-fix-1` (a correct-but-slow starter) is graded by a
 documented operation-cost check rather than a value test. All 26 also received
 the full 6-stage hint progression.
+
+### Further bare-script → function conversions in Amendment 2
+Satisfying the R6.4 print-answer check for the remaining single-input bare-script
+exercises required the same conversion pattern (function contract + ≥3-input
+tests + cleared `EXERCISE_PRELUDE`). Across Amendment 2 these conversions touched
+the learner-facing `prompt`/`starterCode`/`expected` (and hints where needed) of
+~50 lesson and pattern files; `src/content/exercise-tests-data.ts` was updated to
+call each as a function with edge-case inputs. Because this edits content a
+learner reads, every converted item's content hash changed and its
+`semanticReview` reverted to pending (tracked honestly below).
 
 ## Content-hash honesty (machine vs human review kept distinct)
 `contentHashOf` excludes **only** the machine-VERIFICATION harness

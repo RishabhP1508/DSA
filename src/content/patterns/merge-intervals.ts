@@ -138,11 +138,11 @@ export const mergeIntervalsPattern: PatternDefinition = {
     {
       id: "pat-mi-fix-1",
       kind: "fix-mistake",
-      prompt: "This misses overlaps because it sorts by the wrong key. Fix it.",
+      prompt: "`merge_intervals(intervals)` returns the merged list of overlapping/touching intervals (each `[start, end]`). This misses overlaps because it sorts by the wrong key. Fix it.",
       starterCode:
-        "intervals.sort(key=lambda x: x[1])\nmerged = [intervals[0]]\nfor start, end in intervals[1:]:\n    if start <= merged[-1][1]:\n        merged[-1][1] = max(merged[-1][1], end)\n    else:\n        merged.append([start, end])",
+        "def merge_intervals(intervals):\n    if not intervals:\n        return []\n    intervals = sorted(intervals, key=lambda x: x[1])\n    merged = [list(intervals[0])]\n    for start, end in intervals[1:]:\n        if start <= merged[-1][1]:\n            merged[-1][1] = max(merged[-1][1], end)\n        else:\n            merged.append([start, end])\n    return merged",
       expected:
-        "intervals.sort(key=lambda x: x[0])\nmerged = [intervals[0]]\nfor start, end in intervals[1:]:\n    if start <= merged[-1][1]:\n        merged[-1][1] = max(merged[-1][1], end)\n    else:\n        merged.append([start, end])",
+        "def merge_intervals(intervals):\n    if not intervals:\n        return []\n    intervals = sorted(intervals, key=lambda x: x[0])\n    merged = [list(intervals[0])]\n    for start, end in intervals[1:]:\n        if start <= merged[-1][1]:\n            merged[-1][1] = max(merged[-1][1], end)\n        else:\n            merged.append([start, end])\n    return merged",
       hints: [
         "Merging needs intervals in START order.",
         "Sorting by end can place an overlapping interval out of reach.",
@@ -176,7 +176,7 @@ export const mergeIntervalsPattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "7fc633318cfcda60",
+    contentHash: "2cd315ddfedea8de",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
