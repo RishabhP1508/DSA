@@ -171,10 +171,10 @@ Two details make or break correctness: the loop condition \`lo <= hi\` (so a one
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "858676ebe239736a",
+    contentHash: "4b95dbf65c08add1",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

@@ -190,10 +190,10 @@ export const kWayMergePattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "989d9ee9833ddc7d",
+    contentHash: "7c9191e77472b4eb",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

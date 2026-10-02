@@ -168,10 +168,10 @@ The trade: it only works on data with a **digit/place structure** (integers, fix
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "e07f1331233791ca",
+    contentHash: "9e7952e79a8a213d",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

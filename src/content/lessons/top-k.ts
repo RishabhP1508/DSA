@@ -168,10 +168,10 @@ Python's \`heapq.nlargest(k, nums)\` does exactly this internally and returns th
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "3af0a2f3e28f1dd2",
+    contentHash: "0693004fe451803f",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

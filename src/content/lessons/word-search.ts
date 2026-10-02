@@ -143,9 +143,9 @@ Complexity is the honest scary part of backtracking. From each of the \`m·n\` s
     {
       id: "ws-fix-1",
       kind: "fix-mistake",
-      prompt: "This DFS never restores the cell, so paths block each other. Add the backtracking restore.",
-      starterCode: "tmp = board[r][c]\nboard[r][c] = '#'\nfound = (dfs(r+1,c,i+1) or dfs(r-1,c,i+1) or dfs(r,c+1,i+1) or dfs(r,c-1,i+1))\nreturn found",
-      expected: "tmp = board[r][c]\nboard[r][c] = '#'\nfound = (dfs(r+1,c,i+1) or dfs(r-1,c,i+1) or dfs(r,c+1,i+1) or dfs(r,c-1,i+1))\nboard[r][c] = tmp\nreturn found",
+      prompt: "`exist(board, word)` returns whether `word` can be formed along 4-directionally adjacent cells (no cell reused). This DFS never restores a cell, so paths block each other. Add the backtracking restore.",
+      starterCode: "def exist(board, word):\n    rows, cols = len(board), len(board[0])\n    def dfs(r, c, i):\n        if i == len(word):\n            return True\n        if r < 0 or r >= rows or c < 0 or c >= cols or board[r][c] != word[i]:\n            return False\n        tmp = board[r][c]\n        board[r][c] = '#'\n        found = dfs(r+1, c, i+1) or dfs(r-1, c, i+1) or dfs(r, c+1, i+1) or dfs(r, c-1, i+1)\n        # TODO: restore board[r][c] before returning\n        return found\n    return any(dfs(r, c, 0) for r in range(rows) for c in range(cols))",
+      expected: "def exist(board, word):\n    rows, cols = len(board), len(board[0])\n    def dfs(r, c, i):\n        if i == len(word):\n            return True\n        if r < 0 or r >= rows or c < 0 or c >= cols or board[r][c] != word[i]:\n            return False\n        tmp = board[r][c]\n        board[r][c] = '#'\n        found = dfs(r+1, c, i+1) or dfs(r-1, c, i+1) or dfs(r, c+1, i+1) or dfs(r, c-1, i+1)\n        board[r][c] = tmp\n        return found\n    return any(dfs(r, c, 0) for r in range(rows) for c in range(cols))",
       hints: ["After exploring neighbours, other paths must see the cell again.", "Put the saved value back.", "board[r][c] = tmp before returning."],
     },
     {
@@ -183,10 +183,10 @@ Complexity is the honest scary part of backtracking. From each of the \`m·n\` s
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "ba9d6414cb6089f8",
+    contentHash: "843cdaa50dfbf123",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 5,
   },
 };

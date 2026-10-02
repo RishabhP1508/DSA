@@ -143,10 +143,10 @@ Frequency maps are the engine behind anagrams, "majority element", "top-K freque
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "60952d2af4740c9d",
+    contentHash: "e3bdd5497442d097",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

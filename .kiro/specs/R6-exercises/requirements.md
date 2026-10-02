@@ -96,12 +96,25 @@ pagination. R6 closes these gaps.
 - **R6.6.3** Attempts and results SHALL persist under the globally unique
   exercise identity `ownerKind:ownerId:exerciseId` (R3).
 
+## Completion status (amended)
+
+ALL R6 requirements are MET: **161/161 coding exercises runnable** (the 24 bare
+fragments were rewritten as complete functions with explicit contracts;
+`kruskal` gained a real find/union body; the one performance-only exercise is
+graded by an operation-cost check), **164/164 recognition exercises graded**, and
+**325/325 interactive exercises carry the full six-stage hints**. See
+`verification.md` for the exact evidence and the content-hash honesty note.
+
 ## Non-goals / carried forward (do NOT hide)
 
 - **FU-1** (Task Scheduler / cooldown scheduling) and **FU-2** (Meeting Rooms II /
   concurrent-overlap-count) remain `unresolved` teaching-content gaps; R6's
   exercise work does not fill them, and their manifest counts are unchanged.
 - `P-RUNNER-ORIGIN` packaging gate remains open (R2/packaging).
+- **Human semantic review is pending repo-wide**: R6 added hints/recognition
+  claims to every item, changing their content hashes, so `semanticReview`
+  honestly reverts to pending until a human re-reads. Machine verification is
+  complete and distinct (coverage `verified` is machine-derived).
 - Layout/styling/responsiveness/accessibility polish is reserved for the UI pass;
   R6 adds only minimal, labeled, keyboard-operable controls.
 

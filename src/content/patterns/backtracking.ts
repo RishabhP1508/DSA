@@ -181,10 +181,10 @@ export const backtrackingPattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "bc29d040d44e7170",
+    contentHash: "35bfb32e8f749c05",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

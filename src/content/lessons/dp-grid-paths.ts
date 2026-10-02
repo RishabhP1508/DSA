@@ -155,11 +155,11 @@ The instructive contrast with unique paths is the **combiner**: counting uses \`
     {
       id: "dpgp-complete-1",
       kind: "complete-code",
-      prompt: "Complete the interior transition for minimum path sum.",
+      prompt: "Complete `min_path_sum(grid)`: minimum sum path from top-left to bottom-right moving right/down.",
       starterCode:
-        "for i in range(1, m):\n    for j in range(1, n):\n        # TODO: local cost + cheaper predecessor\n        pass\nreturn dp[m - 1][n - 1]",
+        "def min_path_sum(grid):\n    m, n = len(grid), len(grid[0])\n    dp = [[0] * n for _ in range(m)]\n    dp[0][0] = grid[0][0]\n    for j in range(1, n):\n        dp[0][j] = dp[0][j - 1] + grid[0][j]\n    for i in range(1, m):\n        dp[i][0] = dp[i - 1][0] + grid[i][0]\n    for i in range(1, m):\n        for j in range(1, n):\n            # TODO: local cost + cheaper predecessor\n            pass\n    return dp[m - 1][n - 1]",
       expected:
-        "for i in range(1, m):\n    for j in range(1, n):\n        dp[i][j] = grid[i][j] + min(dp[i - 1][j], dp[i][j - 1])\nreturn dp[m - 1][n - 1]",
+        "def min_path_sum(grid):\n    m, n = len(grid), len(grid[0])\n    dp = [[0] * n for _ in range(m)]\n    dp[0][0] = grid[0][0]\n    for j in range(1, n):\n        dp[0][j] = dp[0][j - 1] + grid[0][j]\n    for i in range(1, m):\n        dp[i][0] = dp[i - 1][0] + grid[i][0]\n    for i in range(1, m):\n        for j in range(1, n):\n            dp[i][j] = grid[i][j] + min(dp[i - 1][j], dp[i][j - 1])\n    return dp[m - 1][n - 1]",
       hints: [
         "You enter from above or from the left.",
         "Pick the cheaper and add this cell's value.",
@@ -224,10 +224,10 @@ The instructive contrast with unique paths is the **combiner**: counting uses \`
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "5ae3491ae702ef5f",
+    contentHash: "4f7e9c24a2811773",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

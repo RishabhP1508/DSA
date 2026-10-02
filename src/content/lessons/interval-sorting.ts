@@ -136,10 +136,10 @@ The cost is dominated by the sort, **O(n log n)**, using \`sorted(..., key=lambd
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "513f8dd67a2dc080",
+    contentHash: "afda4c24d122c270",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

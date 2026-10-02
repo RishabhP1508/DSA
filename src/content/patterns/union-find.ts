@@ -212,10 +212,10 @@ export const unionFindPattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "85f85239d7e426d1",
+    contentHash: "4e66d54e66ec193d",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 5,
   },
 };

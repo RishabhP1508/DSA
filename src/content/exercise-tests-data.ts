@@ -3441,3 +3441,2453 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "No — the subproblems OVERLAP, so this calls for DP (memoization/tabulation), not plain divide-and-conquer.",
   ],
 };
+
+
+// ── R6 amendment — tests for the 26 rewritten-as-complete-function exercises ──
+// These were previously bare fragments left self-assessed; their learner-facing
+// starterCode/expected were rewritten into complete functions (see the R6
+// verification notes), so every coding exercise is now runnable. The model
+// passes; the unfinished starter, empty, and synthesised mistake variants fail.
+Object.assign(EXERCISE_TESTS, {
+  "lesson:conditions:cond-fix-1":
+    "assert classify(35) == 'hot', 'temp 35 is hot (specific branch first)'\nassert classify(25) == 'warm', 'temp 25 is warm'\nassert classify(30) == 'hot', 'boundary 30 is hot'\nassert classify(20) == 'warm', 'boundary 20 is warm'\nassert classify(5) == 'cold', 'temp 5 is cold'\nprint('OK')",
+  "lesson:string-sliding-window:ssw-fix-1":
+    "assert length_of_longest_unique('abcabcbb') == 3, 'abc'\nassert length_of_longest_unique('bbbbb') == 1\nassert length_of_longest_unique('pwwkew') == 3, 'wke'\nassert length_of_longest_unique('') == 0\n# 'abba': the guard must stop start jumping back for the first 'a' (seen outside window)\nassert length_of_longest_unique('abba') == 2, 'abba -> ab/ba length 2 (needs the >= start guard)'\nprint('OK')",
+  "lesson:word-search:ws-fix-1":
+    "assert exist([list('ABCE'), list('SFCS'), list('ADEE')], 'ABCCED') is True\nassert exist([list('ABCE'), list('SFCS'), list('ADEE')], 'SEE') is True\nassert exist([list('ABCE'), list('SFCS'), list('ADEE')], 'ABCB') is False, 'cannot reuse a cell'\n# Missing-restore bug: a dead-end path marks cells '#'; without restoring them a\n# later correct path cannot reuse those cells. On this board 'AAB' is reachable\n# ONLY if cells are restored after each failed branch (no-restore returns False).\nassert exist([['C','A','A'],['A','A','A'],['B','C','D']], 'AAB') is True, 'needs cells restored after a dead-end path'\nassert exist([['A','A'],['A','A']], 'AAAAA') is False, 'only 4 cells, no reuse'\nassert exist([['A']], 'A') is True\nassert exist([['A']], 'B') is False\nprint('OK')",
+  "lesson:linked-list-merging:llm-fix-1":
+    "class Node:\n    def __init__(self, val, nxt=None):\n        self.val = val; self.next = nxt\ndef build(vals):\n    head = None\n    for v in reversed(vals):\n        head = Node(v, head)\n    return head\ndef to_list(h):\n    out = []\n    while h: out.append(h.val); h = h.next\n    return out\nassert to_list(merge(build([1,3,5]), build([2,4,6]))) == [1,2,3,4,5,6]\n# leftover tail must be attached: second list much longer\nassert to_list(merge(build([1]), build([2,3,4,5]))) == [1,2,3,4,5], 'longer list tail must be kept'\nassert to_list(merge(None, build([1,2]))) == [1,2]\nassert to_list(merge(build([1,2]), None)) == [1,2]\nassert to_list(merge(None, None)) == []\n# Stability (distinguishes <= from <): on equal vals take the LEFT node first.\nla, lb = Node(1), Node(1)\nla.src = 'L'; lb.src = 'R'\nmerged = merge(la, lb)\nassert getattr(merged, 'src', None) == 'L', 'on a tie the left node comes first (needs <=)'\nprint('OK')",
+  "lesson:dp-tabulation:dptab-complete-1":
+    "assert fib(0) == 0\nassert fib(1) == 1\nassert fib(2) == 1\nassert fib(10) == 55\nassert fib(15) == 610\nprint('OK')",
+  "lesson:dp-1d-2d:dp12-complete-1":
+    "assert count_paths(1, 1) == 1\nassert count_paths(2, 2) == 2\nassert count_paths(3, 3) == 6\nassert count_paths(3, 7) == 28\nassert count_paths(1, 5) == 1, 'single row -> one path'\nprint('OK')",
+  "lesson:dp-state-transitions:dpst-complete-1":
+    "assert max_profit([7,1,5,3,6,4]) == 5, 'buy 1 sell 6'\nassert max_profit([7,6,4,3,1]) == 0, 'only losses -> 0'\nassert max_profit([]) == 0\nassert max_profit([5]) == 0\nassert max_profit([1,2,3,4,5]) == 4\nprint('OK')",
+  "lesson:dp-house-robber:dphr-complete-1":
+    "assert rob([]) == 0\nassert rob([5]) == 5\nassert rob([1,2,3,1]) == 4, 'rob 1 and 3 -> 1+3=4'\nassert rob([2,7,9,3,1]) == 12, 'rob 2,9,1'\nassert rob([2,1,1,2]) == 4, 'rob first and last'\nprint('OK')",
+  "lesson:dp-grid-paths:dpgp-complete-1":
+    "assert min_path_sum([[1,3,1],[1,5,1],[4,2,1]]) == 7, 'path 1->3->1->1->1'\nassert min_path_sum([[1,2,3],[4,5,6]]) == 12\nassert min_path_sum([[5]]) == 5\nassert min_path_sum([[1,2,5],[3,2,1]]) == 6\nprint('OK')",
+  "lesson:dp-coin-change:dpcc-complete-1":
+    "assert coin_change([1,2,5], 11) == 3, '5+5+1'\nassert coin_change([2], 3) == -1, 'impossible'\nassert coin_change([1], 0) == 0\nassert coin_change([1,2,5], 0) == 0\nassert coin_change([2,5,10], 1) == -1\nassert coin_change([1,3,4], 6) == 2, '3+3'\nprint('OK')",
+  "lesson:dp-lis:dplis-complete-1":
+    "assert lis([10,9,2,5,3,7,101,18]) == 4, '2,3,7,101'\nassert lis([0,1,0,3,2,3]) == 4\nassert lis([7,7,7,7]) == 1, 'strictly increasing -> 1'\nassert lis([]) == 0\nassert lis([5]) == 1\nprint('OK')",
+  "lesson:dp-lis:dplis-fix-1":
+    "assert lis([10,9,2,5,3,7,101,18]) == 4\n# the fix matters when the LIS does NOT end at the last index:\nassert lis([1,2,3,4,0]) == 4, 'best is 1,2,3,4 (not ending at last index 0)'\nassert lis([3,2,1]) == 1\nassert lis([5]) == 1\nprint('OK')",
+  "lesson:dp-divide-and-conquer:dpdc-complete-1":
+    "assert max_subarray([-2,1,-3,4,-1,2,1,-5,4]) == 6, '4,-1,2,1'\nassert max_subarray([1]) == 1\nassert max_subarray([-1,-2,-3]) == -1, 'all negative -> best single'\nassert max_subarray([5,4,-1,7,8]) == 23\nassert max_subarray([-2,-1]) == -1\nprint('OK')",
+  "lesson:dp-n-queens:dpnq-complete-1":
+    "# Keep n small so tracing stays under the event limit; these still pin the\n# choose/explore/un-choose correctness (n=4 is the smallest nonzero board).\nassert count_n_queens(1) == 1\nassert count_n_queens(2) == 0\nassert count_n_queens(3) == 0\nassert count_n_queens(4) == 2\nprint('OK')",
+  "lesson:kmp:kmp-complete-1":
+    "assert kmp_search('abxabcabcaby', 'abcaby') == [6]\nassert kmp_search('aaaaa', 'aa') == [0,1,2,3], 'overlapping matches'\nassert kmp_search('abcabcabc', 'abc') == [0,3,6]\nassert kmp_search('abc', 'xyz') == []\nassert kmp_search('abc', 'abcd') == [], 'pattern longer than text'\nprint('OK')",
+  "lesson:kruskal:kru-fix-1":
+    "# MST total weight; unsorted edges must still yield the minimum.\nassert kruskal(4, [(0,1,10),(0,2,6),(0,3,5),(1,3,15),(2,3,4)]) == 19, 'MST edges 2-3(4),0-3(5),0-1(10)'\nassert kruskal(2, [(0,1,7)]) == 7\nassert kruskal(3, [(0,1,1),(1,2,2),(0,2,3)]) == 3, 'take 1 and 2, skip the cycle edge 3'\nassert kruskal(1, []) == 0\nprint('OK')",
+  "pattern:prefix-sums-hashmap:pat-ps-fix-1":
+    "assert count_subarrays([1,1,1], 2) == 2\nassert count_subarrays([1,2,3], 3) == 2, '[1,2] and [3]'\n# subarray starting at index 0 must count (needs seen[0]=1):\nassert count_subarrays([3,1,2], 3) == 2, '[3] and [1,2]'\nassert count_subarrays([1,-1,0], 0) == 3\nassert count_subarrays([], 0) == 0\nprint('OK')",
+  "pattern:two-pointers:pat-tp-fix-1":
+    "assert two_sum_sorted([1,2,3,4,6], 6) == (1,3), '2+4'\nassert two_sum_sorted([2,3,4], 6) == (0,2)\nassert two_sum_sorted([1,2,3], 7) is None\n# a too-small sum must move lo UP (would loop forever the wrong way):\nassert two_sum_sorted([1,2,3,9], 11) == (1,3), '2+9'\nassert two_sum_sorted([5], 5) is None\nprint('OK')",
+  "pattern:fast-slow-pointers:pat-fs-fix-1":
+    "class Node:\n    def __init__(self, val, nxt=None):\n        self.val = val; self.next = nxt\ndef build(vals):\n    head = None\n    for v in reversed(vals):\n        head = Node(v, head)\n    return head\nassert has_cycle(build([1,2,3,4])) is False, 'even-length acyclic must not crash'\nassert has_cycle(build([1,2,3])) is False\nassert has_cycle(None) is False\nassert has_cycle(build([1])) is False\na=Node(1); b=Node(2); c=Node(3); a.next=b; b.next=c; c.next=b\nassert has_cycle(a) is True\nprint('OK')",
+  "pattern:binary-search-on-answer:pat-bsa-fix-1":
+    "assert least_capacity([1,2,3,4,5,6,7,8,9,10], 5) == 15\nassert least_capacity([3,2,2,4,1,4], 3) == 6\nassert least_capacity([1,2,3,1,1], 4) == 3\n# the boundary (mid feasible) must be kept, not skipped:\nassert least_capacity([5,5,5], 3) == 5, 'each day one 5'\nprint('OK')",
+  "pattern:top-k-heap:pat-tk-fix-1":
+    "assert k_largest([3,1,5,2,4], 2) == [5,4]\nassert k_largest([1,2,3], 3) == [3,2,1]\nassert k_largest([7], 1) == [7]\nassert k_largest([4,4,4], 2) == [4,4], 'duplicates'\nassert k_largest([-1,-2,-3], 2) == [-1,-2], 'handles negatives (negation bug would fail)'\nprint('OK')",
+  "pattern:greedy-interval-scheduling:pat-gis-fix-1":
+    "assert max_non_overlapping([[1,3],[2,4],[3,5]]) == 2, '[1,3] then [3,5]'\n# sort-by-start would pick the long [1,10] and block the rest:\nassert max_non_overlapping([[1,10],[2,3],[4,5],[6,7]]) == 3\nassert max_non_overlapping([[1,2]]) == 1\nassert max_non_overlapping([]) == 0\nprint('OK')",
+  "pattern:in-place-linkedlist-reversal:pat-iplr-fix-1":
+    "class Node:\n    def __init__(self, val, nxt=None):\n        self.val = val; self.next = nxt\ndef build(vals):\n    head = None\n    for v in reversed(vals):\n        head = Node(v, head)\n    return head\ndef to_list(h):\n    out = []\n    while h: out.append(h.val); h = h.next\n    return out\nassert to_list(reverse(build([1,2,3,4,5]))) == [5,4,3,2,1]\nassert to_list(reverse(build([1]))) == [1]\nassert reverse(None) is None\nassert to_list(reverse(build([1,2]))) == [2,1]\nprint('OK')",
+  "pattern:modified-binary-search:pat-mbs-fix-1":
+    "assert first_occurrence([1,2,2,2,3], 2) == 1, 'FIRST 2, not any'\nassert first_occurrence([1,2,3], 3) == 2\nassert first_occurrence([2,2,2], 2) == 0\nassert first_occurrence([1,2,3], 5) == -1\nassert first_occurrence([], 1) == -1\nprint('OK')",
+  "pattern:divide-and-conquer:pat-dac-fix-1":
+    "assert merge([1,3,5], [2,4,6]) == [1,2,3,4,5,6]\nassert merge([1,2], []) == [1,2], 'leftover left must be appended'\nassert merge([], [3,4]) == [3,4], 'leftover right must be appended'\nassert merge([1,1,1],[1]) == [1,1,1,1]\nassert merge([], []) == []\n# Stability (distinguishes <= from <): equal keys keep the LEFT element first.\nclass _E:\n    def __init__(self, k, src): self.k = k; self.src = src\n    def __le__(self, o): return self.k <= o.k\n    def __lt__(self, o): return self.k < o.k\nout = merge([_E(1,'L')], [_E(1,'R')])\nassert out[0].src == 'L', 'stable merge takes the left element on a tie (needs <=)'\nprint('OK')",
+});
+
+// pat-sw-fix-1 is already a complete function; the bug is PERFORMANCE (O(n*k) vs
+// O(n)), so a value-only test cannot reject the slow starter. We attach an
+// OPERATION-COST check (R6.3 "appropriate operation-cost check"): a prelude
+// instruments list indexing to count element reads, and the test asserts the
+// solution stays linear (<= ~3n reads) rather than O(n*k). The slow starter
+// (sum(nums[start:start+k]) each step) performs ~n*k reads and is rejected; the
+// O(1)-slide model performs O(n) reads and passes.
+Object.assign(EXERCISE_PRELUDE, {
+  "pattern:sliding-window:pat-sw-fix-1":
+    "class _CountList(list):\n    reads = 0\n    def __getitem__(self, i):\n        if isinstance(i, slice):\n            r = list.__getitem__(self, i)\n            _CountList.reads += len(r)  # a slice reads every element it copies\n            return r\n        _CountList.reads += 1\n        return list.__getitem__(self, i)",
+});
+Object.assign(EXERCISE_TESTS, {
+  "pattern:sliding-window:pat-sw-fix-1":
+    "# correctness first\nassert max_sum_k([1,2,3,4,5], 2) == 9, '4+5'\nassert max_sum_k([2,1,5,1,3,2], 3) == 9, '5+1+3'\nassert max_sum_k([5], 1) == 5\n# operation-cost check: slicing-sum each window reads ~ n*k elements; the O(1)\n# slide reads O(n). Count element reads via an instrumented list and require\n# the solution to stay linear (not n*k). For n=40, k=10: n*k=400, linear ~<=160.\n_CountList.reads = 0\nnums = _CountList(range(40))\nmax_sum_k(nums, 10)\nassert _CountList.reads <= 3 * len(nums), f'must be O(n), not O(n*k): {_CountList.reads} reads for n={len(nums)}, k=10'\nprint('OK')",
+});
+
+
+// ── R6 amendment — full 6-stage hints for the 26 rewritten exercises ──
+Object.assign(EXERCISE_HINTS, {
+  "lesson:conditions:cond-fix-1": [
+    "Goal: classify(temp) returns 'hot' (>=30), 'warm' (>=20), else 'cold'.",
+    "The cost here is wrong branch ORDER: a broad test runs before a specific one.",
+    "Key property: if-elif stops at the FIRST true test, so the most specific threshold must come first.",
+    "Approach: order the thresholds from highest/most-specific to lowest.",
+    "Pseudocode: if temp>=30 return 'hot'; elif temp>=20 return 'warm'; else return 'cold'.",
+    "Fix: swap the first two branches so the >=30 test is checked before >=20.",
+  ],
+  "lesson:string-sliding-window:ssw-fix-1": [
+    "Goal: length_of_longest_unique(s) = longest substring with no repeated character.",
+    "The repeated work is scanning; track the window [start, i] and each char's last index.",
+    "Key property: a duplicate only matters if its last index is INSIDE the current window (>= start).",
+    "Approach: on a repeat, move start forward only when seen[ch] >= start.",
+    "Pseudocode: if ch in seen and seen[ch] >= start: start = seen[ch] + 1; seen[ch]=i; best=max(best, i-start+1).",
+    "Fix: add the guard `and seen[ch] >= start` to the if.",
+  ],
+  "lesson:word-search:ws-fix-1": [
+    "Goal: exist(board, word) = can word be spelled along adjacent cells without reuse.",
+    "Repeated work is DFS from each cell; mark a cell visited so one path can't reuse it.",
+    "Key property: after a branch fails, the cell must become available again for OTHER paths.",
+    "Approach: backtracking — mark on entry, recurse, then UNMARK on exit.",
+    "Pseudocode: tmp=board[r][c]; board[r][c]='#'; found=dfs(neighbours); board[r][c]=tmp; return found.",
+    "Fix: restore board[r][c] = tmp before returning.",
+  ],
+  "lesson:kruskal:kru-fix-1": [
+    "Goal: kruskal(n, edges) returns the total weight of a Minimum Spanning Tree.",
+    "The cost is choosing edges in the wrong order; the greedy needs them cheapest-first.",
+    "Key property: Kruskal adds the smallest edge that doesn't form a cycle (union-find detects cycles).",
+    "Approach: sort edges by weight, then union endpoints when they're in different components.",
+    "Pseudocode: edges=sorted(edges,key=w); for u,v,w: if find(u)!=find(v): union; total+=w.",
+    "Fix: add `edges = sorted(edges, key=lambda e: e[2])` at the top.",
+  ],
+  "lesson:linked-list-merging:llm-fix-1": [
+    "Goal: merge(a,b) returns one sorted list from two sorted lists.",
+    "The repeated work is comparing fronts; splice the smaller each step with a dummy+tail.",
+    "Key property: when the while loop ends, ONE list may still have (already-sorted) nodes.",
+    "Approach: after the loop, attach whichever list is non-empty to the tail.",
+    "Pseudocode: while a and b: splice smaller; then tail.next = a if a else b; return dummy.next.",
+    "Fix: add `tail.next = a if a is not None else b` after the loop.",
+  ],
+  "lesson:dp-tabulation:dptab-complete-1": [
+    "Goal: fib(n) bottom-up using a table dp.",
+    "The repeated subproblems are fib(i-1) and fib(i-2); store them so each is computed once.",
+    "Key property: each cell depends only on the two cells below it.",
+    "Approach: fill dp left-to-right from the base cases.",
+    "Pseudocode: dp[0]=0; dp[1]=1; for i in 2..n: dp[i]=dp[i-1]+dp[i-2]; return dp[n].",
+    "Fix: dp[i] = dp[i - 1] + dp[i - 2].",
+  ],
+  "lesson:dp-1d-2d:dp12-complete-1": [
+    "Goal: count_paths(m,n) = unique right/down paths in an m×n grid.",
+    "Repeated subproblems are paths-to-each-cell; store them in a 2D table.",
+    "Key property: you reach a cell only from above or from the left.",
+    "Approach: first row/col are 1; each interior cell sums its top and left neighbours.",
+    "Pseudocode: for i in 1..m-1: for j in 1..n-1: dp[i][j]=dp[i-1][j]+dp[i][j-1].",
+    "Fix: dp[i][j] = dp[i - 1][j] + dp[i][j - 1].",
+  ],
+  "lesson:dp-state-transitions:dpst-complete-1": [
+    "Goal: max_profit(prices) = best profit from one buy then one later sell.",
+    "The state you carry is the cheapest price seen so far and the best profit so far.",
+    "Key property: selling today earns price - min_price_so_far.",
+    "Approach: scan once, update best BEFORE moving min_price so you never sell before buying.",
+    "Pseudocode: for p in prices[1:]: best=max(best, p-min_price); min_price=min(min_price,p).",
+    "Fix: best = max(best, p - min_price) then min_price = min(min_price, p).",
+  ],
+  "lesson:dp-house-robber:dphr-complete-1": [
+    "Goal: rob(nums) = max sum with no two adjacent elements chosen.",
+    "The repeated decision at each house is take-or-skip; keep two rolling totals.",
+    "Key property: best up to i = max(best up to i-1, nums[i] + best up to i-2).",
+    "Approach: roll prev (i-2) and curr (i-1) forward in one pass.",
+    "Pseudocode: for x in nums: prev, curr = curr, max(curr, prev + x).",
+    "Fix: prev, curr = curr, max(curr, prev + x).",
+  ],
+  "lesson:dp-grid-paths:dpgp-complete-1": [
+    "Goal: min_path_sum(grid) = cheapest right/down path cost.",
+    "Repeated subproblems are cheapest-cost-to-each-cell; store in a table.",
+    "Key property: you arrive from above or from the left, so take the cheaper predecessor.",
+    "Approach: seed first row/col cumulatively, then fill interior cells.",
+    "Pseudocode: dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1]).",
+    "Fix: dp[i][j] = grid[i][j] + min(dp[i - 1][j], dp[i][j - 1]).",
+  ],
+  "lesson:dp-coin-change:dpcc-complete-1": [
+    "Goal: coin_change(coins, amount) = fewest coins to make amount, or -1.",
+    "The repeated subproblem is dp[a] = fewest coins for amount a; build up from 0.",
+    "Key property: using coin c (if c<=a) costs 1 + dp[a-c].",
+    "Approach: for each amount, try every coin that fits and keep the smallest.",
+    "Pseudocode: for a in 1..amount: for c in coins: if c<=a: dp[a]=min(dp[a], dp[a-c]+1).",
+    "Fix: if c <= a and dp[a - c] + 1 < dp[a]: dp[a] = dp[a - c] + 1.",
+  ],
+  "lesson:dp-lis:dplis-complete-1": [
+    "Goal: lis(nums) = length of the longest strictly increasing subsequence.",
+    "dp[i] = LIS ending at i; the repeated work compares i against all earlier j.",
+    "Key property: you may extend j's subsequence by i only when nums[j] < nums[i].",
+    "Approach: for each i, look back at every j < i and extend when it helps.",
+    "Pseudocode: if nums[j]<nums[i] and dp[j]+1>dp[i]: dp[i]=dp[j]+1; answer=max(dp).",
+    "Fix: if nums[j] < nums[i] and dp[j] + 1 > dp[i]: dp[i] = dp[j] + 1.",
+  ],
+  "lesson:dp-lis:dplis-fix-1": [
+    "Goal: lis(nums) returns the overall LIS length.",
+    "dp[i] is the LIS ENDING at i — not necessarily the global best.",
+    "Key property: the best subsequence can end at any index, not just the last one.",
+    "Approach: after filling dp, take the maximum over all cells.",
+    "Pseudocode: return max(dp) (not dp[-1]).",
+    "Fix: return max(dp).",
+  ],
+  "lesson:dp-divide-and-conquer:dpdc-complete-1": [
+    "Goal: max_subarray(nums) = maximum contiguous subarray sum (divide & conquer).",
+    "Each level splits in half; the extra work is the crossing sum through the middle.",
+    "Key property: the best subarray is entirely left, entirely right, or crosses the midpoint.",
+    "Approach: recurse on both halves, compute the crossing best, and combine.",
+    "Pseudocode: return max(left_result, right_result, crossing_sum).",
+    "Fix: return max(left, right, cross).",
+  ],
+  "lesson:dp-n-queens:dpnq-complete-1": [
+    "Goal: count_n_queens(n) = number of ways to place n non-attacking queens.",
+    "The repeated work is trying each column per row; prune with column/diagonal sets.",
+    "Key property: a safe square adds col, row-col, and row+col to the three sets.",
+    "Approach: backtracking — choose a safe square, recurse to the next row, then undo.",
+    "Pseudocode: add(col,r-c,r+c); bt(row+1); remove(col,r-c,r+c).",
+    "Fix: cols.add(col); diag1.add(row-col); diag2.add(row+col); bt(row+1); then remove the same three.",
+  ],
+  "lesson:kmp:kmp-complete-1": [
+    "Goal: kmp_search(text, pattern) = all start indices where pattern occurs.",
+    "The naive restart re-compares matched characters; KMP reuses them via the LPS table.",
+    "Key property: on a mismatch with j>0, the longest proper prefix that is also a suffix is lps[j-1].",
+    "Approach: fall back j to lps[j-1] instead of resetting j or moving i backward.",
+    "Pseudocode: on mismatch: if j>0: j=lps[j-1] else i+=1.",
+    "Fix: in the `elif j > 0:` branch, set j = lps[j - 1].",
+  ],
+  "pattern:sliding-window:pat-sw-fix-1": [
+    "Goal: max_sum_k(nums, k) = largest sum of any k consecutive elements.",
+    "The repeated work is sum(nums[start:start+k]) — it re-adds k elements every step (O(n·k)).",
+    "Key property: adjacent windows differ by exactly two elements (one enters, one leaves).",
+    "Approach: keep a running window sum and slide it in O(1) per step.",
+    "Pseudocode: window=sum(first k); for i in k..n-1: window += nums[i]-nums[i-k]; best=max(best,window).",
+    "Fix: replace the re-sum with window += nums[i] - nums[i - k].",
+  ],
+  "pattern:prefix-sums-hashmap:pat-ps-fix-1": [
+    "Goal: count_subarrays(nums, k) = number of contiguous subarrays summing to k.",
+    "The repeated work is range sums; a running prefix + a count map answers each in O(1).",
+    "Key property: a subarray that STARTS at index 0 has 'previous prefix' 0, which must already be counted.",
+    "Approach: seed the empty-prefix count before scanning.",
+    "Pseudocode: seen={0:1}; for x: prefix+=x; count+=seen[prefix-k]; seen[prefix]+=1.",
+    "Fix: set seen[0] = 1 before the loop.",
+  ],
+  "pattern:two-pointers:pat-tp-fix-1": [
+    "Goal: two_sum_sorted(nums, target) = indices of a pair summing to target in a SORTED array.",
+    "The two pointers start at both ends; moving the wrong one wastes work or loops.",
+    "Key property: if the sum is too small you need a LARGER value (raise lo); too big → lower hi.",
+    "Approach: compare the sum to target and move the correct pointer inward.",
+    "Pseudocode: if s<target: lo+=1 elif s>target: hi-=1 else return (lo,hi).",
+    "Fix: on s < target do lo += 1; else hi -= 1 (swap the two moves).",
+  ],
+  "pattern:fast-slow-pointers:pat-fs-fix-1": [
+    "Goal: has_cycle(head) = does the linked list contain a cycle.",
+    "fast moves two steps per iteration, so reading fast.next.next can dereference None.",
+    "Key property: before a double step, BOTH fast and fast.next must exist.",
+    "Approach: guard the loop condition so fast never steps past the end.",
+    "Pseudocode: while fast and fast.next: slow=slow.next; fast=fast.next.next; if slow is fast: return True.",
+    "Fix: change the loop to `while fast and fast.next:`.",
+  ],
+  "pattern:binary-search-on-answer:pat-bsa-fix-1": [
+    "Goal: least_capacity(weights, days) = smallest capacity to ship all weights within days.",
+    "Binary-search the ANSWER; a feasibility test can_ship(cap) checks a candidate.",
+    "Key property: mid itself may be the smallest feasible capacity, so it must stay in range.",
+    "Approach: on feasible, shrink the UPPER bound to mid (not mid-1); on infeasible, lo=mid+1.",
+    "Pseudocode: if can_ship(mid): hi=mid else lo=mid+1; return lo.",
+    "Fix: set hi = mid (not hi = mid - 1) in the feasible branch.",
+  ],
+  "pattern:top-k-heap:pat-tk-fix-1": [
+    "Goal: k_largest(nums, k) = the k largest values, descending.",
+    "Python's heapq is a MIN-heap; the smallest sits at the root (index 0).",
+    "Key property: to keep the k LARGEST, hold a size-k min-heap and evict its smallest.",
+    "Approach: push each value; if the heap exceeds k, pop (removes the current smallest).",
+    "Pseudocode: for x: heappush(heap,x); if len>k: heappop(heap); return sorted(heap, reverse=True).",
+    "Fix: push x (not -x) and return sorted(heap, reverse=True).",
+  ],
+  "pattern:greedy-interval-scheduling:pat-gis-fix-1": [
+    "Goal: max_non_overlapping(intervals) = most mutually non-overlapping intervals.",
+    "Sorting by start can pick a long interval that blocks several shorter ones.",
+    "Key property: the optimal greedy always takes the interval that FINISHES earliest.",
+    "Approach: sort by end time, then greedily take an interval whose start >= last end.",
+    "Pseudocode: sort by x[1]; for start,end: if start>=last_end: count+=1; last_end=end.",
+    "Fix: sort with key=lambda x: x[1] (end time).",
+  ],
+  "pattern:in-place-linkedlist-reversal:pat-iplr-fix-1": [
+    "Goal: reverse(head) = the head of the reversed list.",
+    "The loop flips each node's next pointer, advancing prev and curr.",
+    "Key property: after the loop, the ORIGINAL head is the tail; prev is the new head.",
+    "Approach: return prev, the last node that became the front.",
+    "Pseudocode: while curr: nxt=curr.next; curr.next=prev; prev=curr; curr=nxt; return prev.",
+    "Fix: return prev (not head).",
+  ],
+  "pattern:modified-binary-search:pat-mbs-fix-1": [
+    "Goal: first_occurrence(nums, target) = index of the FIRST target in a sorted array, or -1.",
+    "Returning on the first match can land on a later duplicate, not the earliest.",
+    "Key property: after a match, earlier equal values can only be to the LEFT.",
+    "Approach: record the match, then keep searching the left half.",
+    "Pseudocode: if nums[mid]==target: res=mid; hi=mid-1 (don't return yet).",
+    "Fix: on a match set res = mid and hi = mid - 1; return res at the end.",
+  ],
+  "pattern:divide-and-conquer:pat-dac-fix-1": [
+    "Goal: merge(left, right) = one sorted list from two sorted lists (the merge-sort combine).",
+    "The main loop stops when EITHER side is exhausted, leaving the other's tail behind.",
+    "Key property: the remaining elements of the non-empty side are already sorted.",
+    "Approach: after the loop, append both remainders (one is empty).",
+    "Pseudocode: out.extend(left[i:]); out.extend(right[j:]).",
+    "Fix: add out.extend(left[i:]) and out.extend(right[j:]) after the while loop.",
+  ],
+});
+
+
+
+// ── R6 functional-repair — recognition grading for choose-approach lessons ──
+// Structured approach/reason grading for the first batch of lesson-owned
+// choose-approach exercises. Each entry's correct approach is taken from the
+// exercise's authoritative `expected` answer; distractors carry empty
+// requiredReasonIds + rejectionFeedback, and every entry has >=1 contradictory
+// reason so a wrong justification is caught. Validated by validateRecognition.
+Object.assign(EXERCISE_RECOGNITION, {
+  "lesson:variables-and-types:vt-choose-1": {
+    scenario:
+      "A variable x must hold a whole number that may be hundreds of digits long. You must pick a Python numeric type and decide whether overflow is a concern.",
+    approaches: [
+      { id: "int", label: "Use Python's built-in int", requiredReasonIds: ["arbitrary-precision"] },
+      { id: "float", label: "Use float", requiredReasonIds: [], rejectionFeedback: "float stores an approximate 64-bit double; past ~15–16 significant digits it loses precision, so a hundreds-of-digits whole number would be corrupted." },
+      { id: "fixed-width", label: "Use a fixed-width 64-bit integer type", requiredReasonIds: [], rejectionFeedback: "Python's int is not a fixed-width C integer; there is no 64-bit cap to design around, and such a type would overflow on huge values." },
+    ],
+    reasons: [
+      { id: "arbitrary-precision", text: "Python ints have arbitrary (unlimited) precision, growing as large as memory allows, so there is no overflow to worry about." },
+      { id: "overflow-wraps", text: "The value will wrap around once it exceeds a fixed maximum, so you must guard against overflow.", contradictory: true },
+      { id: "need-float-range", text: "Only a floating-point type can represent numbers this large.", contradictory: true },
+    ],
+    acceptableApproachIds: ["int"],
+    modelExplanation:
+      "Use int: Python integers have unlimited precision, so a value of any size is exact and there is no overflow.",
+  },
+  "lesson:expressions:expr-choose-1": {
+    scenario:
+      "You need the remainder of dividing a by b — for example, to test whether a is even.",
+    approaches: [
+      { id: "modulo", label: "Use the modulo operator %", requiredReasonIds: ["remainder-op"] },
+      { id: "floordiv", label: "Use floor division //", requiredReasonIds: [], rejectionFeedback: "// gives the quotient (how many times b fits), discarding the remainder — the opposite of what you need." },
+      { id: "truediv", label: "Use true division /", requiredReasonIds: [], rejectionFeedback: "/ gives a float quotient, not the integer remainder, so a % 2 == 0 cannot be expressed with it directly." },
+    ],
+    reasons: [
+      { id: "remainder-op", text: "% returns the remainder after division, so a % 2 == 0 is true exactly when a is even." },
+      { id: "gives-quotient", text: "This operator returns the quotient of the division, which is what we want.", contradictory: true },
+      { id: "needs-float", text: "You must convert to float first to find a remainder.", contradictory: true },
+    ],
+    acceptableApproachIds: ["modulo"],
+    modelExplanation:
+      "The modulo operator % yields the remainder; a % 2 == 0 tests evenness.",
+  },
+  "lesson:scope:scope-choose-1": {
+    scenario:
+      "A function must update a module-level counter. You can declare the name `global` inside the function, or return the new value and reassign it at the call site.",
+    approaches: [
+      { id: "return-value", label: "Return the new value and reassign at the call site", requiredReasonIds: ["no-hidden-side-effects"] },
+      { id: "global-decl", label: "Declare the name `global` and mutate it in place", requiredReasonIds: [], rejectionFeedback: "`global` works but couples the function to one specific module name and introduces a hidden side effect, making it harder to test and reuse." },
+      { id: "nonlocal-decl", label: "Use `nonlocal`", requiredReasonIds: [], rejectionFeedback: "`nonlocal` targets an enclosing function's local, not a module-level name, so it does not apply to a module-level counter." },
+    ],
+    reasons: [
+      { id: "no-hidden-side-effects", text: "Returning the value and reassigning it keeps the data flow explicit and avoids hidden side effects, so the function stays easy to test and decoupled from any particular name." },
+      { id: "global-works-coupled", text: "`global` does correctly update the module-level name, so it works when shared mutable state is genuinely wanted — at the cost of coupling the function to that specific name." },
+      { id: "global-is-cleanest", text: "Mutating a global is the cleanest option because it avoids any return value.", contradictory: true },
+      { id: "cannot-return", text: "A function cannot return a value to update a counter, so a declaration is required.", contradictory: true },
+    ],
+    acceptableApproachIds: ["return-value"],
+    alternatives: [
+      { approachId: "global-decl", conditions: "When a quick script truly needs shared mutable module state and the coupling is acceptable.", tradeoff: "Introduces a hidden side effect and binds the function to that module name, hurting testability.", requiredReasonIds: ["global-works-coupled"] },
+    ],
+    reflectionPrompt:
+      "Think of a case where a hidden side effect from `global` would make a bug hard to track down.",
+    modelExplanation:
+      "Prefer returning the new value and reassigning it at the call site — it avoids hidden side effects. `global` works but couples the function to that specific name.",
+  },
+  "lesson:errors:err-choose-1": {
+    scenario:
+      "A key might be missing from a dict. You can guard with `if key in d`, or wrap the access in try/except KeyError. You must decide which fits — and when.",
+    approaches: [
+      { id: "membership-check", label: "Check with `if key in d` first", requiredReasonIds: ["miss-is-common"] },
+      { id: "try-except", label: "Catch KeyError with try/except", requiredReasonIds: ["miss-is-rare"] },
+      { id: "catch-broad", label: "Wrap it in try/except Exception", requiredReasonIds: [], rejectionFeedback: "Catching broad Exception hides unrelated bugs (typos, TypeErrors); catch only the specific KeyError you expect." },
+    ],
+    reasons: [
+      { id: "miss-is-common", text: "When a miss is common and expected, the `in` check is a cheap, explicit test that reads naturally in the normal flow." },
+      { id: "miss-is-rare", text: "When a miss is rare/exceptional, try/except KeyError keeps the common path fast and treats the absence as the exception it is." },
+      { id: "must-catch-broad", text: "You should always catch the broadest Exception type to be safe.", contradictory: true },
+      { id: "in-mutates", text: "Using `in` modifies the dictionary, so try/except is the only safe option.", contradictory: true },
+    ],
+    acceptableApproachIds: ["membership-check"],
+    alternatives: [
+      { approachId: "try-except", conditions: "When a missing key is rare/exceptional rather than part of the normal flow.", tradeoff: "Exceptions are costly on the error path but keep the common (present) path clean and fast.", requiredReasonIds: ["miss-is-rare"] },
+    ],
+    modelExplanation:
+      "Both are valid: use `if key in d` when a miss is common (cheap check); use try/except KeyError when a miss is rare/exceptional. Avoid catching broad Exception.",
+  },
+  "lesson:representations:repr-choose-1": {
+    scenario:
+      "On changing data, you frequently ask 'is key K present, and what is its value?'. You can store the data as a list of (key, value) pairs or as a dict.",
+    approaches: [
+      { id: "dict", label: "Use a dict keyed by K", requiredReasonIds: ["o1-lookup"] },
+      { id: "list-pairs", label: "Keep a list of (key, value) pairs", requiredReasonIds: [], rejectionFeedback: "Finding a key in a list of pairs means scanning until you hit it — O(n) per lookup — which is wasteful for frequent keyed queries." },
+      { id: "sorted-list", label: "Keep a list of pairs sorted by key and binary-search", requiredReasonIds: [], rejectionFeedback: "Binary search needs the list kept sorted, and inserts/deletes on changing data cost O(n); a dict gives expected O(1) without that upkeep." },
+    ],
+    reasons: [
+      { id: "o1-lookup", text: "A dict hashes the key, so 'is K present and what is its value?' is answered in expected O(1), versus O(n) scanning a list of pairs." },
+      { id: "preserves-order-only", text: "A list of pairs answers keyed lookups faster because it preserves insertion order.", contradictory: true },
+      { id: "list-is-constant", text: "Searching a list of pairs for a key is O(1).", contradictory: true },
+    ],
+    acceptableApproachIds: ["dict"],
+    modelExplanation:
+      "A dict: keyed lookup is expected O(1), versus O(n) scanning a list of pairs.",
+  },
+  "lesson:complexity:cx-choose-1": {
+    scenario:
+      "You must find the maximum of an unsorted list, examining it only once. What is the best time complexity achievable?",
+    approaches: [
+      { id: "linear-scan", label: "A single O(n) linear scan tracking the running max", requiredReasonIds: ["must-see-every"] },
+      { id: "sort-first", label: "Sort the list, then take the last element", requiredReasonIds: [], rejectionFeedback: "Sorting is O(n log n) — slower than necessary; you don't need total order just to find one maximum." },
+      { id: "binary-search", label: "Binary search for the maximum", requiredReasonIds: [], rejectionFeedback: "Binary search needs a sorted array; the list is unsorted, so there is no ordering to exploit." },
+    ],
+    reasons: [
+      { id: "must-see-every", text: "Any element you never examine could be the maximum, so you must look at every element at least once — that forces at least linear time." },
+      { id: "sublinear-possible", text: "You can find the max without inspecting every element, so sublinear time is achievable.", contradictory: true },
+      { id: "already-ordered", text: "The list is already ordered, so you can jump straight to the max.", contradictory: true },
+    ],
+    acceptableApproachIds: ["linear-scan"],
+    modelExplanation:
+      "O(n): any unexamined element could be the maximum, so you must inspect every element at least once — you cannot do better than linear.",
+  },
+  "lesson:cases:cases-choose-1": {
+    scenario:
+      "Two sorting algorithms handle n items: one is O(n log n) in the WORST case; the other averages O(n log n) but degrades to O(n²) in the worst case. The input is untrusted and possibly adversarial.",
+    approaches: [
+      { id: "guaranteed-worst", label: "Choose the guaranteed O(n log n) worst-case algorithm", requiredReasonIds: ["adversary-triggers-worst"] },
+      { id: "best-average", label: "Choose the better average-case algorithm", requiredReasonIds: [], rejectionFeedback: "Average-case assumes random/benign input; an adversary can craft the exact input that triggers the O(n²) worst case, so the average bound gives no guarantee here." },
+    ],
+    reasons: [
+      { id: "adversary-triggers-worst", text: "Untrusted input can be crafted to hit the quadratic worst case, so only a guaranteed worst-case bound protects you against a deliberate attack." },
+      { id: "average-is-guarantee", text: "The average-case bound guarantees performance even on worst-case adversarial input.", contradictory: true },
+      { id: "worst-case-irrelevant", text: "Worst-case behavior never occurs in practice, so it can be ignored.", contradictory: true },
+    ],
+    acceptableApproachIds: ["guaranteed-worst"],
+    modelExplanation:
+      "Pick the algorithm with the guaranteed O(n log n) worst case: untrusted/adversarial input could deliberately trigger the other's O(n²) worst case.",
+  },
+  "lesson:amortized:amort-choose-1": {
+    scenario:
+      "You will append exactly n items to a list and n is known in advance. You want to avoid the periodic resize/copy that a growing list performs.",
+    approaches: [
+      { id: "preallocate", label: "Preallocate a list of size n ([None] * n) and assign by index", requiredReasonIds: ["one-alloc-no-copies"] },
+      { id: "append-grow", label: "Start empty and append n times, letting the list grow", requiredReasonIds: [], rejectionFeedback: "Appending to a growing list triggers periodic doubling/reallocations; it is amortized O(n) overall but does repeated mid-loop copies you were asked to avoid." },
+    ],
+    reasons: [
+      { id: "one-alloc-no-copies", text: "Because n is known, one [None]*n allocation reserves all space up front, so index assignment does zero mid-loop copies — a single O(n) allocation." },
+      { id: "append-never-copies", text: "Appending to a Python list never causes any reallocation or copying.", contradictory: true },
+      { id: "size-unknown", text: "The final size is unknown, so preallocation is impossible.", contradictory: true },
+    ],
+    acceptableApproachIds: ["preallocate"],
+    modelExplanation:
+      "Preallocate a list of size n (e.g. [None] * n) and assign by index: one O(n) allocation and no mid-loop copies.",
+  },
+  "lesson:matrix-traversal:mat-predict-1": {
+    scenario:
+      "You must state the time complexity of visiting every cell of an R×C grid, and explain why it is not O(R+C).",
+    approaches: [
+      { id: "rc-product", label: "O(R*C) — nested loops multiply", requiredReasonIds: ["nested-multiply"] },
+      { id: "r-plus-c", label: "O(R+C) — add the dimensions", requiredReasonIds: [], rejectionFeedback: "O(R+C) counts each row and each column only once, but a full traversal touches every one of the R*C cells, so the counts multiply, not add." },
+    ],
+    reasons: [
+      { id: "nested-multiply", text: "The row loop runs R times and the inner column loop runs C times for each row, so the cell visits multiply to R*C." },
+      { id: "loops-are-sequential", text: "The two loops run one after another rather than nested, so their counts add to R+C.", contradictory: true },
+      { id: "diagonal-only", text: "A traversal only visits the diagonal, so it is O(min(R,C)).", contradictory: true },
+    ],
+    acceptableApproachIds: ["rc-product"],
+    modelExplanation:
+      "O(R*C): the loops are nested so the counts multiply. O(R+C) would count each row and column once, but there are R*C cells to visit.",
+  },
+  "lesson:intervals:int-choose-1": {
+    scenario:
+      "You merge a set of n intervals. You must give the overall time complexity and name the step that dominates it.",
+    approaches: [
+      { id: "sort-dominates", label: "O(n log n), dominated by sorting the intervals", requiredReasonIds: ["sort-then-linear-sweep"] },
+      { id: "linear-total", label: "O(n), because the merge sweep is linear", requiredReasonIds: [], rejectionFeedback: "The one-pass sweep is indeed O(n), but you must sort by start first, and that O(n log n) sort dominates the total." },
+      { id: "quadratic", label: "O(n²), from comparing every pair of intervals", requiredReasonIds: [], rejectionFeedback: "Pairwise comparison would be O(n²), but sorting + a single sweep avoids that, giving O(n log n)." },
+    ],
+    reasons: [
+      { id: "sort-then-linear-sweep", text: "Sorting by start is O(n log n) and the subsequent merge sweep is only O(n), so the sort dominates the total." },
+      { id: "no-sort-needed", text: "No sorting is required to merge intervals, so the whole thing is linear.", contradictory: true },
+      { id: "sweep-is-quadratic", text: "The merge sweep itself is O(n²).", contradictory: true },
+    ],
+    acceptableApproachIds: ["sort-dominates"],
+    modelExplanation:
+      "O(n log n), dominated by the sort. The merge sweep itself is only O(n).",
+  },
+  "lesson:string-frequency:sf-choose-1": {
+    scenario:
+      "You must decide whether two strings are anagrams of each other. You can build and compare character-frequency maps, or sort both strings.",
+    approaches: [
+      { id: "freq-map", label: "Build a frequency map of each string and compare", requiredReasonIds: ["linear-count-compare"] },
+      { id: "sort-both", label: "Sort both strings and compare", requiredReasonIds: [], rejectionFeedback: "Sorting works but is O(n log n); counting characters answers the same question in O(n)." },
+      { id: "set-compare", label: "Compare the sets of characters", requiredReasonIds: [], rejectionFeedback: "A set ignores how many times each character appears, so 'aab' and 'abb' would wrongly look equal — counts matter for anagrams." },
+    ],
+    reasons: [
+      { id: "linear-count-compare", text: "Anagrams have identical character counts, so counting each string in O(n) and comparing the two maps decides it in O(n) time and O(k) space." },
+      { id: "sorting-also-works", text: "Two strings are anagrams exactly when their sorted forms are equal, so sorting both and comparing is a valid O(n log n) alternative." },
+      { id: "order-matters", text: "Anagram testing depends on the order of characters, so you must preserve order.", contradictory: true },
+      { id: "counts-dont-matter", text: "Only the set of distinct characters matters, not how many of each.", contradictory: true },
+    ],
+    acceptableApproachIds: ["freq-map"],
+    alternatives: [
+      { approachId: "sort-both", conditions: "When you want a one-line solution and the O(n log n) cost is acceptable.", tradeoff: "Sorting is O(n log n), slower than the O(n) frequency-map count.", requiredReasonIds: ["sorting-also-works"] },
+    ],
+    modelExplanation:
+      "Build a frequency map of each string and compare them (equal maps ⇒ anagrams): O(n) time, O(k) space — better than sorting's O(n log n).",
+  },
+  "lesson:string-two-pointers:stp-choose-1": {
+    scenario:
+      "In a memory-constrained setting you must check whether a string is a palindrome. You can compare it to its reverse (s == s[::-1]) or walk two pointers inward from both ends.",
+    approaches: [
+      { id: "two-pointers", label: "Two pointers converging from both ends", requiredReasonIds: ["constant-space-early-exit"] },
+      { id: "reverse-slice", label: "Compare s to its reversed copy s[::-1]", requiredReasonIds: [], rejectionFeedback: "s[::-1] allocates a full reversed copy — O(n) extra space — and always scans the whole string, which the memory-tight setting rules out." },
+    ],
+    reasons: [
+      { id: "constant-space-early-exit", text: "Two pointers compare characters in place using O(1) extra space and can return False at the first mismatch without building anything." },
+      { id: "slice-is-constant-space", text: "Building s[::-1] uses only O(1) extra space.", contradictory: true },
+      { id: "pointers-need-copy", text: "The two-pointer method must first copy the string, so it uses O(n) space too.", contradictory: true },
+    ],
+    acceptableApproachIds: ["two-pointers"],
+    modelExplanation:
+      "Two pointers use O(1) extra space and can exit early on the first mismatch; s[::-1] builds a full reversed copy using O(n) space.",
+  },
+  "lesson:string-sliding-window:ssw-choose-1": {
+    scenario:
+      "You need the longest substring with at most 2 distinct characters. You must choose between a fixed-size and a variable-size sliding window.",
+    approaches: [
+      { id: "variable-window", label: "Variable-size sliding window", requiredReasonIds: ["grow-shrink-on-constraint"] },
+      { id: "fixed-window", label: "Fixed-size sliding window", requiredReasonIds: [], rejectionFeedback: "A fixed window needs a known width, but the answer's length is exactly what you're solving for — it isn't fixed." },
+    ],
+    reasons: [
+      { id: "grow-shrink-on-constraint", text: "The window grows while 'at most 2 distinct' holds and contracts from the left when it breaks, so its width adapts to the data rather than being fixed." },
+      { id: "width-is-known", text: "The target substring has a fixed, known width, so a constant-size window applies.", contradictory: true },
+      { id: "needs-sorting", text: "The string must be sorted before the window can slide.", contradictory: true },
+    ],
+    acceptableApproachIds: ["variable-window"],
+    modelExplanation:
+      "Variable-size: the window grows while the constraint (<= 2 distinct) holds and contracts when it breaks; the width is not fixed.",
+  },
+  "lesson:string-parsing:sp-choose-1": {
+    scenario:
+      "You receive the text '10,20,30' and must add the three numbers together. You must choose the required steps and their order.",
+    approaches: [
+      { id: "split-then-int", label: "Split on ',' into tokens, then convert each with int, then sum", requiredReasonIds: ["text-to-numbers-first"] },
+      { id: "sum-tokens", label: "Split on ',' and sum the string tokens directly", requiredReasonIds: [], rejectionFeedback: "Summing strings either concatenates them or raises a TypeError — text must become numbers before arithmetic." },
+      { id: "int-whole", label: "Call int('10,20,30') on the whole string", requiredReasonIds: [], rejectionFeedback: "int() cannot parse a string containing commas; you must split into individual numeric tokens first." },
+    ],
+    reasons: [
+      { id: "text-to-numbers-first", text: "Splitting yields string tokens, and arithmetic needs numbers, so you must convert each token with int before summing — split first, then convert." },
+      { id: "convert-before-split", text: "You should convert the whole string to an int before splitting it.", contradictory: true },
+      { id: "strings-add-numerically", text: "Adding the string tokens directly performs numeric addition.", contradictory: true },
+    ],
+    acceptableApproachIds: ["split-then-int"],
+    modelExplanation:
+      "First split on ',' to get string tokens, then convert each with int before summing — text must become numbers first.",
+  },
+  "lesson:palindromes:pal-choose-1": {
+    scenario:
+      "For a very long string in a memory-tight environment, you must choose a palindrome-checking method: slicing (s == s[::-1]) or two converging pointers.",
+    approaches: [
+      { id: "two-pointers", label: "Two pointers from both ends", requiredReasonIds: ["o1-space-early-exit"] },
+      { id: "slice-reverse", label: "Compare s to s[::-1]", requiredReasonIds: [], rejectionFeedback: "The slice builds a full reversed copy (O(n) extra space) and never exits early — both bad in a memory-tight setting on a long string." },
+    ],
+    reasons: [
+      { id: "o1-space-early-exit", text: "The two-pointer scan compares in place with O(1) extra space and stops at the first mismatch, which fits a long string under tight memory." },
+      { id: "slice-saves-memory", text: "The slice method uses less memory because it avoids extra pointers.", contradictory: true },
+      { id: "pointers-slower-asymptotically", text: "Two pointers are asymptotically slower than slicing.", contradictory: true },
+    ],
+    acceptableApproachIds: ["two-pointers"],
+    modelExplanation:
+      "The two-pointer method: O(1) extra space and early exit on mismatch, versus the slice's O(n) reversed copy.",
+  },
+  "lesson:palindromes:pal-longest-substring-1": {
+    scenario:
+      "To find the LONGEST palindromic substring of 'cbbd' by expanding around centers, you must decide which centers to try. The answer 'bb' is an even-length palindrome.",
+    approaches: [
+      { id: "all-centers", label: "Expand around all 2n-1 centers (each index AND each gap between adjacent indices)", requiredReasonIds: ["even-needs-gap-center"] },
+      { id: "odd-only", label: "Expand only around single-index (odd-length) centers", requiredReasonIds: [], rejectionFeedback: "Odd-only centers never check the gap between the two 'b's, so the even-length 'bb' is missed and you return a length-1 answer." },
+    ],
+    reasons: [
+      { id: "even-needs-gap-center", text: "An even-length palindrome like 'bb' is centered in the gap between two indices, so you must expand from both single-index centers (odd) and between-index gaps (even) — 2n-1 centers in O(n^2) time, O(1) space." },
+      { id: "odd-centers-suffice", text: "Only single-index centers are needed because every palindrome has an odd length.", contradictory: true },
+      { id: "needs-sorting", text: "You must sort the string's characters before expanding around centers.", contradictory: true },
+    ],
+    acceptableApproachIds: ["all-centers"],
+    modelExplanation:
+      "Try all 2n-1 centers — each index (odd-length) and each gap between adjacent indices (even-length) — expanding while s[lo]==s[hi]. 'bb' is even-length, centered in a gap, so an odd-only version misses it. O(n^2) time, O(1) space.",
+  },
+  "lesson:anagrams:ana-choose-1": {
+    scenario:
+      "For very long strings you must test whether they are anagrams, and you care which method scales better.",
+    approaches: [
+      { id: "freq-map", label: "Compare character-frequency maps (reject early if lengths differ)", requiredReasonIds: ["linear-counts"] },
+      { id: "sort-both", label: "Sort both strings and compare", requiredReasonIds: [], rejectionFeedback: "Sorting is O(n log n); for long strings the O(n) frequency count scales better." },
+    ],
+    reasons: [
+      { id: "linear-counts", text: "Counting characters is O(n) time and O(k) space, and a quick length check rejects non-anagrams immediately — better scaling than sorting." },
+      { id: "sorting-works-slower", text: "Comparing the sorted forms of both strings also decides anagrams correctly, at an O(n log n) cost." },
+      { id: "sort-is-linear", text: "Sorting both strings runs in O(n) time, matching the frequency-map method.", contradictory: true },
+      { id: "lengths-irrelevant", text: "Strings of different lengths can still be anagrams, so the length check is pointless.", contradictory: true },
+    ],
+    acceptableApproachIds: ["freq-map"],
+    alternatives: [
+      { approachId: "sort-both", conditions: "When code brevity matters more than the asymptotic edge.", tradeoff: "O(n log n) versus the frequency map's O(n).", requiredReasonIds: ["sorting-works-slower"] },
+    ],
+    modelExplanation:
+      "The frequency-map method: O(n) time, O(k) space, versus sorting's O(n log n). Also reject early if lengths differ.",
+  },
+  "lesson:substrings:sub-choose-1": {
+    scenario:
+      "A problem asks for the longest substring without repeating characters. You could enumerate all substrings, or slide a window.",
+    approaches: [
+      { id: "variable-window", label: "Variable-size sliding window with a seen-set/last-index map", requiredReasonIds: ["linear-window"] },
+      { id: "enumerate-all", label: "Enumerate every substring and check each", requiredReasonIds: [], rejectionFeedback: "There are O(n^2) substrings and checking each adds more cost; a window solves the same problem in O(n)." },
+    ],
+    reasons: [
+      { id: "linear-window", text: "The 'no repeats' constraint is monotone: grow the right edge and advance the left past any repeat, visiting each index O(1) times for O(n) total and O(k) space." },
+      { id: "enumeration-is-linear", text: "Enumerating all substrings is only O(n) work.", contradictory: true },
+      { id: "needs-sorting", text: "The string must be sorted first for a window to work.", contradictory: true },
+    ],
+    acceptableApproachIds: ["variable-window"],
+    modelExplanation:
+      "No — enumeration is O(n^2)+ substrings. Use a variable-size sliding window: O(n) time, O(k) space.",
+  },
+  "lesson:linear-search:ls-choose-1": {
+    scenario:
+      "You will search the SAME array thousands of times, each query asking whether a different value is present. Repeated linear scans vs building an index first.",
+    approaches: [
+      { id: "build-set", label: "Build a set once, then query membership", requiredReasonIds: ["amortize-queries"] },
+      { id: "repeated-linear", label: "Linear-search the array on every query", requiredReasonIds: [], rejectionFeedback: "Each scan is O(n), so q queries cost O(n·q) — far too slow when q is large and the array is fixed." },
+    ],
+    reasons: [
+      { id: "amortize-queries", text: "The array is fixed, so a one-time O(n) set build lets each of the q queries run in expected O(1), giving O(n + q) overall instead of O(n·q)." },
+      { id: "linear-is-faster-repeated", text: "Repeated linear search is faster than a set because it avoids the build cost each time.", contradictory: true },
+      { id: "set-query-linear", text: "Membership in a set costs O(n) per query, no better than scanning.", contradictory: true },
+    ],
+    acceptableApproachIds: ["build-set"],
+    modelExplanation:
+      "Repeated linear search is O(n) per query = O(n·q). Build a set once (O(n)) then query in expected O(1), giving O(n + q).",
+  },
+  "lesson:bounds:bnd-choose-1": {
+    scenario:
+      "In a sorted array with duplicate values, you need the index of the FIRST occurrence of a target. You must pick between bisect_left and bisect_right.",
+    approaches: [
+      { id: "bisect-left", label: "Use bisect_left", requiredReasonIds: ["leftmost-insertion"] },
+      { id: "bisect-right", label: "Use bisect_right", requiredReasonIds: [], rejectionFeedback: "bisect_right returns the index just past the LAST occurrence, so it points to the wrong end of a run of duplicates." },
+    ],
+    reasons: [
+      { id: "leftmost-insertion", text: "bisect_left returns the leftmost position where the target appears (or would be inserted), which is exactly the first occurrence's index." },
+      { id: "right-gives-first", text: "bisect_right returns the index of the first occurrence of the target.", contradictory: true },
+      { id: "duplicates-break-bisect", text: "Neither bisect function works when the array contains duplicates.", contradictory: true },
+    ],
+    acceptableApproachIds: ["bisect-left"],
+    modelExplanation:
+      "bisect_left — it returns the leftmost index where the target appears (or would be inserted); bisect_right points past the last occurrence.",
+  },
+});
+
+
+Object.assign(EXERCISE_RECOGNITION, {
+  "lesson:matrix-search:ms-choose-1": {
+    scenario:
+      "A matrix is sorted within each row and each column, but NOT globally (a row's first value may be smaller than the previous row's last value). You must search it for a target.",
+    approaches: [
+      { id: "staircase", label: "Staircase walk from the top-right (or bottom-left) corner", requiredReasonIds: ["corner-prunes-rowcol"] },
+      { id: "flatten-binary", label: "Flatten the cells and binary-search", requiredReasonIds: [], rejectionFeedback: "Flattening is NOT globally sorted (row starts can be below previous row ends), so binary search over cells can skip the target — it's invalid here." },
+    ],
+    reasons: [
+      { id: "corner-prunes-rowcol", text: "From the top-right, a too-big value rules out that whole column (move left) and a too-small value rules out that whole row (move down), eliminating one row or column each step for O(m+n)." },
+      { id: "globally-sorted", text: "Reading the cells row by row yields a globally sorted sequence, so binary search applies.", contradictory: true },
+      { id: "no-structure", text: "The matrix has no useful ordering, so only a full O(m·n) scan works.", contradictory: true },
+    ],
+    acceptableApproachIds: ["staircase"],
+    modelExplanation:
+      "Flattening isn't globally sorted, so cell binary search is invalid. Use the staircase walk from the top-right (or bottom-left): move left on too-big, down on too-small — O(m+n).",
+  },
+  "lesson:bubble-sort:bub-choose-1": {
+    scenario:
+      "You must sort n = 1,000,000 elements. You must decide whether bubble sort is acceptable, and if not, what to use.",
+    approaches: [
+      { id: "nlogn-sort", label: "Use an O(n log n) sort (Python's sorted/Timsort)", requiredReasonIds: ["quadratic-too-slow"] },
+      { id: "bubble", label: "Use bubble sort", requiredReasonIds: [], rejectionFeedback: "Bubble sort is O(n²); for n = 10^6 that's ~10^12 operations — far too slow to finish in reasonable time." },
+    ],
+    reasons: [
+      { id: "quadratic-too-slow", text: "O(n²) on a million elements is ~10^12 operations, whereas an O(n log n) sort is ~2×10^7 — many orders of magnitude faster." },
+      { id: "bubble-is-nlogn", text: "Bubble sort runs in O(n log n), so it scales fine to a million elements.", contradictory: true },
+      { id: "quadratic-fine", text: "10^12 operations completes essentially instantly, so quadratic is acceptable.", contradictory: true },
+    ],
+    acceptableApproachIds: ["nlogn-sort"],
+    modelExplanation:
+      "No — O(n²) would be ~10^12 operations. Use an O(n log n) sort (Python's sorted/Timsort), which is ~2×10^7 operations.",
+  },
+  "lesson:selection-sort:sel-choose-1": {
+    scenario:
+      "Writes to your storage medium are very expensive but reads are cheap. Among the O(n²) sorts, you must pick the one that minimizes writes.",
+    approaches: [
+      { id: "selection", label: "Selection sort", requiredReasonIds: ["at-most-n-writes"] },
+      { id: "bubble", label: "Bubble sort", requiredReasonIds: [], rejectionFeedback: "Bubble sort performs O(n²) adjacent swaps in the worst case — far more writes than selection sort's n." },
+      { id: "insertion", label: "Insertion sort", requiredReasonIds: [], rejectionFeedback: "Insertion sort shifts elements to make room, which can be O(n²) writes — more than selection sort's at-most-n swaps." },
+    ],
+    reasons: [
+      { id: "at-most-n-writes", text: "Selection sort does at most n swaps — one per position as it places the correct element — so it writes O(n) times even though it reads O(n²) times." },
+      { id: "selection-many-writes", text: "Selection sort performs O(n²) writes, more than the other quadratic sorts.", contradictory: true },
+      { id: "all-same-writes", text: "All O(n²) sorts perform the same number of writes.", contradictory: true },
+    ],
+    acceptableApproachIds: ["selection"],
+    modelExplanation:
+      "Selection sort — it performs at most n swaps (writes), one per position, whereas bubble/insertion may perform O(n²) writes.",
+  },
+  "lesson:insertion-sort:ins-choose-1": {
+    scenario:
+      "You must sort many small chunks that are each already nearly sorted. You must choose the best quadratic sort for this.",
+    approaches: [
+      { id: "insertion", label: "Insertion sort", requiredReasonIds: ["adaptive-nearly-sorted"] },
+      { id: "selection", label: "Selection sort", requiredReasonIds: [], rejectionFeedback: "Selection sort always scans the full remaining array regardless of order, so it is O(n²) even on nearly-sorted input — it is not adaptive." },
+    ],
+    reasons: [
+      { id: "adaptive-nearly-sorted", text: "Insertion sort is adaptive: each element only shifts past the few out-of-place neighbours, so nearly-sorted input runs in near O(n), and it is stable — exactly why hybrid sorts use it for small runs." },
+      { id: "selection-adaptive", text: "Selection sort speeds up to O(n) on nearly-sorted input.", contradictory: true },
+      { id: "insertion-not-stable", text: "Insertion sort is unstable, so it reorders equal elements.", contradictory: true },
+    ],
+    acceptableApproachIds: ["insertion"],
+    modelExplanation:
+      "Insertion sort — it is adaptive (near O(n) on nearly-sorted input) and stable, which is why hybrid sorts use it for small runs.",
+  },
+  "lesson:merge-sort:mrg-choose-1": {
+    scenario:
+      "You must sort 100 GB of data that does not fit in memory. You must choose a sorting approach suited to data on disk.",
+    approaches: [
+      { id: "merge-sort", label: "Merge sort (as an external sort)", requiredReasonIds: ["sequential-run-merge"] },
+      { id: "quick-sort", label: "In-memory quicksort", requiredReasonIds: [], rejectionFeedback: "Quicksort assumes random access to the whole array in memory; 100 GB does not fit, and its partitioning is not naturally a sequential external pass." },
+    ],
+    reasons: [
+      { id: "sequential-run-merge", text: "Merge sort sorts chunks that fit in memory, then merges the sorted runs with sequential linear passes from disk — guaranteed O(n log n) with disk-friendly sequential access." },
+      { id: "fits-in-memory", text: "The whole 100 GB can be loaded into memory, so an in-place sort is fine.", contradictory: true },
+      { id: "merge-random-access", text: "Merge sort requires random access across the entire dataset at once.", contradictory: true },
+    ],
+    acceptableApproachIds: ["merge-sort"],
+    modelExplanation:
+      "Merge sort merges sorted runs sequentially, so it works as an external sort: sort in-memory chunks, then merge them from disk with linear passes. O(n log n) is guaranteed and access is sequential.",
+  },
+  "lesson:quick-sort:qk-choose-1": {
+    scenario:
+      "You need a sort with a GUARANTEED worst-case O(n log n) on adversarial input, and stability matters. Quicksort or merge sort?",
+    approaches: [
+      { id: "merge-sort", label: "Merge sort", requiredReasonIds: ["guaranteed-stable"] },
+      { id: "quick-sort", label: "Quicksort", requiredReasonIds: [], rejectionFeedback: "Quicksort can be driven to O(n²) by crafted input, and its usual in-place form is not stable — failing both requirements." },
+    ],
+    reasons: [
+      { id: "guaranteed-stable", text: "Merge sort guarantees O(n log n) in the worst case and is stable, satisfying both the adversarial-input and stability requirements." },
+      { id: "quicksort-guaranteed", text: "Quicksort guarantees O(n log n) worst case regardless of input.", contradictory: true },
+      { id: "merge-unstable", text: "Merge sort is inherently unstable.", contradictory: true },
+    ],
+    acceptableApproachIds: ["merge-sort"],
+    modelExplanation:
+      "Merge sort — it guarantees O(n log n) worst case and is stable. Quicksort risks O(n²) on crafted input and its in-place form is not stable.",
+  },
+  "lesson:counting-sort:cnt-choose-1": {
+    scenario:
+      "You must sort 1,000,000 exam scores, each an integer from 0 to 100. Counting sort or an O(n log n) comparison sort?",
+    approaches: [
+      { id: "counting-sort", label: "Counting sort", requiredReasonIds: ["small-range-linear"] },
+      { id: "comparison-sort", label: "An O(n log n) comparison sort", requiredReasonIds: [], rejectionFeedback: "It works, but with the tiny fixed range 0–100 counting sort is O(n), faster than the O(n log n) comparison bound here." },
+    ],
+    reasons: [
+      { id: "small-range-linear", text: "The value range hi = 100 is tiny and fixed, so counting sort is O(n + hi) ≈ O(n) — linear and faster than O(n log n)." },
+      { id: "range-is-huge", text: "The score range is enormous, so counting sort's counts array would be impractical.", contradictory: true },
+      { id: "counting-needs-comparisons", text: "Counting sort still makes O(n log n) comparisons internally.", contradictory: true },
+    ],
+    acceptableApproachIds: ["counting-sort"],
+    modelExplanation:
+      "Counting sort: hi = 100 is tiny, so it's O(n + hi) ≈ O(n) — linear and faster than O(n log n) here.",
+  },
+  "lesson:bucket-sort:buck-choose-1": {
+    scenario:
+      "You have a million floats UNIFORMLY distributed in [0, 1). You consider bucket sort versus an O(n log n) comparison sort.",
+    approaches: [
+      { id: "bucket-sort", label: "Bucket sort", requiredReasonIds: ["uniform-small-buckets"] },
+      { id: "comparison-sort", label: "An O(n log n) comparison sort", requiredReasonIds: [], rejectionFeedback: "It is a fine general choice, but it cannot beat the O(n log n) comparison bound, whereas bucket sort exploits the uniform distribution to reach expected O(n)." },
+    ],
+    reasons: [
+      { id: "uniform-small-buckets", text: "A uniform distribution spreads items evenly, so each bucket stays small and sorting them is cheap, giving expected O(n) — below the comparison-sort bound." },
+      { id: "distribution-irrelevant", text: "Bucket sort's speed does not depend on how the data is distributed.", contradictory: true },
+      { id: "comparison-beats-linear", text: "A comparison sort can run in O(n) on this data, so bucket sort offers no advantage.", contradictory: true },
+    ],
+    acceptableApproachIds: ["bucket-sort"],
+    modelExplanation:
+      "Uniform distribution keeps each bucket small, so bucket sort runs in expected O(n) — faster than the O(n log n) comparison bound for this well-distributed data.",
+  },
+  "lesson:heap-sort:hs-choose-1": {
+    scenario:
+      "You need a guaranteed O(n log n) sort using O(1) extra space, and stability is NOT required. Heap sort or merge sort?",
+    approaches: [
+      { id: "heap-sort", label: "Heap sort (in-place)", requiredReasonIds: ["inplace-guaranteed"] },
+      { id: "merge-sort", label: "Merge sort", requiredReasonIds: [], rejectionFeedback: "Merge sort is also O(n log n) but needs O(n) auxiliary space, violating the O(1)-space requirement." },
+    ],
+    reasons: [
+      { id: "inplace-guaranteed", text: "Heap sort is O(n log n) in the worst case and sorts in place with O(1) auxiliary space; since stability is not needed, its non-stability is irrelevant." },
+      { id: "heap-needs-on-space", text: "Heap sort requires O(n) extra space for the heap.", contradictory: true },
+      { id: "merge-is-constant-space", text: "Merge sort sorts with O(1) auxiliary space.", contradictory: true },
+    ],
+    acceptableApproachIds: ["heap-sort"],
+    modelExplanation:
+      "Heap sort (in-place): O(n log n) guaranteed and O(1) auxiliary space. Merge sort is also O(n log n) but needs O(n) space.",
+  },
+  "lesson:radix-sort:rad-choose-1": {
+    scenario:
+      "You must sort a million integers ranging up to 1,000,000,000. Counting sort or radix sort?",
+    approaches: [
+      { id: "radix-sort", label: "Radix sort", requiredReasonIds: ["digit-passes-avoid-range"] },
+      { id: "counting-sort", label: "Plain counting sort over the value range", requiredReasonIds: [], rejectionFeedback: "A single counting sort would need an O(hi)=O(10^9) counts array for the billion-wide range — wasteful in time and memory." },
+    ],
+    reasons: [
+      { id: "digit-passes-avoid-range", text: "Radix sort processes ~10 digits with a small base, so it is O(d·(n+b)) ≈ O(n), avoiding the huge O(10^9) counts array that the raw range would require." },
+      { id: "range-is-small", text: "The value range is small, so a single counting-sort pass is cheap.", contradictory: true },
+      { id: "radix-needs-comparisons", text: "Radix sort relies on O(n log n) comparisons like a comparison sort.", contradictory: true },
+    ],
+    acceptableApproachIds: ["radix-sort"],
+    modelExplanation:
+      "Radix sort — counting sort would need an O(hi)=O(10^9) counts array (wasteful). Radix processes ~10 digits: O(d·(n+b)) ≈ O(n), avoiding the huge-range blowup.",
+  },
+  "lesson:comparators:cmp-choose-1": {
+    scenario:
+      "You want to sort records by field A ascending and field B descending at the same time. You must pick a clean Python approach.",
+    approaches: [
+      { id: "tuple-key", label: "A tuple key that negates the descending field, e.g. key=lambda x: (x.a, -x.b)", requiredReasonIds: ["key-computed-once"] },
+      { id: "cmp-function", label: "A cmp_to_key comparator function", requiredReasonIds: [], rejectionFeedback: "cmp_to_key invokes the comparator O(n log n) times and is noticeably slower than a key computed once per element." },
+    ],
+    reasons: [
+      { id: "key-computed-once", text: "A key function is computed once per element and sorting then compares the resulting tuples lexicographically; negating the descending field flips just that field's order." },
+      { id: "cmp-faster", text: "A cmp_to_key comparator is faster because it compares elements directly.", contradictory: true },
+      { id: "cannot-mix-directions", text: "Python's sort cannot mix ascending and descending fields in one pass.", contradictory: true },
+    ],
+    acceptableApproachIds: ["tuple-key"],
+    modelExplanation:
+      "Use a tuple key that negates the descending field, e.g. key=lambda x: (x.a, -x.b). The key is computed once per element; cmp_to_key calls a comparator O(n log n) times and is slower.",
+  },
+  "lesson:interval-sorting:isort-choose-1": {
+    scenario:
+      "You need to MERGE overlapping intervals. You must decide whether to sort by start or by end, and what sorting enables.",
+    approaches: [
+      { id: "sort-by-start", label: "Sort by start, then sweep left to right", requiredReasonIds: ["start-order-enables-sweep"] },
+      { id: "sort-by-end", label: "Sort by end", requiredReasonIds: [], rejectionFeedback: "Sorting by end is the tool for interval scheduling (max non-overlapping), not for merging; for merging you want intervals grouped by where they begin." },
+      { id: "no-sort", label: "Compare every pair of intervals", requiredReasonIds: [], rejectionFeedback: "Pairwise comparison is O(n²); sorting first turns the merge into a single O(n) sweep." },
+    ],
+    reasons: [
+      { id: "start-order-enables-sweep", text: "After sorting by start, any interval that overlaps the last kept one starts before that one ends, so a single left-to-right sweep merges them — O(n log n) sort + O(n) sweep." },
+      { id: "end-order-for-merging", text: "Sorting by end time is what makes interval merging work.", contradictory: true },
+      { id: "merging-needs-no-sort", text: "Merging overlapping intervals requires no sorting at all.", contradictory: true },
+    ],
+    acceptableApproachIds: ["sort-by-start"],
+    modelExplanation:
+      "Sort by START, then a single left-to-right sweep merges each interval into the last kept one when they overlap — turning an O(n²) pairwise check into O(n log n) sort + O(n) sweep.",
+  },
+  "lesson:stack-queue-operations:sq-choose-1": {
+    scenario:
+      "You need FIFO processing of tasks with millions of enqueue and dequeue operations. You must choose between a list and a collections.deque.",
+    approaches: [
+      { id: "deque", label: "Use collections.deque", requiredReasonIds: ["o1-both-ends"] },
+      { id: "list", label: "Use a list with append and pop(0)", requiredReasonIds: [], rejectionFeedback: "list.pop(0) shifts every remaining element, costing O(n) per dequeue — far too slow for millions of operations." },
+    ],
+    reasons: [
+      { id: "o1-both-ends", text: "A deque supports append (enqueue) and popleft (dequeue) in O(1) each, so millions of FIFO operations stay linear overall." },
+      { id: "list-pop0-constant", text: "list.pop(0) runs in O(1), so a plain list is just as fast as a deque for a queue.", contradictory: true },
+      { id: "deque-no-fifo", text: "A deque cannot model FIFO ordering.", contradictory: true },
+    ],
+    acceptableApproachIds: ["deque"],
+    modelExplanation:
+      "deque — enqueue (append) and dequeue (popleft) are O(1). A list would make dequeue list.pop(0) = O(n), far too slow.",
+  },
+  "lesson:parentheses-matching:paren-choose-1": {
+    scenario:
+      "You must validate bracket strings like '([)]'. A single integer counter increments on '(' and decrements on ')'; a stack pushes openers and matches closers. You must explain why the counter fails but the stack succeeds.",
+    approaches: [
+      { id: "stack", label: "Use a stack of open brackets", requiredReasonIds: ["stack-enforces-type-order"] },
+      { id: "counter", label: "Use a single integer counter", requiredReasonIds: [], rejectionFeedback: "A counter ignores bracket TYPE and nesting order, so '([)]' balances numerically yet is actually mis-nested — the counter accepts an invalid string." },
+    ],
+    reasons: [
+      { id: "stack-enforces-type-order", text: "A stack makes each closer match the most recent opener of the correct type, so it catches the mis-nesting in '([)]' that a numeric count cannot see." },
+      { id: "counter-tracks-type", text: "An integer counter tracks each bracket's type and nesting order.", contradictory: true },
+      { id: "paren-is-numeric", text: "Validity depends only on the total counts of openers and closers, so a counter suffices.", contradictory: true },
+    ],
+    acceptableApproachIds: ["stack"],
+    modelExplanation:
+      "A counter ignores bracket type and order, so '([)]' balances numerically but is mis-nested. A stack enforces that each closer matches the most recent opener of the correct type.",
+  },
+  "lesson:expression-evaluation:expr-choose-1": {
+    scenario:
+      "You must evaluate arithmetic expressions. You compare evaluating RPN (postfix) against evaluating infix like (2+1)*3 directly, and explain why RPN is simpler.",
+    approaches: [
+      { id: "rpn-stack", label: "Evaluate RPN with a single value stack", requiredReasonIds: ["order-is-explicit"] },
+      { id: "infix-direct", label: "Evaluate the infix expression directly with one left-to-right pass", requiredReasonIds: [], rejectionFeedback: "Infix needs precedence and parentheses handling (e.g. a shunting-yard parser) before you can evaluate it; a naive single pass gets operator precedence wrong." },
+    ],
+    reasons: [
+      { id: "order-is-explicit", text: "RPN encodes evaluation order explicitly, so you just push numbers and apply each operator to the top values — no precedence or parentheses logic needed." },
+      { id: "infix-has-no-precedence", text: "Infix expressions require no precedence handling, so they are as simple as RPN.", contradictory: true },
+      { id: "rpn-needs-parens", text: "RPN still needs parentheses to disambiguate operations.", contradictory: true },
+    ],
+    acceptableApproachIds: ["rpn-stack"],
+    modelExplanation:
+      "RPN encodes order explicitly, so no precedence or parentheses handling is needed — just push numbers and apply operators. Infix requires a precedence-aware parser (e.g. shunting-yard) first.",
+  },
+  "lesson:bfs-queues:bfs-choose-1": {
+    scenario:
+      "You need the shortest path LENGTH between two nodes in an UNWEIGHTED graph. BFS or DFS?",
+    approaches: [
+      { id: "bfs", label: "Breadth-first search", requiredReasonIds: ["distance-order"] },
+      { id: "dfs", label: "Depth-first search", requiredReasonIds: [], rejectionFeedback: "DFS dives down one path first and does not visit nodes in distance order, so the first time it reaches the target is not guaranteed to be via a shortest path." },
+    ],
+    reasons: [
+      { id: "distance-order", text: "BFS explores nodes in increasing distance from the source, so the first time it reaches the target it has used the fewest edges — the shortest path in an unweighted graph. O(V + E)." },
+      { id: "dfs-finds-shortest", text: "DFS visits nodes in increasing distance order, so it finds shortest paths too.", contradictory: true },
+      { id: "needs-weights", text: "You must have edge weights to compute a shortest path here.", contradictory: true },
+    ],
+    acceptableApproachIds: ["bfs"],
+    modelExplanation:
+      "BFS — it visits nodes in increasing distance order, so the first time it reaches the target is the shortest path. O(V + E). DFS does not visit in distance order.",
+  },
+  "lesson:min-max-tracking:min-choose-1": {
+    scenario:
+      "You need the maximum within every sliding window of size k over an array, in O(n) total. You must decide whether a min/max stack suffices or something else is required.",
+    approaches: [
+      { id: "monotonic-deque", label: "A monotonic double-ended queue (deque)", requiredReasonIds: ["drop-both-ends"] },
+      { id: "minmax-stack", label: "A plain min/max stack", requiredReasonIds: [], rejectionFeedback: "A stack only grows/shrinks at one end, so it cannot evict elements that fall out of the window's FRONT; you need to remove from both ends." },
+    ],
+    reasons: [
+      { id: "drop-both-ends", text: "A monotonic deque drops out-of-window elements from the front and dominated elements from the back, so each element is pushed and popped once — O(n) total for sliding-window maximum." },
+      { id: "stack-handles-window", text: "A single-ended stack can evict elements leaving the window front, so it is enough.", contradictory: true },
+      { id: "needs-sorting", text: "You must sort each window to find its maximum.", contradictory: true },
+    ],
+    acceptableApproachIds: ["monotonic-deque"],
+    modelExplanation:
+      "You need a monotonic DEQUE (double-ended), not a plain stack: it drops out-of-window and dominated elements from both ends, giving O(n) total for sliding-window maximum.",
+  },
+  "lesson:maps-sets:ms-choose-1": {
+    scenario:
+      "You must check membership against a FIXED collection millions of times. You compare a list, a sorted list with binary search, and a set.",
+    approaches: [
+      { id: "set", label: "A set", requiredReasonIds: ["o1-membership"] },
+      { id: "list", label: "A plain list with the `in` operator", requiredReasonIds: [], rejectionFeedback: "Membership in a list is O(n) per check — millions of checks make this far too slow." },
+      { id: "sorted-binary", label: "A sorted list with binary search", requiredReasonIds: [], rejectionFeedback: "Binary search is O(log n) per check — better than a list but still beaten by the set's expected O(1) for pure membership." },
+    ],
+    reasons: [
+      { id: "o1-membership", text: "A set hashes each element, so membership is expected O(1) per check regardless of size — ideal when the only operation is 'is x present?' done millions of times." },
+      { id: "binary-logn-ordered", text: "A sorted list with binary search answers membership in O(log n) and additionally supports ordered queries like ranges and predecessors that a set cannot." },
+      { id: "list-is-constant", text: "Membership in a plain list is O(1).", contradictory: true },
+      { id: "set-is-logn", text: "A set answers membership in O(log n), the same as binary search.", contradictory: true },
+    ],
+    acceptableApproachIds: ["set"],
+    alternatives: [
+      { approachId: "sorted-binary", conditions: "When you also need ordered operations like range or predecessor queries, not just membership.", tradeoff: "O(log n) per membership check versus the set's expected O(1), in exchange for order.", requiredReasonIds: ["binary-logn-ordered"] },
+    ],
+    modelExplanation:
+      "A set — expected O(1) membership. A list is O(n) per check; a sorted list + binary search is O(log n). For pure membership, the set wins.",
+  },
+  "lesson:hashing-frequency:hf-choose-1": {
+    scenario:
+      "You must find the 'majority element' of an array — the value appearing more than n/2 times. You consider a frequency map (Counter).",
+    approaches: [
+      { id: "counter", label: "Build a Counter and check the most common value's count", requiredReasonIds: ["count-then-check-half"] },
+      { id: "boyer-moore", label: "Boyer–Moore voting algorithm", requiredReasonIds: ["voting-constant-space"] },
+      { id: "sort-middle", label: "Sort and look only at the middle element without verifying", requiredReasonIds: [], rejectionFeedback: "Sorting to the median is a known trick, but it is O(n log n) and, taken without a count, it can report a value that isn't actually a strict majority." },
+    ],
+    reasons: [
+      { id: "count-then-check-half", text: "A Counter tallies every value in O(n); the most_common(1) entry is the majority exactly when its count exceeds n/2 — O(n) time, O(k) space." },
+      { id: "voting-constant-space", text: "Boyer–Moore voting keeps a single candidate and a counter, finding the majority in O(n) time and O(1) space when one is guaranteed to exist." },
+      { id: "no-count-needed", text: "You can identify the majority without counting any occurrences.", contradictory: true },
+      { id: "counter-is-quadratic", text: "Building a Counter over the array is O(n²).", contradictory: true },
+    ],
+    acceptableApproachIds: ["counter"],
+    alternatives: [
+      { approachId: "boyer-moore", conditions: "When O(1) extra space is required and a majority is guaranteed to exist.", tradeoff: "Boyer–Moore voting uses O(1) space instead of the Counter's O(k), at the cost of being less obvious.", requiredReasonIds: ["voting-constant-space"] },
+    ],
+    modelExplanation:
+      "Build a Counter in O(n), then take most_common(1); if its count > n/2 it's the majority. O(n) time, O(k) space. (Boyer–Moore voting does it in O(1) space.)",
+  },
+  "lesson:duplicate-detection:dup-choose-1": {
+    scenario:
+      "You must detect duplicates but cannot use extra memory, and you ARE allowed to reorder the data.",
+    approaches: [
+      { id: "sort-scan", label: "Sort in place, then scan for equal adjacent elements", requiredReasonIds: ["sort-brings-equal-adjacent"] },
+      { id: "hash-set", label: "Track seen values in a hash set", requiredReasonIds: [], rejectionFeedback: "A set is O(n) time but needs O(n) extra memory, which the no-extra-memory constraint forbids." },
+    ],
+    reasons: [
+      { id: "sort-brings-equal-adjacent", text: "Sorting puts equal values next to each other, so a single adjacent scan finds any duplicate; in-place sorting adds no extra memory, trading the set's O(n) space for O(n log n) time." },
+      { id: "sort-needs-extra-space", text: "Sorting always requires O(n) extra memory, so it violates the constraint too.", contradictory: true },
+      { id: "set-is-constant-space", text: "A hash set uses only O(1) extra memory.", contradictory: true },
+    ],
+    acceptableApproachIds: ["sort-scan"],
+    modelExplanation:
+      "Sort the array (O(n log n), O(1) extra if in-place) and scan for equal adjacent elements. This trades the set's O(n) space for O(n log n) time.",
+  },
+  "lesson:value-to-index:vti-choose-1": {
+    scenario:
+      "For Two Sum, a hash map gives O(n) time and O(n) space. You consider instead sorting the array and using converging two pointers.",
+    approaches: [
+      { id: "hash-map", label: "Hash map of complements (returns original indices)", requiredReasonIds: ["need-original-indices"] },
+      { id: "sort-two-pointers", label: "Sort, then converging two pointers", requiredReasonIds: ["dont-need-indices-save-space"] },
+    ],
+    reasons: [
+      { id: "need-original-indices", text: "A hash map runs in O(n) time and reports the values' original positions, which is required when the answer must be the original indices." },
+      { id: "dont-need-indices-save-space", text: "When you don't need original indices and want O(1) extra space, sorting then two pointers works in O(n log n) time with constant extra space." },
+      { id: "sorting-keeps-indices", text: "Sorting preserves each element's original index, so you can still report original positions.", contradictory: true },
+      { id: "hashmap-constant-space", text: "The hash-map approach uses O(1) extra space.", contradictory: true },
+    ],
+    acceptableApproachIds: ["hash-map"],
+    alternatives: [
+      { approachId: "sort-two-pointers", conditions: "When you don't need the original indices and want O(1) extra space.", tradeoff: "O(n log n) time (vs O(n)) and sorting scrambles indices, so it's worse when original positions are required.", requiredReasonIds: ["dont-need-indices-save-space"] },
+    ],
+    modelExplanation:
+      "With a hash map Two Sum is O(n)/O(n) and keeps original indices. Sort + two pointers is O(n log n) with O(1) space but scrambles indices, so it's worse when the answer must be original positions.",
+  },
+  "lesson:grouping:grp-choose-1": {
+    scenario:
+      "You must group anagrams over a fixed lowercase alphabet. Using the sorted string as a group key costs O(n·L log L). You want a cheaper key.",
+    approaches: [
+      { id: "count-tuple-key", label: "Use a 26-length letter-count tuple as the key", requiredReasonIds: ["count-key-no-sort"] },
+      { id: "sorted-string-key", label: "Use the sorted characters as the key", requiredReasonIds: [], rejectionFeedback: "Sorting each word is O(L log L) per word, giving O(n·L log L); counting over the fixed alphabet is only O(L) per word." },
+    ],
+    reasons: [
+      { id: "count-key-no-sort", text: "A 26-slot count of each letter is a canonical anagram signature computed in O(L) without sorting, so grouping all words is O(n·L)." },
+      { id: "sorting-is-linear", text: "Sorting a word's characters is O(L), the same as counting them.", contradictory: true },
+      { id: "counts-not-canonical", text: "Two anagrams can have different letter counts, so a count tuple is not a reliable key.", contradictory: true },
+    ],
+    acceptableApproachIds: ["count-tuple-key"],
+    modelExplanation:
+      "A 26-length count tuple (how many of each letter) as the key is computed in O(L) without sorting, giving O(n·L) total — below O(n·L log L).",
+  },
+  "lesson:caching-seen:cache-choose-1": {
+    scenario:
+      "You must decide when memoization will help a recursive algorithm, and describe the resulting complexity relationship.",
+    approaches: [
+      { id: "overlapping-subproblems", label: "Apply memoization when subproblems OVERLAP (recur with the same inputs)", requiredReasonIds: ["distinct-subproblems-once"] },
+      { id: "memoize-always", label: "Memoize every recursion regardless of structure", requiredReasonIds: [], rejectionFeedback: "If subproblems never repeat (e.g. plain divide-and-conquer on disjoint halves), a cache only adds overhead and memory — memoization helps only when the same inputs recur." },
+    ],
+    reasons: [
+      { id: "distinct-subproblems-once", text: "Overlapping subproblems mean the same inputs recur; caching each one makes total time proportional to the number of DISTINCT subproblems (each solved once) plus O(1) reuse, replacing exponential recomputation." },
+      { id: "always-helps", text: "Memoization speeds up every recursive algorithm, even when subproblems never repeat.", contradictory: true },
+      { id: "no-repeats-needed", text: "Memoization helps precisely when subproblems are all distinct and never recur.", contradictory: true },
+    ],
+    acceptableApproachIds: ["overlapping-subproblems"],
+    modelExplanation:
+      "Overlapping subproblems are the signal: the same inputs recur. Memoization then makes total time proportional to the number of DISTINCT subproblems (each solved once) plus O(1) per reuse, replacing exponential recomputation.",
+  },
+  "lesson:bit-logical-ops:bit-log-choose-1": {
+    scenario:
+      "You pack several on/off feature flags into one integer. You must choose which bitwise operators SET a flag and TEST a flag.",
+    approaches: [
+      { id: "or-set-and-test", label: "OR (|) with the flag's bit to set it; AND (&) with the flag's bit to test it", requiredReasonIds: ["or-sets-and-tests"] },
+      { id: "xor-set-and-test", label: "XOR (^) to set and XOR (^) to test", requiredReasonIds: [], rejectionFeedback: "XOR TOGGLES a bit rather than setting it, so applying it twice clears the flag — it doesn't reliably set, and it doesn't isolate a bit for testing." },
+    ],
+    reasons: [
+      { id: "or-sets-and-tests", text: "ORing with the flag's bit forces that bit to 1 (set) while leaving others untouched, and ANDing with the flag's bit isolates it — a non-zero result means the flag is set." },
+      { id: "and-sets-or-tests", text: "AND sets a flag and OR tests it.", contradictory: true },
+      { id: "xor-sets", text: "XOR with the bit reliably sets the flag no matter its current value.", contradictory: true },
+    ],
+    acceptableApproachIds: ["or-set-and-test"],
+    modelExplanation:
+      "Use OR (|) with the flag's bit to set it, and AND (&) with the flag's bit to test it (non-zero means set).",
+  },
+});
+
+
+Object.assign(EXERCISE_RECOGNITION, {
+  "lesson:xor-cancellation:xor-choose-1": {
+    scenario:
+      "Every number in an array appears exactly twice except one, which appears once. You must find that single number and care about memory.",
+    approaches: [
+      { id: "xor-fold", label: "XOR-fold every element into one accumulator", requiredReasonIds: ["xor-pairs-cancel"] },
+      { id: "hash-set", label: "Count with a hash set / frequency map", requiredReasonIds: [], rejectionFeedback: "This works in O(n) time but stores the seen values, so it uses O(n) extra space — worse on memory than XOR's single accumulator." },
+    ],
+    reasons: [
+      { id: "xor-pairs-cancel", text: "a ^ a == 0 and x ^ 0 == x, so XORing everything cancels the paired values and leaves only the unique one — O(n) time, O(1) space." },
+      { id: "xor-needs-on-space", text: "XOR-folding must store every value it has seen, so it uses O(n) space just like the hash set.", contradictory: true },
+      { id: "needs-sorting-first", text: "The array must be sorted before XOR can cancel the pairs.", contradictory: true },
+    ],
+    acceptableApproachIds: ["xor-fold"],
+    modelExplanation:
+      "Both are O(n) time, but XOR-folding is O(1) space (a single accumulator) while the hash-set count is O(n) space. XOR wins on memory.",
+  },
+  "lesson:count-set-bits:csb-choose-1": {
+    scenario:
+      "You must count the set bits of a 64-bit integer that has only a couple of bits set, and want the fewest iterations.",
+    approaches: [
+      { id: "kernighan", label: "Kernighan's trick (n &= n - 1 per set bit)", requiredReasonIds: ["loops-per-set-bit"] },
+      { id: "check-every-bit", label: "Test every one of the 64 bit positions", requiredReasonIds: [], rejectionFeedback: "Checking every position always does w=64 iterations regardless of how many bits are set, so it is slower than Kernighan on sparse numbers." },
+    ],
+    reasons: [
+      { id: "loops-per-set-bit", text: "n &= n - 1 clears exactly the lowest set bit each iteration, so the loop runs once per set bit — O(s) = O(2) here, not O(w)." },
+      { id: "kernighan-loops-w", text: "Kernighan's trick still iterates once for every bit width (64 times) no matter how few bits are set.", contradictory: true },
+      { id: "both-same-cost", text: "Both methods always perform the same number of iterations.", contradictory: true },
+    ],
+    acceptableApproachIds: ["kernighan"],
+    modelExplanation:
+      "Kernighan does 2 iterations (O(s) = O(2)); checking every bit does 64 (O(w) = O(64)). Kernighan is far better for sparse numbers.",
+  },
+  "lesson:min-max-heaps:heap-choose-1": {
+    scenario:
+      "You repeatedly insert numbers and must always be able to fetch the current minimum, interleaving many inserts and extractions.",
+    approaches: [
+      { id: "heap", label: "A min-heap", requiredReasonIds: ["heap-log-ops"] },
+      { id: "sorted-list", label: "A list kept sorted on every insert", requiredReasonIds: [], rejectionFeedback: "A sorted list gives O(1) min but every insertion is O(n) to keep order, so a stream of inserts makes it too slow." },
+    ],
+    reasons: [
+      { id: "heap-log-ops", text: "A heap does insert and extract-min in O(log n) and peek-min in O(1), which balances the interleaved inserts and extractions far better than O(n) insertion." },
+      { id: "heap-sorted-fully", text: "A heap keeps all elements fully sorted, so you can read any rank in O(1).", contradictory: true },
+      { id: "sorted-list-fast-insert", text: "A sorted list inserts in O(1), so it beats the heap for frequent inserts.", contradictory: true },
+    ],
+    acceptableApproachIds: ["heap"],
+    modelExplanation:
+      "A heap: insert O(log n) and extract-min O(log n), peek O(1). A sorted list gives O(1) min but O(n) insertion, so the heap wins when inserts and extractions interleave.",
+  },
+  "lesson:heap-sift:sift-choose-1": {
+    scenario:
+      "You removed the min from a heap and moved the last element into the root slot. You must restore the heap property in O(log n).",
+    approaches: [
+      { id: "sift-down-smaller-child", label: "Sift the root DOWN, swapping with the SMALLER child", requiredReasonIds: ["root-sinks-to-smaller"] },
+      { id: "sift-up", label: "Sift the root UP toward the parent", requiredReasonIds: [], rejectionFeedback: "The root has no parent to rise to, so sifting up does nothing — the out-of-place element is at the top and must sink downward." },
+      { id: "sift-down-larger-child", label: "Sift DOWN but swap with the LARGER child", requiredReasonIds: [], rejectionFeedback: "In a min-heap the parent must be <= both children; swapping with the larger child can leave the smaller child above its parent, breaking the heap." },
+    ],
+    reasons: [
+      { id: "root-sinks-to-smaller", text: "In a min-heap each parent must be <= its children, so the misplaced root sinks by swapping with the smaller of children 2i+1 and 2i+2 while it is larger — O(log n)." },
+      { id: "root-has-parent", text: "The root has a parent, so sifting it up restores the heap.", contradictory: true },
+      { id: "swap-larger-correct", text: "Swapping with the larger child is correct for a min-heap.", contradictory: true },
+    ],
+    acceptableApproachIds: ["sift-down-smaller-child"],
+    modelExplanation:
+      "Sift DOWN, comparing the root with the SMALLER of its two in-range children (2i+1, 2i+2) and swapping while it is larger. Sifting up is wrong because the root has no parent to rise to.",
+  },
+  "lesson:merge-sorted-data:merge-choose-1": {
+    scenario:
+      "You have 1000 already-sorted files, too large to all fit in memory, and must produce one sorted output stream.",
+    approaches: [
+      { id: "kway-heap", label: "Heap-based k-way merge of the file fronts", requiredReasonIds: ["heap-front-elements"] },
+      { id: "concat-sort", label: "Concatenate every file and sort the whole thing", requiredReasonIds: [], rejectionFeedback: "Concatenate-and-sort must hold all N items in memory (O(N) space) and is O(N log N) — but the data does not fit in memory, so it is infeasible here." },
+    ],
+    reasons: [
+      { id: "heap-front-elements", text: "A min-heap holding only the k=1000 current front elements picks the global next value in O(log k) and streams output lazily, needing just O(k) memory." },
+      { id: "concat-is-cheaper", text: "Concatenating and sorting uses less memory than a k-way merge because it reads each file only once.", contradictory: true },
+      { id: "merge-needs-all-memory", text: "The k-way merge must load all N items into memory before it can emit anything.", contradictory: true },
+    ],
+    acceptableApproachIds: ["kway-heap"],
+    modelExplanation:
+      "Heap-based k-way merge keeps only k front elements in memory (O(k) space) and streams output in O(N log k). Concatenate-and-sort needs all N items in memory and is O(N log N).",
+  },
+  "lesson:tree-bfs:bfs-choose-1": {
+    scenario:
+      "You must report, for each depth of a binary tree, the value of its rightmost node (the 'right side view').",
+    approaches: [
+      { id: "level-bfs", label: "Level-order BFS, taking the last node of each level", requiredReasonIds: ["per-level-natural"] },
+      { id: "depth-dfs", label: "Depth-tracking DFS visiting the right child first", requiredReasonIds: ["dfs-depth-right-first"] },
+      { id: "inorder-dfs", label: "Plain inorder DFS collecting values in order", requiredReasonIds: [], rejectionFeedback: "Inorder traversal visits nodes left-to-right across the whole tree without tracking depth, so it cannot pick out the rightmost node at each level." },
+    ],
+    reasons: [
+      { id: "per-level-natural", text: "The answer is defined per depth, and BFS processes the tree one full level at a time, so the last node dequeued on each level is exactly the rightmost at that depth." },
+      { id: "dfs-depth-right-first", text: "A DFS that records a node the first time it reaches a new depth, visiting the right child before the left, captures each level's rightmost node in O(n)." },
+      { id: "sides-irrelevant-depth", text: "The problem does not depend on depth, so any traversal order gives the same answer.", contradictory: true },
+      { id: "bfs-no-levels", text: "BFS cannot tell which level a node is on, so it is unsuitable here.", contradictory: true },
+    ],
+    acceptableApproachIds: ["level-bfs"],
+    alternatives: [
+      { approachId: "depth-dfs", conditions: "A DFS that tracks the current depth and visits the right child first.", tradeoff: "Equally O(n) but the per-level framing is less direct than BFS's natural level order.", requiredReasonIds: ["dfs-depth-right-first"] },
+    ],
+    modelExplanation:
+      "BFS by levels is the intuitive fit: process each level and take its last node. A depth-tracking DFS that visits the right child first also works.",
+  },
+  "lesson:tree-traversals:trav-choose-1": {
+    scenario:
+      "You must pick traversal orders for three tasks: (a) print a BST's values sorted, (b) serialize so each parent is recorded before its children, (c) free every node without losing a reference.",
+    approaches: [
+      { id: "in-pre-post", label: "Inorder for (a), preorder for (b), postorder for (c)", requiredReasonIds: ["order-matches-task"] },
+      { id: "all-preorder", label: "Use preorder for all three", requiredReasonIds: [], rejectionFeedback: "Preorder does not emit a BST's values in sorted order (that needs inorder) and frees a parent before its children (postorder is required for safe deletion)." },
+    ],
+    reasons: [
+      { id: "order-matches-task", text: "Inorder visits left-node-right so a BST comes out sorted; preorder records a node before its subtrees; postorder frees both children before the parent, so no reference is lost." },
+      { id: "any-order-works", text: "All three traversal orders produce identical results for these tasks.", contradictory: true },
+      { id: "postorder-sorts-bst", text: "Postorder is what prints a BST's values in sorted order.", contradictory: true },
+    ],
+    acceptableApproachIds: ["in-pre-post"],
+    modelExplanation:
+      "(a) inorder — sorted BST output; (b) preorder — node before children; (c) postorder — free children before the parent so no reference is lost.",
+  },
+  "lesson:bst-operations:bst-choose-1": {
+    scenario:
+      "You need ordered operations (range queries, floor/ceil) AND guaranteed fast lookup on data that keeps changing.",
+    approaches: [
+      { id: "balanced-bst", label: "A self-balancing BST (AVL / red-black)", requiredReasonIds: ["balanced-ordered-and-fast"] },
+      { id: "plain-bst", label: "A plain (unbalanced) BST", requiredReasonIds: [], rejectionFeedback: "A plain BST supports ordered queries but can degrade to an O(n)-height chain on bad insert orders, losing the guaranteed fast lookup." },
+      { id: "hash-map", label: "A hash map", requiredReasonIds: [], rejectionFeedback: "A hash map gives expected O(1) lookup but stores no order, so it cannot answer range or floor/ceil queries." },
+    ],
+    reasons: [
+      { id: "balanced-ordered-and-fast", text: "A balanced BST keeps height O(log n), guaranteeing O(log n) search/insert/delete while its in-order structure answers range and floor/ceil queries." },
+      { id: "hashmap-does-ranges", text: "A hash map answers range and floor/ceil queries efficiently.", contradictory: true },
+      { id: "plain-bst-always-logn", text: "A plain BST always has O(log n) height regardless of insertion order.", contradictory: true },
+    ],
+    acceptableApproachIds: ["balanced-bst"],
+    modelExplanation:
+      "A balanced BST (AVL/red-black) gives guaranteed O(log n) search/insert/delete AND ordered queries. A plain BST risks O(n) if unbalanced; a hash map is expected O(1) but supports no order/range queries.",
+  },
+  "lesson:lowest-common-ancestor:lca-choose-1": {
+    scenario:
+      "You must find the lowest common ancestor of two nodes in a plain binary tree that has NO BST ordering.",
+    approaches: [
+      { id: "recursive-dfs", label: "Recursive DFS returning where p and q are found", requiredReasonIds: ["no-order-cant-prune"] },
+      { id: "bst-value-walk", label: "Walk down comparing node values to decide direction (BST LCA)", requiredReasonIds: [], rejectionFeedback: "Comparing values to pick a direction only works when the tree is a BST; a plain tree has no ordering to steer the walk, so this gives wrong answers." },
+    ],
+    reasons: [
+      { id: "no-order-cant-prune", text: "Without ordering you cannot prune a side, so a DFS searches both subtrees and returns the node where p and q surface from different sides — O(n) time, O(h) stack." },
+      { id: "order-lets-prune", text: "The tree's ordering lets you discard one subtree at each node, giving O(log n).", contradictory: true },
+      { id: "lca-needs-parent-pointers", text: "Finding the LCA is impossible without parent pointers on every node.", contradictory: true },
+    ],
+    acceptableApproachIds: ["recursive-dfs"],
+    modelExplanation:
+      "Use a recursive DFS: return a node if it equals p or q, or if p and q are found in different subtrees. It is O(n) time and O(h) stack space, since without ordering you cannot prune.",
+  },
+  "lesson:tree-construction:build-choose-1": {
+    scenario:
+      "You have sorted data and want a BST that supports O(log n) search. You must decide how to build it.",
+    approaches: [
+      { id: "build-from-middle", label: "Recursively build from the middle element (divide and conquer)", requiredReasonIds: ["middle-balances-height"] },
+      { id: "insert-one-by-one", label: "Insert the values one at a time in sorted order", requiredReasonIds: [], rejectionFeedback: "Inserting already-sorted values one-by-one always appends to the same side, producing a degenerate O(n)-height chain that gives O(n) search." },
+    ],
+    reasons: [
+      { id: "middle-balances-height", text: "Choosing the middle as the root and recursing on each half splits the keys evenly, directly producing a balanced O(log n)-height tree." },
+      { id: "sorted-insert-balances", text: "Inserting sorted values one-by-one naturally produces a balanced tree.", contradictory: true },
+      { id: "shape-irrelevant", text: "The tree's shape does not affect search time, so either method is fine.", contradictory: true },
+    ],
+    acceptableApproachIds: ["build-from-middle"],
+    modelExplanation:
+      "Build from the middle (divide and conquer): it produces a balanced O(log n)-height tree directly. Inserting sorted values one-by-one yields a degenerate O(n)-height tree.",
+  },
+  "lesson:trie-insertion:trie-choose-1": {
+    scenario:
+      "You only need exact-word membership on a dictionary. A hash set and a trie are both roughly O(L) per word, and you must choose.",
+    approaches: [
+      { id: "hash-set", label: "A hash set of the words", requiredReasonIds: ["set-simpler-for-exact"] },
+      { id: "trie-for-exact-only", label: "A trie, justified by faster exact lookup", requiredReasonIds: [], rejectionFeedback: "A trie is not faster than a hash set for exact membership; its real advantage is prefix queries, not plain lookup, so 'faster exact lookup' is the wrong justification." },
+    ],
+    reasons: [
+      { id: "set-simpler-for-exact", text: "For exact membership alone a hash set is simpler and lower-overhead, since the trie's edge-walking buys nothing when you never ask about prefixes." },
+      { id: "set-does-prefixes", text: "A hash set efficiently enumerates all words sharing a given prefix.", contradictory: true },
+      { id: "trie-faster-exact", text: "A trie answers exact membership asymptotically faster than a hash set.", contradictory: true },
+    ],
+    acceptableApproachIds: ["hash-set"],
+    modelExplanation:
+      "For exact membership alone, a hash set is simpler and lower-overhead. The trie's advantage is prefix queries — enumerating or counting words that start with a prefix — which a hash set cannot do efficiently.",
+  },
+  "lesson:prefix-search:prefix-choose-1": {
+    scenario:
+      "You are building autocomplete over a large dictionary and must support fast prefix lookups and suggestion listing.",
+    approaches: [
+      { id: "trie", label: "A trie", requiredReasonIds: ["trie-prefix-queries"] },
+      { id: "hash-set", label: "A hash set of words", requiredReasonIds: [], rejectionFeedback: "A hash set only answers exact membership; it cannot efficiently find all words sharing a prefix, which is exactly what autocomplete needs." },
+    ],
+    reasons: [
+      { id: "trie-prefix-queries", text: "A trie reaches a prefix node in O(P) and then walks its subtree to collect matches in O(P + S) — prefix queries a hash set cannot do." },
+      { id: "set-prefix-cheap", text: "A hash set finds all words with a given prefix in O(P) just like a trie.", contradictory: true },
+      { id: "trie-exact-faster", text: "The reason to pick a trie is that exact membership is faster than a hash set.", contradictory: true },
+    ],
+    acceptableApproachIds: ["trie"],
+    modelExplanation:
+      "A trie supports prefix queries a hash set can't. Checking a prefix exists is O(P); listing suggestions is O(P + S) — reaching the prefix node then walking its subtree to collect the matching words.",
+  },
+  "lesson:word-search:ws-choose-1": {
+    scenario:
+      "You must search a character grid for MANY words at once, deciding whether to search each word separately or share work across them.",
+    approaches: [
+      { id: "trie-guided-dfs", label: "Build a trie of all words and run one trie-guided DFS", requiredReasonIds: ["shared-prefix-once"] },
+      { id: "repeated-single-dfs", label: "Run a separate single-word DFS for each word", requiredReasonIds: [], rejectionFeedback: "Searching each word independently re-explores the same grid paths once per word (O(m·n·3^L) each), wasting the work shared by common prefixes." },
+    ],
+    reasons: [
+      { id: "shared-prefix-once", text: "A trie lets one DFS follow all words simultaneously, so a prefix shared by many words is explored just once instead of per word." },
+      { id: "words-no-shared-prefixes", text: "The words share no prefixes, so a trie saves nothing over separate searches.", contradictory: true },
+      { id: "trie-slower-per-word", text: "A trie-guided DFS is slower than repeating single-word DFS because the trie adds overhead.", contradictory: true },
+    ],
+    acceptableApproachIds: ["trie-guided-dfs"],
+    modelExplanation:
+      "Build a trie of all the words and run one DFS (Word Search II): walk the grid guided by the trie so shared prefixes are explored once, instead of paying O(m·n·3^L) separately per word.",
+  },
+  "lesson:avl-rotations:avl-choose-1": {
+    scenario:
+      "You will insert 1, 2, 3, ..., n in increasing order and need the resulting structure to still give fast search.",
+    approaches: [
+      { id: "avl-tree", label: "An AVL (self-balancing) tree", requiredReasonIds: ["rotations-keep-logn"] },
+      { id: "plain-bst", label: "A plain BST", requiredReasonIds: [], rejectionFeedback: "Inserting a sorted sequence into a plain BST appends to the same side every time, producing a height-n chain and O(n) search — the worst case." },
+    ],
+    reasons: [
+      { id: "rotations-keep-logn", text: "AVL rebalances with rotations after each insert, keeping height O(log n) even for sorted input, so search stays O(log n)." },
+      { id: "plain-bst-balances-sorted", text: "A plain BST stays balanced on sorted input, giving O(log n) height.", contradictory: true },
+      { id: "avl-degenerates", text: "AVL insertion of sorted values produces an O(n)-height chain just like a plain BST.", contradictory: true },
+    ],
+    acceptableApproachIds: ["avl-tree"],
+    modelExplanation:
+      "Plain BST: a degenerate chain of height n → O(n) search. AVL: rotations keep height O(log n) → O(log n) search. AVL's self-balancing prevents the sorted-insert worst case.",
+  },
+  "lesson:graph-representations:grep-choose-1": {
+    scenario:
+      "On a small, dense graph you frequently ask 'is there an edge between u and v?' and want that check as fast as possible.",
+    approaches: [
+      { id: "adjacency-matrix", label: "An adjacency matrix", requiredReasonIds: ["matrix-o1-edge-check"] },
+      { id: "adjacency-list", label: "An adjacency list", requiredReasonIds: [], rejectionFeedback: "An adjacency list must scan u's neighbour list for v, which is O(degree) per check — slower than the constant-time lookup an edge query here wants." },
+    ],
+    reasons: [
+      { id: "matrix-o1-edge-check", text: "mat[u][v] answers the edge query in O(1), and the graph being small/dense makes the O(V^2) matrix storage affordable." },
+      { id: "list-o1-edge-check", text: "An adjacency list answers 'is u–v an edge?' in O(1).", contradictory: true },
+      { id: "matrix-wastes-on-dense", text: "A matrix is wasteful specifically on dense graphs, so it is the wrong choice here.", contradictory: true },
+    ],
+    acceptableApproachIds: ["adjacency-matrix"],
+    modelExplanation:
+      "A matrix gives O(1) edge lookup (mat[u][v]), affordable because the graph is small/dense. An adjacency list needs O(degree) to scan u's neighbours for v.",
+  },
+  "lesson:adjacency-lists:adj-choose-1": {
+    scenario:
+      "A traversal visits every neighbour of every vertex. You must state why its total cost is O(V + E) and not simply O(V) times the average degree.",
+    approaches: [
+      { id: "sum-of-degrees", label: "Count via the sum of all degrees = 2E", requiredReasonIds: ["degrees-sum-to-edges"] },
+      { id: "v-times-maxdegree", label: "Multiply V by the maximum degree", requiredReasonIds: [], rejectionFeedback: "Multiplying V by the max degree over-counts: most vertices have far fewer neighbours, so this gives a loose bound, not the tight O(V + E)." },
+    ],
+    reasons: [
+      { id: "degrees-sum-to-edges", text: "Summing degrees over all vertices counts each edge from both endpoints, totalling 2E; adding O(V) to touch each vertex gives the exact O(V + E)." },
+      { id: "neighbour-work-is-v2", text: "Visiting all neighbours is inherently O(V^2) regardless of how many edges exist.", contradictory: true },
+      { id: "edges-dont-matter", text: "The number of edges does not affect the traversal cost.", contradictory: true },
+    ],
+    acceptableApproachIds: ["sum-of-degrees"],
+    modelExplanation:
+      "The sum of all degrees equals 2E, so neighbour visits total O(E); adding O(V) to touch each vertex gives O(V + E). V·(avg degree) is the same quantity (it equals O(E)), but O(V + E) is the standard exact form.",
+  },
+  "lesson:graph-bfs:gbfs-choose-1": {
+    scenario:
+      "You need the fewest number of edges on a path from A to B in an UNWEIGHTED graph.",
+    approaches: [
+      { id: "bfs", label: "Breadth-first search", requiredReasonIds: ["bfs-distance-order"] },
+      { id: "dfs", label: "Depth-first search", requiredReasonIds: [], rejectionFeedback: "DFS plunges down one path and does not visit vertices in distance order, so the first time it reaches B need not be via the fewest edges." },
+    ],
+    reasons: [
+      { id: "bfs-distance-order", text: "BFS expands vertices in increasing distance from A, so the first time it dequeues B it has arrived by a fewest-edge path — O(V + E)." },
+      { id: "dfs-finds-shortest", text: "DFS visits vertices in order of distance, so its first arrival at B is shortest.", contradictory: true },
+      { id: "needs-dijkstra-unweighted", text: "An unweighted shortest path requires Dijkstra with a priority queue.", contradictory: true },
+    ],
+    acceptableApproachIds: ["bfs"],
+    modelExplanation:
+      "BFS visits vertices in increasing distance, so the first time it reaches B is via a shortest (fewest-edge) path. O(V + E). DFS does not visit in distance order.",
+  },
+  "lesson:graph-dfs:gdfs-choose-1": {
+    scenario:
+      "You must detect whether a graph contains a cycle, and decide which traversal is the natural fit.",
+    approaches: [
+      { id: "dfs", label: "Depth-first search", requiredReasonIds: ["dfs-follows-paths"] },
+      { id: "bfs-levels", label: "BFS justified by level processing", requiredReasonIds: [], rejectionFeedback: "Cycle detection is about revisiting a vertex along the current path, not about level order; BFS's level-by-level framing is not what naturally reveals a cycle." },
+    ],
+    reasons: [
+      { id: "dfs-follows-paths", text: "DFS follows a path as deep as it can, so meeting an already-visited vertex that is not the immediate parent (undirected) or one on the recursion stack (directed) exposes a cycle — O(V + E)." },
+      { id: "cycle-needs-distance", text: "Detecting a cycle requires visiting vertices in distance order, which is BFS's job.", contradictory: true },
+      { id: "cycles-undetectable-traversal", text: "No traversal can detect a cycle; you must count edges versus vertices.", contradictory: true },
+    ],
+    acceptableApproachIds: ["dfs"],
+    modelExplanation:
+      "DFS naturally follows paths, so encountering an already-visited vertex that is not the immediate parent (undirected) or a vertex on the current recursion stack (directed) reveals a cycle. It's O(V + E).",
+  },
+  "lesson:connected-components:cc-choose-1": {
+    scenario:
+      "Edges arrive one at a time and after each addition you must report the current number of connected components.",
+    approaches: [
+      { id: "union-find", label: "Union-find (disjoint set union)", requiredReasonIds: ["union-incremental"] },
+      { id: "retraverse", label: "Re-run a full BFS/DFS after each edge", requiredReasonIds: [], rejectionFeedback: "Re-traversing the whole graph after every edge is O(V + E) per query, so a stream of edges makes it far too slow." },
+    ],
+    reasons: [
+      { id: "union-incremental", text: "Each new edge is a single union in near-O(α) time, and the component count simply drops by one on each merge — ideal for an incremental edge stream." },
+      { id: "traverse-cheaper-stream", text: "Re-running a full traversal per edge is cheaper than union-find for a stream of edges.", contradictory: true },
+      { id: "union-cant-count", text: "Union-find cannot report the number of components.", contradictory: true },
+    ],
+    acceptableApproachIds: ["union-find"],
+    modelExplanation:
+      "Union-find: each edge union is near O(α), so it handles incremental edges without re-traversing. Repeated full traversals would be O(V + E) per query — far slower for a stream of edges.",
+  },
+  "lesson:graph-cycle-detection:cyc-choose-1": {
+    scenario:
+      "You must detect a cycle in a DIRECTED graph and explain why the undirected 'visited and not the parent' rule does not transfer.",
+    approaches: [
+      { id: "back-edge-recstack", label: "Detect a back edge to a vertex on the recursion stack (in-progress set)", requiredReasonIds: ["recstack-is-cycle"] },
+      { id: "visited-not-parent", label: "Reuse the undirected visited-and-not-parent rule", requiredReasonIds: [], rejectionFeedback: "In a directed graph a visited vertex may already be finished and off the current path, so reaching it is not a cycle — the parent rule misfires." },
+    ],
+    reasons: [
+      { id: "recstack-is-cycle", text: "A cycle exists only when DFS reaches a neighbour still on the current recursion stack (in-progress); a finished vertex off the path is not a cycle." },
+      { id: "parent-rule-works-directed", text: "The undirected visited-and-not-parent rule works unchanged on directed graphs.", contradictory: true },
+      { id: "any-visited-is-cycle", text: "In a directed graph, revisiting any already-visited vertex means there is a cycle.", contradictory: true },
+    ],
+    acceptableApproachIds: ["back-edge-recstack"],
+    modelExplanation:
+      "In a directed graph a visited vertex might be finished (off the current path), so reaching it isn't a cycle. The correct rule detects a BACK EDGE: a neighbour currently on the recursion stack (in-progress set).",
+  },
+  "lesson:multi-source-bfs:msbfs-choose-1": {
+    scenario:
+      "In a grid every empty cell must learn its distance to the NEAREST of several gates.",
+    approaches: [
+      { id: "multi-source-bfs", label: "Multi-source BFS seeding all gates at distance 0", requiredReasonIds: ["seed-all-sources"] },
+      { id: "bfs-per-gate", label: "Run a separate BFS from each gate", requiredReasonIds: [], rejectionFeedback: "One BFS per gate is O(k·(V + E)) for k gates and recomputes overlapping frontiers, far slower than seeding them all at once." },
+    ],
+    reasons: [
+      { id: "seed-all-sources", text: "Putting every gate in the queue at distance 0 lets a single BFS expand all frontiers together, so each cell is first reached by its nearest gate — O(V + E)." },
+      { id: "per-gate-same-cost", text: "Running a separate BFS from each gate costs the same as one multi-source BFS.", contradictory: true },
+      { id: "cant-seed-multiple", text: "BFS can only start from one source, so multiple gates must be handled one at a time.", contradictory: true },
+    ],
+    acceptableApproachIds: ["multi-source-bfs"],
+    modelExplanation:
+      "Multi-source BFS: seed all gates at distance 0 and run one BFS — O(V + E). Separate BFS per gate is O(k·(V + E)) for k gates, far slower.",
+  },
+  "lesson:shortest-paths-unweighted:spu-choose-1": {
+    scenario:
+      "You need the cheapest route in a road network where roads have DIFFERENT lengths (weights).",
+    approaches: [
+      { id: "dijkstra", label: "Dijkstra's algorithm with a min-heap", requiredReasonIds: ["weights-break-bfs"] },
+      { id: "bfs", label: "Breadth-first search", requiredReasonIds: [], rejectionFeedback: "BFS counts edges, so it finds the fewest-edge route, which is not the lowest-cost route once edges carry different weights." },
+    ],
+    reasons: [
+      { id: "weights-break-bfs", text: "With differing edge weights 'fewest edges' is not 'lowest cost', so you need Dijkstra (non-negative weights), which always settles the closest unsettled node via a heap — O((V+E) log V)." },
+      { id: "bfs-handles-weights", text: "BFS already accounts for edge weights, so it gives the cheapest route.", contradictory: true },
+      { id: "weights-dont-change-path", text: "Edge weights do not change which route is cheapest, so counting edges suffices.", contradictory: true },
+    ],
+    acceptableApproachIds: ["dijkstra"],
+    modelExplanation:
+      "Dijkstra — edges have different weights, so 'fewest edges' isn't 'lowest cost.' BFS only works for equal-weight graphs. Dijkstra (non-negative weights) uses a heap for O((V+E) log V).",
+  },
+  "lesson:floyd-warshall:fw-choose-1": {
+    scenario:
+      "You need shortest distances between ALL pairs of vertices in a small, dense graph (V ≈ 200, edges ≈ V²).",
+    approaches: [
+      { id: "floyd-warshall", label: "Floyd–Warshall", requiredReasonIds: ["fw-dense-allpairs"] },
+      { id: "dijkstra-each-source", label: "Run Dijkstra from every source", requiredReasonIds: [], rejectionFeedback: "On a dense graph Dijkstra-from-every-source is ~O(V·(V+E) log V) ≈ O(V³ log V) — the extra log factor and heap bookkeeping make it slower and more complex than Floyd–Warshall here." },
+    ],
+    reasons: [
+      { id: "fw-dense-allpairs", text: "Floyd–Warshall is O(V³) with tiny triple-loop code, and on a dense graph that beats the O(V³ log V) of Dijkstra-from-every-source while being far simpler." },
+      { id: "fw-slower-dense", text: "Floyd–Warshall is asymptotically slower than Dijkstra-from-every-source on dense graphs.", contradictory: true },
+      { id: "fw-single-source", text: "Floyd–Warshall only computes paths from a single source.", contradictory: true },
+    ],
+    acceptableApproachIds: ["floyd-warshall"],
+    modelExplanation:
+      "Floyd–Warshall: O(V³) with tiny code; on a dense graph, Dijkstra from every source is ~O(V³ log V). Floyd–Warshall avoids the log factor and is simpler for all-pairs on dense/small graphs.",
+  },
+  "lesson:prim:prim-choose-1": {
+    scenario:
+      "Both Prim and Dijkstra use a min-heap. You must say how Prim differs and what it produces.",
+    approaches: [
+      { id: "prim-mst", label: "Prim keys by crossing-edge weight and builds a Minimum Spanning Tree", requiredReasonIds: ["prim-keys-crossing-edge"] },
+      { id: "prim-shortest-paths", label: "Prim keys by cumulative distance and builds shortest paths", requiredReasonIds: [], rejectionFeedback: "Keying by cumulative distance from a source and producing shortest paths describes Dijkstra, not Prim — that confuses the two objectives." },
+    ],
+    reasons: [
+      { id: "prim-keys-crossing-edge", text: "Prim keys the heap by the weight of the cheapest edge crossing out of the tree, so it greedily grows a Minimum Spanning Tree; Dijkstra instead keys by distance from the source." },
+      { id: "prim-same-as-dijkstra", text: "Prim and Dijkstra optimize the same objective and produce the same tree.", contradictory: true },
+      { id: "prim-makes-shortest-paths", text: "Prim produces a shortest-path tree from the source.", contradictory: true },
+    ],
+    acceptableApproachIds: ["prim-mst"],
+    modelExplanation:
+      "Prim keys the heap by the crossing-edge weight (to join the tree) and produces a Minimum Spanning Tree; Dijkstra keys by cumulative distance from the source and produces shortest paths — same structure, different objective.",
+  },
+  "lesson:kruskal:kru-choose-1": {
+    scenario:
+      "You must build a minimum spanning tree of a SPARSE graph that is given to you as an edge list.",
+    approaches: [
+      { id: "kruskal", label: "Kruskal's algorithm", requiredReasonIds: ["kruskal-sort-edges"] },
+      { id: "prim-matrix", label: "Prim's algorithm over an adjacency matrix", requiredReasonIds: [], rejectionFeedback: "A matrix-based Prim is O(V²), which wastes work on a sparse graph and ignores that the input is already an edge list suited to Kruskal." },
+    ],
+    reasons: [
+      { id: "kruskal-sort-edges", text: "Kruskal sorts the edge list (O(E log E)) and adds each edge unless union-find reports it would form a cycle — a perfect fit for sparse graphs given as edges, with the sort dominating." },
+      { id: "kruskal-no-sort", text: "Kruskal does not need to sort the edges.", contradictory: true },
+      { id: "kruskal-needs-dense", text: "Kruskal is only efficient on dense graphs.", contradictory: true },
+    ],
+    acceptableApproachIds: ["kruskal"],
+    modelExplanation:
+      "Kruskal — it sorts the edge list (O(E log E)) and uses union-find for near-linear cycle checks, ideal for sparse graphs / edge-list input. Sorting the edges dominates its cost.",
+  },
+  "lesson:linked-list-cycle-detection:llcd-choose-1": {
+    scenario:
+      "You must detect a cycle in a linked list of possibly millions of nodes under tight memory limits.",
+    approaches: [
+      { id: "floyd-two-pointers", label: "Floyd's slow/fast two pointers", requiredReasonIds: ["floyd-o1-space"] },
+      { id: "visited-set", label: "A visited set of node references", requiredReasonIds: [], rejectionFeedback: "A visited set is O(n) space to store every node seen, which may exceed the tight memory budget at millions of nodes." },
+    ],
+    reasons: [
+      { id: "floyd-o1-space", text: "Floyd's two pointers run in O(n) time but O(1) space — a fast pointer catching a slow one inside a loop proves a cycle without storing any nodes." },
+      { id: "floyd-needs-on-space", text: "Floyd's algorithm must store visited nodes, so it uses O(n) space just like the set.", contradictory: true },
+      { id: "set-is-o1-space", text: "A visited set uses only O(1) space.", contradictory: true },
+    ],
+    acceptableApproachIds: ["floyd-two-pointers"],
+    modelExplanation:
+      "Floyd's algorithm: O(n) time like the set method but O(1) space, so it fits tight memory. The visited set is O(n) space, which may be too much at scale.",
+  },
+  "lesson:linked-list-middle:llmid-choose-1": {
+    scenario:
+      "Nodes arrive from a stream you can read only once, and you must report the middle node.",
+    approaches: [
+      { id: "slow-fast", label: "Slow/fast pointers in a single pass", requiredReasonIds: ["one-pass-middle"] },
+      { id: "count-then-walk", label: "Count the length, then walk to length/2", requiredReasonIds: [], rejectionFeedback: "Counting first and then walking requires a SECOND pass over the data, which a one-read stream does not permit." },
+    ],
+    reasons: [
+      { id: "one-pass-middle", text: "Advancing fast by two and slow by one lands slow at the middle when fast reaches the end — one pass, no length known in advance." },
+      { id: "need-length-first", text: "You must know the length before you can find the middle, so a counting pass is unavoidable.", contradictory: true },
+      { id: "stream-allows-rereads", text: "A read-once stream can be traversed twice, so count-then-walk is fine.", contradictory: true },
+    ],
+    acceptableApproachIds: ["slow-fast"],
+    modelExplanation:
+      "Slow/fast finds the middle in a single pass without knowing the length. Count-then-walk needs a second pass over the same data, which a one-read stream doesn't allow.",
+  },
+  "lesson:linked-list-variants:llv-choose-1": {
+    scenario:
+      "Match a list variant to each need: (a) browser history with back/forward, (b) a fixed-size ring buffer overwriting the oldest, (c) a memory-tight forward-only queue.",
+    approaches: [
+      { id: "doubly-circular-singly", label: "Doubly for (a), circular for (b), singly for (c)", requiredReasonIds: ["variant-matches-need"] },
+      { id: "singly-everywhere", label: "Use a singly linked list for all three", requiredReasonIds: [], rejectionFeedback: "A singly linked list cannot move backward (needed for history) and has no wrap-around end (needed for a ring buffer), so it fits only the forward-only queue." },
+    ],
+    reasons: [
+      { id: "variant-matches-need", text: "A doubly list moves both directions and deletes a known node in O(1) (history); a circular list wraps with no None end (ring buffer); a singly list is the leanest for forward-only traversal (queue)." },
+      { id: "singly-does-all", text: "A singly linked list supports backward movement and wrap-around, so it covers all three needs.", contradictory: true },
+      { id: "circular-cant-wrap", text: "A circular list cannot cycle back to the start, so it is unsuited to a ring buffer.", contradictory: true },
+    ],
+    acceptableApproachIds: ["doubly-circular-singly"],
+    modelExplanation:
+      "(a) doubly — move both directions and delete a given node in O(1). (b) circular — cycle through slots with no None end. (c) singly — least memory, forward-only is enough.",
+  },
+  "lesson:linked-list-deques:lldq-choose-1": {
+    scenario:
+      "You need a fixed-size buffer of the last 100 sensor readings that automatically drops the oldest as new ones arrive.",
+    approaches: [
+      { id: "deque-maxlen", label: "collections.deque(maxlen=100)", requiredReasonIds: ["maxlen-auto-drops"] },
+      { id: "list-manual-trim", label: "A list you append to and slice back to 100", requiredReasonIds: [], rejectionFeedback: "A plain list requires manual trimming, and dropping the oldest with list.pop(0) is O(n); deque's maxlen does the eviction automatically in O(1)." },
+    ],
+    reasons: [
+      { id: "maxlen-auto-drops", text: "deque(maxlen=100) discards from the opposite end automatically once full, giving an O(1) fixed-size ring buffer with no manual bookkeeping." },
+      { id: "maxlen-raises-when-full", text: "A deque with maxlen raises an error when it is full rather than evicting.", contradictory: true },
+      { id: "list-pop0-is-o1", text: "Removing the oldest element with list.pop(0) is O(1), so a list is just as good.", contradictory: true },
+    ],
+    acceptableApproachIds: ["deque-maxlen"],
+    modelExplanation:
+      "deque(maxlen=100): appending past capacity discards from the opposite end, giving an automatic fixed-size ring buffer in O(1).",
+  },
+  "lesson:dp-recursive-calls:dprc-choose-1": {
+    scenario:
+      "A recursive solution recomputes the same subproblems over and over, and you must speed it up.",
+    approaches: [
+      { id: "memoize", label: "Memoize (cache) each subproblem's result", requiredReasonIds: ["cache-overlapping"] },
+      { id: "add-base-case", label: "Just add another base case", requiredReasonIds: [], rejectionFeedback: "Adding a base case changes where recursion stops; it does not stop the SAME subproblem being recomputed on different branches, so the exponential blowup remains." },
+    ],
+    reasons: [
+      { id: "cache-overlapping", text: "The subproblems overlap, so caching each one computes it once and reuses it, collapsing exponential repeated work to the number of distinct subproblems." },
+      { id: "no-overlap-to-cache", text: "The subproblems never repeat, so caching would never produce a hit.", contradictory: true },
+      { id: "memo-slower", text: "Memoization makes the recursion asymptotically slower.", contradictory: true },
+    ],
+    acceptableApproachIds: ["memoize"],
+    modelExplanation:
+      "Memoization (or bottom-up tabulation): cache each subproblem's answer so it's computed once, turning exponential repeated work into linear work.",
+  },
+  "lesson:dp-combinations:dpcomb-choose-1": {
+    scenario:
+      "Distinguish seating 3 people in a row (order matters) from picking a 3-person team (order irrelevant): which is permutations and which is combinations.",
+    approaches: [
+      { id: "perm-row-comb-team", label: "Seating in a row = permutations; picking a team = combinations", requiredReasonIds: ["order-matters-split"] },
+      { id: "swap-them", label: "Seating = combinations; picking a team = permutations", requiredReasonIds: [], rejectionFeedback: "This reverses the definitions: order matters for a seating arrangement (permutations) and is irrelevant for a chosen team (combinations)." },
+    ],
+    reasons: [
+      { id: "order-matters-split", text: "When order distinguishes outcomes (a row of seats) it's permutations, n!/(n-k)!; when order is irrelevant (a team) it's combinations, C(n,k)." },
+      { id: "order-never-matters", text: "Order never affects the count, so both tasks are combinations.", contradictory: true },
+      { id: "team-is-ordered", text: "Choosing a team is order-sensitive, so it is a permutation problem.", contradictory: true },
+    ],
+    acceptableApproachIds: ["perm-row-comb-team"],
+    modelExplanation:
+      "Seating in a row = permutations (order matters, n!/(n-k)! arrangements). Picking a team = combinations (order irrelevant, C(n,k)).",
+  },
+  "lesson:dp-combinations:dpcomb-combination-sum-1": {
+    scenario:
+      "Adapt the choose/explore/un-choose backtracking template to Combination Sum: all combinations of candidates=[2,3,6,7] (reuse allowed) summing to target=7.",
+    approaches: [
+      { id: "same-index-remaining", label: "Recurse with the SAME index and drive by a remaining target, pruning when remaining < 0", requiredReasonIds: ["reuse-same-index", "positive-distinct-preconditions"] },
+      { id: "next-index-size-k", label: "Recurse with i+1 and stop at a fixed size k", requiredReasonIds: [], rejectionFeedback: "Recursing with i+1 forbids reusing a candidate, so it misses [2,2,3]; and a fixed size k is the wrong driver — Combination Sum is bounded by the remaining target, not a count." },
+    ],
+    reasons: [
+      { id: "reuse-same-index", text: "Recursing bt(i, ...) with the same index lets a candidate be reused, while a non-decreasing start index avoids duplicate orderings; subtract the pick and record when remaining == 0, prune when remaining < 0." },
+      { id: "positive-distinct-preconditions", text: "Candidates must be strictly positive (so each pick decreases remaining and the <0 prune terminates) and distinct (so each multiset is emitted once without a skip-equal-siblings guard)." },
+      { id: "i-plus-one-allows-reuse", text: "Recursing with i+1 still allows a candidate to be reused, so [2,2,3] is found.", contradictory: true },
+      { id: "zero-candidate-fine", text: "A zero or negative candidate is harmless because the remaining<0 prune still guarantees termination.", contradictory: true },
+    ],
+    acceptableApproachIds: ["same-index-remaining"],
+    modelExplanation:
+      "Two changes: recurse with the SAME index so candidates reuse, and drive by a remaining target (record at remaining==0, prune at remaining<0). It relies on candidates being strictly positive (termination/overshoot) and distinct (each multiset once). Results: [[2,2,3],[7]].",
+  },
+  "lesson:dp-1d-2d:dp12-choose-1": {
+    scenario:
+      "A subproblem is 'best result using the first i items with j units of capacity left'. You must decide whether the DP table is 1D or 2D.",
+    approaches: [
+      { id: "two-d", label: "2D DP table dp[i][j]", requiredReasonIds: ["two-independent-dims"] },
+      { id: "one-d", label: "1D DP table indexed by one variable", requiredReasonIds: [], rejectionFeedback: "A single index cannot capture both the item position i and the remaining capacity j independently, so a 1D table loses state the recurrence needs." },
+    ],
+    reasons: [
+      { id: "two-independent-dims", text: "The state has two independent quantities — item index i and remaining capacity j — so it is naturally dp[i][j], exactly the 0/1 knapsack shape." },
+      { id: "state-is-one-var", text: "The subproblem depends on only one varying quantity, so one dimension suffices.", contradictory: true },
+      { id: "capacity-not-state", text: "Remaining capacity is not part of the state, so it need not index the table.", contradictory: true },
+    ],
+    acceptableApproachIds: ["two-d"],
+    modelExplanation:
+      "2D: the state has two independent quantities (item index i and remaining capacity j), so the table is dp[i][j]. That's exactly the 0/1 knapsack shape.",
+  },
+  "lesson:dp-knapsack:dpks-choose-1": {
+    scenario:
+      "Items may be split into any fraction and you want maximum value under a weight limit.",
+    approaches: [
+      { id: "greedy-ratio", label: "Greedy by value-per-weight ratio", requiredReasonIds: ["fractions-remove-01"] },
+      { id: "dp-knapsack", label: "0/1 knapsack dynamic programming", requiredReasonIds: [], rejectionFeedback: "0/1 DP is for the all-or-nothing case; when items can be split, the fraction removes that interaction and a simple ratio-greedy is optimal, so DP is unnecessary overhead." },
+    ],
+    reasons: [
+      { id: "fractions-remove-01", text: "Because items can be split, taking them in descending value/weight order (splitting the last to fill the limit) is provably optimal in O(n log n) — no DP interaction remains." },
+      { id: "greedy-wrong-fractional", text: "Greedy by ratio gives a suboptimal answer for the fractional knapsack.", contradictory: true },
+      { id: "fractional-needs-dp", text: "The fractional knapsack still needs the 0/1 DP table to be solved optimally.", contradictory: true },
+    ],
+    acceptableApproachIds: ["greedy-ratio"],
+    modelExplanation:
+      "Greedy by value-per-weight: for the fractional knapsack, take items in ratio order (splitting the last), giving the optimum in O(n log n). DP is unnecessary because fractions remove the 0/1 interaction.",
+  },
+  "lesson:dp-subsequences:dpsub-choose-1": {
+    scenario:
+      "Distinguish (a) 'does s appear in t keeping order but allowing gaps?' from (b) 'does s appear in t as a contiguous block?'.",
+    approaches: [
+      { id: "subseq-vs-substr", label: "(a) is a subsequence check; (b) is a substring search", requiredReasonIds: ["gaps-vs-contiguous"] },
+      { id: "both-same", label: "Treat both as the same contiguous-match problem", requiredReasonIds: [], rejectionFeedback: "They are different: (a) permits gaps between matched characters while (b) demands a contiguous run, so they need different algorithms." },
+    ],
+    reasons: [
+      { id: "gaps-vs-contiguous", text: "Allowing gaps while keeping order is a subsequence check — a greedy two-pointer scan in O(|t|); requiring a contiguous block is a substring search (e.g. s in t, or KMP)." },
+      { id: "subseq-needs-contiguous", text: "A subsequence must be contiguous in t, so (a) and (b) are the same problem.", contradictory: true },
+      { id: "substring-allows-gaps", text: "A substring match allows gaps between characters.", contradictory: true },
+    ],
+    acceptableApproachIds: ["subseq-vs-substr"],
+    modelExplanation:
+      "(a) subsequence — greedy two-pointer scan, O(|t|). (b) substring — contiguous match (e.g. `s in t` or KMP), a different problem.",
+  },
+  "lesson:dp-state-transitions:dpst-choose-1": {
+    scenario:
+      "For a long price series you can compare all (buy, sell) pairs in O(n²) or track a rolling state in O(n). You must choose and name the state.",
+    approaches: [
+      { id: "rolling-state", label: "O(n) rolling-state scan tracking (min price, best profit)", requiredReasonIds: ["rolling-min-profit"] },
+      { id: "all-pairs", label: "Compare every (buy, sell) pair", requiredReasonIds: [], rejectionFeedback: "Comparing all pairs is O(n²), unnecessary on a long series because a single left-to-right pass tracking the cheapest price so far already yields the best profit." },
+    ],
+    reasons: [
+      { id: "rolling-min-profit", text: "Keeping (cheapest price so far, best profit so far) and updating both each day gives the answer in one O(n) pass with O(1) extra state." },
+      { id: "needs-all-pairs", text: "You must examine every buy/sell pair, so O(n²) is unavoidable.", contradictory: true },
+      { id: "state-needs-full-history", text: "The rolling scan must remember every past price, not just the minimum.", contradictory: true },
+    ],
+    acceptableApproachIds: ["rolling-state"],
+    modelExplanation:
+      "The O(n) rolling-state scan. The minimal state is (cheapest price so far, best profit so far); updating both per day gives the answer in one pass.",
+  },
+  "lesson:dp-climbing-stairs:dpcs-choose-1": {
+    scenario:
+      "You must count the ways to reach step n for very large n and choose between naive recursion, memoized recursion, and a rolling bottom-up loop.",
+    approaches: [
+      { id: "rolling-bottom-up", label: "Rolling-variable bottom-up iteration", requiredReasonIds: ["rolling-o1-no-recursion"] },
+      { id: "naive-recursion", label: "Plain recursion with no caching", requiredReasonIds: [], rejectionFeedback: "Naive recursion recomputes overlapping subproblems and is exponential, so it is hopeless for very large n." },
+      { id: "memoized-recursion", label: "Memoized recursion", requiredReasonIds: [], rejectionFeedback: "Memoized recursion is O(n) time but keeps an O(n) cache and O(n) call stack, risking a recursion-depth error for very large n." },
+    ],
+    reasons: [
+      { id: "rolling-o1-no-recursion", text: "Keeping only the last two counts gives O(n) time and O(1) space with no recursion, so very large n is safe from stack limits." },
+      { id: "naive-is-linear", text: "Naive recursion already runs in O(n) time without caching.", contradictory: true },
+      { id: "rolling-needs-on-space", text: "The rolling bottom-up loop still needs an O(n) table and deep recursion.", contradictory: true },
+    ],
+    acceptableApproachIds: ["rolling-bottom-up"],
+    modelExplanation:
+      "Rolling-variable bottom-up: O(n) time, O(1) space, no recursion limit. Naive recursion is exponential; memoized recursion is O(n) time but uses O(n) cache and stack.",
+  },
+  "lesson:dp-house-robber:dphr-choose-1": {
+    scenario:
+      "For houses [2,7,9,3,1] where adjacent houses can't both be robbed, you must choose between a naive greedy and DP.",
+    approaches: [
+      { id: "dp", label: "Dynamic programming (max of rob-this + best-two-back, or skip)", requiredReasonIds: ["dp-correct-nonadjacent"] },
+      { id: "greedy-richest", label: "Greedily grab the richest available non-adjacent house", requiredReasonIds: [], rejectionFeedback: "Grabbing 9 first forces skipping its neighbours and tops out at 11 (9+2 or 9+1), below the DP optimum of 12 — greedy is not reliable here." },
+    ],
+    reasons: [
+      { id: "dp-correct-nonadjacent", text: "DP keeps, at each house, the best of skipping it or robbing it plus the best up to two houses back, correctly finding 12 (rob 2, 9, 1)." },
+      { id: "greedy-optimal-here", text: "Greedily taking the richest house always yields the optimum for this problem.", contradictory: true },
+      { id: "dp-gives-11", text: "DP returns 11 for [2,7,9,3,1].", contradictory: true },
+    ],
+    acceptableApproachIds: ["dp"],
+    modelExplanation:
+      "DP is correct: 12 (rob 2, 9, 1). A naive greedy grabbing 9 first ends at 11, worse than 12. Greedy is not reliable here; use DP.",
+  },
+  "lesson:dp-lcs:dplcs-choose-1": {
+    scenario:
+      "You must find the longest run of characters common to two strings that is CONTIGUOUS in both.",
+    approaches: [
+      { id: "longest-common-substring", label: "Longest common SUBSTRING DP (reset the cell to 0 on mismatch)", requiredReasonIds: ["contiguous-resets-on-mismatch"] },
+      { id: "lcs", label: "Longest common subsequence (LCS) DP", requiredReasonIds: [], rejectionFeedback: "LCS allows gaps between matched characters, so it does not require the run to be contiguous — it solves a different problem than the one asked." },
+    ],
+    reasons: [
+      { id: "contiguous-resets-on-mismatch", text: "Requiring contiguity means a mismatch breaks the run, so the DP cell resets to 0 and you track the maximum cell — the longest-common-substring recurrence." },
+      { id: "lcs-is-contiguous", text: "LCS already requires the common characters to be contiguous in both strings.", contradictory: true },
+      { id: "substring-allows-gaps-lcs", text: "The contiguous version keeps the carry on a mismatch just like LCS.", contradictory: true },
+    ],
+    acceptableApproachIds: ["longest-common-substring"],
+    modelExplanation:
+      "Not LCS — that's the longest common SUBSTRING (contiguous), a different DP where a mismatch resets the cell to 0. LCS allows gaps; substring does not.",
+  },
+  "lesson:dp-divide-and-conquer:dpdc-choose-1": {
+    scenario:
+      "You need the maximum subarray sum on a huge array under tight time limits, choosing between divide-and-conquer O(n log n) and Kadane's O(n).",
+    approaches: [
+      { id: "kadane", label: "Kadane's algorithm", requiredReasonIds: ["kadane-linear-o1"] },
+      { id: "divide-conquer", label: "Divide-and-conquer across the midpoint", requiredReasonIds: [], rejectionFeedback: "Divide-and-conquer is O(n log n) and great for teaching the paradigm, but on a huge array under tight limits Kadane's O(n) single pass is faster." },
+    ],
+    reasons: [
+      { id: "kadane-linear-o1", text: "Kadane runs in one O(n) pass with O(1) space (extend-or-restart at each index), beating the O(n log n) divide-and-conquer on large inputs." },
+      { id: "dc-faster-than-kadane", text: "Divide-and-conquer is asymptotically faster than Kadane for maximum subarray sum.", contradictory: true },
+      { id: "kadane-is-nlogn", text: "Kadane's algorithm runs in O(n log n).", contradictory: true },
+    ],
+    acceptableApproachIds: ["kadane"],
+    modelExplanation:
+      "Kadane's O(n): it's asymptotically faster and O(1) space. Divide-and-conquer (O(n log n)) is great for teaching the paradigm but not the fastest here.",
+  },
+  "lesson:fenwick-tree:fen-choose-1": {
+    scenario:
+      "You need many range-SUM queries on an array whose entries are updated frequently.",
+    approaches: [
+      { id: "fenwick", label: "A Fenwick (binary indexed) tree", requiredReasonIds: ["fenwick-log-update-query"] },
+      { id: "static-prefix", label: "A static prefix-sum array", requiredReasonIds: [], rejectionFeedback: "A prefix-sum array answers queries in O(1) but must be rebuilt in O(n) after every update, which is far too slow when updates are frequent." },
+    ],
+    reasons: [
+      { id: "fenwick-log-update-query", text: "A Fenwick tree does both point update and prefix-sum query in O(log n), so frequent updates no longer force an O(n) rebuild." },
+      { id: "prefix-updates-o1", text: "A static prefix-sum array supports point updates in O(1) without rebuilding.", contradictory: true },
+      { id: "fenwick-cant-update", text: "A Fenwick tree cannot handle updates once built.", contradictory: true },
+    ],
+    acceptableApproachIds: ["fenwick"],
+    modelExplanation:
+      "Fenwick tree: O(log n) for both update and query. A static prefix-sum array answers queries in O(1) but needs O(n) to rebuild after every update, too slow with frequent updates.",
+  },
+  "lesson:segment-tree:seg-choose-1": {
+    scenario:
+      "You need range-MINIMUM queries with point updates and must choose between a Fenwick tree and a segment tree.",
+    approaches: [
+      { id: "segment-tree", label: "A segment tree storing per-segment minima", requiredReasonIds: ["min-non-invertible"] },
+      { id: "fenwick", label: "A Fenwick tree", requiredReasonIds: [], rejectionFeedback: "A Fenwick tree answers queries by subtracting prefix results, but minimum is non-invertible — you cannot 'subtract' a min — so it can't answer an arbitrary range minimum." },
+    ],
+    reasons: [
+      { id: "min-non-invertible", text: "Minimum has no inverse, so prefix differences don't work; a segment tree stores each segment's min and combines O(log n) covering segments to answer any range-min." },
+      { id: "min-invertible-prefix", text: "Minimum is invertible, so a Fenwick tree answers range-min via prefix differences.", contradictory: true },
+      { id: "segtree-cant-min", text: "A segment tree cannot answer range-minimum queries.", contradictory: true },
+    ],
+    acceptableApproachIds: ["segment-tree"],
+    modelExplanation:
+      "Segment tree: minimum is non-invertible, so a Fenwick tree can't answer arbitrary range minima via prefix differences. The segment tree stores per-segment minima and answers range-min in O(log n).",
+  },
+  "lesson:kmp:kmp-choose-1": {
+    scenario:
+      "You must find all occurrences of a pattern in a huge text with a worst-case time guarantee, since inputs may be adversarial.",
+    approaches: [
+      { id: "kmp", label: "KMP with a prefix-function (failure) table", requiredReasonIds: ["kmp-no-rescan"] },
+      { id: "naive-scan", label: "Naive sliding comparison at every start position", requiredReasonIds: [], rejectionFeedback: "Naive scanning rescans the text after a mismatch, degrading to O(n·m) on adversarial inputs like 'aaaa...a' with pattern 'aa...ab' — no worst-case guarantee." },
+    ],
+    reasons: [
+      { id: "kmp-no-rescan", text: "KMP's failure table lets the search skip already-matched text instead of backing up, giving a guaranteed O(n + m) even on adversarial inputs." },
+      { id: "naive-is-linear-worst", text: "Naive scanning is already O(n + m) in the worst case, so KMP adds nothing.", contradictory: true },
+      { id: "kmp-quadratic-adversarial", text: "KMP degrades to O(n·m) on adversarial inputs just like naive scanning.", contradictory: true },
+    ],
+    acceptableApproachIds: ["kmp"],
+    modelExplanation:
+      "KMP: guaranteed O(n + m) even on adversarial inputs like 'aaaa...a' with pattern 'aa...ab', where naive scanning degrades to O(n·m). KMP never rescans the text.",
+  },
+});
+
+Object.assign(EXERCISE_HINTS, {
+  "lesson:variables-and-types:vt-choose-1": [
+    "Goal: pick the Python numeric type for a whole number that may be hundreds of digits long, and decide whether overflow can bite you.",
+    "The costly assumption is reaching for a fixed-width integer out of habit — in many languages that would overflow at huge magnitudes.",
+    "Key property: Python's int is not fixed-width; it grows to hold any magnitude exactly.",
+    "Approach: store the value in a plain int rather than a float or any capped type.",
+    "Reasoning: int gives exact arbitrary-precision arithmetic, while float would lose precision on hundreds of digits; there is no capped alternative to worry about here.",
+    "Answer: use int — Python integers have unlimited precision, so a value of any size is exact and there is no overflow.",
+  ],
+  "lesson:expressions:expr-choose-1": [
+    "Goal: choose the operator that gives the remainder of a divided by b, e.g. to test whether a is even.",
+    "The naive detour is computing a quotient and subtracting back — that recomputes what one operator already gives you.",
+    "Key property: you want the leftover after division, not the quotient.",
+    "Approach: use the modulo operator rather than / or //.",
+    "Reasoning: // gives the floor quotient and / gives a float, but only % yields the remainder you can test against zero.",
+    "Answer: use the modulo operator % — a % b is the remainder, and a % 2 == 0 tests evenness.",
+  ],
+  "lesson:scope:scope-choose-1": [
+    "Goal: decide the cleaner way for a function to update a module-level counter: declare it global, or return the new value.",
+    "The hidden cost of global is a side effect: the function silently mutates outside state, making it harder to test and reason about.",
+    "Key property: a function that only reads inputs and returns outputs is easier to reason about than one that reaches out to mutate a name.",
+    "Approach: have the function return the new value and let the caller reassign it.",
+    "Reasoning: returning keeps the function pure and testable; global works but couples it to one specific name and introduces hidden coupling.",
+    "Answer: prefer returning the new value and reassigning at the call site — it avoids hidden side effects, whereas global ties the function to that specific name.",
+  ],
+  "lesson:errors:err-choose-1": [
+    "Goal: decide whether to guard a possibly-missing dict key with `if key in d` or with try/except KeyError — and when each fits.",
+    "The wrong instinct is a one-size rule; using exceptions for the common case (or `in` for the rare case) pays an avoidable cost either way.",
+    "Key property: the right choice depends on how OFTEN the key is actually missing.",
+    "Approach: match the guard to the expected frequency of a miss, and keep the except clause specific.",
+    "Reasoning: a membership check is cheap when misses are frequent; exceptions are cheap when misses are rare but costly when they fire constantly — and a broad `except Exception` would mask unrelated bugs.",
+    "Answer: both are valid — use `if key in d` when a miss is common, use try/except KeyError when a miss is rare/exceptional, and never catch broad Exception.",
+  ],
+  "lesson:representations:repr-choose-1": [
+    "Goal: pick a representation for changing data you repeatedly query as 'is key K present, and what is its value?' — a list of pairs or a dict.",
+    "The costly choice is a list of (key, value) pairs: every lookup scans the whole list.",
+    "Key property: the dominant operation is keyed lookup by K, which a hash table serves directly.",
+    "Approach: store the data in a dict keyed by K rather than a list of pairs.",
+    "Reasoning: a dict hashes straight to the entry in expected O(1), while a list of pairs forces an O(n) scan per query — and the data changing doesn't hurt the dict.",
+    "Answer: use a dict — keyed lookup is expected O(1), versus O(n) scanning a list of pairs.",
+  ],
+  "lesson:complexity:cx-choose-1": [
+    "Goal: determine the best achievable time complexity for finding the maximum of an unsorted list in a single examination.",
+    "The tempting error is assuming you can somehow shortcut and skip elements the way binary search skips in sorted data.",
+    "Key property: the list is unsorted, so any element you don't look at could be the maximum.",
+    "Approach: accept that a full linear scan is required and reason about its lower bound.",
+    "Reasoning: skipping even one element risks missing the true max, so no algorithm can be certain without inspecting all n — sorting first would be worse at O(n log n).",
+    "Answer: O(n) is optimal — any unexamined element could be the maximum, so you must inspect every element at least once.",
+  ],
+  "lesson:cases:cases-choose-1": [
+    "Goal: choose between two sorts for untrusted input — one O(n log n) worst case, one that averages O(n log n) but degrades to O(n²).",
+    "The trap is judging by average case: on adversarial input the average tells you nothing about what an attacker can force.",
+    "Key property: the input is untrusted/adversarial, so an attacker can deliberately hit the worst case.",
+    "Approach: choose on the WORST-case bound, not the average.",
+    "Reasoning: a guaranteed worst case can't be exploited, whereas the second sort's O(n²) worst case could be triggered by crafted input to cause a denial of service; the average-case sort would be fine only for trusted/random data.",
+    "Answer: pick the algorithm with the guaranteed O(n log n) worst case, because adversarial input could deliberately trigger the other's O(n²).",
+  ],
+  "lesson:amortized:amort-choose-1": [
+    "Goal: append exactly n known-in-advance items while avoiding the periodic resize-and-copy a growing list performs.",
+    "The avoidable cost is letting the list grow on demand: it reallocates and copies several times as capacity is exceeded.",
+    "Key property: n is known up front, so the final capacity is fixed in advance.",
+    "Approach: reserve all the capacity once, then fill by index.",
+    "Reasoning: preallocating does a single allocation and no mid-loop copies; relying on amortized append still pays occasional O(n) copies you can skip entirely when n is known.",
+    "Answer: preallocate a list of size n (e.g. [None] * n) and assign by index — one O(n) allocation and no mid-loop copies.",
+  ],
+  "lesson:matrix-traversal:mat-predict-1": [
+    "Goal: state the time complexity of visiting every cell of an R×C grid and justify why it is not O(R+C).",
+    "The mistake O(R+C) encodes is treating the two loops as sequential (added) rather than nested (multiplied).",
+    "Key property: for each of the R rows you walk all C columns, so the loops are nested.",
+    "Approach: multiply the loop counts rather than add them.",
+    "Reasoning: nested loops multiply, giving R·C cell visits; O(R+C) would only count each row and each column once, which undercounts the actual cells.",
+    "Answer: O(R*C) — the nested loops multiply, and there are R*C cells to visit, not R+C.",
+  ],
+  "lesson:intervals:int-choose-1": [
+    "Goal: give the overall time complexity of merging n intervals and name the step that dominates it.",
+    "The error is costing only the visible merge loop and forgetting the preprocessing that makes it work.",
+    "Key property: merging needs the intervals in sorted order before a single linear sweep can combine overlaps.",
+    "Approach: add the cost of the sort to the cost of the sweep and keep the larger term.",
+    "Reasoning: the sort is O(n log n) and the sweep is only O(n), so the sort dominates; without sorting you'd face O(n²) pairwise checks instead.",
+    "Answer: O(n log n), dominated by the sort — the merge sweep itself is only O(n).",
+  ],
+  "lesson:string-frequency:sf-choose-1": [
+    "Goal: decide whether two strings are anagrams, choosing between comparing frequency maps and sorting both strings.",
+    "The slower route is sorting both strings just to compare them, which costs more than counting.",
+    "Key property: anagrams are exactly the strings with identical character counts.",
+    "Approach: build a character-frequency map of each string and compare the two maps.",
+    "Reasoning: counting is a single linear pass and equal maps prove anagram status, while sorting adds an O(n log n) factor you don't need; also reject early if lengths differ.",
+    "Answer: build and compare frequency maps — O(n) time, O(k) space, better than sorting's O(n log n).",
+  ],
+  "lesson:string-two-pointers:stp-choose-1": [
+    "Goal: in a memory-constrained setting, choose how to check if a string is a palindrome — compare it to its reverse or walk two pointers inward.",
+    "The costly part of s == s[::-1] is that it allocates a whole reversed copy of the string.",
+    "Key property: a palindrome is symmetric, so you only ever need to compare the i-th and (n-1-i)-th characters — no copy required.",
+    "Approach: converge two pointers from both ends, comparing as they move inward.",
+    "Reasoning: two pointers use O(1) extra space and can stop at the first mismatch, whereas the slice always builds an O(n) copy; the slice is only acceptable when memory is plentiful.",
+    "Answer: use two pointers — O(1) extra space and early exit on the first mismatch, versus s[::-1]'s O(n) reversed copy.",
+  ],
+  "lesson:string-sliding-window:ssw-choose-1": [
+    "Goal: pick a fixed-size or variable-size sliding window for 'longest substring with at most 2 distinct characters'.",
+    "The clue against a fixed window is that the answer's length is unknown — you are discovering it, not given it.",
+    "Key property: the window must stay valid under the constraint (≤ 2 distinct), expanding and shrinking as that constraint allows.",
+    "Approach: use a variable-size window driven by the distinct-character constraint.",
+    "Reasoning: the window grows while ≤ 2 distinct holds and contracts when it breaks, so its width changes; a fixed-size window only fits when the target length k is given up front.",
+    "Answer: variable-size — the window grows while the ≤ 2-distinct constraint holds and contracts when it breaks, so the width is not fixed.",
+  ],
+  "lesson:string-parsing:sp-choose-1": [
+    "Goal: read the text '10,20,30' and add the three numbers, choosing the required steps and their order.",
+    "The costly bug is adding the pieces while they are still strings — '10'+'20' concatenates instead of summing.",
+    "Key property: the values are separated by commas and arrive as text, so they must be split and then converted before arithmetic.",
+    "Approach: split on the delimiter first, then convert each token to int, then sum.",
+    "Reasoning: splitting yields string tokens; only after int() turns each into a number can '+' mean addition — doing it in the other order (sum then convert) is impossible.",
+    "Answer: first split on ',' to get tokens, then convert each with int before summing — text must become numbers first.",
+  ],
+  "lesson:palindromes:pal-choose-1": [
+    "Goal: for a very long string in a memory-tight environment, choose a palindrome check — slicing (s == s[::-1]) or two converging pointers.",
+    "The expensive part of slicing is that it materializes a full reversed copy, doubling memory for a long string.",
+    "Key property: symmetry means you only need to compare mirrored character pairs, which needs no extra storage.",
+    "Approach: walk two pointers inward from both ends instead of building a reversed string.",
+    "Reasoning: two pointers run in O(1) extra space and bail out at the first mismatch, while the slice always spends O(n) space; slicing is fine only when memory is abundant.",
+    "Answer: use two pointers — O(1) extra space and early exit on mismatch, versus the slice's O(n) reversed copy.",
+  ],
+  "lesson:palindromes:pal-longest-substring-1": [
+    "Goal: find the longest palindromic substring of 'cbbd' by expanding around centers, and decide which centers to try.",
+    "The costly mistake is checking only single-character (odd) centers, which never finds an even-length palindrome.",
+    "Key property: a palindrome's center is either one character (odd length) or the gap between two adjacent characters (even length), and 'bb' sits in a gap.",
+    "Approach: expand around all 2n-1 centers — each index and each adjacent gap — keeping the widest match.",
+    "Reasoning: expand(i,i) catches odd palindromes and expand(i,i+1) catches even ones like 'bb'; an odd-only version skips the gap center between the two b's and wrongly returns a length-1 answer. Overall O(n^2) time, O(1) space.",
+    "Answer: try all 2n-1 centers (each index for odd, each gap for even), expanding while s[lo]==s[hi]; 'bb' is even and gap-centered, so odd-only misses it — O(n^2) time, O(1) space.",
+  ],
+  "lesson:anagrams:ana-choose-1": [
+    "Goal: for very long strings, choose the anagram test that scales better and state the complexities.",
+    "The slower choice is sorting both strings, which adds a logarithmic factor over simply counting.",
+    "Key property: anagrams share identical character counts, which one linear pass can tally.",
+    "Approach: build and compare character-frequency maps rather than sorting.",
+    "Reasoning: counting is O(n) versus sorting's O(n log n), and you can reject immediately when the lengths differ; sorting only wins if you had to produce sorted output anyway.",
+    "Answer: the frequency-map method — O(n) time, O(k) space, beating sorting's O(n log n); also reject early if lengths differ.",
+  ],
+  "lesson:substrings:sub-choose-1": [
+    "Goal: find the longest substring without repeating characters, deciding whether to enumerate all substrings or slide a window.",
+    "The costly route is enumerating substrings: there are O(n^2) of them, so checking each is far too slow.",
+    "Key property: as you extend a window rightward, a repeat only forces the left edge forward — you never need to restart from scratch.",
+    "Approach: use a variable-size sliding window that tracks the last seen position of each character.",
+    "Reasoning: the window grows while characters stay unique and the left edge jumps past a duplicate, giving one linear pass instead of quadratic enumeration.",
+    "Answer: don't enumerate (O(n^2)+ substrings) — use a variable-size sliding window: O(n) time, O(k) space.",
+  ],
+  "lesson:linear-search:ls-choose-1": [
+    "Goal: decide if repeated linear search is right when you query the same array thousands of times for different values.",
+    "The costly pattern is rescanning the whole array per query — O(n) each, multiplied by many queries.",
+    "Key property: the array is fixed across queries, so you can preprocess it once and reuse the result.",
+    "Approach: build a set (hash index) once, then answer each membership query against it.",
+    "Reasoning: one O(n) build plus expected O(1) per query gives O(n + q), far better than O(n·q) for repeated scans; linear search only wins for a single one-off query.",
+    "Answer: no — repeated linear search is O(n·q); build a set once (O(n)) and query in expected O(1), giving O(n + q).",
+  ],
+  "lesson:bounds:bnd-choose-1": [
+    "Goal: find the index of the FIRST occurrence of a value in a sorted array with duplicates — bisect_left or bisect_right.",
+    "The error is bisect_right, which lands past the last duplicate rather than at the first.",
+    "Key property: the first occurrence is the leftmost position where the target could sit among equal values.",
+    "Approach: use bisect_left to get that leftmost boundary.",
+    "Reasoning: bisect_left returns the first index ≥ target (the start of the run of equals), while bisect_right returns the index just after the last equal element.",
+    "Answer: bisect_left — it returns the leftmost index where the target appears, whereas bisect_right points past the last occurrence.",
+  ],
+  "lesson:matrix-search:ms-choose-1": [
+    "Goal: search a matrix sorted within each row and column but NOT globally, deciding if you can binary-search the flattened cells.",
+    "The costly misstep is flattening and binary-searching: row-major order isn't globally sorted here, so binary search is simply invalid.",
+    "Key property: although not globally sorted, from the top-right corner every value is the max of its row and the min of its column — giving a monotone decision at each step.",
+    "Approach: walk a staircase from the top-right (or bottom-left) corner.",
+    "Reasoning: moving left on too-big and down on too-small eliminates a row or column each step for O(m+n); flattened binary search would compare against unsorted order and miss the target.",
+    "Answer: no — flattening isn't globally sorted, so use the O(m+n) staircase from a corner: left on too-big, down on too-small.",
+  ],
+  "lesson:bubble-sort:bub-choose-1": [
+    "Goal: decide whether bubble sort is acceptable for n = 1,000,000 elements, and if not, what to use.",
+    "The costly reality is bubble sort's O(n²): for a million elements that is about 10^12 operations.",
+    "Key property: n is large enough that the quadratic-versus-log-linear gap is the difference between seconds and hours.",
+    "Approach: use an O(n log n) comparison sort such as Python's built-in sorted (Timsort).",
+    "Reasoning: O(n log n) is roughly 2×10^7 operations here, tens of thousands of times fewer than O(n²); bubble sort is only tolerable for tiny or nearly-sorted inputs.",
+    "Answer: no — O(n²) is ~10^12 ops; use an O(n log n) sort (sorted/Timsort), ~2×10^7 ops.",
+  ],
+  "lesson:selection-sort:sel-choose-1": [
+    "Goal: among the O(n²) sorts, pick the one that minimizes writes when writes to storage are expensive but reads are cheap.",
+    "The costly choice is bubble or insertion sort, which can perform O(n²) writes as they shuffle elements.",
+    "Key property: the cost model weights writes far above reads/comparisons, so write count is what matters.",
+    "Approach: choose selection sort, which commits one element to its final place per position.",
+    "Reasoning: selection sort does at most n swaps regardless of input, whereas bubble/insertion move elements repeatedly; it reads a lot but writes little, matching this cost model.",
+    "Answer: selection sort — at most n swaps (writes), one per position, versus O(n²) writes for bubble/insertion.",
+  ],
+  "lesson:insertion-sort:ins-choose-1": [
+    "Goal: choose the best quadratic sort for many small chunks that are each already nearly sorted.",
+    "The missed opportunity is using a non-adaptive quadratic sort that pays full O(n²) even when the data is almost ordered.",
+    "Key property: the input is nearly sorted, so most elements are already close to their final positions.",
+    "Approach: use insertion sort, whose work scales with how far elements must move.",
+    "Reasoning: insertion sort is adaptive (near O(n) on nearly-sorted data) and stable, which is exactly why hybrid sorts like Timsort use it for small runs; selection sort wouldn't benefit from the near-order.",
+    "Answer: insertion sort — adaptive (near O(n) on nearly-sorted input) and stable, which is why hybrids use it for small runs.",
+  ],
+  "lesson:merge-sort:mrg-choose-1": [
+    "Goal: choose a sorting approach for 100 GB of data that does not fit in memory.",
+    "The costly assumption is any in-memory sort — the data simply cannot all be loaded at once.",
+    "Key property: the algorithm must work on sorted runs streamed from disk, accessing data sequentially rather than randomly.",
+    "Approach: use merge sort as an external sort — sort chunks that fit in RAM, then merge them from disk.",
+    "Reasoning: merge sort combines sorted runs with linear sequential passes, so it never needs the whole dataset in memory; quicksort's random-access partitioning is a poor fit for disk.",
+    "Answer: merge sort — its sequential merges make external sorting practical with guaranteed O(n log n) and sequential access.",
+  ],
+  "lesson:quick-sort:qk-choose-1": [
+    "Goal: choose a sort with GUARANTEED worst-case O(n log n) on adversarial input where stability also matters — quicksort or merge sort.",
+    "The risk with quicksort is that crafted input can force O(n²) and its in-place form isn't stable.",
+    "Key property: the input is adversarial (so average case can't be trusted) and equal keys must keep their order (stability).",
+    "Approach: use merge sort.",
+    "Reasoning: merge sort guarantees O(n log n) regardless of input and is stable, satisfying both requirements; quicksort would be the pick only without adversarial input or stability needs.",
+    "Answer: merge sort — guaranteed O(n log n) worst case and stable, while quicksort risks O(n²) and its in-place form isn't stable.",
+  ],
+  "lesson:counting-sort:cnt-choose-1": [
+    "Goal: choose between counting sort and an O(n log n) comparison sort for 1,000,000 exam scores each in 0–100, and give the complexity.",
+    "The suboptimal default is a comparison sort, which pays an O(n log n) factor even though the key range is tiny.",
+    "Key property: every value lies in a small fixed range (0–100), so the max value hi is tiny relative to n.",
+    "Approach: use counting sort over the 0–100 range.",
+    "Reasoning: counting sort runs in O(n + hi); with hi = 100 that is effectively O(n), beating O(n log n); it would be wasteful only if the value range were huge.",
+    "Answer: counting sort — hi = 100 is tiny, so O(n + hi) ≈ O(n), faster than O(n log n) here.",
+  ],
+  "lesson:bucket-sort:buck-choose-1": [
+    "Goal: judge why bucket sort might beat an O(n log n) comparison sort for a million floats uniformly distributed in [0, 1).",
+    "The default comparison sort pays O(n log n) even though the data's distribution could be exploited.",
+    "Key property: the values are UNIFORMLY distributed, so spreading them into equal-width buckets leaves each bucket with only a few items.",
+    "Approach: distribute into buckets by value, sort each small bucket, and concatenate.",
+    "Reasoning: uniform spread keeps bucket sizes small, so total work is expected O(n); skewed data would overfill a bucket and lose this edge, where a comparison sort would be safer.",
+    "Answer: bucket sort — uniform distribution keeps buckets small, giving expected O(n) and beating the O(n log n) comparison bound.",
+  ],
+  "lesson:heap-sort:hs-choose-1": [
+    "Goal: choose a guaranteed O(n log n) sort with O(1) extra space where stability is NOT required — heap sort or merge sort.",
+    "The costly aspect of merge sort here is its O(n) auxiliary buffer, which the memory budget forbids.",
+    "Key property: you need worst-case O(n log n) with constant extra space, and you don't care about preserving equal-key order.",
+    "Approach: use in-place heap sort.",
+    "Reasoning: heap sort guarantees O(n log n) and sorts in place with O(1) auxiliary space; merge sort matches the time but needs O(n) space, so it only wins when stability is required.",
+    "Answer: in-place heap sort — O(n log n) guaranteed and O(1) auxiliary space, versus merge sort's O(n) space.",
+  ],
+  "lesson:radix-sort:rad-choose-1": [
+    "Goal: choose between counting sort and radix sort for a million integers ranging up to 1,000,000,000.",
+    "The costly misfit is plain counting sort: it would allocate a counts array of size ~10^9, far larger than n.",
+    "Key property: the value range is enormous but each number has only about 10 digits, so the data has few digits even though it has a huge range.",
+    "Approach: use radix sort, processing the numbers digit by digit with a small base.",
+    "Reasoning: radix runs in O(d·(n+b)) ≈ O(n) with d≈10 digits and small base b, avoiding the O(hi) blowup; counting sort would win only when hi is comparable to n.",
+    "Answer: radix sort — counting sort's O(hi)=O(10^9) array is wasteful, while radix's O(d·(n+b)) ≈ O(n) avoids the huge-range blowup.",
+  ],
+  "lesson:comparators:cmp-choose-1": [
+    "Goal: sort records by field A ascending and field B descending at once, choosing the clean Python approach.",
+    "The slow route is a cmp-style comparator, which Python invokes O(n log n) times during the sort.",
+    "Key property: both orderings can be captured in a single composite key if you flip the descending field's sign.",
+    "Approach: pass a tuple key that negates the descending field, e.g. key=lambda x: (x.a, -x.b).",
+    "Reasoning: a key is computed once per element and then compared with fast tuple ordering, while cmp_to_key re-runs a Python comparator on every comparison and is slower.",
+    "Answer: use key=lambda x: (x.a, -x.b) — computed once per element, versus a slow cmp function called O(n log n) times.",
+  ],
+  "lesson:interval-sorting:isort-choose-1": [
+    "Goal: to MERGE overlapping intervals, decide whether to sort by start or by end, and what sorting enables.",
+    "The costly baseline is comparing every pair of intervals, which is O(n²).",
+    "Key property: sorting by start makes all intervals that could overlap a given one appear contiguously, right after it.",
+    "Approach: sort by start, then sweep once, merging each interval into the last kept one when they overlap.",
+    "Reasoning: a start-sorted order lets a single left-to-right pass decide each merge in O(n); sorting by end doesn't line up overlaps for a merge sweep the same way.",
+    "Answer: sort by START, then a single sweep merges overlaps — turning an O(n²) pairwise check into O(n log n) sort + O(n) sweep.",
+  ],
+  "lesson:stack-queue-operations:sq-choose-1": [
+    "Goal: choose a structure for FIFO processing with millions of enqueues and dequeues — a list or a collections.deque.",
+    "The costly choice is a list, because removing from the front with pop(0) shifts every remaining element.",
+    "Key property: FIFO removes from the front, and only a deque supports O(1) removal there.",
+    "Approach: use a deque, appending to enqueue and popleft to dequeue.",
+    "Reasoning: deque gives O(1) at both ends, so millions of operations stay linear overall; a list's pop(0) is O(n), making the total O(n²).",
+    "Answer: deque — append and popleft are O(1), whereas list.pop(0) is O(n) and far too slow at scale.",
+  ],
+  "lesson:parentheses-matching:paren-choose-1": [
+    "Goal: explain why a single integer counter fails to validate '([)]' while a stack succeeds.",
+    "The counter's flaw is that it only tallies open-minus-close, so it can balance numerically yet be mis-nested.",
+    "Key property: validity depends on bracket TYPE and nesting order, not just the count — each closer must match the most recent opener of its kind.",
+    "Approach: use a stack that pushes each opener and, on a closer, checks the top is the matching opener.",
+    "Reasoning: the stack enforces last-opened-first-closed with type matching, catching '([)]' where ')' meets an unmatched '[', while a counter is blind to both type and order.",
+    "Answer: a counter ignores bracket type and order (so '([)]' balances numerically but is mis-nested); a stack enforces that each closer matches the most recent opener of the correct type.",
+  ],
+  "lesson:expression-evaluation:expr-choose-1": [
+    "Goal: explain why evaluating RPN (postfix) is simpler than evaluating infix like (2+1)*3 directly.",
+    "The cost infix imposes is handling operator precedence and parentheses before you can compute anything.",
+    "Key property: RPN already encodes evaluation order in the token sequence, so no precedence or grouping remains to resolve.",
+    "Approach: evaluate RPN with a single stack — push numbers, pop operands when an operator appears, push the result.",
+    "Reasoning: RPN needs no parser because order is explicit; infix first requires a precedence-aware pass (e.g. shunting-yard) to even reach that stack evaluation.",
+    "Answer: RPN encodes order explicitly, so just push numbers and apply operators — infix needs a precedence-aware parser first.",
+  ],
+  "lesson:bfs-queues:bfs-choose-1": [
+    "Goal: find the shortest path LENGTH between two nodes in an UNWEIGHTED graph, choosing BFS or DFS.",
+    "The pitfall with DFS is that it plunges down one branch, so the first time it reaches the target need not be via the fewest edges.",
+    "Key property: with unit edge weights, distance equals edge count, and exploring by layers visits nodes in increasing distance.",
+    "Approach: use BFS from the source with a queue.",
+    "Reasoning: BFS reaches each node in nondecreasing distance order, so its first arrival at the target is a shortest path in O(V+E); DFS doesn't visit in distance order and would need extra work.",
+    "Answer: BFS — it visits nodes in increasing distance, so the first arrival at the target is the shortest path; O(V+E), unlike DFS.",
+  ],
+  "lesson:min-max-tracking:min-choose-1": [
+    "Goal: compute the maximum of every size-k sliding window over an array in O(n) total, deciding if a min/max stack is enough.",
+    "The limitation of a plain stack is that it can't drop elements that have slid out of the window's left edge.",
+    "Key property: you must discard both out-of-window elements (from the front) and dominated smaller elements (from the back), i.e. work at both ends.",
+    "Approach: use a monotonic DEQUE that keeps indices in decreasing value order.",
+    "Reasoning: the deque pops the front when it leaves the window and pops the back while new values dominate, so each index is pushed and popped once for O(n); a one-ended stack can't evict stale front elements.",
+    "Answer: a monotonic DEQUE (not a plain stack) — it drops out-of-window and dominated elements from both ends, giving O(n) for sliding-window maximum.",
+  ],
+  "lesson:maps-sets:ms-choose-1": [
+    "Goal: choose a structure for millions of membership checks against a FIXED collection — list, sorted list + binary search, or set.",
+    "The costly options are a plain list (O(n) per check) and even a sorted list (O(log n) per check), repeated millions of times.",
+    "Key property: the only operation is 'is x present?', with no ordering or range needs, and the collection never changes.",
+    "Approach: build a set once and test membership against it.",
+    "Reasoning: a set hashes to expected O(1) per check, beating O(log n) and O(n); the sorted-list+binary-search option would matter only if you also needed order or range queries.",
+    "Answer: a set — expected O(1) membership, versus O(log n) for sorted list + binary search and O(n) for a list.",
+  ],
+  "lesson:hashing-frequency:hf-choose-1": [
+    "Goal: find the majority element (appearing more than n/2 times) and state how a frequency map solves it and at what cost.",
+    "The naive baseline is counting each candidate by rescanning the array, which is O(n²).",
+    "Key property: one pass can tally every value's count, after which the majority is just the most frequent if its count exceeds n/2.",
+    "Approach: build a Counter in one pass, then check whether its most common value exceeds n/2.",
+    "Reasoning: the Counter gives O(n) time and O(k) space; if memory is tight, Boyer–Moore voting reaches the same answer in O(1) space as a further optimization.",
+    "Answer: build a Counter in O(n), take most_common(1), and confirm count > n/2 — O(n) time, O(k) space (Boyer–Moore voting is the O(1)-space refinement).",
+  ],
+  "lesson:duplicate-detection:dup-choose-1": [
+    "Goal: detect duplicates when extra memory is forbidden but reordering the data IS allowed.",
+    "The usual O(n)-space set is ruled out here because no extra memory is permitted.",
+    "Key property: reordering is allowed, and once equal values are adjacent, a duplicate is just a neighbor comparison.",
+    "Approach: sort the array in place, then scan for equal adjacent elements.",
+    "Reasoning: an in-place sort uses O(1) extra space and makes duplicates adjacent, trading the set's O(n) space for O(n log n) time; a set would be the pick when time matters more than memory and reordering is disallowed.",
+    "Answer: sort the array (O(n log n), O(1) extra in-place) and scan for equal adjacent elements — trading the set's O(n) space for time.",
+  ],
+  "lesson:value-to-index:vti-choose-1": [
+    "Goal: for Two Sum, decide when to switch from the hash-map approach to sorting plus two pointers, and what changes.",
+    "The cost of sorting is that it scrambles the original positions, so you lose the ability to report input indices.",
+    "Key property: the deciding factor is whether the answer must be the ORIGINAL indices or just the values, and how tight memory is.",
+    "Approach: keep the hash map when indices matter; switch to sort + converging two pointers when only values matter and space is tight.",
+    "Reasoning: the hash map is O(n)/O(n) and preserves indices; sort + two pointers is O(n log n) with O(1) extra space but destroys original positions.",
+    "Answer: use sort + two pointers when you don't need original indices and want O(1) space (O(n log n)); keep the hash map (O(n)/O(n)) when the answer must be original positions.",
+  ],
+  "lesson:grouping:grp-choose-1": [
+    "Goal: group anagrams over a fixed lowercase alphabet with a key cheaper than the sorted-string key's O(n·L log L).",
+    "The costly key is the sorted string: sorting each word of length L adds a log L factor per word.",
+    "Key property: with a fixed 26-letter alphabet, two words are anagrams exactly when their per-letter counts match — and counts need no sorting.",
+    "Approach: use a 26-length count tuple of letter frequencies as the group key.",
+    "Reasoning: counting a word is O(L) with no sort, so grouping is O(n·L); the sorted-string key pays O(n·L log L) for the same grouping.",
+    "Answer: a 26-length count tuple as the key — computed in O(L) without sorting, giving O(n·L), below O(n·L log L).",
+  ],
+  "lesson:caching-seen:cache-choose-1": [
+    "Goal: decide when memoization will speed up a recursive algorithm and describe the resulting complexity relationship.",
+    "The costly symptom without memoization is exponential recomputation of the same subproblems.",
+    "Key property: the signal is overlapping subproblems — the same inputs recur across the recursion tree.",
+    "Approach: cache each subproblem's result (memoize) so each is computed only once.",
+    "Reasoning: with caching, total time becomes proportional to the number of DISTINCT subproblems plus O(1) per reuse; without overlap (all subproblems distinct) memoization adds overhead without saving work.",
+    "Answer: overlapping subproblems are the signal — memoization makes total time proportional to the distinct subproblems (each solved once) plus O(1) per reuse, replacing exponential recomputation.",
+  ],
+  "lesson:bit-logical-ops:bit-log-choose-1": [
+    "Goal: packing on/off feature flags into one integer, choose the bitwise operators to SET a flag and to TEST a flag.",
+    "The error is reaching for arithmetic (+/-) which can carry across bits and corrupt neighboring flags.",
+    "Key property: each flag is one bit, so you need operations that touch exactly that bit without disturbing others.",
+    "Approach: OR the flag's bit in to set it; AND with the flag's bit to test it.",
+    "Reasoning: OR (|) turns a bit on idempotently, and AND (&) with a single-bit mask isolates that bit (non-zero means set); addition/subtraction would misbehave if the flag were already set/clear.",
+    "Answer: use OR (|) with the flag's bit to set it, and AND (&) with the flag's bit to test it (non-zero means set).",
+  ],
+  "lesson:xor-cancellation:xor-choose-1": [
+    "Goal: find the single number that appears once while all others appear twice, caring about memory, comparing XOR-fold vs a hash-set count.",
+    "The hash-set approach stores every value seen, costing O(n) memory you may not have.",
+    "Key property: XOR is self-inverse (x ^ x = 0) and commutative, so paired values cancel and only the unique one survives.",
+    "Approach: XOR all elements together into a single accumulator.",
+    "Reasoning: both methods are O(n) time, but the XOR fold uses O(1) space (one accumulator) while the hash set uses O(n); the set only wins if the 'twice' invariant doesn't hold.",
+    "Answer: both are O(n) time, but XOR-folding is O(1) space versus the hash set's O(n) — XOR wins on memory.",
+  ],
+  "lesson:count-set-bits:csb-choose-1": [
+    "Goal: count set bits of a sparse 64-bit integer (only a couple set) with the fewest iterations.",
+    "The wasteful method checks all 64 bit positions regardless of how few are actually set.",
+    "Key property: the number is sparse, so the count of set bits s is far smaller than the word width w.",
+    "Approach: use Kernighan's trick (n &= n - 1), which clears the lowest set bit each iteration.",
+    "Reasoning: Kernighan iterates once per set bit, so O(s) = 2 here, while checking every bit is O(w) = 64; the bit-by-bit scan would only be comparable when nearly all bits are set.",
+    "Answer: Kernighan does 2 iterations (O(s)); checking every bit does 64 (O(w)) — Kernighan is far better for sparse numbers.",
+  ],
+  "lesson:min-max-heaps:heap-choose-1": [
+    "Goal: repeatedly insert numbers and always fetch the current minimum, choosing a sorted list or a heap, with per-op costs.",
+    "The costly part of a sorted list is insertion: keeping it sorted shifts elements in O(n) each time.",
+    "Key property: inserts and extract-mins interleave heavily, so BOTH operations must stay cheap.",
+    "Approach: use a binary heap (e.g. heapq).",
+    "Reasoning: a heap gives O(log n) insert and extract-min with O(1) peek, balancing both operations; a sorted list offers O(1) min but O(n) insert, which loses when inserts are frequent.",
+    "Answer: a heap — insert and extract-min O(log n), peek O(1); the sorted list's O(n) insert loses when inserts and extractions interleave.",
+  ],
+  "lesson:heap-sift:sift-choose-1": [
+    "Goal: after moving the last element into the vacated root slot, restore the heap in O(log n) — sift up or down, and against which child.",
+    "The wrong move is sifting up: the root has no parent, so there is nowhere for it to rise.",
+    "Key property: the new root may be too large for a min-heap, so it must descend toward the smaller side to keep the heap order.",
+    "Approach: sift the root DOWN, comparing it against the smaller of its two in-range children.",
+    "Reasoning: swapping with the smaller child (indices 2i+1, 2i+2) preserves the min-heap property as the element sinks; comparing with the larger child or sifting up would violate it.",
+    "Answer: sift DOWN, comparing with the SMALLER of the two in-range children (2i+1, 2i+2) and swapping while larger — sifting up is wrong since the root has no parent.",
+  ],
+  "lesson:merge-sorted-data:merge-choose-1": [
+    "Goal: merge 1000 sorted files too large to fit in memory into one sorted stream — concatenate-and-sort or heap-based k-way merge.",
+    "The costly route is concatenate-and-sort: it needs all N items in memory and re-sorts data that is already sorted.",
+    "Key property: each file is already sorted, so the global next element is always one of the k current front elements.",
+    "Approach: run a heap-based k-way merge, keeping one front element per file in a min-heap.",
+    "Reasoning: the heap holds only k=1000 items (O(k) space) and emits output lazily in O(N log k), while concatenate-and-sort needs O(N) memory and O(N log N) time.",
+    "Answer: heap-based k-way merge — O(k) space and O(N log k) streaming, versus concatenate-and-sort's O(N) memory and O(N log N).",
+  ],
+  "lesson:tree-bfs:bfs-choose-1": [
+    "Goal: report the rightmost node value at each depth of a binary tree (the 'right side view'), choosing BFS or DFS.",
+    "The clumsy framing is a plain DFS with no notion of levels, which doesn't naturally group nodes by depth.",
+    "Key property: the problem is defined PER LEVEL, and level-order processing exposes each depth's nodes together.",
+    "Approach: run BFS level by level and take the last node of each level.",
+    "Reasoning: BFS processes one depth at a time, so the final node per level is the right-side view; a depth-tracking DFS that visits the right child first also works but BFS matches the per-level definition most directly.",
+    "Answer: BFS by levels — process each level and take its last node (a right-first depth-tracking DFS also works).",
+  ],
+  "lesson:tree-traversals:trav-choose-1": [
+    "Goal: match a traversal order to each task — (a) print a BST sorted, (b) serialize parent-before-children, (c) free every node safely.",
+    "The error is picking one traversal for all three; each task constrains the visit order differently.",
+    "Key property: inorder yields sorted BST values, preorder emits a node before its subtrees, and postorder finishes children before their parent.",
+    "Approach: assign inorder to (a), preorder to (b), postorder to (c).",
+    "Reasoning: a BST's inorder is ascending; serialization needs the parent recorded first (preorder) so it can be rebuilt; freeing must release children before the parent (postorder) so no reference is lost.",
+    "Answer: (a) inorder — sorted BST output; (b) preorder — node before children; (c) postorder — free children before the parent.",
+  ],
+  "lesson:bst-operations:bst-choose-1": [
+    "Goal: pick a structure needing ordered operations (range, floor/ceil) AND guaranteed fast lookup on changing data — plain BST, balanced BST, or hash map.",
+    "The costly risks are a plain BST degenerating to O(n) and a hash map having no ordering at all.",
+    "Key property: you need BOTH order-based queries and a worst-case guarantee under ongoing inserts and deletes.",
+    "Approach: use a self-balancing BST (AVL or red-black).",
+    "Reasoning: a balanced BST keeps height O(log n) for guaranteed O(log n) search/insert/delete plus ordered queries; a plain BST risks O(n) if unbalanced, and a hash map is expected O(1) but supports no order or range queries.",
+    "Answer: a balanced BST (AVL/red-black) — guaranteed O(log n) operations AND ordered queries, unlike a plain BST (risking O(n)) or a hash map (no order).",
+  ],
+  "lesson:lowest-common-ancestor:lca-choose-1": [
+    "Goal: find the LCA of two nodes in a plain binary tree with NO BST ordering, and give the complexity.",
+    "The missing shortcut is BST ordering: without it you cannot use value comparisons to prune a branch.",
+    "Key property: the LCA is the node where the two targets first lie in different subtrees (or that equals one target).",
+    "Approach: use a recursive DFS that returns a target when found and combines results from both subtrees.",
+    "Reasoning: a node is the LCA if p and q are found in its different subtrees, or if it is one of them; because nothing can be pruned, it costs O(n) time and O(h) recursion-stack space.",
+    "Answer: a recursive DFS returning a node when it equals p or q, or when p and q appear in different subtrees — O(n) time, O(h) stack, since no ordering allows pruning.",
+  ],
+  "lesson:tree-construction:build-choose-1": [
+    "Goal: build a BST from sorted data for O(log n) search, deciding between inserting one-by-one and building from the middle.",
+    "The costly misstep is inserting sorted values one by one, which produces a degenerate O(n)-height chain.",
+    "Key property: the data is already sorted, so the middle element is a perfectly balanced root for each range.",
+    "Approach: build from the middle via divide and conquer — pick the midpoint as root, recurse on each half.",
+    "Reasoning: choosing midpoints yields an O(log n)-height balanced tree directly, whereas sequential insertion of sorted keys defeats the purpose by making a linked-list-shaped tree.",
+    "Answer: build from the middle (divide and conquer) for a balanced O(log n)-height tree — one-by-one insertion of sorted values yields a degenerate O(n)-height tree.",
+  ],
+  "lesson:trie-insertion:trie-choose-1": [
+    "Goal: for exact-word membership only, decide between a hash set and a trie (both ~O(L)) and name what the trie uniquely enables.",
+    "The hidden tradeoff is that a trie carries more structural overhead than a set when all you need is exact lookup.",
+    "Key property: exact membership needs only the full key, but PREFIX queries need the shared-prefix structure a trie provides.",
+    "Approach: choose a hash set for pure exact membership; choose a trie when prefix queries are required.",
+    "Reasoning: for exact lookup both are ~O(L) and the set is simpler and lighter; the trie's edge is enumerating or counting words by prefix, which a hash set can't do efficiently.",
+    "Answer: for exact membership alone use a hash set (simpler, lower overhead); the trie's advantage is prefix queries a set can't serve efficiently.",
+  ],
+  "lesson:prefix-search:prefix-choose-1": [
+    "Goal: for autocomplete over a large dictionary, justify a trie over a hash set and give the cost of a prefix check vs listing 10 suggestions.",
+    "The hash set's limitation is that it keys whole words and can't walk forward from a prefix.",
+    "Key property: autocomplete is a PREFIX operation, and a trie stores words along shared-prefix paths.",
+    "Approach: use a trie, descending P characters to the prefix node and then walking its subtree for suggestions.",
+    "Reasoning: checking a prefix exists is O(P) to reach the node, and listing matches is O(P + S) to collect the subtree words; a hash set offers neither efficiently.",
+    "Answer: a trie supports prefix queries a hash set can't — a prefix check is O(P), and listing suggestions is O(P + S) (reach the node, then walk its subtree).",
+  ],
+  "lesson:word-search:ws-choose-1": [
+    "Goal: search a grid for MANY words at once, deciding between repeated single-word DFS and a trie-guided DFS.",
+    "The costly repetition is a separate DFS per word, re-exploring shared prefixes over and over at O(m·n·3^L) each.",
+    "Key property: many search words share common prefixes, so their grid exploration can be done once.",
+    "Approach: build a trie of all words and run one DFS over the grid guided by the trie.",
+    "Reasoning: the trie prunes to only paths that extend some word's prefix, exploring each shared prefix once (Word Search II), rather than paying the per-word cost repeatedly.",
+    "Answer: a trie of all words with one trie-guided DFS (Word Search II) — shared prefixes are explored once instead of O(m·n·3^L) per word.",
+  ],
+  "lesson:avl-rotations:avl-choose-1": [
+    "Goal: compare inserting 1,2,3,...,n into a plain BST versus an AVL tree — resulting heights and search complexities.",
+    "The costly case is the plain BST on sorted insertion: it never branches, forming a chain.",
+    "Key property: increasing-order insertion is exactly the worst case that unbalanced BSTs fall into, while AVL rebalances after each insert.",
+    "Approach: reason about the height each structure ends with and derive search cost from it.",
+    "Reasoning: the plain BST becomes a height-n chain giving O(n) search, whereas AVL rotations keep height O(log n) for O(log n) search — self-balancing is precisely what defeats the sorted-insert worst case.",
+    "Answer: plain BST → height-n chain → O(n) search; AVL → height O(log n) → O(log n) search, because rotations prevent the sorted-insert worst case.",
+  ],
+  "lesson:graph-representations:grep-choose-1": [
+    "Goal: on a small dense graph where you often ask 'is there an edge u–v?', choose an adjacency list or matrix, with edge-check costs.",
+    "The costly option is the adjacency list: answering 'edge u–v?' means scanning u's neighbor list.",
+    "Key property: the query is a direct edge-existence test, and the graph is small/dense so a V×V matrix is affordable.",
+    "Approach: store the graph as an adjacency matrix and test mat[u][v].",
+    "Reasoning: the matrix answers edge existence in O(1) and its O(V²) space is fine for a small dense graph; an adjacency list needs O(degree) per check and shines mainly for sparse graphs or neighbor iteration.",
+    "Answer: a matrix — O(1) edge lookup (mat[u][v]), affordable on a small dense graph, versus O(degree) for an adjacency list.",
+  ],
+  "lesson:adjacency-lists:adj-choose-1": [
+    "Goal: explain why a traversal visiting every neighbor of every vertex costs O(V + E), not O(V·d) written as V times average degree.",
+    "The confusion is treating per-vertex neighbor work as a fixed multiplier d on V, hiding that total neighbor work is bounded by edges.",
+    "Key property: the sum of all vertex degrees equals 2E (undirected) or E (directed), so all neighbor visits together total O(E).",
+    "Approach: count the O(V) to touch each vertex plus the O(E) summed over all neighbor lists.",
+    "Reasoning: V·(average degree) actually equals O(E), so it's the same quantity — but O(V + E) is the exact standard form that also accounts for touching every vertex even in a sparse graph.",
+    "Answer: because degrees sum to 2E, neighbor visits total O(E), and adding O(V) to touch each vertex gives O(V + E) — V·(avg degree) is the same quantity (= O(E)), but O(V + E) is the standard exact form.",
+  ],
+  "lesson:graph-bfs:gbfs-choose-1": [
+    "Goal: find the fewest number of edges on a path from A to B in an UNWEIGHTED graph, choosing BFS or DFS, with complexity.",
+    "The pitfall with DFS is that it dives along a branch, so its first path to B may be far from the fewest-edge one.",
+    "Key property: with equal edge weights, fewest edges equals shortest distance, and BFS visits vertices in increasing distance.",
+    "Approach: run BFS from A with a queue, stopping when B is dequeued.",
+    "Reasoning: BFS reaches B first via a minimum-edge path in O(V+E); DFS doesn't order visits by distance, so it can't guarantee fewest edges without extra bookkeeping.",
+    "Answer: BFS — it visits vertices in increasing distance, so the first arrival at B uses the fewest edges; O(V+E), unlike DFS.",
+  ],
+  "lesson:graph-dfs:gdfs-choose-1": [
+    "Goal: detect whether a graph contains a cycle, deciding which traversal is the natural fit and why.",
+    "The awkward option is BFS, whose level-by-level frontier doesn't directly expose a path revisiting itself.",
+    "Key property: a cycle is a path that returns to a vertex already on the current exploration path.",
+    "Approach: use DFS, tracking visited status (and the recursion stack for directed graphs).",
+    "Reasoning: DFS follows paths, so meeting an already-visited vertex that isn't the immediate parent (undirected) or is on the current recursion stack (directed) reveals a cycle, all in O(V+E).",
+    "Answer: DFS — following paths, a revisit that isn't the parent (undirected) or that's on the recursion stack (directed) reveals a cycle; O(V+E).",
+  ],
+  "lesson:connected-components:cc-choose-1": [
+    "Goal: report the component count after each edge is added one at a time — repeated traversal or union-find.",
+    "The costly approach is re-running a full traversal after every edge, at O(V+E) per query.",
+    "Key property: edges arrive incrementally, and adding one edge can only merge two components, never split any.",
+    "Approach: use union-find, uniting the endpoints of each new edge and tracking the component count.",
+    "Reasoning: each union is near O(α) (almost constant) and simply decrements the count on a successful merge, so a stream of edges stays near-linear; repeated traversals would redo O(V+E) work every time.",
+    "Answer: union-find — each edge union is near O(α) and handles incremental edges without re-traversing, far beating O(V+E) per query.",
+  ],
+  "lesson:graph-cycle-detection:cyc-choose-1": [
+    "Goal: detect a cycle in a DIRECTED graph and explain why the undirected 'visited and not the parent' rule fails there.",
+    "The costly misapplication is the undirected rule: in a digraph a vertex can be visited-but-finished, so meeting it is not a cycle.",
+    "Key property: a directed cycle corresponds to a BACK EDGE — an edge to a vertex still on the current recursion path (in progress).",
+    "Approach: DFS while tracking an in-progress set (gray) distinct from finished (black); a neighbor in the in-progress set means a cycle.",
+    "Reasoning: finished vertices lie off the current path, so revisiting them is harmless; only a neighbor currently on the recursion stack closes a directed cycle, which the parent-based rule can't capture.",
+    "Answer: a visited directed vertex may be finished (off the path), so the parent rule fails — detect a BACK EDGE instead: a neighbor currently on the recursion stack.",
+  ],
+  "lesson:multi-source-bfs:msbfs-choose-1": [
+    "Goal: give every empty grid cell its distance to the NEAREST of several gates — separate BFS per gate or multi-source BFS, with costs.",
+    "The costly approach is a separate BFS from each gate, repeating the whole sweep k times.",
+    "Key property: all gates are sources at distance 0, and a single frontier can expand from all of them simultaneously.",
+    "Approach: seed every gate into the queue at distance 0 and run one BFS.",
+    "Reasoning: one combined wavefront assigns each cell its nearest-gate distance in O(V+E); running BFS per gate costs O(k·(V+E)), far slower for many gates.",
+    "Answer: multi-source BFS — seed all gates at distance 0 and run one BFS, O(V+E), versus O(k·(V+E)) for per-gate BFS.",
+  ],
+  "lesson:shortest-paths-unweighted:spu-choose-1": [
+    "Goal: find the cheapest route in a road network where roads have DIFFERENT lengths — BFS or Dijkstra, and why.",
+    "The costly mistake is BFS: it counts edges, so on weighted roads 'fewest roads' is not 'lowest total length'.",
+    "Key property: edges carry different (non-negative) weights, so cost accumulates by weight, not by hop count.",
+    "Approach: use Dijkstra's algorithm with a min-heap keyed by cumulative distance.",
+    "Reasoning: Dijkstra always finalizes the closest-by-cost frontier vertex, giving correct weighted shortest paths in O((V+E) log V); BFS is correct only when all weights are equal.",
+    "Answer: Dijkstra — with differing weights, fewest edges isn't lowest cost; BFS only works unweighted, while Dijkstra (non-negative weights) runs in O((V+E) log V).",
+  ],
+  "lesson:floyd-warshall:fw-choose-1": [
+    "Goal: get shortest distances between ALL pairs in a small dense graph (V ≈ 200, E ≈ V²) — Floyd–Warshall or Dijkstra-from-every-source.",
+    "The costlier option on a dense graph is running Dijkstra from every source, which carries a log factor across all V runs.",
+    "Key property: you need all-pairs distances on a small, dense graph where a simple O(V³) triple loop is entirely affordable.",
+    "Approach: use Floyd–Warshall's three nested loops over intermediate vertices.",
+    "Reasoning: Floyd–Warshall is O(V³) with tiny code, while Dijkstra from every source is ~O(V³ log V) on dense graphs; the all-source Dijkstra approach wins mainly on sparse graphs.",
+    "Answer: Floyd–Warshall — O(V³) and simple, avoiding the log factor of ~O(V³ log V) all-source Dijkstra on a small dense graph.",
+  ],
+  "lesson:prim:prim-choose-1": [
+    "Goal: explain how Prim differs from Dijkstra (both use a min-heap) and what Prim produces.",
+    "The confusion to avoid is assuming identical heap structure means identical output — the heap KEY differs.",
+    "Key property: the objective differs — Prim grows a tree by cheapest connecting edge, Dijkstra grows shortest paths by cumulative distance.",
+    "Approach: key Prim's heap by the weight of the edge crossing into the tree, not by distance from a source.",
+    "Reasoning: because Prim keys on crossing-edge weight it builds a Minimum Spanning Tree, whereas Dijkstra keys on accumulated distance to build shortest paths — same machinery, different goal.",
+    "Answer: Prim keys the heap by crossing-edge weight and produces a Minimum Spanning Tree; Dijkstra keys by cumulative distance and produces shortest paths — same structure, different objective.",
+  ],
+  "lesson:kruskal:kru-choose-1": [
+    "Goal: build an MST of a SPARSE graph given as an edge list — Prim or Kruskal — and name what dominates Kruskal's cost.",
+    "The friction with Prim here is that it prefers adjacency structure, while the input is a raw edge list.",
+    "Key property: the graph is sparse and already presented as edges, which suits an edge-sorting greedy.",
+    "Approach: use Kruskal — sort all edges by weight and add each if its endpoints are in different components (union-find).",
+    "Reasoning: sorting the edges is O(E log E) and union-find makes cycle checks near-linear, ideal for sparse/edge-list input; the sort is the dominant term.",
+    "Answer: Kruskal — it sorts the edge list (O(E log E)) and uses union-find for near-linear cycle checks, with the sort dominating its cost.",
+  ],
+  "lesson:linked-list-cycle-detection:llcd-choose-1": [
+    "Goal: detect a cycle in a list of possibly millions of nodes under tight memory — Floyd's two pointers or a visited set.",
+    "The costly option is the visited set, which stores a reference per node for O(n) memory.",
+    "Key property: a cycle makes a fast pointer eventually lap a slow one, so detection needs no stored history.",
+    "Approach: use Floyd's slow/fast pointers moving at one and two steps.",
+    "Reasoning: Floyd's method is O(n) time like the set but O(1) space, fitting the memory limit; the visited set's O(n) space may be too much at this scale.",
+    "Answer: Floyd's two pointers — O(n) time like the set but O(1) space, so it fits tight memory where the O(n)-space visited set may not.",
+  ],
+  "lesson:linked-list-middle:llmid-choose-1": [
+    "Goal: report the middle node when nodes arrive from a stream you can read only ONCE.",
+    "The costly approach is count-then-walk, which requires a second pass the one-read stream won't permit.",
+    "Key property: the data can be consumed only once, so the method must finish in a single pass without knowing the length upfront.",
+    "Approach: use slow/fast pointers — advance slow one step and fast two steps.",
+    "Reasoning: when fast reaches the end, slow sits at the middle, all in one pass; counting first then walking needs to revisit the data, impossible on a one-read stream.",
+    "Answer: slow/fast — it finds the middle in a single pass without knowing the length, unlike count-then-walk which needs a second pass.",
+  ],
+  "lesson:linked-list-variants:llv-choose-1": [
+    "Goal: match a list variant to each need — (a) browser history with back/forward, (b) fixed-size ring buffer overwriting oldest, (c) memory-tight forward-only queue.",
+    "The error is one variant for all; each need stresses a different capability (bidirectional moves, wraparound, or minimal memory).",
+    "Key property: back/forward needs two-way links, a ring buffer needs no terminal end, and a forward-only queue needs only forward links.",
+    "Approach: assign doubly to (a), circular to (b), singly to (c).",
+    "Reasoning: doubly lets you move both directions and delete a known node in O(1); circular cycles through fixed slots with no None end; singly uses the least memory for a forward-only traversal.",
+    "Answer: (a) doubly (both directions, O(1) delete); (b) circular (cycle slots, no None end); (c) singly (least memory, forward-only suffices).",
+  ],
+  "lesson:linked-list-deques:lldq-choose-1": [
+    "Goal: keep a fixed-size buffer of the last 100 sensor readings, automatically dropping the oldest as new ones arrive.",
+    "The costly hand-rolled approach is manually removing the front whenever a list grows past 100, which is error-prone and may be O(n).",
+    "Key property: you need a bounded FIFO where appending past capacity evicts from the opposite end automatically.",
+    "Approach: use collections.deque with a maxlen of 100.",
+    "Reasoning: deque(maxlen=100) discards from the opposite end on each over-capacity append in O(1), giving a free ring buffer with no manual bookkeeping.",
+    "Answer: deque(maxlen=100) — appending past capacity discards from the opposite end, an automatic O(1) fixed-size ring buffer.",
+  ],
+  "lesson:dp-recursive-calls:dprc-choose-1": [
+    "Goal: speed up a recursion that recomputes identical subproblems many times — pick the right technique.",
+    "The costly symptom is exponential blowup from re-solving the same subproblem again and again.",
+    "Key property: the recursion has overlapping subproblems — the same arguments recur across the call tree.",
+    "Approach: cache subproblem answers via memoization, or build them bottom-up with tabulation.",
+    "Reasoning: caching ensures each distinct subproblem is computed once and reused in O(1), collapsing exponential repeated work to linear in the number of subproblems.",
+    "Answer: memoization (or bottom-up tabulation) — cache each subproblem's answer so it's computed once, turning exponential repeated work into linear.",
+  ],
+  "lesson:dp-combinations:dpcomb-choose-1": [
+    "Goal: classify seating 3 people in a row (order matters) versus picking a 3-person team (order irrelevant) as permutations or combinations.",
+    "The error is treating both as the same count; whether order matters changes the formula entirely.",
+    "Key property: arrangements where position matters are permutations; selections where only membership matters are combinations.",
+    "Approach: label the ordered task permutations and the unordered task combinations.",
+    "Reasoning: seating fixes positions, so swapping two people gives a new arrangement (n!/(n-k)!); a team is a set, so reorderings are the same team (C(n,k)).",
+    "Answer: seating in a row = permutations (order matters, n!/(n-k)!); picking a team = combinations (order irrelevant, C(n,k)).",
+  ],
+  "lesson:dp-combinations:dpcomb-combination-sum-1": [
+    "Goal: adapt the choose/explore/un-choose template to Combination Sum — all combos of candidates=[2,3,6,7] summing to target=7 with reuse allowed.",
+    "The costly bug is recursing from i+1 (which forbids reuse and misses [2,2,3]) or driving by a fixed size k instead of a remaining target.",
+    "Key property: reuse requires recursing from the SAME index, and the goal is a sum target, so you prune as soon as the remaining target goes negative.",
+    "Approach: recurse with bt(i, ...) to allow reuse, subtract the chosen value from a remaining target, record a path when remaining == 0, and prune when remaining < 0.",
+    "Reasoning: keeping the start index non-decreasing avoids duplicate orderings like [2,2,3] vs [3,2,2]; this relies on candidates being strictly POSITIVE (so each pick decreases remaining, guaranteeing termination and valid overshoot pruning) and DISTINCT (so each multiset is emitted once).",
+    "Answer: recurse with the SAME index (reuse) and drive by a remaining target (record at 0, prune below 0), giving [[2,2,3],[7]] — valid only because candidates are strictly positive and distinct.",
+  ],
+  "lesson:dp-1d-2d:dp12-choose-1": [
+    "Goal: decide whether a subproblem 'best using the first i items with j capacity left' is 1D or 2D DP.",
+    "The error is collapsing it to 1D and losing track of one of the two varying quantities.",
+    "Key property: the state varies along TWO independent axes — item index i and remaining capacity j.",
+    "Approach: index the DP table by both, as dp[i][j].",
+    "Reasoning: because i and j vary independently, a single dimension can't capture every reachable state; this two-axis state is exactly the 0/1 knapsack shape.",
+    "Answer: 2D — the state has two independent quantities (item index i and remaining capacity j), so the table is dp[i][j], the 0/1 knapsack shape.",
+  ],
+  "lesson:dp-knapsack:dpks-choose-1": [
+    "Goal: maximize value under a weight limit when items can be split into ANY fraction — DP knapsack or greedy.",
+    "The costly over-engineering is a DP knapsack table, which exists to handle the all-or-nothing item interaction.",
+    "Key property: fractional splitting removes the 0/1 coupling, so each item can be taken partially by its value density.",
+    "Approach: greedily take items in decreasing value-per-weight order, splitting the last one to fill the limit.",
+    "Reasoning: with fractions the exchange argument proves greedy optimal in O(n log n); DP is only needed for the 0/1 variant where items can't be split.",
+    "Answer: greedy by value-per-weight (fractional knapsack) — optimal in O(n log n); DP is unnecessary because fractions remove the 0/1 interaction.",
+  ],
+  "lesson:dp-subsequences:dpsub-choose-1": [
+    "Goal: distinguish (a) 'does s appear in t keeping order but allowing gaps?' from (b) 'does s appear in t as a contiguous block?' — subsequence or substring.",
+    "The error is conflating the two; allowing gaps versus requiring contiguity are different problems with different algorithms.",
+    "Key property: (a) only needs order preserved (gaps allowed), while (b) needs the characters consecutive.",
+    "Approach: solve (a) with a greedy two-pointer scan; solve (b) with a contiguous match (`s in t` or KMP).",
+    "Reasoning: a subsequence check advances through t matching s's characters in order in O(|t|); a substring search must find an unbroken block, a fundamentally different scan.",
+    "Answer: (a) subsequence — greedy two-pointer scan, O(|t|); (b) substring — contiguous match (`s in t` or KMP), a different problem.",
+  ],
+  "lesson:dp-state-transitions:dpst-choose-1": [
+    "Goal: for a long price series, choose between comparing all (buy, sell) pairs in O(n²) and a rolling-state O(n) scan, and name the state.",
+    "The costly baseline is the O(n²) double loop over all buy/sell pairs.",
+    "Key property: the best sell at day i only depends on the cheapest price seen before it, so a small running summary suffices.",
+    "Approach: scan once, maintaining a rolling state and updating the answer each day.",
+    "Reasoning: tracking (cheapest price so far, best profit so far) lets each day update both in O(1), replacing the quadratic pairwise comparison with one linear pass.",
+    "Answer: the O(n) rolling-state scan — minimal state (cheapest price so far, best profit so far), updated per day in one pass.",
+  ],
+  "lesson:dp-climbing-stairs:dpcs-choose-1": [
+    "Goal: count ways to reach step n for very large n — naive recursion, memoized recursion, or rolling-variable bottom-up.",
+    "The costly options are naive recursion (exponential) and even memoized recursion (O(n) cache and recursion-depth risk) for very large n.",
+    "Key property: each answer depends only on the previous two, so you never need the full table or the call stack.",
+    "Approach: iterate bottom-up keeping just two rolling variables.",
+    "Reasoning: rolling variables give O(n) time and O(1) space with no recursion-limit risk; memoization is O(n) time but spends O(n) cache/stack, and naive recursion is exponential.",
+    "Answer: rolling-variable bottom-up — O(n) time, O(1) space, no recursion limit; naive recursion is exponential and memoized recursion costs O(n) cache and stack.",
+  ],
+  "lesson:dp-house-robber:dphr-choose-1": [
+    "Goal: for houses [2,7,9,3,1] with no two adjacent robbed, choose between a naive greedy and DP, and give each result.",
+    "The costly trap is greedy: grabbing the richest house first can block a better combination.",
+    "Key property: the optimal choice at each house depends on the best of the two prior subproblems, not on a locally richest pick.",
+    "Approach: use DP where dp[i] = max(dp[i-1], dp[i-2] + house[i]).",
+    "Reasoning: DP yields 12 (rob 2, 9, 1), while a greedy grabbing 9 first ends at 11; the adjacency constraint makes locally greedy choices unreliable, so DP is required.",
+    "Answer: DP is correct — 12 (rob 2, 9, 1); the naive greedy grabbing 9 first ends at 11, so greedy is unreliable here.",
+  ],
+  "lesson:dp-lcs:dplcs-choose-1": [
+    "Goal: find the longest run of characters common to two strings that is CONTIGUOUS in both — is that LCS or something else?",
+    "The error is applying LCS, which permits gaps and so overcounts for a contiguity requirement.",
+    "Key property: 'contiguous in both' forbids gaps, so a mismatch must break the run entirely.",
+    "Approach: use the longest common SUBSTRING DP, where dp[i][j] extends on a match and resets to 0 on a mismatch.",
+    "Reasoning: resetting on mismatch enforces contiguity, unlike LCS which carries the best-with-gaps value across mismatches; the answer is the max cell, not dp[m][n].",
+    "Answer: not LCS — it's the longest common SUBSTRING (contiguous), a DP that resets a cell to 0 on mismatch, whereas LCS allows gaps.",
+  ],
+  "lesson:dp-divide-and-conquer:dpdc-choose-1": [
+    "Goal: compute maximum subarray sum on a huge array under tight time limits — divide-and-conquer O(n log n) or Kadane's O(n).",
+    "The costlier option is divide-and-conquer: its O(n log n) recursion is slower and uses stack space.",
+    "Key property: the best subarray ending at each index extends from a running sum, so one left-to-right pass suffices.",
+    "Approach: use Kadane's algorithm, tracking the best sum ending here and the best overall.",
+    "Reasoning: Kadane's is O(n) time and O(1) space, strictly faster here; divide-and-conquer is valuable for teaching the paradigm but not the fastest option.",
+    "Answer: Kadane's O(n) — asymptotically faster and O(1) space; divide-and-conquer's O(n log n) is for teaching the paradigm, not speed here.",
+  ],
+  "lesson:fenwick-tree:fen-choose-1": [
+    "Goal: serve many range-SUM queries on an array whose entries are updated frequently — static prefix-sum array or Fenwick tree.",
+    "The costly choice is a static prefix-sum array: each update invalidates it, forcing an O(n) rebuild.",
+    "Key property: updates and range-sum queries interleave, so BOTH must be fast — a static precompute can't absorb frequent writes.",
+    "Approach: use a Fenwick (binary indexed) tree.",
+    "Reasoning: a Fenwick tree does both point update and prefix/range sum in O(log n); the prefix array answers queries in O(1) but needs O(n) per update, which is too slow when updates are frequent.",
+    "Answer: a Fenwick tree — O(log n) for both update and query, versus a prefix array's O(1) query but O(n) rebuild per update.",
+  ],
+  "lesson:segment-tree:seg-choose-1": [
+    "Goal: serve range-MINIMUM queries with point updates — Fenwick tree or segment tree.",
+    "The costly misfit is a Fenwick tree: minimum can't be undone, so prefix-difference tricks don't recover an arbitrary range min.",
+    "Key property: minimum is non-invertible (there is no subtraction for min), unlike sums where prefix differences work.",
+    "Approach: use a segment tree that stores each segment's minimum and combines children on query.",
+    "Reasoning: the segment tree answers arbitrary range-min in O(log n) by merging O(log n) segment minima, which a Fenwick tree can't do because min lacks an inverse.",
+    "Answer: a segment tree — minimum is non-invertible so a Fenwick tree can't do range min; the segment tree stores per-segment minima and answers in O(log n).",
+  ],
+  "lesson:kmp:kmp-choose-1": [
+    "Goal: find all occurrences of a pattern in a huge text with a worst-case time guarantee against adversarial inputs — naive scanning or KMP.",
+    "The costly risk with naive scanning is backtracking: on inputs like 'aaaa...a' with pattern 'aa...ab' it degrades to O(n·m).",
+    "Key property: the pattern's own structure (its longest proper prefix-suffix overlaps) tells you how far to shift without rescanning the text.",
+    "Approach: use KMP, precomputing the failure/prefix function and advancing through the text without ever moving the text pointer backward.",
+    "Reasoning: KMP guarantees O(n + m) regardless of input because it never rescans text, whereas naive scanning's worst case is exploitable by adversarial inputs.",
+    "Answer: KMP — guaranteed O(n + m) even on adversarial inputs where naive scanning degrades to O(n·m), because KMP never rescans the text.",
+  ],
+});

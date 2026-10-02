@@ -193,10 +193,10 @@ export const knapsackPattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "7749c49d19d34a6b",
+    contentHash: "77577d726340ad0c",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

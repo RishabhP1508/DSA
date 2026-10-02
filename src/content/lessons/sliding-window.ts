@@ -173,10 +173,10 @@ This is the **fixed-size** window (the width k never changes). A later variant i
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "74bfa7e672eeddf1",
+    contentHash: "575dc8d135ac5d40",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

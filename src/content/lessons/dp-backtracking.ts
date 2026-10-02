@@ -215,10 +215,10 @@ Backtracking's structure is always the same three beats — **choose, explore, u
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "f45dfe337744e8d1",
+    contentHash: "50269e6e44a874d4",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

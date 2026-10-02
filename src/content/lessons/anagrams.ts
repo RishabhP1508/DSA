@@ -142,10 +142,10 @@ So both are correct, but they sit at different complexities: **O(n log n)** (sor
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "b12a78a25235425e",
+    contentHash: "2a2a0feb9b820920",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

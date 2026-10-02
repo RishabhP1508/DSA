@@ -134,11 +134,11 @@ This example sharpens two DP habits. First, **derive the transition from the con
     {
       id: "dphr-complete-1",
       kind: "complete-code",
-      prompt: "Complete the take-or-skip rolling transition.",
+      prompt: "Complete `rob(nums)`: maximum sum with no two adjacent elements taken.",
       starterCode:
-        "prev, curr = 0, 0\nfor x in nums:\n    # TODO: roll forward with max(skip, rob)\n    pass\nreturn curr",
+        "def rob(nums):\n    prev, curr = 0, 0\n    for x in nums:\n        # TODO: roll forward with max(skip, rob)\n        pass\n    return curr",
       expected:
-        "prev, curr = 0, 0\nfor x in nums:\n    prev, curr = curr, max(curr, prev + x)\nreturn curr",
+        "def rob(nums):\n    prev, curr = 0, 0\n    for x in nums:\n        prev, curr = curr, max(curr, prev + x)\n    return curr",
       hints: [
         "Skip keeps curr; rob is prev + x.",
         "Take the max of the two; prev becomes the old curr.",
@@ -200,10 +200,10 @@ This example sharpens two DP habits. First, **derive the transition from the con
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "418441b9c60bf081",
+    contentHash: "e08e3c02da7c09ad",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

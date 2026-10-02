@@ -151,10 +151,10 @@ Reporting a bound **without saying which case** is ambiguous, so always state it
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "3071b09105a0b4fe",
+    contentHash: "1f31f7d42bd2adc4",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 1,
   },
 };

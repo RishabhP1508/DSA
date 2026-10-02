@@ -172,10 +172,10 @@ DFS visits every node exactly once, so it is **O(n)** time. Its space is the **r
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "4947b5aa1f04029a",
+    contentHash: "7b83cf3fe0411b5d",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 5,
   },
 };

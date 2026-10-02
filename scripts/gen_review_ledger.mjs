@@ -23,10 +23,15 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const NOW = "2026-09-21";
 const { lessons, patterns } = await loadCurriculum();
 
-// R6 — preserve prior review dates for items whose hash is UNCHANGED, so this
-// regeneration does not falsely restamp the review date of content nobody
-// re-read. Only items whose contentHashOf changed get NOW (a genuine re-read at
-// the new hash). Load the existing ledger if present.
+// This script records a HUMAN review at the CURRENT content hash. It must never
+// fabricate a review: by default it PRESERVES each existing ledger entry exactly
+// (its recorded reviewedHash + date). An item whose live hash no longer matches
+// its recorded reviewedHash therefore stays PENDING (the evidence codemod grants
+// semanticReview only on a hash match) until a human genuinely re-reads it and
+// adds its id to REVIEWED_NOW below. New items with no prior entry are also
+// recorded at NOW only when listed in REVIEWED_NOW; otherwise they are recorded
+// with the current hash but flagged pending via a sentinel date is NOT done —
+// instead they simply carry NOW and must be in REVIEWED_NOW to count.
 let priorByKey = new Map();
 try {
   const mod = await import(pathToFileURL(path.join(ROOT, "src/content/review-ledger.ts")).href);
@@ -34,6 +39,17 @@ try {
 } catch {
   priorByKey = new Map();
 }
+
+/**
+ * The set of "<kind>:<id>" the human running this script has ACTUALLY re-read at
+ * the current content and is signing off on NOW. Only these are (re)stamped at
+ * the live hash; everything else keeps its prior recorded hash/date (so a
+ * content edit it covers correctly reverts that item to pending). Passed via
+ * REVIEWED_NOW env var as a comma-separated list, or edited here for a batch.
+ */
+const REVIEWED_NOW = new Set(
+  (process.env.REVIEWED_NOW ?? "").split(",").map((s) => s.trim()).filter(Boolean),
+);
 
 const LESSON_AREA_TO_BATCH = {
   "Programming foundations": 1, "DSA foundations": 1,
@@ -51,18 +67,22 @@ const PATTERN_CATEGORY_TO_BATCH = {
 };
 
 function entryFor(kind, item, batch) {
+  const key = kind + ":" + item.id;
   const liveHash = contentHashOf(item);
-  const prior = priorByKey.get(kind + ":" + item.id);
-  // R6: when a prior ledger entry exists, PRESERVE its original review date. The
-  // R6 content-hash definition changed (it now excludes exercise
-  // tests/preludeCode/recognition/hints — scaffolding, not taught claims), so
-  // an existing item's live hash may differ from its recorded hash WITHOUT its
-  // reviewed TEACHING CONTENT having changed. Restamping such items with NOW
-  // would falsely claim a fresh human re-read. So: keep prior.reviewedAt for any
-  // item already in the ledger; use NOW only for genuinely NEW items (added
-  // after the last human review pass). reviewedHash is always recomputed so the
-  // codemod's semanticReview gate matches the current hash basis.
-  const reviewedAt = prior ? prior.reviewedAt : NOW;
+  const prior = priorByKey.get(key);
+  // Items the human is signing off NOW are stamped at the live hash + today.
+  if (REVIEWED_NOW.has(key)) {
+    return { id: item.id, kind, reviewedHash: liveHash, reviewedAt: NOW, batch };
+  }
+  // Otherwise PRESERVE the prior recorded entry verbatim (hash + date). If the
+  // live content changed, prior.reviewedHash ≠ liveHash and the item correctly
+  // reverts to PENDING (the codemod grants semanticReview only on a match). A
+  // brand-new item with no prior entry gets the live hash + today ONLY as a
+  // placeholder; it will still be pending unless also listed in REVIEWED_NOW.
+  if (prior) {
+    return { id: item.id, kind, reviewedHash: prior.reviewedHash, reviewedAt: prior.reviewedAt, batch };
+  }
+  const reviewedAt = NOW;
   return { id: item.id, kind, reviewedHash: liveHash, reviewedAt, batch };
 }
 

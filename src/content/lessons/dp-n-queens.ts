@@ -157,11 +157,11 @@ Those diagonal keys are the clever bit worth remembering: encoding a constraint 
     {
       id: "dpnq-complete-1",
       kind: "complete-code",
-      prompt: "Complete the choose/explore/un-choose block for placing a queen.",
+      prompt: "Complete `count_n_queens(n)`: number of ways to place n non-attacking queens. Fill the choose / explore / un-choose block.",
       starterCode:
-        "if col in cols or (row - col) in diag1 or (row + col) in diag2:\n    continue\n# TODO: choose, explore next row, un-choose\n",
+        "def count_n_queens(n):\n    cols = set(); diag1 = set(); diag2 = set()\n    count = 0\n    def bt(row):\n        nonlocal count\n        if row == n:\n            count += 1\n            return\n        for col in range(n):\n            if col in cols or (row - col) in diag1 or (row + col) in diag2:\n                continue\n            # TODO: choose, explore next row, un-choose\n            pass\n    bt(0)\n    return count",
       expected:
-        "if col in cols or (row - col) in diag1 or (row + col) in diag2:\n    continue\ncols.add(col); diag1.add(row - col); diag2.add(row + col)\nbt(row + 1)\ncols.remove(col); diag1.remove(row - col); diag2.remove(row + col)",
+        "def count_n_queens(n):\n    cols = set(); diag1 = set(); diag2 = set()\n    count = 0\n    def bt(row):\n        nonlocal count\n        if row == n:\n            count += 1\n            return\n        for col in range(n):\n            if col in cols or (row - col) in diag1 or (row + col) in diag2:\n                continue\n            cols.add(col); diag1.add(row - col); diag2.add(row + col)\n            bt(row + 1)\n            cols.remove(col); diag1.remove(row - col); diag2.remove(row + col)\n    bt(0)\n    return count",
       hints: [
         "Add the column and both diagonal keys.",
         "Recurse to the next row.",
@@ -226,10 +226,10 @@ Those diagonal keys are the clever bit worth remembering: encoding a constraint 
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "e4110d6cb8a37817",
+    contentHash: "6f170b6a4323295a",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

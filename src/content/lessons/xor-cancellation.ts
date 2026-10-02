@@ -148,10 +148,10 @@ XOR cancellation also solves "find the missing number" (XOR the indices with the
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "a9b1f265718677d1",
+    contentHash: "6cb4cf5a9efb2b2e",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

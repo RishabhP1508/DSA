@@ -157,10 +157,10 @@ When the data is **sorted**, binary search does far better (O(log n)); when you 
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "e5deba3966b36eae",
+    contentHash: "90eb44786059d473",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

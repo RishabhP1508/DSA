@@ -256,10 +256,10 @@ The loop condition \`prev.next is not None and prev.next.next is not None\` chec
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "01743459a398036c",
+    contentHash: "98cb7b06e6f38ed1",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

@@ -149,10 +149,10 @@ The trick each time is that the mask \`1 << i\` isolates exactly bit \`i\`, and 
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "26f65c64c99c9b43",
+    contentHash: "cc6337187221df19",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

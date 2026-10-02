@@ -142,11 +142,11 @@ export const greedyIntervalSchedulingPattern: PatternDefinition = {
       id: "pat-gis-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This selects too few intervals because it sorts by the wrong key. Fix it.",
+        "`max_non_overlapping(intervals)` returns the most mutually non-overlapping intervals (each is [start, end]). This sorts by the wrong key and selects too few. Fix the sort key.",
       starterCode:
-        "intervals.sort(key=lambda x: x[0])\ncount = 0\nlast_end = float('-inf')\nfor start, end in intervals:\n    if start >= last_end:\n        count += 1\n        last_end = end\nreturn count",
+        "def max_non_overlapping(intervals):\n    intervals = sorted(intervals, key=lambda x: x[0])\n    count = 0\n    last_end = float('-inf')\n    for start, end in intervals:\n        if start >= last_end:\n            count += 1\n            last_end = end\n    return count",
       expected:
-        "intervals.sort(key=lambda x: x[1])\ncount = 0\nlast_end = float('-inf')\nfor start, end in intervals:\n    if start >= last_end:\n        count += 1\n        last_end = end\nreturn count",
+        "def max_non_overlapping(intervals):\n    intervals = sorted(intervals, key=lambda x: x[1])\n    count = 0\n    last_end = float('-inf')\n    for start, end in intervals:\n        if start >= last_end:\n            count += 1\n            last_end = end\n    return count",
       hints: [
         "Sorting by start can grab a long interval that blocks many.",
         "The optimal greedy key is earliest FINISH.",
@@ -180,10 +180,10 @@ export const greedyIntervalSchedulingPattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "ce6a9d1806261ecb",
+    contentHash: "02250a7c128d96c5",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

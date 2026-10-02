@@ -168,11 +168,11 @@ export const binarySearchOnAnswerPattern: PatternDefinition = {
       id: "pat-bsa-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This binary-search-on-answer can loop forever or skip the boundary. Fix the update when the candidate is feasible.",
+        "`least_capacity(weights, days)` finds the smallest ship capacity to ship all weights within `days` (order preserved). This can skip the boundary or loop. Fix the feasible-case update.",
       starterCode:
-        "while lo < hi:\n    mid = (lo + hi) // 2\n    if can_ship(weights, mid, days):\n        hi = mid - 1\n    else:\n        lo = mid + 1\nreturn lo",
+        "def least_capacity(weights, days):\n    def can_ship(cap):\n        d, cur = 1, 0\n        for w in weights:\n            if w > cap:\n                return False\n            if cur + w > cap:\n                d += 1; cur = 0\n            cur += w\n        return d <= days\n    lo, hi = max(weights), sum(weights)\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if can_ship(mid):\n            hi = mid - 1\n        else:\n            lo = mid + 1\n    return lo",
       expected:
-        "while lo < hi:\n    mid = (lo + hi) // 2\n    if can_ship(weights, mid, days):\n        hi = mid\n    else:\n        lo = mid + 1\nreturn lo",
+        "def least_capacity(weights, days):\n    def can_ship(cap):\n        d, cur = 1, 0\n        for w in weights:\n            if w > cap:\n                return False\n            if cur + w > cap:\n                d += 1; cur = 0\n            cur += w\n        return d <= days\n    lo, hi = max(weights), sum(weights)\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if can_ship(mid):\n            hi = mid\n        else:\n            lo = mid + 1\n    return lo",
       hints: [
         "mid itself may be the smallest feasible answer.",
         "Setting hi = mid - 1 can skip past it.",
@@ -206,10 +206,10 @@ export const binarySearchOnAnswerPattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "45469c50d2ddd812",
+    contentHash: "f01b98dba4a4e778",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

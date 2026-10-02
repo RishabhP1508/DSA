@@ -144,10 +144,10 @@ This "one pass building a map" shape is everywhere: it turns "how many / does it
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "b5e9d6c9b83f14e6",
+    contentHash: "eff1d292f0dbb204",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

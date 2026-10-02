@@ -148,10 +148,10 @@ This is the archetype of the broader **"caching seen values"** pattern (next les
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "6aee44733fc5647b",
+    contentHash: "f3b2c8d3834d89d1",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

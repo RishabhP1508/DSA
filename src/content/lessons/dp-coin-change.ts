@@ -143,11 +143,11 @@ Note the **unbounded** flavor: because coins can repeat, the transition freely r
     {
       id: "dpcc-complete-1",
       kind: "complete-code",
-      prompt: "Complete the transition that tries each coin as the last coin.",
+      prompt: "Complete `coin_change(coins, amount)`: fewest coins to make `amount`, or -1 if impossible.",
       starterCode:
-        "for a in range(1, amount + 1):\n    for c in coins:\n        # TODO: if c fits and improves dp[a], update it\n        pass\nreturn dp[amount] if dp[amount] != INF else -1",
+        "def coin_change(coins, amount):\n    INF = float('inf')\n    dp = [0] + [INF] * amount\n    for a in range(1, amount + 1):\n        for c in coins:\n            # TODO: if c fits and improves dp[a], update it\n            pass\n    return dp[amount] if dp[amount] != INF else -1",
       expected:
-        "for a in range(1, amount + 1):\n    for c in coins:\n        if c <= a and dp[a - c] + 1 < dp[a]:\n            dp[a] = dp[a - c] + 1\nreturn dp[amount] if dp[amount] != INF else -1",
+        "def coin_change(coins, amount):\n    INF = float('inf')\n    dp = [0] + [INF] * amount\n    for a in range(1, amount + 1):\n        for c in coins:\n            if c <= a and dp[a - c] + 1 < dp[a]:\n                dp[a] = dp[a - c] + 1\n    return dp[amount] if dp[amount] != INF else -1",
       hints: [
         "Only use a coin that fits (c <= a).",
         "Using coin c costs 1 plus dp[a - c].",
@@ -209,10 +209,10 @@ Note the **unbounded** flavor: because coins can repeat, the transition freely r
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "6a4b7dc2fc0c141a",
+    contentHash: "ba0a9a8a07e05ace",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

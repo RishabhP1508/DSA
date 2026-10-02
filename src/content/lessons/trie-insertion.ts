@@ -193,10 +193,10 @@ Each operation touches one node per character, so insert and search are **O(L)**
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "6b038b720dd891ab",
+    contentHash: "57beb1db6f024bec",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 5,
   },
 };

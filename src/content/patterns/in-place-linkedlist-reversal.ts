@@ -192,11 +192,11 @@ export const inPlaceLinkedListReversalPattern: PatternDefinition = {
       id: "pat-iplr-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This full-list reversal returns the wrong head. Fix the return value.",
+        "`reverse(head)` reverses a linked list in place and returns the new head. This returns the wrong node. Fix the return.",
       starterCode:
-        "prev = None\ncurr = head\nwhile curr:\n    nxt = curr.next\n    curr.next = prev\n    prev = curr\n    curr = nxt\nreturn head",
+        "def reverse(head):\n    prev = None\n    curr = head\n    while curr:\n        nxt = curr.next\n        curr.next = prev\n        prev = curr\n        curr = nxt\n    return head",
       expected:
-        "prev = None\ncurr = head\nwhile curr:\n    nxt = curr.next\n    curr.next = prev\n    prev = curr\n    curr = nxt\nreturn prev",
+        "def reverse(head):\n    prev = None\n    curr = head\n    while curr:\n        nxt = curr.next\n        curr.next = prev\n        prev = curr\n        curr = nxt\n    return prev",
       hints: [
         "After the loop, head is the old first node (now the tail).",
         "prev is the new head.",
@@ -230,10 +230,10 @@ export const inPlaceLinkedListReversalPattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "8ef3ef9cc48bd3e7",
+    contentHash: "3db54d0b8d6e8c10",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

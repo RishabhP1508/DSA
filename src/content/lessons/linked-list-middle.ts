@@ -259,10 +259,10 @@ Both share the even-length **convention**: with \`fast\`/\`slow\` starting at th
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "2d52848498c4f4e2",
+    contentHash: "8d5547c709e3ad11",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

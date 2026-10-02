@@ -200,10 +200,10 @@ Two conditions must hold for memoization to be correct and useful: **overlapping
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "3be2a477955dc070",
+    contentHash: "0fefb88e8917a8b0",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

@@ -1,112 +1,114 @@
-# R6 — Verification
+# R6 — Verification (amended to the full acceptance standard)
 
 **Branch:** `repair/r6-exercises` off `main` `f754e75` (R5 merged).
 **Environment:** Node v22 (nvm), bundled Pyodide / CPython 3.14.2, headless
 Chromium (Playwright) on Linux.
 **Commands:** `npm run check:all` (exit 0) and `npm run test:browser`
 (12 passed / 5 skipped).
+**Tested commit:** recorded at amendment-commit time on `repair/r6-exercises`
+(see the PR head SHA).
+
+## Acceptance criteria (repair plan §R6) — status
+
+| R6 criterion | Status | Evidence |
+|---|---|---|
+| Every coding exercise has working local evaluation | **MET** | 161/161 runnable |
+| Every model solution passes | **MET** | `Model solutions passing: 161/161` |
+| Every coding exercise has a meaningful rejection test (unfinished / plausible-wrong / early-exit / print-only fail) | **MET** | harness rejects starter + empty + every synthesisable variant per exercise |
+| Recognition grading handles authored approaches, reasons, alternatives, feedback | **MET** | 164/164 choose-approach graded; `ALL RECOGNITION OK` |
+| Free-text reflections remain clearly ungraded | **MET** | `RecognitionPanel` reflection is never scored |
+| Six-stage hint progression for coding + recognition exercises | **MET** | 325/325 interactive exercises carry the full 6 stages |
+| Opening Practice creates no mass worker initialization | **MET** | browser test: 0 workers on open + paging |
+| Attempts/results persist under unique exercise identities | **MET** | R3 composite `ownerKind:ownerId:exId` |
+| Practice bounded (≤20/page) | **MET** | pagination; browser test asserts ≤20 panels |
 
 ## What was proven
 
 ### `check:all` — exit 0 (all green)
-- build; lint 0 errors / 9 warnings.
-- **unit 602/602 across 34 files** (was 592/33; +`recognition-grading.test.ts` 10).
+- build; lint 0 errors / 9 warnings (unchanged advisory baseline).
+- **unit 446/446 across 34 files** (incl. `recognition-grading.test.ts`,
+  `review-ledger.test.ts` extended for the hash-of-hints/recognition check).
 - test:python pipeline + visualizers OK.
 - curriculum: 131 lessons, 29 patterns, 131 complexity panels, line-explanations
-  (131+29), example-model (131+29), **coverage-evidence 131 verified / 0 not-yet**,
-  semantic-consistency 0 failures / 7 advisory.
+  (131+29), example-model (131+29), **coverage-evidence 131 verified / 0 not-yet**
+  (machine checks + current content hash), semantic-consistency 0 failures /
+  7 advisory.
 - exercises gate:
-  - **Runnable coding exercises: 135/135 model solutions pass**, and each rejects
-    the unfinished starter, the empty program, and every synthesised mistake
-    variant (print-answer / early-exit / plausible-wrong where derivable).
-  - **Recognition-graded exercises: 77 — ALL RECOGNITION OK** (each validates
-    structurally AND grades the acceptable pair as accepted and a contradictory
-    reason as rejected).
-  - **Interactive exercises: 212; full 6-stage progression: 212; all have ≥3
-    staged hints — HINTS OK.**
+  - **Coding exercises: 161/161 runnable; 161/161 model solutions pass.** Each
+    rejects the unfinished starter, the empty program, and every synthesisable
+    mistake variant (print-answer / early-exit / plausible-wrong where
+    derivable). The one performance-only exercise
+    (`pattern:sliding-window:pat-sw-fix-1`) is graded by an **operation-cost
+    check** (an instrumented list counts element reads and the test asserts the
+    solution stays O(n), rejecting the O(n·k) starter).
+  - **Recognition-graded exercises: 164/164 — ALL RECOGNITION OK** (each
+    validates structurally AND grades the acceptable pair as accepted and a
+    contradictory reason as rejected).
+  - **Interactive exercises: 325; full 6-stage progression: 325; all ≥3 staged
+    hints — HINTS OK.**
 
 ### `test:browser` — 12 passed / 5 skipped
-- New `e2e/practice-exercises.spec.ts` (3 tests):
-  - opening Practice creates **0 Python workers** and renders **≤20** panels with
-    working pagination (page 2 reachable, still 0 workers);
-  - a recognition drill grades an authored approach+reason pair (verdict shown);
-  - a runnable coding exercise executes its tests on the real engine.
+- `e2e/practice-exercises.spec.ts`: opening Practice creates **0 Python
+  workers** and renders **≤20** panels with working pagination; a recognition
+  drill grades an authored approach+reason pair; a runnable coding exercise
+  executes its tests on the real engine.
 - The 5 skips are the **`P-RUNNER-ORIGIN`** packaging gate (unchanged; still open).
 
-## Counts (honest, separated)
+## Final counts (exact)
 
-| Category | Total | Machine-verified runnable / graded | Not yet |
+| Category | Total | Runnable / graded | Remaining |
 |---|---|---|---|
-| Coding exercises (lesson + pattern `complete-code`/`fix-mistake`) | 161 | **135 runnable** | 26 self-assessed |
-| — of which lesson-owned | 133 | 117 | 16 |
-| — of which pattern-owned | 28 | 18 | 10 |
-| Recognition (`choose-approach`) | 164 | **77 graded** | 87 self-assessed |
-| Interactive exercises with full 6-stage hints | 212 | **212** | 0 |
+| Coding exercises (`complete-code` + `fix-mistake`) | 161 | **161 runnable** | 0 |
+| Recognition (`choose-approach`) | 164 | **164 graded** | 0 |
+| Interactive exercises with the full 6-stage hints | 325 | **325** | 0 |
 
-Runnable coding rose from **3 → 135**. Recognition grading did not exist before
-R6 (`correctPatternId` was display-only); **77** now have authored, verified
-grading.
+Runnable coding rose from **3 → 161**; recognition grading from **0 → 164**
+(`correctPatternId` was display-only before R6).
+
+### How the 26 previously-deferred exercises were completed
+The 24 bare code fragments (module-level `return`/`continue`, or references to
+undefined context) were **rewritten as complete functions/programs with an
+explicit contract** (new learner-facing `prompt`/`starterCode`/`expected`), then
+given deterministic tests. `kruskal:kru-fix-1` gained a real find/union body.
+`pattern:sliding-window:pat-sw-fix-1` (a correct-but-slow starter) is graded by a
+documented operation-cost check rather than a value test. All 26 also received
+the full 6-stage hint progression.
+
+## Content-hash honesty (machine vs human review kept distinct)
+`contentHashOf` excludes **only** the machine-VERIFICATION harness
+(`tests`, `preludeCode` — executable assertions / a runnable-wrapper scaffold).
+Everything a learner READS as a claim is hashed, **including `hints` and the
+whole `recognition` block (scenario, approach/reason labels, feedback, model
+explanation)**. Unit tests prove a hint or recognition change flips the hash
+while adding `tests` does not.
+
+Consequence (honest): R6 added hints and/or recognition claims to **every**
+lesson and pattern, so each item's content hash changed relative to R5's
+recorded human-review hash. The review ledger preserves R5's recorded hashes
+verbatim, so **semantic review is now PENDING repo-wide** (all 160 items show
+`semanticReview: false`) until a human re-reads the new claim-bearing content and
+re-records the ledger (via `gen_review_ledger.mjs`, optionally with
+`REVIEWED_NOW`). This is the designed anti-stale behaviour — a human-review claim
+cannot survive a content edit.
+
+Machine verification stays **green and distinct**: coverage `verified` is derived
+from the machine evidence checks (content/implementation/visualization/exercise/
+complexity/references) plus a current content hash, not from `semanticReview`.
+`COVERAGE_VERSION = 19`.
 
 ## What was NOT proven / carried forward (do NOT treat as done)
-
-### 26 coding exercises remain self-assessed (documented, not hidden)
-These are code FRAGMENTS whose authored `starterCode`/`expected` are not
-standalone programs, so no appended-test harness can grade them without rewriting
-the learner-visible content:
-- **Module-level `return`/`continue` fragments (21):** `word-search:ws-fix-1`,
-  `linked-list-merging:llm-fix-1`, `dp-tabulation`, `dp-1d-2d`,
-  `dp-state-transitions`, `dp-house-robber`, `dp-grid-paths`, `dp-coin-change`,
-  `dp-lis` (×2), `dp-divide-and-conquer`, `dp-n-queens:dpnq-complete-1`
-  (`continue`), and pattern fix-drills `pat-ps-fix-1`, `pat-tp-fix-1`,
-  `pat-fs-fix-1`, `pat-bsa-fix-1`, `pat-tk-fix-1`, `pat-gis-fix-1`,
-  `pat-iplr-fix-1`, `pat-mbs-fix-1`, `pat-dac-fix-1`. A bare `return`/`continue`
-  at module scope is a Python SyntaxError; a prepended prelude cannot wrap the
-  learner code in a function/loop without indenting it.
-- **Fragments referencing names not defined within them / no observable state
-  (4):** `conditions:cond-fix-1` (only prints; `temp` fixed so the fix is not
-  observable at one input), `string-sliding-window:ssw-fix-1` (fixed path leaves
-  state identical to the empty submission), `kruskal:kru-fix-1` (loop body is a
-  `pass` stub, so model and starter both yield `total==0`), `kmp:kmp-complete-1`
-  (TODO in the mismatch branch that a single straight-line run can't exercise
-  while also rejecting the plausible-wrong corruption in the match branch).
-- **Performance-only fix (1):** `pattern:sliding-window:pat-sw-fix-1` — the
-  starter is a correct O(n·k) solution producing identical results to the O(n)
-  model, so value-based tests cannot reject it.
-
-These stay runnable-in-lesson-context and fully taught (correct model + 6-stage
-hints); they are simply not auto-graded. Making them runnable would require
-editing the learner-visible fragment into a complete function — deferred as a
-content change, not done here.
-
-### 87 recognition exercises remain self-assessed
-R6 authored structured grading for the 57 Pattern-Library drills plus 20
-high-value lesson distinctions (window vs prefix vs Kadane, DP memo vs tab, heap
-top-k, Dijkstra/Bellman-Ford, topo/union-find, etc.). The remaining 87
-lesson-level choose-approach prompts keep their authored model explanation and
-self-assessment; authoring structured grading for them is follow-up work.
-
-### R5 follow-ups and gates (unchanged, still open)
+- **`P-RUNNER-ORIGIN`** packaging gate remains open (5 skipped Playwright specs).
 - **FU-1** (Task Scheduler / cooldown scheduling lesson) and **FU-2** (Meeting
   Rooms II / concurrent-overlap-count lesson) remain `unresolved` in the external
-  practice manifest. R6 did not touch their counts or add these lessons.
-- **`P-RUNNER-ORIGIN`** packaging gate remains open (5 skipped Playwright specs).
+  practice manifest. R6 did not add these lessons or change their counts.
+- **Human semantic review is pending repo-wide** (see above): the new hints and
+  recognition prose have not been human-reviewed at their current hash. Machine
+  verification is complete; human sign-off is tracked separately and honestly.
+- Headless Chromium ≠ Windows Chrome/Edge (R9 gap).
 
 ### What green does NOT prove
-The Node/Pyodide exercise checks prove the Python grading path on the bundled
-runtime; they do not prove the in-browser worker for every exercise, nor the
-correctness of the hint prose or recognition explanations beyond structural +
-behavioural validation. Those rest on the browser tests (representative) and
-human review.
-
-## Content-hash / evidence integrity note
-Adding `tests`/`preludeCode`/`recognition`/`hints` to exercises would have
-invalidated R5's content hashes for ~150 items. Because these are verification
-harness / grading DATA / learner scaffolding (not the authoritative taught
-claim), they are excluded from `contentHashOf`. The review ledger was regenerated
-incrementally so existing items keep their original review date (the hash
-DEFINITION changed, not the reviewed teaching prose): **157 items keep
-2026-09-20; 3 lessons that carried inline `tests` in R5 show 2026-09-21.**
-Machine evidence regenerated; `COVERAGE_VERSION` 18 → 19; coverage-evidence 131
-verified / 0 not-yet.
-
-**Tested commit:** recorded at PR time on `repair/r6-exercises`.
+The Node/Pyodide checks prove the Python grading path on the bundled runtime and
+that every model passes while mistakes are rejected. They do not prove the
+in-browser worker for every exercise, nor the pedagogical quality of the hint
+prose or recognition explanations beyond structural + behavioural validation —
+those rest on the representative browser tests and (pending) human review.

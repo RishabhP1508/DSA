@@ -170,10 +170,10 @@ BFS visits every node once and looks at every edge once, so on a graph with **V*
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "a2ce1fbf3a6e289b",
+    contentHash: "544ddeec76753e26",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

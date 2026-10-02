@@ -168,10 +168,10 @@ The same "middle as root, recurse on halves" idea appears when **rebuilding a tr
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "bb8c7942898c6a9c",
+    contentHash: "fb994923f2e8b8b5",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 5,
   },
 };

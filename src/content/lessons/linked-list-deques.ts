@@ -214,10 +214,10 @@ Naming is the usual stumbling block: \`append\`/\`pop\` act on the **right** end
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "51ed8899310a33e7",
+    contentHash: "9c0c8a20ab5aac1b",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

@@ -168,10 +168,10 @@ It is **stable** and uses **O(1)** extra space. Among the three quadratic sorts,
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "ca9b001787731a5c",
+    contentHash: "e9d9acb7905a394b",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

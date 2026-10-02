@@ -160,10 +160,10 @@ The efficiency point that every graph algorithm's complexity rests on: iterating
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "7f68c2c7ebc515cc",
+    contentHash: "e95247e000f89495",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 5,
   },
 };

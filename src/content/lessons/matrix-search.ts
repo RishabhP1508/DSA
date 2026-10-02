@@ -175,10 +175,10 @@ Because \`log(m·n) = log m + log n\`, this is far faster than searching each ro
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "eec14557b61b2f6a",
+    contentHash: "de603fb9eafcf438",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

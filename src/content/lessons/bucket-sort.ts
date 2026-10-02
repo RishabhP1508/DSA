@@ -162,10 +162,10 @@ It generalizes counting sort (which is bucket sort with one bucket per value) an
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "309dedebdb8017e4",
+    contentHash: "3cfba24111f48a98",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

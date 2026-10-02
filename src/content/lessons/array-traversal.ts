@@ -140,10 +140,10 @@ Because a Python list is backed by a contiguous array, reading \`nums[i]\` is **
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "f616daf8c6cd1672",
+    contentHash: "53d47a81e3caa009",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

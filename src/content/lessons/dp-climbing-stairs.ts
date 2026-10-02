@@ -202,10 +202,10 @@ The point of this worked example is to see the full DP pipeline on something int
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "da18e0dc3179927d",
+    contentHash: "702cbcdd09e4a80d",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

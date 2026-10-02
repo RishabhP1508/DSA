@@ -220,10 +220,10 @@ A practical **pruning** exists (not shown, to keep the example minimal): if ther
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "728b4e6f50b0a001",
+    contentHash: "df752d76abf3c441",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

@@ -180,10 +180,10 @@ The whole thing is **O(V + E)** time even though it launches multiple traversals
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "2f833866cd25c402",
+    contentHash: "eb31fa0d2afadcf0",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 5,
   },
 };

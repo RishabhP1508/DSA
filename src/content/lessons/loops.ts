@@ -159,10 +159,10 @@ The key mental model: a for loop runs **once per item** (n items → n iteration
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "deea373a486b5371",
+    contentHash: "38a1a72e57cefac2",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 1,
   },
 };

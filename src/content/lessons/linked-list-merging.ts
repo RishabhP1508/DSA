@@ -210,11 +210,11 @@ Using \`<=\` (not \`<\`) keeps the merge **stable**: equal values keep their ori
     {
       id: "llm-fix-1",
       kind: "fix-mistake",
-      prompt: "This merge drops the tail of whichever list is longer. Add the missing step.",
+      prompt: "`merge(a, b)` merges two sorted linked lists and returns the merged head. This drops the tail of whichever list is longer. Attach the leftover list.",
       starterCode:
-        "while a is not None and b is not None:\n    if a.val <= b.val:\n        tail.next = a; a = a.next\n    else:\n        tail.next = b; b = b.next\n    tail = tail.next\n# bug: nothing attaches the leftover list\nreturn dummy.next",
+        "def merge(a, b):\n    dummy = Node(0)\n    tail = dummy\n    while a is not None and b is not None:\n        if a.val <= b.val:\n            tail.next = a; a = a.next\n        else:\n            tail.next = b; b = b.next\n        tail = tail.next\n    # TODO: attach whichever list still has nodes\n    return dummy.next",
       expected:
-        "while a is not None and b is not None:\n    if a.val <= b.val:\n        tail.next = a; a = a.next\n    else:\n        tail.next = b; b = b.next\n    tail = tail.next\ntail.next = a if a is not None else b\nreturn dummy.next",
+        "def merge(a, b):\n    dummy = Node(0)\n    tail = dummy\n    while a is not None and b is not None:\n        if a.val <= b.val:\n            tail.next = a; a = a.next\n        else:\n            tail.next = b; b = b.next\n        tail = tail.next\n    tail.next = a if a is not None else b\n    return dummy.next",
       hints: [
         "When the loop ends, one list may still have nodes.",
         "Those remaining nodes are already sorted.",
@@ -265,10 +265,10 @@ Using \`<=\` (not \`<\`) keeps the merge **stable**: equal values keep their ori
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "59f1efab7036d3f8",
+    contentHash: "b69817a588713381",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

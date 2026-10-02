@@ -130,11 +130,11 @@ export const topKHeapPattern: PatternDefinition = {
       id: "pat-tk-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This is supposed to keep the k LARGEST but throws away the wrong ones. Fix it (Python heapq is a min-heap).",
+        "`k_largest(nums, k)` returns the k largest values in descending order. Python's heapq is a MIN-heap; this negates and keeps the wrong ones. Fix it to keep a size-k min-heap.",
       starterCode:
-        "heap = []\nfor x in nums:\n    heapq.heappush(heap, -x)\n    if len(heap) > k:\n        heapq.heappop(heap)\nreturn sorted([-v for v in heap], reverse=True)",
+        "import heapq\ndef k_largest(nums, k):\n    heap = []\n    for x in nums:\n        heapq.heappush(heap, -x)\n        if len(heap) > k:\n            heapq.heappop(heap)\n    return sorted([-v for v in heap], reverse=True)",
       expected:
-        "heap = []\nfor x in nums:\n    heapq.heappush(heap, x)\n    if len(heap) > k:\n        heapq.heappop(heap)\nreturn sorted(heap, reverse=True)",
+        "import heapq\ndef k_largest(nums, k):\n    heap = []\n    for x in nums:\n        heapq.heappush(heap, x)\n        if len(heap) > k:\n            heapq.heappop(heap)\n    return sorted(heap, reverse=True)",
       hints: [
         "Negating makes the smallest values look largest.",
         "For k LARGEST, keep a plain MIN-heap and pop the smallest.",
@@ -182,10 +182,10 @@ export const topKHeapPattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "36205da1f8844db0",
+    contentHash: "cbca1fd49226680f",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

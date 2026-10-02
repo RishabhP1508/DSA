@@ -6,12 +6,13 @@
 | T2 | `recognition-grading.ts`: `gradeRecognition` + `validateRecognition` (+ unit tests) | R6.4 | `recognition-grading.test.ts` (10) | done |
 | T3 | Central authored-data module (`exercise-tests-data.ts`) + pure merge (`exercise-tests.ts`) wired into `registry.ts` | R6.1/6.4/6.5 | build + verifier | done |
 | T4 | Mistake-rejection harness (`verify_exercise_tests.mjs` + `mistake-variants.mjs`): model passes; starter/empty/synthesised variants rejected | R6.1–R6.3 | `npm run test:exercises` | done |
-| T5 | Author `tests` (+ preludes) making coding exercises runnable | R6.1/6.3 | verifier: 135/135 runnable | done (135/161; 26 documented) |
-| T6 | Author `EXERCISE_RECOGNITION` for choose-approach exercises | R6.4 | verifier: 77 recognition OK | done (77 authored) |
+| T5 | Author `tests` (+ preludes) making coding exercises runnable | R6.1/6.3 | verifier runnable count | **done (161/161)** |
+| T5b | Rewrite the 24 bare fragments as complete functions + `kruskal` real find/union + `pat-sw` operation-cost check | R6.1 | verifier: 161/161 model pass | **done** |
+| T6 | Author `EXERCISE_RECOGNITION` for ALL choose-approach exercises | R6.4 | verifier recognition count | **done (164/164)** |
 | T7 | `RecognitionPanel.tsx` + wire into `ExercisePanel` | R6.4 | browser test | done |
-| T8 | Author full 6-stage `EXERCISE_HINTS` for interactive exercises | R6.5 | verifier: 212 full progression | done (212/212) |
+| T8 | Author full 6-stage `EXERCISE_HINTS` for ALL interactive exercises | R6.5 | verifier full-progression count | **done (325/325)** |
 | T9 | Practice pagination (≤20/page), no eager worker, filter reset | R6.6 | `practice-exercises.spec.ts` | done |
-| T10 | Exclude scaffolding fields from content hash; regen ledger (incremental) + evidence; bump COVERAGE_VERSION | R5-integrity | `verify:coverage-evidence` | done |
+| T10 | Content-hash honesty: exclude ONLY `tests`/`preludeCode`; hash `hints`+`recognition`; regen ledger (preserve prior → changed→pending) + evidence | R5-integrity | `verify:coverage-evidence` + unit | **done** |
 | T11 | Spec docs + run all suites + PR | discipline | check:all + test:browser | done |
 
 ## Files added

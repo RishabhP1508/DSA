@@ -137,11 +137,11 @@ export const twoPointersPattern: PatternDefinition = {
       id: "pat-tp-fix-1",
       kind: "fix-mistake",
       prompt:
-        "This two-pointer sum search loops forever on some inputs. Fix the pointer movement.",
+        "`two_sum_sorted(nums, target)` returns a pair of indices (lo, hi) summing to target in a SORTED array, or None. This moves the pointers the wrong way and can loop. Fix the moves.",
       starterCode:
-        "lo, hi = 0, len(nums) - 1\nwhile lo < hi:\n    s = nums[lo] + nums[hi]\n    if s == target:\n        return (lo, hi)\n    if s < target:\n        hi -= 1\n    else:\n        lo += 1\nreturn None",
+        "def two_sum_sorted(nums, target):\n    lo, hi = 0, len(nums) - 1\n    while lo < hi:\n        s = nums[lo] + nums[hi]\n        if s == target:\n            return (lo, hi)\n        if s < target:\n            hi -= 1\n        else:\n            lo += 1\n    return None",
       expected:
-        "lo, hi = 0, len(nums) - 1\nwhile lo < hi:\n    s = nums[lo] + nums[hi]\n    if s == target:\n        return (lo, hi)\n    if s < target:\n        lo += 1\n    else:\n        hi -= 1\nreturn None",
+        "def two_sum_sorted(nums, target):\n    lo, hi = 0, len(nums) - 1\n    while lo < hi:\n        s = nums[lo] + nums[hi]\n        if s == target:\n            return (lo, hi)\n        if s < target:\n            lo += 1\n        else:\n            hi -= 1\n    return None",
       hints: [
         "If the sum is too small you need a LARGER value.",
         "The larger values are to the right, reached by moving lo up.",
@@ -190,10 +190,10 @@ export const twoPointersPattern: PatternDefinition = {
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "c81867b731e0b97f",
+    contentHash: "4c65b491cbb8ae21",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

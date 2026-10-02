@@ -150,10 +150,10 @@ The cost is **O(n · L log L)** for n words of length up to L (the sort dominate
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "ffb83aa3cdf61059",
+    contentHash: "98bc7babfdea1dcb",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

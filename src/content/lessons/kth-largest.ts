@@ -160,10 +160,10 @@ There's an important alternative worth knowing: **Quickselect** (a partial quick
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "df0d6174cd1d4269",
+    contentHash: "1dda6dc2827be49d",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

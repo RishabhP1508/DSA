@@ -99,9 +99,9 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
     {
       id: "cond-fix-1",
       kind: "fix-mistake",
-      prompt: "This code always prints 'warm' even when temp is 35. Why, and how do you fix it?",
-      starterCode: "temp = 35\nif temp >= 20:\n    print('warm')\nelif temp >= 30:\n    print('hot')",
-      expected: "temp = 35\nif temp >= 30:\n    print('hot')\nelif temp >= 20:\n    print('warm')",
+      prompt: "`classify(temp)` should return 'hot' for temps >= 30, 'warm' for 20–29, else 'cold'. This version always returns 'warm' for hot temps. Fix the branch order.",
+      starterCode: "def classify(temp):\n    if temp >= 20:\n        return 'warm'\n    elif temp >= 30:\n        return 'hot'\n    return 'cold'",
+      expected: "def classify(temp):\n    if temp >= 30:\n        return 'hot'\n    elif temp >= 20:\n        return 'warm'\n    return 'cold'",
       hints: ["Which test is checked first?", "The broad test (>= 20) matches before the specific one (>= 30).", "Order branches from most specific/highest to least: check >= 30 first."],
     },
     {
@@ -139,10 +139,10 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "6c798609f0518c64",
+    contentHash: "9c63d07d9bb2235d",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 1,
   },
 };

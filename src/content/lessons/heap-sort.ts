@@ -144,10 +144,10 @@ Heap sort's classic advantage is space: an in-place array heap sorts with **O(1)
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "04b645b046888e1f",
+    contentHash: "078fea2effce0771",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

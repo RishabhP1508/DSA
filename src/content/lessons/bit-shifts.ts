@@ -121,10 +121,10 @@ Each shift is **O(1)** on machine words (**O(w)** for w-bit big integers, since 
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "790ea4afc87d7ed1",
+    contentHash: "bce507b9f17e74c8",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

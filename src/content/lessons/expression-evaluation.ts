@@ -160,10 +160,10 @@ It runs in **O(n)** time and **O(n)** space. Converting normal **infix** express
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "b7bfb5e829ac0a3c",
+    contentHash: "4b22314fe90b166f",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

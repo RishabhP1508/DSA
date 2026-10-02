@@ -155,10 +155,10 @@ The other common form is the **fast/slow** or **same-direction** two pointers (e
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "cf4bae0c98ce3962",
+    contentHash: "4a70d5c675932a21",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

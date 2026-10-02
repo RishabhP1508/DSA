@@ -149,10 +149,10 @@ Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 â†’ 11 â
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "21447fd00300d564",
+    contentHash: "8693b395b5881198",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 1,
   },
 };

@@ -143,11 +143,11 @@ Tabulation vs memoization is a real design choice. **Memoization** is easy to wr
     {
       id: "dptab-complete-1",
       kind: "complete-code",
-      prompt: "Complete the bottom-up transition to fill the Fibonacci table.",
+      prompt: "Complete `fib(n)` (bottom-up table): fib(0)=0, fib(1)=1, else sum of the two previous.",
       starterCode:
-        "dp = [0] * (n + 1)\ndp[1] = 1\nfor i in range(2, n + 1):\n    # TODO: fill dp[i] from smaller cells\n    pass\nreturn dp[n]",
+        "def fib(n):\n    if n == 0:\n        return 0\n    dp = [0] * (n + 1)\n    dp[1] = 1\n    for i in range(2, n + 1):\n        # TODO: fill dp[i] from smaller cells\n        pass\n    return dp[n]",
       expected:
-        "dp = [0] * (n + 1)\ndp[1] = 1\nfor i in range(2, n + 1):\n    dp[i] = dp[i - 1] + dp[i - 2]\nreturn dp[n]",
+        "def fib(n):\n    if n == 0:\n        return 0\n    dp = [0] * (n + 1)\n    dp[1] = 1\n    for i in range(2, n + 1):\n        dp[i] = dp[i - 1] + dp[i - 2]\n    return dp[n]",
       hints: [
         "Fibonacci sums the two previous numbers.",
         "Those are dp[i-1] and dp[i-2].",
@@ -208,10 +208,10 @@ Tabulation vs memoization is a real design choice. **Memoization** is easy to wr
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "83adced1c625a49a",
+    contentHash: "2b3307b9e5203aa1",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

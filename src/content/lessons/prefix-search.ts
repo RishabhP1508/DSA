@@ -216,10 +216,10 @@ The complexity split is worth internalizing: **existence** of a prefix is O(P), 
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "cbb946da658a13ec",
+    contentHash: "c231d5daed085b80",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 5,
   },
 };

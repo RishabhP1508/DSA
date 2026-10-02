@@ -135,9 +135,9 @@ The cost is dominated by **sorting the edges: O(E log E)** (equivalently O(E log
     {
       id: "kru-fix-1",
       kind: "fix-mistake",
-      prompt: "This Kruskal forgets to sort the edges, so it doesn't build a minimum tree. Add the sort.",
-      starterCode: "def kruskal(n, edges):\n    parent = list(range(n))\n    # ... find/union ...\n    total = 0\n    for u, v, w in edges:\n        # take cheapest cycle-free edges\n        pass\n    return total",
-      expected: "def kruskal(n, edges):\n    edges = sorted(edges, key=lambda e: e[2])\n    parent = list(range(n))\n    # ... find/union ...\n    total = 0\n    for u, v, w in edges:\n        # take cheapest cycle-free edges\n        pass\n    return total",
+      prompt: "`kruskal(n, edges)` returns the total weight of a Minimum Spanning Tree (edges are (u, v, w)). This forgets to sort the edges cheapest-first. Add the sort.",
+      starterCode: "def kruskal(n, edges):\n    parent = list(range(n))\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n    total = 0\n    for u, v, w in edges:\n        ru, rv = find(u), find(v)\n        if ru != rv:\n            parent[ru] = rv\n            total += w\n    return total",
+      expected: "def kruskal(n, edges):\n    edges = sorted(edges, key=lambda e: e[2])\n    parent = list(range(n))\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n    total = 0\n    for u, v, w in edges:\n        ru, rv = find(u), find(v)\n        if ru != rv:\n            parent[ru] = rv\n            total += w\n    return total",
       hints: ["Kruskal must consider edges cheapest-first.", "Sort by the weight (third element).", "edges = sorted(edges, key=lambda e: e[2])"],
     },
   ],
@@ -168,10 +168,10 @@ The cost is dominated by **sorting the edges: O(E log E)** (equivalently O(E log
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "e3dbeae2bcc7dcb9",
+    contentHash: "ed0f6d473d38a448",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 5,
   },
 };

@@ -231,10 +231,10 @@ The loop condition is the subtle part: \`while fast is not None and fast.next is
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "362e77924370cd15",
+    contentHash: "afcefad0caad04f2",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

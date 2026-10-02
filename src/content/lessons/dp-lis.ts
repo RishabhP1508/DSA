@@ -141,11 +141,11 @@ This is **O(n²)** time (each \`i\` scans all earlier \`j\`) and **O(n)** space.
     {
       id: "dplis-complete-1",
       kind: "complete-code",
-      prompt: "Complete the inner loop that extends earlier subsequences.",
+      prompt: "Complete `lis(nums)`: length of the longest strictly increasing subsequence.",
       starterCode:
-        "for i in range(len(nums)):\n    for j in range(i):\n        # TODO: if nums[j] < nums[i], try to extend\n        pass\nreturn max(dp)",
+        "def lis(nums):\n    if not nums:\n        return 0\n    dp = [1] * len(nums)\n    for i in range(len(nums)):\n        for j in range(i):\n            # TODO: if nums[j] < nums[i], try to extend\n            pass\n    return max(dp)",
       expected:
-        "for i in range(len(nums)):\n    for j in range(i):\n        if nums[j] < nums[i] and dp[j] + 1 > dp[i]:\n            dp[i] = dp[j] + 1\nreturn max(dp)",
+        "def lis(nums):\n    if not nums:\n        return 0\n    dp = [1] * len(nums)\n    for i in range(len(nums)):\n        for j in range(i):\n            if nums[j] < nums[i] and dp[j] + 1 > dp[i]:\n                dp[i] = dp[j] + 1\n    return max(dp)",
       hints: [
         "Only extend when nums[j] < nums[i].",
         "Extending gives length dp[j] + 1.",
@@ -155,11 +155,11 @@ This is **O(n²)** time (each \`i\` scans all earlier \`j\`) and **O(n)** space.
     {
       id: "dplis-fix-1",
       kind: "fix-mistake",
-      prompt: "This returns the length ending at the last index instead of the true LIS. Fix the return.",
+      prompt: "`lis(nums)` returns the LIS length. This returns the length ending at the LAST index instead of the overall best. Fix the return.",
       starterCode:
-        "for i in range(len(nums)):\n    for j in range(i):\n        if nums[j] < nums[i] and dp[j] + 1 > dp[i]:\n            dp[i] = dp[j] + 1\nreturn dp[-1]",
+        "def lis(nums):\n    if not nums:\n        return 0\n    dp = [1] * len(nums)\n    for i in range(len(nums)):\n        for j in range(i):\n            if nums[j] < nums[i] and dp[j] + 1 > dp[i]:\n                dp[i] = dp[j] + 1\n    return dp[-1]",
       expected:
-        "for i in range(len(nums)):\n    for j in range(i):\n        if nums[j] < nums[i] and dp[j] + 1 > dp[i]:\n            dp[i] = dp[j] + 1\nreturn max(dp)",
+        "def lis(nums):\n    if not nums:\n        return 0\n    dp = [1] * len(nums)\n    for i in range(len(nums)):\n        for j in range(i):\n            if nums[j] < nums[i] and dp[j] + 1 > dp[i]:\n                dp[i] = dp[j] + 1\n    return max(dp)",
       hints: [
         "dp[i] is the LIS ending at i.",
         "The best can end anywhere.",
@@ -210,10 +210,10 @@ This is **O(n²)** time (each \`i\` scans all earlier \`j\`) and **O(n)** space.
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "09fda4bb9f74739d",
+    contentHash: "c44fcc91448991f8",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 6,
   },
 };

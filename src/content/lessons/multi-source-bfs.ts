@@ -173,10 +173,10 @@ This pattern is everywhere in grid problems: "rotting oranges" (all rotten cells
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "fb978bd14a94836d",
+    contentHash: "45323dc1c5099826",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 5,
   },
 };

@@ -167,10 +167,10 @@ BFS visits every reachable vertex once and scans every incident edge once, so it
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "811f24f1f6600b3d",
+    contentHash: "2cbba2d45fe2a0b7",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 5,
   },
 };

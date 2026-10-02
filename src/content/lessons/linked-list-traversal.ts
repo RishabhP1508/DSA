@@ -230,10 +230,10 @@ Think of a scavenger hunt: each clue (node) tells you where the next clue is. Yo
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "b8eea42d6735a88f",
+    contentHash: "ef7fbd8e03e8d283",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

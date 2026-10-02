@@ -171,10 +171,10 @@ Every operation is **O(1)**, at the cost of **O(n)** extra space for the second 
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "2574f926717eb8f3",
+    contentHash: "93387854920ddae8",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

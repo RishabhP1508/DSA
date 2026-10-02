@@ -152,10 +152,10 @@ Row/column pointers in the visualization highlight the current cell so you can s
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "ddc73b7d60517a2b",
+    contentHash: "71349a3c47813467",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 2,
   },
 };

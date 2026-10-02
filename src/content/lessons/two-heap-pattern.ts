@@ -161,10 +161,10 @@ This pattern powers more than medians: **IPO / maximize capital** (a max-heap of
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "84cd0aadc15180e9",
+    contentHash: "da57864f0d3de2f7",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 4,
   },
 };

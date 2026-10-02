@@ -155,10 +155,10 @@ A subtle contrast: selection sort's comparison count is **the same regardless of
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "367a32685f5d8fdb",
+    contentHash: "70b36e31f1ad5300",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

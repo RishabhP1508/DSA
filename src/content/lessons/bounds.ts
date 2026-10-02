@@ -140,10 +140,10 @@ Both are **O(log n)** (they are binary searches) and operate on a sorted array. 
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "edecf44dc364f302",
+    contentHash: "c1576a274792801e",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 3,
   },
 };

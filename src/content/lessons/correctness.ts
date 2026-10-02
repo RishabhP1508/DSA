@@ -145,10 +145,10 @@ You will use this style of reasoning throughout: state what stays true, check th
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "76121f369b7dcc0c",
+    contentHash: "9db456b486337f4e",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: true,
+    semanticReview: false,
     reviewBatch: 1,
   },
 };

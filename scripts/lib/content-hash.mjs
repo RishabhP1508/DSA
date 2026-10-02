@@ -26,28 +26,26 @@
 import { createHash } from "node:crypto";
 
 /**
- * R6 — project an exercise to its LEARNER-FACING, CLAIM-BEARING fields for the
- * content hash. The R6 additions `tests` and `preludeCode` are the machine
- * VERIFICATION harness (proven separately by scripts/verify_exercise_tests.mjs),
- * and `recognition` is structured grading DATA (validated by
- * validateRecognition); none of them are teaching prose a human reviews for the
- * correctness of a taught CLAIM. Excluding them keeps the hash's contract intact
- * — "a change to a taught claim invalidates prior semantic-review evidence" —
- * without treating the addition of a test harness as a teaching-claim edit (which
- * would falsely revert R5's human review of unchanged prose). The claim-bearing
- * exercise fields (prompt, starterCode, expected model answer, hints,
- * correctPatternId) ARE still hashed.
+ * R6 (corrected) — project an exercise to its content-hashed fields.
+ *
+ * ONLY the machine-VERIFICATION harness is excluded: `tests` (Python assertions
+ * run by scripts/verify_exercise_tests.mjs) and `preludeCode` (a scaffold that
+ * wraps a fragment into a runnable program). Those are executable checks, not
+ * prose a human reviews for the correctness of a taught CLAIM.
+ *
+ * Everything a learner READS as a claim IS hashed — including `hints` (the
+ * 6-stage progression states approaches, properties, pseudocode and the
+ * solution) and the ENTIRE `recognition` block (scenario, approach/reason
+ * labels, acceptable approaches, feedback, model explanation). So changing any
+ * hint, recognition reason, or feedback string changes the content hash and
+ * therefore invalidates the item's semantic-review evidence until a human
+ * re-reads it and re-records the ledger. Machine verification (tests/evidence
+ * checks) and human semantic review stay distinct: the former proves behaviour,
+ * the latter is a recorded human claim gated on an unchanged hash.
  */
 function exerciseClaimFields(ex) {
   if (!ex || typeof ex !== "object") return ex;
-  // `hints` are progressive learner SCAFFOLDING (the 6-stage help ladder), not
-  // the authoritative taught claim — the claim lives in the lesson explanation,
-  // code, complexity, and the exercise prompt/expected. Like `tests`/
-  // `preludeCode` (verification harness) and `recognition` (grading data), hints
-  // are excluded so adding/expanding them does not falsely revert the human
-  // semantic-review of unchanged teaching prose. The claim-bearing exercise
-  // fields (prompt, starterCode, expected) remain hashed.
-  const { tests: _t, preludeCode: _p, recognition: _r, hints: _h, ...claim } = ex;
+  const { tests: _t, preludeCode: _p, ...claim } = ex;
   return claim;
 }
 
