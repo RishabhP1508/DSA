@@ -56,7 +56,7 @@ Watching the call stack in the visualization makes this concrete: a frame appear
     time: {
       bound: "O(1)",
       case: "worst",
-      explanation: "add does a single addition and returns. There is no loop or recursion, so one call is constant time regardless of the values passed.",
+      explanation: "add does a single addition and returns, with no loop or recursion, so one call is constant time for the small fixed-size integers used here (2 and 5). This O(1) assumes the operands fit in a machine word; Python ints are arbitrary precision, so for very large operands the addition cost grows with the number of digits — that is outside this example's small-value assumption.",
     },
     space: {
       bound: "O(1)",
@@ -68,10 +68,10 @@ Watching the call stack in the visualization makes this concrete: a frame appear
       { lines: [4, 5], description: "One addition and one return inside the body.", cost: "O(1)", dimension: "time" },
       { lines: [4], description: "A fixed number of locals in a single frame; stack depth stays at 1.", cost: "O(1)", dimension: "space" },
     ],
-    assumptions: ["Addition of these operands is constant time.", "No recursion, so call depth is bounded by a constant."],
+    assumptions: ["The operands are small, fixed-size integers, so one addition is O(1). (Deriving the general case ourselves: since Python's int is unlimited precision — per the Numeric Types docs — adding two d-digit integers must process all d digits, so it is O(d); the O(1) here is the special case where d is a small constant.)", "No recursion, so call depth is bounded by a constant."],
     tradeoffs: "Inlining the addition (writing 2 + 5 directly) avoids the call overhead but loses reuse and readability; the O-class is the same.",
     counters: [{ label: "function calls", definition: "call events for add (line 8)", countLines: [8] }],
-    fixedDataNote: "The arguments are fixed (2 and 5), so this run does constant work. add would still be O(1) per call for any numeric inputs.",
+    fixedDataNote: "The arguments are fixed, small ints (2 and 5), so this run does constant work. add is O(1) per call for small, machine-word-sized operands; it is NOT unconditionally O(1) for arbitrarily large integers, whose addition cost grows with their digit count.",
   },
 
   code,
@@ -137,10 +137,19 @@ Watching the call stack in the visualization makes this concrete: a frame appear
       verifiedClaims: ["def introduces a function definition", "A function without a return statement returns None"],
       accessDate: "2026-09-20",
     },
+    {
+      url: "https://docs.python.org/3.14/library/stdtypes.html#numeric-types-int-float-complex",
+      title: "Built-in Types — Numeric Types (int, float, complex) — Python 3.14 documentation",
+      section: "Numeric Types",
+      topic: "foundations/functions",
+      purpose: "Establish that Python's int has unlimited (arbitrary) precision. The O(d) cost of adding d-digit integers is then the lesson's OWN derived complexity reasoning from that fact — not a claim quoted from this page.",
+      verifiedClaims: ["Python integers (int) have unlimited precision (no fixed width / no overflow)"],
+      accessDate: "2026-10-03",
+    },
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "fb3892f19f580d34",
+    contentHash: "34076dce4cf0d3ba",
     verifiedAt: "2026-10-03",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
