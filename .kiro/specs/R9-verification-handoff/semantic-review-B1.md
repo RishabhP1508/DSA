@@ -96,14 +96,32 @@ prerequisites are introduced before use.
 >   kept `2026-09-21` (no bulk re-dating). Regression test:
 >   `src/content/evidence-date.test.ts`.
 >
+> **Amendment 6 (this round) — correct the stale date on the other reverified B1
+> lessons:** diffing all lessons this PR changed against `main` showed that
+> `functions`, `loops`, and `variables-and-types` carried **new content hashes**
+> but still had the old hard-coded **`verifiedAt: "2026-09-21"`** (only
+> `representations` had been re-dated in Amendment 5). Their actual B1
+> verification date is **`2026-10-03`** — established from the git history (the
+> commits that introduced their current content, `1acd90c` and `b113559`, are
+> dated 2026-10-03) and confirmed by **reverifying all three now**
+> (`verify:lessons`: functions 9 events, loops 23, variables-and-types 15 — all
+> outputs match). Their `verifiedAt` is corrected to `2026-10-03`. Nothing else
+> was touched: the other **156** items keep `2026-09-21`, `representations` keeps
+> `2026-10-02`, no content hash changed, and no `semanticReview` flag changed.
+> Re-running the evidence generator **preserves** these corrected dates (the
+> `verifiedAtFor` rule keeps the prior date when the content hash is unchanged).
+> B1 reverified-date summary: `representations` 2026-10-02; `functions`, `loops`,
+> `variables-and-types` 2026-10-03.
+>
 > **Machine verification on this branch:** `npm run check:all` → exit 0 (unit
 > **605** passed across **43** files; model solutions **161/161**; R6.4
 > mistake-rejection all five categories **161/161**; coverage-evidence **131
 > verified / 0 not-yet**; recognition **164**; hints **325**; all **131** lesson
 > outputs match). `npm run test:browser` → **18 passed / 5 skipped**, result
-> retained from commit `45f3c40` (no browser-facing behaviour changed this round:
-> only reference metadata, the evidence-date generator, and the regenerated
-> `representations` evidence hash). All **160** items remain `semanticReview: false`.
+> retained from commit `45f3c40` (no browser-facing behaviour changed by this
+> round or the prior one: only reference metadata, the evidence-date generator,
+> and evidence `verifiedAt`/hash fields — none affect rendered behaviour). All
+> **160** items remain `semanticReview: false`.
 
 **How to sign off AFTER you approve items** (set the env vars BEFORE the script):
 
@@ -160,7 +178,7 @@ and my assessment. "Concern" = something a human should look at before approving
 "No blocking concern" = I found the content factually correct and well-posed, but
 your approval is still required.
 
-### 1. `variables-and-types` — Variables and Types  — hash `59318c3da1069063`
+### 1. `variables-and-types` — Variables and Types  — hash `59318c3da1069063` · verified 2026-10-03
 - **Teaches:** names refer to objects; dynamic typing; `int/float/str/bool/None`;
   **aliasing** and **identity**. The program binds `best = scores`, prints
   `best is scores` (**True**, same object), appends through `best`, then makes a
@@ -203,7 +221,7 @@ your approval is still required.
 - **Assessment:** correct. `cond-fix-1` cleanly demonstrates the broad-test-first
   ordering bug and its fix. **No blocking concern.**
 
-### 4. `loops` — Loops (for and while)  — hash `60a8b338e1b51036`
+### 4. `loops` — Loops (for and while)  — hash `60a8b338e1b51036` · verified 2026-10-03
 - **Teaches:** for = once per item, while = until condition false, accumulator,
   infinite loop. `expectedOutput: "27\n0\n1\n2\n"` (unchanged — code unchanged).
 - **Assessment:** prose, complexity, and exercises (`loop-fix-1` missing
@@ -228,7 +246,7 @@ your approval is still required.
 - **For the reviewer:** confirm you're comfortable that the array view carries no
   pointer here (the for-loop walks values, not indices).
 
-### 5. `functions` — Functions  — hash `fb3892f19f580d34`
+### 5. `functions` — Functions  — hash `fb3892f19f580d34` · verified 2026-10-03
 - **Teaches:** `def`, parameters vs arguments, `return`, None-on-no-return,
   per-call frame + the call stack. `expectedOutput: "7\n"` (unchanged).
 - **Assessment:** correct, incl. "default parameter values evaluated once at
@@ -288,7 +306,7 @@ your approval is still required.
   `err-choose-1` (KeyError vs `in`) both correct and balanced. **No blocking
   concern.**
 
-### 11. `representations` — Representations of Data  — hash `d145cc3190c48bc8`
+### 11. `representations` — Representations of Data  — hash `d145cc3190c48bc8` · verified 2026-10-02
 - **Teaches:** one small graph (nodes 0,1,2 with edges 0–1, 0–2, 1–2) in two
   equivalent encodings — an **edge list** `[(0, 1), (0, 2), (1, 2)]` and an
   **adjacency map** `{0: {1,2}, 1: {0,2}, 2: {0,1}}`. The program rebuilds the

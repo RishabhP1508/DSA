@@ -278,7 +278,7 @@ You can test this directly. The \`is\` operator compares **identity** — whethe
   evidence: {
     inventoryVersion: 19,
     contentHash: "59318c3da1069063",
-    verifiedAt: "2026-09-21",
+    verifiedAt: "2026-10-03",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,

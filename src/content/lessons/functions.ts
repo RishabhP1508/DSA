@@ -141,7 +141,7 @@ Watching the call stack in the visualization makes this concrete: a frame appear
   evidence: {
     inventoryVersion: 19,
     contentHash: "fb3892f19f580d34",
-    verifiedAt: "2026-09-21",
+    verifiedAt: "2026-10-03",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,
