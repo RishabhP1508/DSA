@@ -39,7 +39,7 @@ Watching the call stack in the visualization makes this concrete: a frame appear
   concepts: {
     purpose: "Functions name and reuse logic, reduce repetition, and make code testable and readable.",
     operations: "Define with def, call with arguments, return a result, use local variables.",
-    uses: "Every algorithm is packaged as a function; recursion is a function calling itself.",
+    uses: "Every algorithm is packaged as a function; later lessons build on calls and the call stack shown here.",
     tradeoffs: "Function calls add a small overhead and a stack frame, but the clarity and reuse are almost always worth it.",
     commonMistakes: "Forgetting to return (the function then returns None); confusing parameters with arguments; expecting a function's local variables to exist outside it.",
     edgeCases: "A function with no return statement returns None. Default parameter values are evaluated once, at definition time.",
@@ -88,7 +88,12 @@ Watching the call stack in the visualization makes this concrete: a frame appear
     { line: 9, executable: true, explanation: "Print answer → 7." },
   ],
 
-  bindings: [{ variable: "answer", model: "recursion" }],
+  // `model: "recursion"` is the CALL-STACK visualizer: it reads the recorded
+  // frames (not a bound variable) and shows each call's frame appearing on call
+  // and disappearing on return. The binding names the function whose calls are
+  // being traced (`add`), NOT a result value — this example is a plain function
+  // call, not recursion. The label makes that explicit for the learner.
+  bindings: [{ variable: "add", model: "recursion" }],
 
   prediction: [
     { atEventIndex: 0, prompt: "What does add return if you call add(10, -3)?", answer: "7", explanation: "It returns a + b = 10 + (-3) = 7." },
@@ -135,8 +140,8 @@ Watching the call stack in the visualization makes this concrete: a frame appear
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "83b494a9d37fc2c9",
-    verifiedAt: "2026-09-21",
+    contentHash: "fb3892f19f580d34",
+    verifiedAt: "2026-10-03",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,

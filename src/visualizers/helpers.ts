@@ -148,3 +148,37 @@ export const OVERLAY_COLORS = [
 export function overlayColor(i: number): string {
   return OVERLAY_COLORS[i % OVERLAY_COLORS.length];
 }
+
+/**
+ * Aliasing, read PURELY from the recorded snapshot (never by re-executing code).
+ *
+ * Two names alias the SAME object exactly when their recorded values are refs
+ * with the SAME object id. Given the binding's own variable, this returns the
+ * OTHER in-scope variable names (innermost frame) whose ref id equals the
+ * binding variable's ref id — i.e. the names that share one object with it.
+ *
+ * Example: after `best = scores`, both locals hold `{kind:"ref", id:"obj_42"}`,
+ * so aliasNames(event, {variable:"scores"}) === ["best"] (and vice versa). A
+ * copy like `independent = list(scores)` has a DIFFERENT id, so it is NOT
+ * returned — letting the UI say "independent refers to another object".
+ */
+export function aliasNames(
+  event: TraceEvent,
+  binding: Pick<VisualBinding, "variable">,
+): string[] {
+  const self = resolveVariable(event, binding.variable);
+  if (!self || self.kind !== "ref") return [];
+  const names: string[] = [];
+  const seen = new Set<string>();
+  // Innermost frame first; a name shadowed in an inner frame is reported once.
+  for (let i = event.frames.length - 1; i >= 0; i--) {
+    for (const local of event.frames[i].locals) {
+      if (local.name === binding.variable || seen.has(local.name)) continue;
+      seen.add(local.name);
+      if (local.value.kind === "ref" && local.value.id === self.id) {
+        names.push(local.name);
+      }
+    }
+  }
+  return names;
+}

@@ -13,12 +13,14 @@ import {
   resolveOverlays,
   indexOverlays,
   overlayColor,
+  aliasNames,
 } from "./helpers";
 
 const CELL = 52;
 const GAP = 8;
 const PAD = 16;
 const TOP = 48;
+const ALIAS_H = 20;
 
 export function ArrayVisualizer({
   event,
@@ -34,10 +36,18 @@ export function ArrayVisualizer({
 
   const cells = obj.entries;
   const width = PAD * 2 + Math.max(1, cells.length) * CELL + Math.max(0, cells.length - 1) * GAP;
-  const height = TOP + CELL + 64;
+
+  // Aliasing (snapshot-only): other in-scope names that refer to THIS SAME list
+  // object (equal recorded reference id). Shown so the learner sees that e.g.
+  // `scores` and `best` are one object, while a copy is a different object.
+  const aliases = aliasNames(event, binding);
+  const height = TOP + CELL + 64 + (aliases.length > 0 ? ALIAS_H : 0);
 
   const overlays = resolveOverlays(event, binding);
   const marks = indexOverlays(overlays, cells.length);
+
+  // Push the cells down to make room for the alias note when it is shown.
+  const top = TOP + (aliases.length > 0 ? ALIAS_H : 0);
 
   // Sliding-window overlays: a "window" overlay whose label encodes lo..hi could
   // be added later; for now window ranges are shown via two boundary overlays.
@@ -54,8 +64,14 @@ export function ArrayVisualizer({
         {binding.variable} ({obj.type}, len {cells.length})
       </text>
 
+      {aliases.length > 0 && (
+        <text x={PAD} y={40} className="alias-note" aria-label={`${binding.variable} shares one object with ${aliases.join(", ")}`}>
+          = same object as {aliases.join(", ")} (one shared list)
+        </text>
+      )}
+
       {cells.length === 0 && (
-        <text x={PAD} y={TOP + CELL / 2} className="viz-empty-svg">
+        <text x={PAD} y={top + CELL / 2} className="viz-empty-svg">
           (empty)
         </text>
       )}
@@ -66,16 +82,16 @@ export function ArrayVisualizer({
           <g key={i}>
             <rect
               x={cellX(i)}
-              y={TOP}
+              y={top}
               width={CELL}
               height={CELL}
               rx={6}
               className={mark ? "cell cell-active" : "cell"}
             />
-            <text x={cellX(i) + CELL / 2} y={TOP + CELL / 2 + 5} className="cell-value">
+            <text x={cellX(i) + CELL / 2} y={top + CELL / 2 + 5} className="cell-value">
               {displayValue(cell.value, event.objects)}
             </text>
-            <text x={cellX(i) + CELL / 2} y={TOP + CELL + 18} className="cell-index">
+            <text x={cellX(i) + CELL / 2} y={top + CELL + 18} className="cell-index">
               {i}
             </text>
           </g>
@@ -86,7 +102,7 @@ export function ArrayVisualizer({
         <text
           key={`ptr-${k}`}
           x={cellX(m.index!) + CELL / 2}
-          y={TOP - 14 - (k % 2) * 16}
+          y={top - 14 - (k % 2) * 16}
           className="pointer-label"
           fill={overlayColor(k)}
         >
