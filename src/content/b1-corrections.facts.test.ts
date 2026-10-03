@@ -18,9 +18,16 @@
  *      `best = scores`, while a copied list is a DIFFERENT object. Identity is
  *      read from reference ids in the trace, never by re-executing learner code.
  *
- * A general guard also asserts that EVERY overlay `source` on EVERY lesson
- * binding names a token that actually appears in that lesson's code — closing
- * the verification gap that let the loops false-pointer pass silently.
+ * A general guard asserts that EVERY overlay `source` on EVERY lesson binding
+ * names a token that actually appears in that lesson's code. NOTE: this is a
+ * NECESSARY-not-sufficient check — it rejects a typo'd/undefined source, but it
+ * would NOT have caught the original loops bug, whose source `i` IS a real
+ * variable (the while-counter) that simply does not index `nums`. The property
+ * that actually matters — that an array binding does not highlight a false
+ * position — is enforced SEMANTICALLY, against a real recorded trace, in
+ * `src/visualizers/loops.overlay.real.test.tsx` (it renders the loops `nums`
+ * binding over every step and asserts no cell is ever marked active, with a
+ * positive control proving the old `source: "i"` overlay WOULD have lit a cell).
  */
 import { describe, it, expect } from "vitest";
 import { lessons } from "./registry";
@@ -54,9 +61,12 @@ function codeMentions(code: string, token: string): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// General guard: overlay sources must be real variables in the lesson code.
+// General guard (NECESSARY, not sufficient): an overlay source must at least
+// name a real variable in the lesson code — this rejects typos/undefined names.
+// It does NOT prove the overlay tracks a meaningful position; that is enforced
+// semantically on a real trace in loops.overlay.real.test.tsx (see file header).
 // ---------------------------------------------------------------------------
-describe("B1 guard — overlay sources name a real variable in the lesson code", () => {
+describe("B1 guard — overlay source names a real variable (necessary, not sufficient)", () => {
   for (const l of lessons) {
     for (const b of l.bindings ?? []) {
       for (const o of b.overlays ?? []) {
@@ -104,6 +114,86 @@ describe("B1 finding 1 — representations shows two EQUIVALENT encodings", () =
     const ops = l.complexity.map((c) => c.operation.toLowerCase()).join(" | ");
     expect(ops).toMatch(/edge list|edge-list/);
     expect(ops).toMatch(/adjacency/);
+  });
+
+  // --- Reviewer deepening (amendment 2) ---
+
+  it("the break-it experiment uses a GENUINELY NEW edge (not a duplicate)", () => {
+    // from_edges is a Python set, so re-adding an EXISTING edge cannot change
+    // equality. The experiment must introduce an edge not already present AND
+    // not in the adjacency map (so the stated edit truly makes equality False).
+    const expJoined = l.experiments.join("\n");
+    expect(expJoined).toContain("(0, 3)");
+    // The edge introduced must not already be one of the three existing edges.
+    for (const existing of ["(0, 1)", "(0, 2)", "(1, 2)"]) {
+      // the NEW edge token must differ from each existing edge
+      expect("(0, 3)").not.toBe(existing);
+    }
+    // The lesson text explicitly states this edit yields False.
+    expect(expJoined.toLowerCase()).toMatch(/false/);
+  });
+
+  it("complexity has NO sort term and the program prints no sorted list", () => {
+    // The program prints an equality + a count, not sorted(from_edges), so no
+    // O(E log E) sort cost should be CLAIMED as a bound.
+    expect(l.code).not.toMatch(/sorted\s*\(/);
+    // The claimed time bound (and the summary operation bounds) must be linear —
+    // no logarithmic sort term anywhere a cost is asserted.
+    const claimedBounds = [
+      l.complexityExplanation.time.bound,
+      ...l.complexity.flatMap((c) => [c.best, c.average, c.worst]),
+    ]
+      .join(" | ")
+      .toLowerCase();
+    expect(claimedBounds).not.toMatch(/log/);
+    // The prose should note that there is no sort step (reconciliation).
+    const cx = JSON.stringify(l.complexityExplanation).toLowerCase();
+    expect(cx).toMatch(/no sort/);
+  });
+
+  it("distinguishes expected O(1) key lookup from O(degree) neighbour enumeration", () => {
+    const adjOp = l.complexity.find((c) => /adjacency/i.test(c.operation));
+    const blob = `${adjOp?.note ?? ""} ${JSON.stringify(l.complexityExplanation)}`.toLowerCase();
+    expect(blob).toMatch(/o\(1\)/); // the keyed REACH is expected O(1)
+    expect(blob).toMatch(/o\(degree\)/); // reading/enumerating neighbours is O(degree)
+    // and the two are explicitly separated (reach vs read/enumerate)
+    expect(blob).toMatch(/reach|lookup/);
+    expect(blob).toMatch(/enumerat|read/);
+  });
+
+  it("states the assumptions under which the two encodings are equal", () => {
+    const blob = (
+      lessonProse(l) +
+      "\n" +
+      (l.complexityExplanation?.assumptions ?? []).join("\n")
+    ).toLowerCase();
+    expect(blob).toContain("undirected");
+    expect(blob).toMatch(/self-loop|self loop/);
+    expect(blob).toMatch(/duplicate|parallel/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Finding 2 — representations is reachable by a beginner at its position.
+// ---------------------------------------------------------------------------
+describe("B1 finding 2 — representations prerequisites match the constructs used", () => {
+  const l = byId("representations");
+
+  it("declares loops as a prerequisite (it uses for-loops incl. a nested one)", () => {
+    expect(l.prerequisites).toContain("variables-and-types");
+    expect(l.prerequisites).toContain("loops");
+  });
+
+  it("introduces set and nested-loop vocabulary it relies on", () => {
+    const terms = l.vocabulary.map((v) => v.term.toLowerCase());
+    expect(terms.some((t) => t.includes("set"))).toBe(true);
+    expect(terms.some((t) => t.includes("nested"))).toBe(true);
+  });
+
+  it("uses plain for-loops rather than set/dict comprehensions", () => {
+    // Beginner-friendlier: explicit loops, no comprehension syntax.
+    expect(l.code).toMatch(/\bfor\b/);
+    expect(l.code).not.toMatch(/\{[^}]*\bfor\b[^}]*\}/); // no {... for ...} comprehension
   });
 });
 

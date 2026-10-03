@@ -45,7 +45,7 @@ Because the name only *refers* to the object, you can point it at something of a
 
 A subtle but important consequence: two names can refer to the **same** object. If that object can be changed in place (like a list), a change made through one name is visible through the other. This is called **aliasing**, and it is one of the most common sources of surprise for beginners.
 
-You can test this directly. The \`is\` operator compares **identity** — whether two names point at the very same object — not just equal contents. After \`best = scores\`, \`best is scores\` is \`True\` (one shared list). Make a **copy** with \`list(scores)\` and it is a *different* object with equal contents, so \`independent is scores\` is \`False\`. The visualization shows this from the recorded snapshot: aliased names carry the same object reference, a copy carries a new one.`,
+You can test this directly. The \`is\` operator compares **identity** — whether two names point at the very same object — not just equal contents. After \`best = scores\`, \`best is scores\` is \`True\` (one shared list). Make a **copy** with \`list(scores)\` and it is a *different* object with equal contents, so \`independent is scores\` is \`False\`. The visualization shows this directly from the recorded snapshot: the list for \`scores\` is labelled "same object as best", because the two names carry the same object reference, while \`independent\` carries a new reference and shows no such label — a copy, not an alias.`,
 
   vocabulary: [
     { term: "Variable (name)", definition: "A label that refers to a value. It does not store the value directly; it points at an object." },
@@ -277,7 +277,7 @@ You can test this directly. The \`is\` operator compares **identity** — whethe
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "8af5048a0e87e562",
+    contentHash: "59318c3da1069063",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

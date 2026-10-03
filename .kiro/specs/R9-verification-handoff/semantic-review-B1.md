@@ -14,20 +14,44 @@ is factually correct, the explanation/vocabulary/complexity/`expectedOutput`
 agree with real CPython-3.14 behaviour, exercises are correct and well-posed, and
 prerequisites are introduced before use.
 
-> **Update — the 4 flagged findings have been FIXED (test-first).** The four
-> items that carried a concern (`representations`, `loops`, `functions`,
-> `variables-and-types`) were corrected on this branch and are backed by a new
-> regression suite `src/content/b1-corrections.facts.test.ts` (97 tests). Their
-> content hashes changed (new values in the table below); they remain
-> `semanticReview: false` like the rest. The fixes do **not** constitute sign-off
-> — a human still reviews and approves every item. See "Fix log" per item.
+> **Update — the 4 flagged findings have been FIXED (test-first), then DEEPENED
+> after a second review pass.** The four items that carried a concern
+> (`representations`, `loops`, `functions`, `variables-and-types`) were corrected
+> on this branch and are backed by regression tests. Their content hashes changed
+> (new values in the table below); they remain `semanticReview: false` like the
+> rest. The fixes do **not** constitute sign-off — a human still reviews and
+> approves every item. See "Fix log" per item.
+>
+> **Amendment 3 (this round) — deeper fixes from the second review:**
+> - *representations:* the "break it" experiment now uses a **genuinely new edge**
+>   `(0, 3)` (adding an existing edge to a set changes nothing); the stated edit
+>   makes the equality print **False**. The program no longer sorts (prints a
+>   count), so complexity carries **no O(E log E)** term; complexity now
+>   distinguishes the **expected-O(1) keyed reach** from the **O(degree)
+>   enumeration** of neighbours; and the **assumptions** for equivalence
+>   (undirected, no self-loops, no duplicate edges, same node set) are stated.
+> - *representations prerequisites:* now also requires **`loops`** (it uses a
+>   nested `for`), and the program was rewritten with **plain for-loops** (no set
+>   comprehensions); new vocabulary explains `set` and `nested loop`.
+> - *variables-and-types / aliasing:* aliasing is now **visible in the rendered
+>   UI** — the array view labels that `scores` and `best` are one shared object
+>   (and a copy is not), driven purely by recorded reference ids. Proven by a
+>   **rendered** test (`src/visualizers/ArrayVisualizer.aliasing.test.tsx`), not
+>   by the printed `is` alone.
+> - *overlay guard:* the general "source names a real variable" check is now
+>   labelled **necessary-not-sufficient** (it would NOT have caught the old `i`
+>   pointer); a **semantic trace/render** test
+>   (`src/visualizers/loops.overlay.real.test.tsx`) renders the loops `nums`
+>   binding over the real recorded trace and asserts no cell is ever highlighted,
+>   with a **positive control** proving the old `source: "i"` overlay WOULD have
+>   lit a false cell.
 >
 > **Machine verification on this branch:** `npm run check:all` → exit 0 (unit
-> **573** passed; model solutions **161/161**; R6.4 mistake-rejection all five
-> categories **161/161**; coverage-evidence **131 verified / 0 not-yet**;
-> recognition **164**; hints **325**; all **131** lesson outputs match).
-> `npm run test:browser` → **18 passed / 5 skipped** (the 5 skips are
-> `P-RUNNER-ORIGIN`). All **160** items remain `semanticReview: false`.
+> **586** passed across **41** files; model solutions **161/161**; R6.4
+> mistake-rejection all five categories **161/161**; coverage-evidence **131
+> verified / 0 not-yet**; recognition **164**; hints **325**; all **131** lesson
+> outputs match). `npm run test:browser` → **18 passed / 5 skipped** (the 5 skips
+> are `P-RUNNER-ORIGIN`). All **160** items remain `semanticReview: false`.
 
 **How to sign off AFTER you approve items** (set the env vars BEFORE the script):
 
@@ -53,7 +77,7 @@ four items corrected on this branch (new hash shown).
 
 | # | Lesson ID | File | Title | contentHash | Exercises |
 |---|---|---|---|---|---|
-| 1 | `variables-and-types` | `src/content/lessons/variables-and-types.ts` | Variables and Types | `8af5048a0e87e562` *(fixed)* | vt-predict-1, vt-fix-1, vt-choose-1 |
+| 1 | `variables-and-types` | `src/content/lessons/variables-and-types.ts` | Variables and Types | `59318c3da1069063` *(fixed)* | vt-predict-1, vt-fix-1, vt-choose-1 |
 | 2 | `expressions` | `src/content/lessons/expressions.ts` | Expressions and Operators | `f143fe2cdd58cb0a` | expr-predict-1, expr-choose-1 |
 | 3 | `conditions` | `src/content/lessons/conditions.ts` | Conditions (if/elif/else) | `9c63d07d9bb2235d` | cond-fix-1, cond-predict-1 |
 | 4 | `loops` | `src/content/lessons/loops.ts` | Loops (for and while) | `60a8b338e1b51036` *(fixed)* | loop-fix-1, loop-complete-1 |
@@ -63,7 +87,7 @@ four items corrected on this branch (new hash shown).
 | 8 | `references-mutation` | `src/content/lessons/references-mutation.ts` | References and Mutation | `5feb2cad2643ea0c` | ref-predict-1, ref-fix-1 |
 | 9 | `classes` | `src/content/lessons/classes.ts` | Classes and Objects | `8693b395b5881198` | class-complete-1, class-predict-1 |
 | 10 | `errors` | `src/content/lessons/errors.ts` | Errors and Exceptions | `c144f84f8a9c03e1` | err-complete-1, err-choose-1 |
-| 11 | `representations` | `src/content/lessons/representations.ts` | Representations of Data | `6f9911863af4840e` *(fixed)* | repr-choose-1, repr-predict-1 |
+| 11 | `representations` | `src/content/lessons/representations.ts` | Representations of Data | `11eb89feeb97c533` *(fixed)* | repr-choose-1, repr-predict-1 |
 | 12 | `complexity` | `src/content/lessons/complexity.ts` | Time and Space Complexity | `448bbae5526f4263` | cx-predict-1, cx-choose-1 |
 | 13 | `cases` | `src/content/lessons/cases.ts` | Best, Average, and Worst Cases | `1f31f7d42bd2adc4` | cases-predict-1, cases-choose-1 |
 | 14 | `amortized` | `src/content/lessons/amortized.ts` | Amortized Cost | `5b23a0c6bd8b3a52` | amort-predict-1, amort-choose-1 |
@@ -84,9 +108,9 @@ and my assessment. "Concern" = something a human should look at before approving
 "No blocking concern" = I found the content factually correct and well-posed, but
 your approval is still required.
 
-### 1. `variables-and-types` — Variables and Types  — hash `8af5048a0e87e562`
+### 1. `variables-and-types` — Variables and Types  — hash `59318c3da1069063`
 - **Teaches:** names refer to objects; dynamic typing; `int/float/str/bool/None`;
-  **aliasing** and **identity**. The program now binds `best = scores`, prints
+  **aliasing** and **identity**. The program binds `best = scores`, prints
   `best is scores` (**True**, same object), appends through `best`, then makes a
   copy `independent = list(scores)` and prints `independent is scores`
   (**False**, different object).
@@ -94,16 +118,21 @@ your approval is still required.
 - **Assessment:** factually correct — int unlimited precision, bool subtype of
   int, None a singleton, and the `is` (identity) vs `==` (equality) distinction
   all correct. Exercises correct.
-- **Fix log (was: aliasing not shown visually):** the program now demonstrates
+- **Fix log (was: aliasing not shown visually):** the program demonstrates
   identity explicitly with `is`, and **both** aliasing names plus the copy are
-  bound (`scores`, `best`, `independent`), so the recorded snapshot shows the
-  equal reference id for the aliases and a different id for the copy. Identity is
-  read from the trace's reference ids — the learner's code is NOT re-executed to
-  infer it. Guarded by `b1-corrections.facts.test.ts` ("teaches identity from the
-  snapshot").
-- **For the reviewer:** confirm the identity framing (`is` vs `==`) reads clearly
-  for a first-time learner and that showing a copy alongside the alias is helpful
-  rather than busy.
+  bound (`scores`, `best`, `independent`). **Amendment 3 makes aliasing visible in
+  the RENDERED UI**, not just via the printed `is`: the array view now draws a
+  "**= same object as best (one shared list)**" label on `scores`/`best` because
+  their recorded reference ids are equal, and draws **no** such label on
+  `independent` (a different id). This is computed purely from the snapshot
+  (`aliasNames` in `src/visualizers/helpers.ts`) — the learner's code is never
+  re-executed. Proven by the **rendered** test
+  `src/visualizers/ArrayVisualizer.aliasing.test.tsx` (before aliasing: no label;
+  after `best = scores`: label names `best`; after the copy: `independent` has no
+  label and `scores`'s label excludes it; equal-contents-different-id: no label).
+  The lesson prose now names this on-screen label.
+- **For the reviewer:** confirm the identity framing (`is` vs `==`) and the
+  on-screen "same object" label read clearly for a first-time learner.
 
 ### 2. `expressions` — Expressions and Operators
 - **Teaches:** precedence; `/` (float) vs `//` (floor) vs `%` (remainder) vs `**`;
@@ -129,10 +158,17 @@ your approval is still required.
   the **unrelated while-loop counter** `i` (0,1,2) — a position that has nothing
   to do with the `for x in nums` loop. The overlay was **removed** (nums now has
   no index overlay); the loop value `x` and the counter `i` are shown directly in
-  the variables panel from the recorded frame. A new general guard in
-  `b1-corrections.facts.test.ts` asserts **every** overlay `source` across all
-  lessons names a variable that actually appears in that lesson's code, so this
-  class of bug can't ship silently again.
+  the variables panel from the recorded frame.
+- **Fix log — overlay guard strengthened (amendment 3):** the first-round guard
+  only checked that an overlay `source` NAMES a variable in the code. That is
+  **necessary but not sufficient** — it would NOT have caught this bug, because
+  `i` IS a real variable. It is now labelled as such, and the real property is
+  enforced **semantically**: `src/visualizers/loops.overlay.real.test.tsx` runs
+  the loops program through the real tracer and renders the `nums` binding over
+  **every** recorded step, asserting **no cell is ever highlighted** and no
+  pointer label is drawn. A **positive control** in the same file rebuilds the old
+  `{ source: "i" }` overlay and asserts it WOULD have lit a false cell — proving
+  the check has teeth.
 - **For the reviewer:** confirm you're comfortable that the array view carries no
   pointer here (the for-loop walks values, not indices).
 
@@ -196,28 +232,47 @@ your approval is still required.
   `err-choose-1` (KeyError vs `in`) both correct and balanced. **No blocking
   concern.**
 
-### 11. `representations` — Representations of Data  — hash `6f9911863af4840e`
+### 11. `representations` — Representations of Data  — hash `11eb89feeb97c533`
 - **Teaches:** one small graph (nodes 0,1,2 with edges 0–1, 0–2, 1–2) in two
-  **genuinely equivalent** encodings — an **edge list**
-  `[(0, 1), (0, 2), (1, 2)]` and an **adjacency map** `{0: {1,2}, 1: {0,2}, 2: {0,1}}`.
-  The program rebuilds the connection set from EACH (normalising edges as
-  `(min, max)`) and prints that they are equal.
-  `expectedOutput: "True\n[(0, 1), (0, 2), (1, 2)]\n"`.
-- **Assessment:** teaching is correct; complexity table now describes both
-  representations (edge-list O(E) iteration; adjacency-map expected O(1) neighbour
-  lookup; O(V+E) space). Two credible references (ODS, Runestone graphs).
-- **Fix log (was: two NON-equivalent examples):** the old program showed
+  equivalent encodings — an **edge list** `[(0, 1), (0, 2), (1, 2)]` and an
+  **adjacency map** `{0: {1,2}, 1: {0,2}, 2: {0,1}}`. The program rebuilds the
+  connection set from EACH with **plain for-loops** (normalising edges as
+  `(min, max)`), prints that they are equal, then prints the count.
+  `expectedOutput: "True\n3\n"`.
+- **Assessment:** teaching is correct; complexity table describes both
+  representations and the time explanation is reconciled with the program (no
+  sort). Two credible references (ODS, Runestone graphs).
+- **Fix log (was: two NON-equivalent examples):** the original program showed
   `as_list = [0, 1, 1, 0]` and `as_dict = {0: [1], 1: [0]}` framed as "the same
   information," but they encoded different relationships. Replaced with the edge
-  list + adjacency map of one graph, and the program itself **proves
-  equivalence** (prints `True`) by reconstructing and comparing the connection
-  set from each. Bindings (`edges` array, `adj` dict), explanations, prediction,
-  complexity, and prose were all updated together. Guarded by
-  `b1-corrections.facts.test.ts` ("shows two EQUIVALENT encodings", incl. a check
-  that the program prints the equality proof).
-- **For the reviewer:** confirm the edge-list/adjacency framing is appropriate at
-  foundations level (the dedicated `graph-representations` lesson later goes
-  deeper into adjacency list vs matrix).
+  list + adjacency map of one graph; the program **proves equivalence** (prints
+  `True`) by reconstructing and comparing the connection set from each.
+- **Fix log — deepened (amendment 3):**
+  - *Experiment uses a genuinely new edge:* the "break it" experiment now adds
+    **`(0, 3)`** (a new node/edge) to the edge list only. Because `from_edges` is
+    a **set**, re-adding an existing edge would change nothing; `(0, 3)` is absent
+    from the adjacency map, so the equality check prints **False** (count 4).
+    Verified on the bundled runtime and asserted in `b1-corrections.facts.test.ts`
+    ("the break-it experiment uses a GENUINELY NEW edge").
+  - *Complexity reconciled with the program:* the program no longer calls
+    `sorted(...)` (it prints `len(from_edges)`), so there is **no O(E log E)**
+    sort term; the claimed bounds are linear and a test asserts no `log` term
+    appears in any claimed bound.
+  - *Expected lookup vs enumeration distinguished:* the adjacency-map row and the
+    complexity prose now separate the **expected O(1)** hashed **reach** of a
+    node's neighbour set from the **O(degree)** cost of **enumerating** those
+    neighbours (asserted by a test).
+  - *Equivalence assumptions stated:* undirected, no self-loops, no
+    duplicate/parallel edges, and the same node set — in the explanation and the
+    `assumptions` list (asserted by a test).
+- **Fix log — prerequisites/beginner level (finding 2):** the lesson now lists
+  **`loops`** as a prerequisite (it uses a nested `for`), the program was
+  rewritten with **plain for-loops** instead of set comprehensions, and new
+  vocabulary explains **`set`** and **nested loop**. The learning-path graph was
+  re-validated (`verify:lessons`): no missing prereqs, no cycles.
+- **For the reviewer:** confirm the edge-list/adjacency framing and the plain-loop
+  rewrite are appropriate at foundations level (the dedicated
+  `graph-representations` lesson later goes deeper into adjacency list vs matrix).
 
 ### 12. `complexity` — Time and Space Complexity
 - **Teaches:** Big-O (O(1)/O(n)/O(n²)), input size n, time vs auxiliary space;
@@ -254,10 +309,25 @@ your approval is still required.
 
 ## Summary for the reviewer
 
-- **The 4 previously-flagged findings are now fixed** (test-first) and
-  regression-guarded: `representations` (equivalent encodings), `loops` (false
-  pointer removed), `functions` (call-stack binding/label), `variables-and-types`
-  (identity shown from the snapshot). All four still read `semanticReview: false`.
+- **The 4 previously-flagged findings are fixed and then DEEPENED** after a second
+  review, all test-first and regression-guarded:
+  - `representations` — equivalent edge-list/adjacency-map encodings; break-it
+    experiment uses a genuinely new edge → `False`; complexity reconciled (no
+    sort; expected-O(1) reach vs O(degree) enumeration); equivalence assumptions
+    stated; prerequisites now include `loops` and the program uses plain
+    for-loops (beginner level).
+  - `loops` — false pointer removed; the overlay guard is now a **semantic**
+    trace/render check (`loops.overlay.real.test.tsx`) with a positive control,
+    not merely "source names a variable".
+  - `functions` — call-stack binding/label (not recursion-on-answer).
+  - `variables-and-types` — identity is **visible in the rendered UI** (a "same
+    object as best" label from recorded ref ids), proven by a rendered test, not
+    just the printed `is`.
+  All four still read `semanticReview: false`.
+- **New regression files this round:**
+  `src/visualizers/ArrayVisualizer.aliasing.test.tsx` (rendered aliasing) and
+  `src/visualizers/loops.overlay.real.test.tsx` (semantic overlay check), plus
+  deepened cases in `src/content/b1-corrections.facts.test.ts`.
 - **The other 11 items** were found factually correct with no blocking concern:
   `expressions`, `conditions`, `io`, `references-mutation`, `errors`,
   `complexity`, `cases`, `amortized`, `correctness`, `scope`, `classes`.
