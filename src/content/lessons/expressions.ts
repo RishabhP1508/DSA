@@ -32,7 +32,7 @@ Python has three "division-like" operators that beginners often confuse. For the
     { term: "Expression", definition: "Code that evaluates to a single value, e.g. 2 + 3 * 4." },
     { term: "Operator", definition: "A symbol that combines values, e.g. +, -, *, /, %, //, **." },
     { term: "Precedence", definition: "The order operators are applied; * and / bind tighter than + and -." },
-    { term: "True division (/)", definition: "Division of numbers that yields a float, e.g. 10 / 4 == 2.5 (even 4 / 2 == 2.0)." },
+    { term: "True division (/)", definition: "For the built-in int/float operands taught here, `/` yields a float, e.g. 10 / 4 == 2.5 (even 4 / 2 == 2.0). (Other numeric types differ: complex operands give a complex.)" },
     { term: "Floor division (//)", definition: "Floors the quotient (rounds toward -infinity); two ints give an int (7 // 2 == 3), a float operand gives a float (7.0 // 2 == 3.0)." },
     { term: "Modulo (%)", definition: "The remainder after division, e.g. 17 % 5 == 2." },
   ],
@@ -108,8 +108,8 @@ Python has three "division-like" operators that beginners often confuse. For the
       id: "expr-predict-1",
       kind: "predict-state",
       prompt: "What does `10 / 2` evaluate to, and what type is it?",
-      expected: "5.0, a float (true division of numbers yields a float, even when it divides evenly).",
-      hints: ["/ is true division.", "On numbers, true division yields a float.", "10 / 2 == 5.0 (not 5)."],
+      expected: "5.0, a float — for the int/float operands taught here, `/` (true division) yields a float, even when it divides evenly.",
+      hints: ["/ is true division.", "On int/float operands, true division yields a float.", "10 / 2 == 5.0 (not 5)."],
     },
     {
       id: "expr-choose-1",
@@ -131,7 +131,7 @@ Python has three "division-like" operators that beginners often confuse. For the
       section: "Numbers (operators and division)",
       topic: "foundations/expressions",
       purpose: "Confirm operator behaviour: / returns float, // floors, ** powers, and operator precedence.",
-      verifiedClaims: ["/ on numbers returns a float", "// floors the quotient (int//int -> int, float operand -> float)", "** is exponentiation"],
+      verifiedClaims: ["/ on int/float operands returns a float", "// floors the quotient (int//int -> int, float operand -> float)", "** is exponentiation"],
       accessDate: "2026-09-20",
     },
     {
@@ -146,7 +146,7 @@ Python has three "division-like" operators that beginners often confuse. For the
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "a43d57ba88b81166",
+    contentHash: "d2d21f9a9f3353b0",
     verifiedAt: "2026-10-03",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

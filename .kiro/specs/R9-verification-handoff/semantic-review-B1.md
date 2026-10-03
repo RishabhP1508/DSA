@@ -135,21 +135,38 @@ prerequisites are introduced before use.
 >   "any numeric inputs" claims (Python ints are arbitrary precision); keep O(1)
 >   `case: worst` for the small fixed-size operands and state that assumption;
 >   add the Python Numeric Types reference.
-> - New hashes: variables-and-types `769b36aaf693d104`, expressions
->   `a43d57ba88b81166`, loops `ff5a1658e037ec10`, functions `8e233bf96888307b`;
->   all four re-dated `2026-10-03` (only these four — the other 156 keep
->   2026-09-21, `representations` keeps 2026-10-02). **No `semanticReview` flag
->   changed; still 0 sign-offs.**
+> - Amendment-7 hashes (superseded for expressions/functions by Amendment 8
+>   below): variables-and-types `769b36aaf693d104`, loops `ff5a1658e037ec10`
+>   (unchanged since); expressions and functions were re-touched in Amendment 8.
+>   All B1-fixed items re-dated `2026-10-03` (the other 155 keep 2026-09-21,
+>   `representations` keeps 2026-10-02). **No `semanticReview` flag changed.**
 >
-> **Machine verification (branch `fix/b1-group1-followup`):** `npm run check:all`
-> → exit 0 (unit **620** passed across **44** files; model solutions **161/161**;
-> R6.4 mistake-rejection all five categories **161/161**; coverage-evidence **131
-> verified / 0 not-yet**; recognition **164**; hints **325**; all **131** lesson
-> outputs match). `npm run test:browser` → **18 passed / 5 skipped**, result
-> retained from commit `45f3c40` (this round changes only learner-facing text,
-> complexity metadata, references, and evidence hash/date fields — no
-> browser-facing/rendered behaviour changed). All **160** items remain
-> `semanticReview: false`.
+> **Amendment 8 (this round — reviewer's narrower findings on PR #24):**
+> - *expressions* — scope EVERY learner-facing "`/` yields a float" claim to the
+>   built-in **int/float** operands taught (vocabulary, `expr-predict-1` expected
+>   + hints, and the reference `verifiedClaims`), since **complex** operands give
+>   a complex. New regression `src/content/b1-group1-expr-fn.facts.test.ts`
+>   checks those fields and verifies the complex counterexample
+>   `(1 + 2j) / (1 + 1j) → complex` on the bundled runtime; the standard output
+>   `14 20 2\n3 32 2.5\n` is preserved. New hash `d2d21f9a9f3353b0`.
+> - *functions* — the Numeric Types page establishes only **unlimited-precision
+>   integers**, so its `verifiedClaims` is narrowed to that; the **O(d)** addition
+>   cost is now presented as the lesson's **own derived** complexity reasoning,
+>   not a claim quoted from the page. New hash `34076dce4cf0d3ba`.
+> - Only expressions and functions were re-hashed/re-dated this round; the other
+>   158 items are untouched. **No `semanticReview` flag changed; still 0 sign-offs.**
+>
+> **Machine verification (branch `fix/b1-group1-followup`, Amendment 8 head):**
+> `npm run check:all` → exit 0 (unit **629** passed across **45** files; model
+> solutions **161/161**; R6.4 mistake-rejection all five categories **161/161**;
+> coverage-evidence **131 verified / 0 not-yet**; recognition **164**; hints
+> **325**; all **131** lesson outputs match). **`npm run test:browser`:** the
+> only recorded browser run (18 passed / 5 skipped) was on an EARLIER commit
+> (`45f3c40`); it is a **prior-commit result**, not proof that this amendment's
+> rendered output is unchanged — **lesson text IS rendered in the browser**, and
+> this round edits learner-facing text. A fresh `test:browser` run on this
+> amendment's head is recorded in the PR; see the PR comment / commit for its
+> result SHA. All **160** items remain `semanticReview: false`.
 
 **How to sign off AFTER you approve items** (set the env vars BEFORE the script):
 
@@ -176,10 +193,10 @@ four items corrected on this branch (new hash shown).
 | # | Lesson ID | File | Title | contentHash | Exercises |
 |---|---|---|---|---|---|
 | 1 | `variables-and-types` | `src/content/lessons/variables-and-types.ts` | Variables and Types | `769b36aaf693d104` *(fixed)* | vt-predict-1, vt-fix-1, vt-choose-1 |
-| 2 | `expressions` | `src/content/lessons/expressions.ts` | Expressions and Operators | `a43d57ba88b81166` *(fixed)* | expr-predict-1, expr-choose-1 |
+| 2 | `expressions` | `src/content/lessons/expressions.ts` | Expressions and Operators | `d2d21f9a9f3353b0` *(fixed)* | expr-predict-1, expr-choose-1 |
 | 3 | `conditions` | `src/content/lessons/conditions.ts` | Conditions (if/elif/else) | `9c63d07d9bb2235d` | cond-fix-1, cond-predict-1 |
 | 4 | `loops` | `src/content/lessons/loops.ts` | Loops (for and while) | `ff5a1658e037ec10` *(fixed)* | loop-fix-1, loop-complete-1 |
-| 5 | `functions` | `src/content/lessons/functions.ts` | Functions | `8e233bf96888307b` *(fixed)* | func-complete-1, func-predict-1 |
+| 5 | `functions` | `src/content/lessons/functions.ts` | Functions | `34076dce4cf0d3ba` *(fixed)* | func-complete-1, func-predict-1 |
 | 6 | `scope` | `src/content/lessons/scope.ts` | Scope (Local vs Global) | `784f6b28a2aed1d6` | scope-predict-1, scope-choose-1 |
 | 7 | `io` | `src/content/lessons/io.ts` | Input and Output | `9ec7390e15aa8128` | io-fix-1, io-predict-1 |
 | 8 | `references-mutation` | `src/content/lessons/references-mutation.ts` | References and Mutation | `5feb2cad2643ea0c` | ref-predict-1, ref-fix-1 |
@@ -247,7 +264,7 @@ your approval is still required.
 - **For the reviewer:** confirm the identity framing (`is` vs `==`) and the
   on-screen "same object" label read clearly for a first-time learner.
 
-### 2. `expressions` — Expressions and Operators  — hash `a43d57ba88b81166` · verified 2026-10-03
+### 2. `expressions` — Expressions and Operators  — hash `d2d21f9a9f3353b0` · verified 2026-10-03
 - **Teaches:** precedence; `/` (float) vs `//` (floor) vs `%` (remainder) vs `**`;
   parentheses. `expectedOutput: "14 20 2\n3 32 2.5\n"`.
 - **Assessment:** correct, incl. the subtle `-1 % 5 == 4` (Python modulo follows
@@ -261,6 +278,16 @@ your approval is still required.
   "`/` always gives a float" claim is now **scoped to the int/float operands
   taught** (with a note that a custom class can define these operators), rather
   than a universal claim; the reference `verifiedClaims` were scoped to match.
+- **Fix log — Amendment 8 (reviewer: scope EVERY '/' float claim):** the
+  remaining learner-facing "`/` yields a float" wordings still said "of numbers" /
+  "on numbers", which is too broad — **complex** operands yield a complex, not a
+  float. All four were narrowed to the **built-in int/float operands taught**: the
+  `True division (/)` vocabulary entry, the `expr-predict-1` **expected** answer
+  and its **hints**, and the reference `verifiedClaims`. A regression
+  (`src/content/b1-group1-expr-fn.facts.test.ts`) checks those exact fields AND
+  verifies on the bundled runtime that `(1 + 2j) / (1 + 1j)` is a **complex**
+  (counterexample), while the standard example's output `14 20 2\n3 32 2.5\n` is
+  preserved. New hash `d2d21f9a9f3353b0`.
 - **Teaches:** first-true-branch wins, order matters, `==` vs `=`, comparison
   operators. `expectedOutput: "hot\n"`.
 - **Assessment:** correct. `cond-fix-1` cleanly demonstrates the broad-test-first
@@ -302,7 +329,7 @@ your approval is still required.
 - **For the reviewer:** confirm you're comfortable that the array view carries no
   pointer here (the for-loop walks values, not indices).
 
-### 5. `functions` — Functions  — hash `8e233bf96888307b` · verified 2026-10-03
+### 5. `functions` — Functions  — hash `34076dce4cf0d3ba` · verified 2026-10-03
 - **Teaches:** `def`, parameters vs arguments, `return`, None-on-no-return,
   per-call frame + the call stack. `expectedOutput: "7\n"` (unchanged).
 - **Assessment:** correct, incl. "default parameter values evaluated once at
@@ -328,6 +355,14 @@ your approval is still required.
   explicit assumption, with the large-integer caveat. A second reference (Python
   **Numeric Types** docs) was added — which also resolves the earlier
   single-reference nit.
+- **Fix log — Amendment 8 (reviewer: O(d) is derived, not quoted):** the Numeric
+  Types page directly establishes only that Python `int` has **unlimited
+  precision**, so its `verifiedClaims` is narrowed to exactly that ("no fixed
+  width / no overflow"). The **O(d) addition cost** is now presented as the
+  lesson's **own derived complexity reasoning** from that fact (the assumptions
+  note reads "Deriving the general case ourselves: … adding two d-digit integers
+  must process all d digits, so it is O(d)…"), not as a claim quoted from the
+  page. Guarded by `b1-group1-expr-fn.facts.test.ts`. New hash `34076dce4cf0d3ba`.
 - **For the reviewer:** confirm the small-operand O(1) framing (and its
   arbitrary-precision caveat) reads clearly.
 
