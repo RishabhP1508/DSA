@@ -26,9 +26,36 @@ import { loadCurriculum } from "./lib/load-curriculum.mjs";
 import { runProgram } from "./lib/pyodide-harness.mjs";
 import { contentHashOf } from "./lib/content-hash.mjs";
 import { validateExample } from "./lib/example-model.mjs";
+import { resolveToday, verifiedAtFor } from "./lib/evidence-date.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const NOW = "2026-09-21";
+
+/**
+ * The verification date to stamp on evidence that is NEW or whose content
+ * actually changed this run. It is the REAL current date by default (not a
+ * hard-coded constant), so freshly recorded evidence carries its actual
+ * verification date. For reproducible runs/tests it can be pinned with the
+ * VERIFIED_DATE=YYYY-MM-DD env var (validated by resolveToday).
+ *
+ * Crucially, this date is applied ONLY to items whose content hash changed (or
+ * that have no prior evidence) — see `verifiedAtFor`. An unchanged item KEEPS
+ * its previously recorded `verifiedAt`, so regenerating after editing one lesson
+ * does NOT bulk-redate the other, untouched items.
+ */
+const TODAY = resolveToday(process.env.VERIFIED_DATE);
+
+/**
+ * Read the evidence block already recorded in a content file (if any), so an
+ * unchanged item can keep its original verification date.
+ * Returns { contentHash, verifiedAt } or null when there is no prior block.
+ */
+function readPriorEvidence(filePath) {
+  const src = readFileSync(filePath, "utf8");
+  const hashM = src.match(/\n\s*contentHash:\s*"([^"]+)"/);
+  const dateM = src.match(/\n\s*verifiedAt:\s*"([^"]+)"/);
+  if (!hashM && !dateM) return null;
+  return { contentHash: hashM ? hashM[1] : null, verifiedAt: dateM ? dateM[1] : null };
+}
 
 const { lessons, patterns } = await loadCurriculum();
 const { COVERAGE_VERSION } = await import(pathToFileURL(path.join(ROOT, "src/content/coverage.ts")).href);
@@ -98,7 +125,7 @@ async function evidenceFor(kind, item) {
     edgeCases: kind === "lesson" ? item.concepts?.edgeCases : [...(item.counterexamples ?? []), ...(item.conditions ?? [])],
     // Temporarily attach a matching hash so the evidence-check passes during generation;
     // we recompute the real hash below from the final content.
-    item: { ...item, evidence: { contentHash: contentHashOf(item), verifiedAt: NOW, inventoryVersion: 0, checks: {} } },
+    item: { ...item, evidence: { contentHash: contentHashOf(item), verifiedAt: TODAY, inventoryVersion: 0, checks: {} } },
   };
   const problems = validateExample(example, executed);
   // Aspect flags.
@@ -115,13 +142,13 @@ async function evidenceFor(kind, item) {
   return { checks, unresolved, res };
 }
 
-function renderEvidence(hash, checks, unresolved, indent, inventoryVersion, reviewed, reviewBatch) {
+function renderEvidence(hash, checks, unresolved, indent, inventoryVersion, reviewed, reviewBatch, verifiedAt) {
   const c = checks;
   const lines = [];
   lines.push(`${indent}evidence: {`);
   lines.push(`${indent}  inventoryVersion: ${inventoryVersion},`);
   lines.push(`${indent}  contentHash: "${hash}",`);
-  lines.push(`${indent}  verifiedAt: "${NOW}",`);
+  lines.push(`${indent}  verifiedAt: "${verifiedAt}",`);
   lines.push(`${indent}  checks: { content: ${c.content}, implementation: ${c.implementation}, visualization: ${c.visualization}, exercise: ${c.exercise}, complexity: ${c.complexity}, references: ${c.references} },`);
   // semanticReview is true ONLY when the human-review ledger's reviewedHash
   // matches the current content hash (see reviewStateFor). reviewBatch is
@@ -158,7 +185,12 @@ for (const [kind, items, files] of [["lesson", lessons, lessonFiles], ["pattern"
     const hash = contentHashOf(item); // hash of current content
     const indent = "  ";
     const { reviewed, batch } = reviewStateFor(kind, item, hash);
-    writeEvidence(filePath, renderEvidence(hash, checks, unresolved, indent, COVERAGE_VERSION, reviewed, batch));
+    // Preserve the prior verification date for UNCHANGED items; stamp TODAY only
+    // when the content hash changed or there was no prior evidence. This avoids
+    // bulk re-dating untouched items when regenerating after a single edit.
+    const prior = readPriorEvidence(filePath);
+    const verifiedAt = verifiedAtFor(prior, hash, TODAY);
+    writeEvidence(filePath, renderEvidence(hash, checks, unresolved, indent, COVERAGE_VERSION, reviewed, batch, verifiedAt));
     done++;
   }
 }

@@ -179,22 +179,50 @@ Neither shape is "more correct" — they trade off differently. The adjacency ma
 
   references: [
     {
-      url: "https://opendatastructures.org/",
-      title: "Open Data Structures",
-      section: "Interfaces vs implementations; graph representations",
+      url: "https://opendatastructures.org/ods-python/12_Graphs.html",
+      title: "Open Data Structures (Python) — 12. Graphs",
+      section: "Chapter 12 intro: a graph G = (V, E) and its two representations",
       topic: "dsa/representations",
-      purpose: "Confirm that one abstract structure (a graph / interface) has multiple equivalent implementations with different operation costs.",
-      verifiedClaims: ["The same abstract data can be implemented by different structures with different runtimes", "Edge list and adjacency representations encode the same graph"],
-      accessDate: "2026-09-20",
+      purpose: "Confirm a graph is an abstract structure (G = (V, E), edges are pairs of vertices) with more than one standard representation, so the same graph can be stored different ways.",
+      verifiedClaims: [
+        "A (directed) graph is a pair G = (V, E) where E is a set of pairs of vertices (edges)",
+        "There are two broad standard representations of a graph (adjacency matrix and adjacency list)",
+      ],
+      accessDate: "2026-10-02",
     },
     {
       url: "https://runestone.academy/ns/books/published/pythonds3/Graphs/VocabularyandDefinitions.html",
-      title: "Graphs: Vocabulary and Definitions — Problem Solving with Algorithms and DS using Python (Runestone)",
-      section: "Representing a graph (edge list / adjacency)",
+      title: "7.2 Graphs: Vocabulary and Definitions — Problem Solving with Algorithms and DS using Python (Runestone)",
+      section: "Vertex / Edge definitions",
       topic: "dsa/representations",
-      purpose: "Cross-check edge-list and adjacency representations of the same graph and their costs.",
-      verifiedClaims: ["A graph can be represented by its edges or by an adjacency structure", "Adjacency lookup is faster than scanning an edge list for neighbours"],
-      accessDate: "2026-09-20",
+      purpose: "Beginner cross-check of the graph vocabulary used in the lesson (vertices and edges).",
+      verifiedClaims: [
+        "A graph is made of vertices and edges; an edge connects two vertices (a tuple (v, w))",
+      ],
+      accessDate: "2026-10-02",
+    },
+    {
+      url: "https://runestone.academy/ns/books/published/pythonds3/Graphs/TheGraphAbstractDataType.html",
+      title: "7.3 The Graph Abstract Data Type — Problem Solving with Algorithms and DS using Python (Runestone)",
+      section: "Representations trade-off (adjacency matrix vs adjacency list)",
+      topic: "dsa/representations",
+      purpose: "Confirm the graph ADT can be implemented by different representations with trade-offs — the lesson's edge list vs adjacency map choice.",
+      verifiedClaims: [
+        "The graph ADT (vertices + edges) has more than one implementation, with trade-offs between representations (adjacency matrix and adjacency list)",
+      ],
+      accessDate: "2026-10-02",
+    },
+    {
+      url: "https://runestone.academy/ns/books/published/pythonds3/Graphs/AnAdjacencyList.html",
+      title: "7.5 An Adjacency List — Problem Solving with Algorithms and DS using Python (Runestone)",
+      section: "Adjacency list as a per-vertex dictionary of neighbours",
+      topic: "dsa/representations",
+      purpose: "Support the adjacency-map claim: each vertex maps to its neighbours, which makes finding one vertex's neighbours easy (vs scanning an edge list).",
+      verifiedClaims: [
+        "An adjacency list keeps, per vertex, a collection (dictionary) of the vertices it connects to",
+        "The adjacency list makes it easy to find the vertices directly connected to a particular vertex, and is space-efficient for sparse graphs",
+      ],
+      accessDate: "2026-10-02",
     },
     {
       url: "https://wiki.python.org/moin/TimeComplexity",
@@ -211,8 +239,8 @@ Neither shape is "more correct" — they trade off differently. The adjacency ma
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "37ea0b194a873226",
-    verifiedAt: "2026-09-21",
+    contentHash: "d145cc3190c48bc8",
+    verifiedAt: "2026-10-02",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,

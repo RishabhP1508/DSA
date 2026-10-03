@@ -76,12 +76,34 @@ prerequisites are introduced before use.
 >   added to `docs/references.md` (ODS, Runestone graphs vocabulary, Python
 >   TimeComplexity), as AGENTS.md requires beyond the lesson's own `references`.
 >
+> **Amendment 5 (this round) — reference accuracy + an honest evidence date:**
+> - *references now match what each page supports (checked against the live
+>   pages):* the **Open Data Structures homepage** is replaced with the exact
+>   consulted chapter **`ods-python/12_Graphs.html`** (which states a graph is
+>   `G=(V,E)` with two standard representations). The **Runestone 7.2 Vocabulary**
+>   page is kept **only** for the graph-vocabulary claim it actually supports (it
+>   does not cover adjacency representations or lookup costs). The adjacency /
+>   neighbour-lookup claim now cites **Runestone 7.5 An Adjacency List**, and the
+>   representation **trade-off** claim cites **Runestone 7.3 The Graph ADT**. Each
+>   `verifiedClaims` entry was narrowed to match its page. `docs/references.md`
+>   was updated to the same URLs and claims.
+> - *evidence date is no longer hard-coded:* `scripts/codemod_add_evidence.mjs`
+>   previously stamped a fixed `verifiedAt: "2026-09-21"` on **every** item each
+>   run. It now records the **actual** run date (via `resolveToday`, overridable
+>   with `VERIFIED_DATE`) and only for items whose content hash is NEW or CHANGED;
+>   an unchanged item **keeps** its prior date (`verifiedAtFor`). So this run
+>   re-dated **only `representations`** → `2026-10-02`; the other **159** items
+>   kept `2026-09-21` (no bulk re-dating). Regression test:
+>   `src/content/evidence-date.test.ts`.
+>
 > **Machine verification on this branch:** `npm run check:all` → exit 0 (unit
-> **596** passed across **42** files; model solutions **161/161**; R6.4
+> **605** passed across **43** files; model solutions **161/161**; R6.4
 > mistake-rejection all five categories **161/161**; coverage-evidence **131
 > verified / 0 not-yet**; recognition **164**; hints **325**; all **131** lesson
-> outputs match). `npm run test:browser` → **18 passed / 5 skipped** (the 5 skips
-> are `P-RUNNER-ORIGIN`). All **160** items remain `semanticReview: false`.
+> outputs match). `npm run test:browser` → **18 passed / 5 skipped**, result
+> retained from commit `45f3c40` (no browser-facing behaviour changed this round:
+> only reference metadata, the evidence-date generator, and the regenerated
+> `representations` evidence hash). All **160** items remain `semanticReview: false`.
 
 **How to sign off AFTER you approve items** (set the env vars BEFORE the script):
 
@@ -117,7 +139,7 @@ four items corrected on this branch (new hash shown).
 | 8 | `references-mutation` | `src/content/lessons/references-mutation.ts` | References and Mutation | `5feb2cad2643ea0c` | ref-predict-1, ref-fix-1 |
 | 9 | `classes` | `src/content/lessons/classes.ts` | Classes and Objects | `8693b395b5881198` | class-complete-1, class-predict-1 |
 | 10 | `errors` | `src/content/lessons/errors.ts` | Errors and Exceptions | `c144f84f8a9c03e1` | err-complete-1, err-choose-1 |
-| 11 | `representations` | `src/content/lessons/representations.ts` | Representations of Data | `37ea0b194a873226` *(fixed)* | repr-choose-1, repr-predict-1 |
+| 11 | `representations` | `src/content/lessons/representations.ts` | Representations of Data | `d145cc3190c48bc8` *(fixed)* | repr-choose-1, repr-predict-1 |
 | 12 | `complexity` | `src/content/lessons/complexity.ts` | Time and Space Complexity | `448bbae5526f4263` | cx-predict-1, cx-choose-1 |
 | 13 | `cases` | `src/content/lessons/cases.ts` | Best, Average, and Worst Cases | `1f31f7d42bd2adc4` | cases-predict-1, cases-choose-1 |
 | 14 | `amortized` | `src/content/lessons/amortized.ts` | Amortized Cost | `5b23a0c6bd8b3a52` | amort-predict-1, amort-choose-1 |
@@ -266,7 +288,7 @@ your approval is still required.
   `err-choose-1` (KeyError vs `in`) both correct and balanced. **No blocking
   concern.**
 
-### 11. `representations` — Representations of Data  — hash `37ea0b194a873226`
+### 11. `representations` — Representations of Data  — hash `d145cc3190c48bc8`
 - **Teaches:** one small graph (nodes 0,1,2 with edges 0–1, 0–2, 1–2) in two
   equivalent encodings — an **edge list** `[(0, 1), (0, 2), (1, 2)]` and an
   **adjacency map** `{0: {1,2}, 1: {0,2}, 2: {0,1}}`. The program rebuilds the
@@ -275,8 +297,10 @@ your approval is still required.
   `expectedOutput: "True\n3\n"`.
 - **Assessment:** teaching is correct; complexity separates reach (expected O(1))
   from enumerate (O(degree)) with honest case labels, and the equality check's
-  scope is qualified (edge-set compare, not a general validator). Three credible
-  references (ODS, Runestone graphs, Python TimeComplexity).
+  scope is qualified (edge-set compare, not a general validator). Four
+  claim-matched references, each verified against the live page (ODS Ch.12 Graphs,
+  Runestone 7.2 Vocabulary, Runestone 7.3 Graph ADT, Runestone 7.5 Adjacency List,
+  plus Python TimeComplexity for the cost labels).
 - **Fix log (was: two NON-equivalent examples):** the original program showed
   `as_list = [0, 1, 1, 0]` and `as_dict = {0: [1], 1: [0]}` framed as "the same
   information," but they encoded different relationships. Replaced with the edge
@@ -325,6 +349,16 @@ your approval is still required.
     and reworded prose make it an *example under assumptions*, not a validator.
   - *References index:* added a claim-specific `### dsa/representations` entry to
     `docs/references.md` (ODS, Runestone graphs vocabulary, Python TimeComplexity).
+- **Fix log — reference accuracy (amendment 5):** each recorded URL and claim was
+  checked against the live page.
+  - The **ODS homepage** was replaced by the exact consulted chapter
+    **`ods-python/12_Graphs.html`** (graph `G=(V,E)`; studies two representations).
+  - **Runestone 7.2 Vocabulary** is kept only for the **vocabulary** claim it
+    supports (vertices/edges); it does NOT discuss adjacency representations or
+    lookup costs, so those claims were moved off it.
+  - The representation **trade-off** claim now cites **Runestone 7.3 The Graph
+    ADT**; the adjacency **neighbour-lookup** claim now cites **Runestone 7.5 An
+    Adjacency List**. `docs/references.md` mirrors these exact URLs and claims.
 - **For the reviewer:** confirm the edge-list/adjacency framing and the plain-loop
   rewrite are appropriate at foundations level (the dedicated
   `graph-representations` lesson later goes deeper into adjacency list vs matrix),
