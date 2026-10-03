@@ -96,11 +96,16 @@ The key mental model: a for loop runs **once per item** (n items → n iteration
     { line: 11, executable: true, explanation: "Increment i. This is what eventually makes i < 3 False and ends the loop." },
   ],
 
+  // The for-loop variable `x` is a VALUE taken from nums, not an index into it,
+  // and the while-loop counter `i` does not index nums at all — so nums carries
+  // NO pointer/highlight overlay (an index overlay here would mark a position
+  // unrelated to what the loop is doing). The current item `x` and the counter
+  // `i` are observed directly in the variables panel from the recorded frame.
   bindings: [
     {
       variable: "nums",
       model: "array",
-      overlays: [{ role: "pointer", label: "x-index", source: "i" }],
+      overlays: [],
     },
   ],
 
@@ -159,7 +164,7 @@ The key mental model: a for loop runs **once per item** (n items → n iteration
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "2c1b052e539933fe",
+    contentHash: "60a8b338e1b51036",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

@@ -22,8 +22,13 @@ result = None
 # Two names can refer to the same list object (aliasing).
 scores = [10, 20, 30]
 best = scores
+# 'is' tests IDENTITY: best and scores are the SAME object -> True.
+print(best is scores)
 # Mutating through one name is visible through the other.
 best.append(40)
+# A COPY is a different object with equal contents -> 'is' is False.
+independent = list(scores)
+print(independent is scores)
 # Show the types and values we built.
 print(player, score, is_ready, result)
 print(scores)`;
@@ -38,7 +43,9 @@ export const variablesAndTypes: LessonDefinition = {
 
 Because the name only *refers* to the object, you can point it at something of a different type later: \`score = 42.5\` makes \`score\` refer to a floating-point number instead. This is called **dynamic typing** — the type travels with the value, not with the name.
 
-A subtle but important consequence: two names can refer to the **same** object. If that object can be changed in place (like a list), a change made through one name is visible through the other. This is called **aliasing**, and it is one of the most common sources of surprise for beginners.`,
+A subtle but important consequence: two names can refer to the **same** object. If that object can be changed in place (like a list), a change made through one name is visible through the other. This is called **aliasing**, and it is one of the most common sources of surprise for beginners.
+
+You can test this directly. The \`is\` operator compares **identity** — whether two names point at the very same object — not just equal contents. After \`best = scores\`, \`best is scores\` is \`True\` (one shared list). Make a **copy** with \`list(scores)\` and it is a *different* object with equal contents, so \`independent is scores\` is \`False\`. The visualization shows this from the recorded snapshot: aliased names carry the same object reference, a copy carries a new one.`,
 
   vocabulary: [
     { term: "Variable (name)", definition: "A label that refers to a value. It does not store the value directly; it points at an object." },
@@ -67,52 +74,57 @@ A subtle but important consequence: two names can refer to the **same** object. 
 
   complexity: [
     { operation: "Assignment / reassignment", best: "O(1)", average: "O(1)", worst: "O(1)", note: "Binding a name is constant time; it does not copy the object." },
+    { operation: "Identity check (is)", best: "O(1)", average: "O(1)", worst: "O(1)", note: "Compares object identities directly, independent of contents or length." },
     { operation: "list.append", best: "O(1)", average: "O(1)", worst: "O(n) (amortized O(1))", note: "Occasional resize copies elements; amortized cost is O(1)." },
+    { operation: "Copy with list(x)", best: "O(k)", average: "O(k)", worst: "O(k)", space: "O(k)", note: "Allocates a new list and copies k elements — a different object." },
   ],
 
   complexityExplanation: {
     scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of appends performed on a list (this example does 1)" },
+      { symbol: "k", meaning: "the number of elements copied when making an independent list (here 3)" },
     ],
     costModel:
-      "Binding a name to an existing object is constant work (it copies a reference, not the object). `list.append` is analysed with the amortized model: most appends are O(1), and the rare internal resize that copies all elements is spread across the cheap appends.",
+      "Binding a name to an existing object is constant work (it copies a reference, not the object), and `is` compares identities in O(1). `list.append` is analysed with the amortized model: most appends are O(1), and the rare internal resize that copies all elements is spread across the cheap appends. Copying a list with `list(x)` is O(k) in the number of elements.",
     time: {
-      bound: "O(1)",
-      case: "amortized",
+      bound: "O(k)",
+      case: "worst",
       explanation:
-        "Every statement here is a name binding or a single append. Binding (lines 2, 4, 6, 8, 10, 12, 13) is O(1) — it never copies the list. The one append (line 15) is amortized O(1): although a growing list occasionally reallocates and copies its elements (an O(n) event), those costs averaged over many appends come out to O(1) each.",
+        "The name bindings, the `is` identity checks, and the single append are each O(1) (append amortized O(1)). The one copy `list(scores)` is O(k): it allocates a new list and copies k elements. With a fixed small list that is constant here, but it is the only step that grows with the data size.",
       otherCases: [
         {
-          case: "worst",
-          bound: "O(n)",
-          note: "A single append that triggers a resize copies all n current elements once; this is the rare worst case behind the amortized O(1).",
+          case: "amortized",
+          bound: "O(1)",
+          note: "Ignoring the copy, every binding/append/identity check is O(1) (append amortized O(1)).",
         },
       ],
     },
     space: {
-      bound: "O(1)",
-      case: "amortized",
+      bound: "O(k)",
+      case: "worst",
       explanation:
-        "One append adds one slot. Aliasing (`best = scores`) creates NO new storage — both names point at the same list — so no space grows with the number of names.",
-      inputOutputNote: "The list itself holds the elements you put in it; that is your data, not auxiliary space.",
+        "Aliasing (`best = scores`) creates NO new storage — both names point at the same list. The copy `independent = list(scores)` DOES allocate a new k-element list, so auxiliary space is O(k); the one append adds a single slot.",
+      inputOutputNote: "The original list holds your data; the extra O(k) is the independent copy you deliberately made.",
     },
     derivation: [
       { lines: [2, 4, 6, 8, 10], description: "Five name bindings to freshly created objects — each O(1).", cost: "O(1)", dimension: "time" },
       { lines: [12], description: "Create a 3-element list literal — proportional to its fixed size, treated as O(1) here.", cost: "O(1)", dimension: "time" },
       { lines: [13], description: "Alias: bind a second name to the same list. Copies only a reference.", cost: "O(1)", dimension: "time" },
-      { lines: [15], description: "Append one element — amortized O(1).", cost: "O(1)", dimension: "time" },
+      { lines: [17], description: "Append one element — amortized O(1).", cost: "O(1)", dimension: "time" },
+      { lines: [19], description: "list(scores) makes a copy of k elements — O(k) time and space.", cost: "O(k)", dimension: "time" },
       { lines: [13], description: "Aliasing adds no storage; both names share one object.", cost: "O(1)", dimension: "space" },
     ],
     assumptions: [
       "Name binding copies a reference, not the referenced object.",
       "CPython's list uses over-allocation so appends are amortized O(1).",
+      "`is` compares identity in O(1); `list(x)` copies k elements in O(k).",
       "`type()` and `print()` of small values are treated as constant work.",
     ],
     tradeoffs:
-      "If you needed the list to stay independent, `best = list(scores)` makes a copy — that copy is O(k) time and O(k) extra space for k elements, unlike the O(1) aliasing shown here.",
+      "Aliasing (`best = scores`) is O(1) and shares one object; a copy (`list(scores)`) is O(k) time and O(k) extra space for k elements but keeps the lists independent (`is` is then False).",
     counters: [
-      { label: "append calls", definition: "executions of the append line (line 15)", countLines: [15] },
+      { label: "append calls", definition: "executions of the append line (line 17)", countLines: [17] },
     ],
     fixedDataNote:
       "This program uses fixed literal values and does exactly one append, so its total cost is constant for this run. The amortized O(1) claim describes what happens as you scale the number of appends up to n.",
@@ -131,30 +143,38 @@ A subtle but important consequence: two names can refer to the **same** object. 
     { line: 8, executable: true, explanation: "Bind `is_ready` to the boolean True. Booleans are either True or False." },
     { line: 9, executable: false, explanation: "Comment introducing None." },
     { line: 10, executable: true, explanation: "Bind `result` to None, the value that represents 'no value yet'." },
-    { line: 11, executable: false, explanation: "Comment: the next two lines demonstrate aliasing." },
+    { line: 11, executable: false, explanation: "Comment: the next lines demonstrate aliasing and identity." },
     { line: 12, executable: true, explanation: "Create a list [10, 20, 30] and bind `scores` to it." },
     { line: 13, executable: true, explanation: "Bind `best` to the SAME list object `scores` refers to. This does not copy the list — both names now alias one object." },
-    { line: 14, executable: false, explanation: "Comment: mutation through one alias is visible through the other." },
-    { line: 15, executable: true, explanation: "Append 40 to the list through `best`. Because `scores` and `best` refer to the same object, `scores` now also shows the 40." },
-    { line: 16, executable: false, explanation: "Comment before the output lines." },
-    { line: 17, executable: true, explanation: "Print the current values. `score` is now 42.5 (its reassigned value), and `result` prints as None." },
-    { line: 18, executable: true, explanation: "Print the list. It shows [10, 20, 30, 40] — the mutation through `best` is visible via `scores`." },
+    { line: 14, executable: false, explanation: "Comment: `is` compares object identity, not just equal contents." },
+    { line: 15, executable: true, explanation: "Print `best is scores`. It is True because both names point at the very same list object (same identity)." },
+    { line: 16, executable: false, explanation: "Comment: mutation through one alias is visible through the other." },
+    { line: 17, executable: true, explanation: "Append 40 to the list through `best`. Because `scores` and `best` refer to the same object, `scores` now also shows the 40." },
+    { line: 18, executable: false, explanation: "Comment: a copy is a separate object with equal contents." },
+    { line: 19, executable: true, explanation: "Build `independent = list(scores)` — a NEW list object with the same elements, a different identity." },
+    { line: 20, executable: true, explanation: "Print `independent is scores`. It is False: equal contents, but a different object." },
+    { line: 21, executable: false, explanation: "Comment before the final output lines." },
+    { line: 22, executable: true, explanation: "Print the current values. `score` is now 42.5 (its reassigned value), and `result` prints as None." },
+    { line: 23, executable: true, explanation: "Print the list. It shows [10, 20, 30, 40] — the mutation through `best` is visible via `scores`." },
   ],
 
+  // Bind BOTH aliasing names so the shared list is visible under each. The
+  // visualizer reads the recorded snapshot: when `best` and `scores` carry the
+  // same reference id they ARE the same object (aliasing); `independent` carries
+  // a different id (a copy). Identity is observed from the trace, never inferred
+  // by re-running the learner's code.
   bindings: [
-    {
-      variable: "scores",
-      model: "array",
-      overlays: [],
-    },
+    { variable: "scores", model: "array", overlays: [] },
+    { variable: "best", model: "array", overlays: [] },
+    { variable: "independent", model: "array", overlays: [] },
   ],
 
   prediction: [
     {
       atEventIndex: 8,
-      prompt: "After `best = scores` runs, `best.append(40)` executes next. What will `scores` be afterwards, and why?",
-      answer: "[10, 20, 30, 40] because best and scores refer to the same list object (aliasing).",
-      explanation: "`best = scores` does not copy the list; both names alias the same object, so appending through `best` changes what `scores` sees too.",
+      prompt: "`best = scores` has just run. Will `best is scores` print True or False, and will mutating `best` change `scores`?",
+      answer: "True — they are the same object (aliasing) — so appending through `best` also changes `scores`.",
+      explanation: "`best = scores` does not copy the list; both names alias one object (same identity), so `best is scores` is True and a mutation through either name is seen through the other. A copy like `list(scores)` would be a different object, so `is` would be False.",
     },
   ],
 
@@ -204,9 +224,9 @@ A subtle but important consequence: two names can refer to the **same** object. 
     },
   ],
 
-  review: `You learned that a **variable is a name that refers to an object**, and that Python is **dynamically typed** — the type follows the value, not the name. The core types you met were \`int\`, \`float\`, \`str\`, \`bool\`, and \`NoneType\`. Most importantly, you saw **aliasing**: \`b = a\` makes both names refer to the same object, so mutating through one is visible through the other. To get an independent list, make a copy with \`list(a)\`, \`a.copy()\`, or \`a[:]\`.`,
+  review: `You learned that a **variable is a name that refers to an object**, and that Python is **dynamically typed** — the type follows the value, not the name. The core types you met were \`int\`, \`float\`, \`str\`, \`bool\`, and \`NoneType\`. Most importantly, you saw **aliasing** and **identity**: \`b = a\` makes both names refer to the same object (so \`b is a\` is \`True\` and mutating through one is visible through the other), while a copy with \`list(a)\`, \`a.copy()\`, or \`a[:]\` is a different object (\`is\` is \`False\`). Use \`is\` to ask "same object?" and \`==\` to ask "equal contents?".`,
 
-  expectedOutput: "Ada 42.5 True None\n[10, 20, 30, 40]\n",
+  expectedOutput: "True\nFalse\nAda 42.5 True None\n[10, 20, 30, 40]\n",
 
   references: [
     {
@@ -257,7 +277,7 @@ A subtle but important consequence: two names can refer to the **same** object. 
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "60ba3ee9a8e20f2e",
+    contentHash: "8af5048a0e87e562",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

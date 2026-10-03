@@ -1,18 +1,22 @@
 /**
  * Lesson: Representations (DSA foundations).
- * Verified on CPython 3.14. Output: "[0, 1, 1, 0]\n{0: [1], 1: [0]}\n".
+ * Verified on CPython 3.14. Output: "True\n[(0, 1), (0, 2), (1, 2)]\n".
  */
 
 import type { LessonDefinition } from "../../core/types";
 
-const code = `# The SAME information can be stored in different shapes.
-# Here: which pairs of 2 items are "connected".
-# Representation A: a flat list of flags (item i connected to i+1?).
-as_list = [0, 1, 1, 0]
-# Representation B: a map from item -> its neighbours.
-as_dict = {0: [1], 1: [0]}
-print(as_list)
-print(as_dict)`;
+const code = `# One small graph, two EQUIVALENT shapes for the SAME connections.
+# Edge list: each undirected edge as a pair.
+edges = [(0, 1), (0, 2), (1, 2)]
+# Adjacency map: each node -> the set of its neighbours.
+adj = {0: {1, 2}, 1: {0, 2}, 2: {0, 1}}
+
+# Rebuild the connection set from EACH representation and compare them.
+from_edges = {(min(u, v), max(u, v)) for (u, v) in edges}
+from_adj = {(min(u, v), max(u, v)) for u in adj for v in adj[u]}
+# Same connections, so the two encodings are equivalent.
+print(from_edges == from_adj)
+print(sorted(from_edges))`;
 
 export const representations: LessonDefinition = {
   id: "representations",
@@ -22,128 +26,143 @@ export const representations: LessonDefinition = {
 
   explanation: `A **data structure** is a way of *representing* information so that the operations you care about are efficient. The same facts can be stored in different shapes, and the shape you pick determines which operations are fast.
 
-Consider "who is connected to whom". You could store a **list** (positional flags), or a **map** from each item to its neighbours. Neither is "more correct" — they trade off differently. A map (dict) gives fast "who are X's neighbours?" lookups; a flat list is compact and cache-friendly but answering neighbour queries may require scanning.
+Take a tiny graph of three nodes where 0–1, 0–2, and 1–2 are connected. Two standard shapes store **exactly the same connections**:
 
-The lesson's takeaway: **choose the representation to match your operations.** Later topics make this concrete — adjacency lists vs adjacency matrices for graphs, arrays vs linked lists for sequences, heaps for "give me the smallest". Recognising representations is the first step of that skill.`,
+- an **edge list** — a flat list of pairs, \`[(0, 1), (0, 2), (1, 2)]\`; and
+- an **adjacency map** — each node mapped to the set of its neighbours, \`{0: {1, 2}, 1: {0, 2}, 2: {0, 1}}\`.
+
+These are *equivalent*: from either one you can rebuild the same set of connections. The program proves it by normalising each edge as \`(min, max)\` and checking the two reconstructed sets are equal (it prints \`True\`). Neither shape is "more correct" — they trade off differently. The adjacency map answers "who are node X's neighbours?" in expected **O(1)**; the edge list is compact and iterates every edge directly but needs a scan to list one node's neighbours.
+
+The takeaway: **choose the representation to match your operations.** Later graph lessons extend this exact idea to adjacency lists vs adjacency matrices.`,
 
   vocabulary: [
     { term: "Data structure", definition: "A way of organising data to make certain operations efficient." },
-    { term: "Representation", definition: "The concrete shape chosen to store information (list, map, tree, …)." },
-    { term: "Abstract data type (ADT)", definition: "What operations are supported (e.g. 'a set'), independent of how they're stored." },
+    { term: "Representation", definition: "The concrete shape chosen to store information (edge list, adjacency map, …)." },
+    { term: "Edge list", definition: "A flat list of pairs, each pair being one connection (edge) between two nodes." },
+    { term: "Adjacency map", definition: "A map from each node to the collection of its neighbours." },
+    { term: "Equivalent encodings", definition: "Different shapes that store exactly the same information, each convertible to the other." },
     { term: "Trade-off", definition: "A representation that speeds up one operation often costs more time or space elsewhere." },
   ],
 
   concepts: {
-    purpose: "Choosing the right representation is what makes an algorithm fast; the same data can be stored many ways.",
-    operations: "Compare how each representation supports lookup, insertion, iteration, and membership.",
-    uses: "Adjacency list vs matrix (graphs), array vs linked list (sequences), dict vs list (lookups).",
-    tradeoffs: "Maps give fast keyed lookup at the cost of overhead; flat lists are compact but slower for keyed queries.",
-    commonMistakes: "Picking a structure by habit rather than by the operations needed; ignoring how representation affects complexity.",
-    edgeCases: "Empty structures; representations that can encode the same fact more than once (redundancy).",
+    purpose: "Choosing the right representation is what makes an algorithm fast; the same connections can be stored as an edge list or an adjacency map.",
+    operations: "Convert between encodings; compare how each supports edge iteration, neighbour lookup, and membership.",
+    uses: "Edge list vs adjacency map (and later adjacency list vs matrix) for graphs; array vs linked list for sequences.",
+    tradeoffs: "The adjacency map gives expected O(1) neighbour lookup; the edge list is compact and iterates edges directly but scans to find one node's neighbours.",
+    commonMistakes: "Assuming two shapes are equivalent without checking; picking a structure by habit rather than by the operations needed; double-counting an undirected edge stored in both directions.",
+    edgeCases: "Empty graph (no edges); self-loops (u == v); an undirected edge appears once in an edge list but in BOTH nodes' neighbour sets.",
   },
 
   complexity: [
-    { operation: "list index access", best: "O(1)", average: "O(1)", worst: "O(1)", note: "Direct positional access." },
-    { operation: "dict key lookup", best: "O(1)", average: "O(1)", worst: "O(n)", note: "Expected O(1) with hashing; worst case on many collisions." },
+    { operation: "Edge list: iterate all edges", best: "O(E)", average: "O(E)", worst: "O(E)", space: "O(E)", note: "Directly lists every edge; neighbour lookup needs an O(E) scan." },
+    { operation: "Adjacency map: neighbours of a node", best: "O(1)", average: "O(1)", worst: "O(degree)", space: "O(V + E)", note: "Expected O(1) to reach a node's neighbour set via hashing." },
   ],
 
   complexityExplanation: {
     scope: "program",
-    variables: [{ symbol: "n", meaning: "the number of items stored in the structure" }],
-    costModel: "List indexing by position is O(1). Dict lookup by key is expected O(1) using hashing, with an O(n) worst case under pathological collisions.",
+    variables: [
+      { symbol: "V", meaning: "the number of nodes (vertices) in the graph" },
+      { symbol: "E", meaning: "the number of edges (connections) in the graph" },
+    ],
+    costModel: "Building each set comprehension touches every edge once. Dict lookup by key and set insertion are expected O(1) under Python's hashing.",
     time: {
-      bound: "O(1)",
+      bound: "O(V + E)",
       case: "worst",
-      explanation: "This program only builds two small literals and prints them — a fixed amount of work. The interesting complexity is in the OPERATIONS each representation supports (shown in the summary table), not in this construction.",
+      explanation: "`from_edges` scans the E edges once. `from_adj` visits every node and each of its neighbours — that is each edge from both ends — so it is O(V + E). Comparing the two resulting sets is O(E). The whole program is therefore linear in the size of the graph.",
     },
     space: {
-      bound: "O(n)",
+      bound: "O(V + E)",
       case: "worst",
-      explanation: "Each representation stores O(n) entries for n items. The map stores keys plus neighbour lists; the list stores one slot per position. Both are linear in the amount of information held.",
-      inputOutputNote: "These structures ARE the data; their O(n) size is inherent, not auxiliary overhead.",
+      explanation: "The edge list stores E pairs; the adjacency map stores V keys plus 2E neighbour entries (each undirected edge appears in two sets). The two reconstructed connection sets each hold E pairs. All are linear in the graph size.",
+      inputOutputNote: "The two representations ARE the data; their O(V + E) size is inherent, not auxiliary overhead.",
     },
     derivation: [
-      { lines: [4], description: "Build a fixed 4-element list literal.", cost: "O(1)", dimension: "time" },
-      { lines: [6], description: "Build a fixed 2-key dict literal.", cost: "O(1)", dimension: "time" },
-      { lines: [4, 6], description: "Storing n items in either shape uses O(n) space.", cost: "O(n)", dimension: "space" },
+      { lines: [8], description: "Rebuild the connection set from the edge list — one pass over E edges.", cost: "O(E)", dimension: "time" },
+      { lines: [9], description: "Rebuild from the adjacency map — visit each node and its neighbours (each edge twice).", cost: "O(V + E)", dimension: "time" },
+      { lines: [11], description: "Compare the two sets for equality.", cost: "O(E)", dimension: "time" },
+      { lines: [3, 5], description: "Store E edges and V nodes with 2E neighbour entries.", cost: "O(V + E)", dimension: "space" },
     ],
-    assumptions: ["Dict lookups are expected O(1) under Python's hashing.", "This example uses fixed small literals, so construction is constant work."],
-    tradeoffs: "A map answers 'neighbours of X?' in expected O(1); a flat list may need an O(n) scan for the same question. The list uses less overhead per element. Pick per your operation mix.",
-    fixedDataNote: "The literals are fixed, so building them is constant work here. The O(1)/O(n) operation costs in the table describe how each representation behaves as the data grows to n items.",
+    assumptions: ["Dict/set lookups are expected O(1) under Python's hashing.", "The example is a fixed tiny graph (V = 3, E = 3), so this run is constant work."],
+    tradeoffs: "The adjacency map answers 'neighbours of X?' in expected O(1); the edge list would scan all E edges for the same question. The edge list uses less overhead per edge. Pick per your operation mix.",
+    fixedDataNote: "The literals are fixed (3 nodes, 3 edges), so building them is constant work here. The O(V + E) costs describe how each representation behaves as the graph grows.",
   },
 
   code,
 
   codeExplanations: [
-    { line: 1, executable: false, explanation: "Comment: the same info can take different shapes." },
-    { line: 2, executable: false, explanation: "Comment describing the example (connections)." },
-    { line: 3, executable: false, explanation: "Comment: representation A is a flat list of flags." },
-    { line: 4, executable: true, explanation: "Build the list representation [0, 1, 1, 0]." },
-    { line: 5, executable: false, explanation: "Comment: representation B is a neighbour map." },
-    { line: 6, executable: true, explanation: "Build the dict representation {0: [1], 1: [0]}." },
-    { line: 7, executable: true, explanation: "Print the list representation." },
-    { line: 8, executable: true, explanation: "Print the dict representation." },
+    { line: 1, executable: false, explanation: "Comment: the same connections stored two equivalent ways." },
+    { line: 2, executable: false, explanation: "Comment: the edge list representation." },
+    { line: 3, executable: true, explanation: "Build the edge list: three undirected edges as pairs (0,1), (0,2), (1,2)." },
+    { line: 4, executable: false, explanation: "Comment: the adjacency map representation." },
+    { line: 5, executable: true, explanation: "Build the adjacency map: each node mapped to the set of its neighbours." },
+    { line: 6, executable: false, explanation: "Blank line." },
+    { line: 7, executable: false, explanation: "Comment: rebuild the connection set from each shape and compare." },
+    { line: 8, executable: true, explanation: "From the edge list: normalise each pair as (min, max) into a set of connections." },
+    { line: 9, executable: true, explanation: "From the adjacency map: for every node and each neighbour, add the normalised (min, max) pair." },
+    { line: 10, executable: false, explanation: "Comment: equal sets mean the two encodings describe the same graph." },
+    { line: 11, executable: true, explanation: "Print whether the two reconstructed connection sets are equal — True proves equivalence." },
+    { line: 12, executable: true, explanation: "Print the shared connections in sorted order: [(0, 1), (0, 2), (1, 2)]." },
   ],
 
   bindings: [
-    { variable: "as_list", model: "array" },
-    { variable: "as_dict", model: "dict" },
+    { variable: "edges", model: "array" },
+    { variable: "adj", model: "dict" },
   ],
 
   prediction: [
-    { atEventIndex: 0, prompt: "Which representation answers 'who are the neighbours of item 0?' faster: the flat list or the neighbour map?", answer: "The neighbour map (dict), in expected O(1).", explanation: "A dict looks up key 0 directly in expected O(1); the flat list may require scanning to reconstruct neighbours." },
+    { atEventIndex: 0, prompt: "Which representation answers 'who are the neighbours of node 0?' faster: the edge list or the adjacency map?", answer: "The adjacency map, in expected O(1) (look up key 0).", explanation: "The adjacency map indexes node 0 directly to its neighbour set in expected O(1); the edge list must scan all edges to collect node 0's neighbours." },
   ],
 
   experiments: [
-    "Add a third item and update BOTH representations to keep them equivalent.",
-    "Write a loop that answers 'neighbours of X' using the list, and note the extra work versus the dict.",
-    "Discuss when the compact list would be preferable (dense, positional data).",
+    "Add an edge (1, 3) to BOTH representations (and node 3 to the map) and confirm the equality check still prints True.",
+    "Break the equivalence on purpose: add (0, 2) to the edge list only, and watch the equality check become False.",
+    "Count how many steps it takes to list node 0's neighbours from the edge list versus the adjacency map.",
   ],
 
   exercises: [
     {
       id: "repr-choose-1",
       kind: "choose-approach",
-      prompt: "You frequently ask 'is key K present, and what is its value?' on changing data. Which representation fits: a list of pairs, or a dict?",
-      expected: "A dict — keyed lookup is expected O(1), versus O(n) scanning a list of pairs.",
-      hints: ["What operation is frequent?", "Keyed lookup by K.", "A dict gives expected O(1) keyed lookup."],
+      prompt: "You frequently ask 'who are the neighbours of node X?' on a changing graph. Which representation fits best: an edge list, or an adjacency map?",
+      expected: "An adjacency map — neighbour lookup is expected O(1) via the key, versus scanning all E edges in an edge list.",
+      hints: ["What operation is frequent?", "Neighbour lookup by node.", "An adjacency map indexes a node directly to its neighbours in expected O(1)."],
     },
     {
       id: "repr-predict-1",
       kind: "predict-state",
-      prompt: "Do the list and dict here store the same relationship? What operation distinguishes them?",
-      expected: "They can encode the same connections, but the dict supports direct neighbour lookup by key (O(1)); the list stores positional flags and needs interpretation/scanning.",
-      hints: ["Both describe connections.", "How do you get item 0's neighbours from each?", "The dict indexes by key directly; the list does not."],
+      prompt: "The edge list and the adjacency map here describe the same graph. From the edge list alone, what are node 0's neighbours, and which representation gives them faster?",
+      expected: "Node 0's neighbours are 1 and 2. The adjacency map gives them in expected O(1) (look up key 0); the edge list must scan all edges to collect them.",
+      hints: ["Scan the edge list for pairs containing 0.", "(0,1) and (0,2) contain 0 → neighbours 1 and 2.", "The adjacency map indexes key 0 directly; the edge list needs a full scan."],
     },
   ],
 
-  review: `A **representation** is the concrete shape of your data, and the right choice makes operations efficient. The same information fits many shapes (list vs map, and later adjacency list vs matrix). Match the representation to the **operations** you need most: dicts give expected **O(1)** keyed lookup, lists give **O(1)** positional access; both store n items in **O(n)** space.`,
+  review: `A **representation** is the concrete shape of your data, and the same connections fit many shapes. An **edge list** and an **adjacency map** are *equivalent* encodings of one graph — you can rebuild the same connection set from either (the program checks this and prints \`True\`). Match the representation to the **operations** you need most: the adjacency map gives expected **O(1)** neighbour lookup; the edge list iterates edges directly in **O(E)**. Both store the graph in **O(V + E)** space.`,
 
-  expectedOutput: "[0, 1, 1, 0]\n{0: [1], 1: [0]}\n",
+  expectedOutput: "True\n[(0, 1), (0, 2), (1, 2)]\n",
 
   references: [
     {
       url: "https://opendatastructures.org/",
       title: "Open Data Structures",
-      section: "Introduction — the role of data structures / interfaces vs implementations",
+      section: "Interfaces vs implementations; graph representations",
       topic: "dsa/representations",
-      purpose: "Confirm the idea that an interface (operations) can have multiple implementations with different costs.",
-      verifiedClaims: ["The same abstract data type can be implemented by different structures with different runtimes"],
+      purpose: "Confirm that one abstract structure (a graph / interface) has multiple equivalent implementations with different operation costs.",
+      verifiedClaims: ["The same abstract data can be implemented by different structures with different runtimes", "Edge list and adjacency representations encode the same graph"],
       accessDate: "2026-09-20",
     },
     {
-      url: "https://www.w3schools.com/python/python_dsa.asp",
-      title: "Python DSA — W3Schools",
-      section: "What are data structures",
+      url: "https://runestone.academy/ns/books/published/pythonds3/Graphs/VocabularyandDefinitions.html",
+      title: "Graphs: Vocabulary and Definitions — Problem Solving with Algorithms and DS using Python (Runestone)",
+      section: "Representing a graph (edge list / adjacency)",
       topic: "dsa/representations",
-      purpose: "Beginner cross-check of the definition of a data structure.",
-      verifiedClaims: ["A data structure organises data for efficient use"],
+      purpose: "Cross-check edge-list and adjacency representations of the same graph and their costs.",
+      verifiedClaims: ["A graph can be represented by its edges or by an adjacency structure", "Adjacency lookup is faster than scanning an edge list for neighbours"],
       accessDate: "2026-09-20",
     },
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "48a6032810b90a2f",
+    contentHash: "6f9911863af4840e",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
