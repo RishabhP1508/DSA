@@ -135,6 +135,42 @@ counter executability are checked by `scripts/verify_example_model.mjs` against
 the bundled runtime. The Big-O CLAIMS themselves remain subject to human review
 (R7); this verifies structural completeness and internal consistency only.
 
+### dsa/representations — ⏳ authored, semantic review pending (R9/B1)
+
+Foundations lesson: one small undirected graph stored as an **edge list** and an
+**adjacency map**, with a program that rebuilds a normalised `(min, max)` **edge
+set** from each and prints whether they match.
+
+- [Open Data Structures — opendatastructures.org](https://opendatastructures.org/)
+  — one abstract structure (interface) has multiple implementations with
+  different operation costs; a graph can be stored by its edges or by adjacency.
+  Consulted for: edge list vs adjacency map are two implementations of the same
+  graph. Accessed 2026-09-20.
+- [Runestone — Graphs: Vocabulary and Definitions](https://runestone.academy/ns/books/published/pythonds3/Graphs/VocabularyandDefinitions.html)
+  — a graph can be represented by its edges or by an adjacency structure;
+  reaching a node's neighbours by key is faster than scanning an edge list.
+  Consulted for: the two representations and their neighbour-lookup trade-off.
+  Accessed 2026-09-20.
+- [Python Wiki — TimeComplexity](https://wiki.python.org/moin/TimeComplexity)
+  — **dict** `Get Item` and `k in d` are **Average O(1), Amortized Worst Case
+  O(n)**; **set** `x in s` is **Average O(1), Worst O(n)**. Consulted to label
+  the costs honestly: **reaching** a neighbour set (one dict lookup) is expected
+  **O(1)** with a hashing worst case of **O(V)**, which is DISTINCT from
+  **enumerating** the neighbours (**O(degree)**, set iteration). The overall
+  rebuild is therefore an **expected** O(V + E), not a guaranteed worst case.
+  Accessed 2026-10-02.
+
+Scope note (recorded during R9/B1 review): the lesson's `from_edges == from_adj`
+check compares normalised **edge sets** only. It is an **example under stated
+assumptions** (undirected, no self-loops, no duplicate/parallel edges, same node
+set) — **not a general graph-equivalence validator**. Some assumption violations
+still compare equal (a parallel/duplicate edge collapses in a set, a
+non-reciprocal adjacency entry normalises to the same edge, an isolated node in
+only one shape adds no edge). Verified on the bundled Pyodide (CPython 3.14.2):
+lesson output `True\n3\n` via `verify_lessons.mjs`, and the three still-True
+violation cases confirmed by a probe during review. Human semantic review of this
+lesson is still pending (`semanticReview: false`).
+
 ### (pending topics)
 
 The following are seeded starting points; entries get filled in as each topic is

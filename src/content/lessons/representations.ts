@@ -43,7 +43,9 @@ Take a tiny graph of three nodes where 0–1, 0–2, and 1–2 are connected. Tw
 
 To check they really match, the program rebuilds the collection of connections from each shape and compares them. It uses a **set of pairs**: each undirected edge is stored as \`(min, max)\` so that the edge between 0 and 1 looks identical whether we read it as \`(0, 1)\` from the list or as the neighbour \`1\` of node \`0\` in the map. A first \`for\` loop walks the edge list; a **nested** \`for\` loop walks the map (for each node, for each of its neighbours). If the two sets are equal, the encodings describe the same graph — the program prints \`True\`.
 
-**When are the two equal?** They describe the same graph **as long as**: the graph is **undirected** (an edge \`u–v\` is the same as \`v–u\`), there are **no self-loops** (\`u == v\`), there are **no duplicate/parallel edges**, and both shapes cover the **same set of nodes**. The \`(min, max)\` normalisation and the use of a **set** are what let us ignore direction and ignore the fact that the map lists each undirected edge from *both* ends.
+**What the check actually compares.** Be precise about what \`from_edges == from_adj\` proves: it compares two **sets of normalised \`(min, max)\` edges**. It does **not** check that the two shapes list the same **vertices**, that the adjacency map stores each edge from **both** ends (reciprocity), or **how many times** an edge appears (multiplicity). So this is an **example under stated assumptions, not a general graph-equivalence validator**. We rely on the graph being **undirected** (an edge \`u–v\` is the same as \`v–u\`), with **no self-loops** (\`u == v\`), **no duplicate/parallel edges**, and **the same set of nodes** in both shapes. The \`(min, max)\` normalisation and the **set** are what let us ignore direction and the map's both-ends listing.
+
+Because a set ignores order and duplicates, several assumption violations can **still print \`True\`** — the check will not catch them: a **parallel/duplicate** edge in the list collapses to one element (multiplicity is lost); a **non-reciprocal** map (node 0 lists 1 but node 1 omits 0) normalises to the same edge; and an **isolated node** present in only one shape contributes no edge, so the edge sets can match even though the vertex sets differ. A real graph-equivalence check would also compare vertex sets and (for directed graphs) edge direction — this lesson deliberately does not, to keep the example small.
 
 Neither shape is "more correct" — they trade off differently. The adjacency map answers "who are node X's neighbours?" by a direct key lookup (expected **O(1)** to reach the set, then O(degree) to read it); the edge list has no key, so the same question means scanning all edges — **O(E)**. The takeaway: **choose the representation to match your operations.** Later graph lessons extend this to adjacency lists vs adjacency matrices.`,
 
@@ -55,6 +57,8 @@ Neither shape is "more correct" — they trade off differently. The adjacency ma
     { term: "Set", definition: "An unordered collection of distinct values, written with { }; adding a duplicate has no effect." },
     { term: "Nested loop", definition: "A loop inside another loop; here, for each node we loop over that node's neighbours." },
     { term: "Equivalent encodings", definition: "Different shapes that store the same information under stated assumptions, each rebuildable from the other." },
+    { term: "Normalised edge set", definition: "The set of edges each stored as (min, max); comparing two such sets ignores order, direction, and duplicates." },
+    { term: "Not a general validator", definition: "This check compares edge sets only; it does not verify vertex sets, reciprocity, or edge multiplicity, so some assumption violations still compare equal." },
   ],
 
   concepts: {
@@ -62,13 +66,14 @@ Neither shape is "more correct" — they trade off differently. The adjacency ma
     operations: "Convert between encodings with loops; compare how each supports edge iteration, neighbour lookup, and membership.",
     uses: "Edge list vs adjacency map (and later adjacency list vs matrix) for graphs; array vs linked list for sequences.",
     tradeoffs: "The adjacency map reaches a node's neighbours by key in expected O(1) (then O(degree) to read them); the edge list has no key, so finding one node's neighbours scans all E edges.",
-    commonMistakes: "Assuming two shapes are equivalent without checking; forgetting the assumptions (undirected, no self-loops, no duplicate edges); double-counting an undirected edge the map stores from both ends.",
-    edgeCases: "Empty graph (no edges). The equality holds only under the stated assumptions: a directed graph, a self-loop (u == v), a parallel edge, or a node missing from one shape would break it.",
+    commonMistakes: "Treating this edge-set check as a general graph-equivalence validator — it is not: a parallel/duplicate edge, a non-reciprocal entry, or an isolated extra node can still compare equal; forgetting the assumptions (undirected, no self-loops, no duplicate edges, same node set); double-counting an undirected edge the map stores from both ends.",
+    edgeCases: "Empty graph (no edges). The check only compares normalised edge SETS, so it is reliable just under the stated assumptions. Some violations still print True (it cannot catch them): a parallel/duplicate edge collapses in the set (multiplicity lost), a non-reciprocal adjacency entry normalises to the same edge, and an isolated node present in only one shape adds no edge. It is NOT a general graph-equivalence validator (which would also compare vertex sets and, for directed graphs, edge direction).",
   },
 
   complexity: [
-    { operation: "Edge list: find a node's neighbours", best: "O(E)", average: "O(E)", worst: "O(E)", space: "O(E)", note: "No key: must scan every edge. Storing all edges is O(E)." },
-    { operation: "Adjacency map: reach a node's neighbour set", best: "O(1)", average: "O(1)", worst: "O(degree)", space: "O(V + E)", note: "Expected O(1) hashed key lookup to REACH the set; reading/enumerating the neighbours is O(degree)." },
+    { operation: "Edge list: find a node's neighbours", best: "O(E)", average: "O(E)", worst: "O(E)", space: "O(E)", note: "No key: must scan every edge. Plain list scan (no hashing), so O(E) in all cases. Storing all edges is O(E)." },
+    { operation: "Adjacency map: reach a node's neighbour set", best: "O(1)", average: "O(1)", worst: "O(V)", space: "O(V + E)", note: "A single hashed dict key lookup: expected O(1) (Python dict Get Item, average O(1)); the hashing worst case is O(V) if keys collide. This is only REACHING the set — not reading its members." },
+    { operation: "Adjacency map: enumerate a node's neighbours", best: "O(degree)", average: "O(degree)", worst: "O(degree)", space: "O(1)", note: "Iterating the reached set visits each neighbour once — linear in that node's degree, in all cases (set iteration is O(size))." },
   ],
 
   complexityExplanation: {
@@ -77,11 +82,18 @@ Neither shape is "more correct" — they trade off differently. The adjacency ma
       { symbol: "V", meaning: "the number of nodes (vertices) in the graph" },
       { symbol: "E", meaning: "the number of edges (connections) in the graph" },
     ],
-    costModel: "Each set insertion and dict key lookup is expected O(1) under Python's hashing. The two rebuild loops each touch every edge; set equality compares the two sets of E pairs.",
+    costModel: "Each set insertion and dict key lookup is EXPECTED (average-case) O(1) under Python's hashing — not a guaranteed worst case: the Python TimeComplexity reference lists dict/set lookup and insert as average O(1) but worst case O(n) when keys collide. The two rebuild loops each touch every edge; set equality compares the two sets of E pairs.",
     time: {
       bound: "O(V + E)",
-      case: "worst",
-      explanation: "The first loop runs once per edge (E iterations). The nested loop visits each node and each of its neighbours — every undirected edge is seen from both ends — which is O(V + E). Comparing the two sets of E pairs is O(E). There is NO sort in the program (we print a count, not a sorted list), so no O(E log E) term. The whole program is linear in the graph size.",
+      case: "expected",
+      explanation: "The first loop runs once per edge (E iterations). The nested loop visits each node and each of its neighbours — every undirected edge is seen from both ends — which is O(V + E). Comparing the two sets of E pairs is O(E). There is NO sort in the program (we print a count, not a sorted list), so no O(E log E) term. This O(V + E) is the EXPECTED (average) case: it assumes the set inserts and set-equality hashing are O(1) each. Under adversarial hash collisions the dict/set operations degrade to O(n), making the worst case superlinear — but that does not happen for ordinary integer keys like these.",
+      otherCases: [
+        {
+          case: "worst",
+          bound: "superlinear (hashing collisions)",
+          note: "If every key hashed to one bucket, each set insert / membership step would be O(n) instead of O(1), so the rebuild + comparison would be well above O(V + E). This is the documented dict/set worst case, not reachable with these integer node labels.",
+        },
+      ],
     },
     space: {
       bound: "O(V + E)",
@@ -100,7 +112,7 @@ Neither shape is "more correct" — they trade off differently. The adjacency ma
       "Dict/set lookups are expected O(1) under Python's hashing.",
       "The example is a fixed tiny graph (V = 3, E = 3), so this run is constant work.",
     ],
-    tradeoffs: "The adjacency map REACHES a node's neighbour set by key in expected O(1) (then O(degree) to enumerate them); the edge list has no key, so the same question scans all E edges. The edge list uses less overhead per edge. Pick per your operation mix.",
+    tradeoffs: "Two distinct steps: the adjacency map REACHES a node's neighbour set by key in expected O(1) (a dict lookup), then ENUMERATES those neighbours in O(degree) (iterating the set). The edge list has no key, so answering the same question scans all E edges — O(E). The edge list uses less overhead per edge. Pick per your operation mix.",
     fixedDataNote: "The literals are fixed (3 nodes, 3 edges), so building them is constant work here. The O(V + E) costs describe how each representation behaves as the graph grows.",
   },
 
@@ -161,7 +173,7 @@ Neither shape is "more correct" — they trade off differently. The adjacency ma
     },
   ],
 
-  review: `A **representation** is the concrete shape of your data, and the same connections fit many shapes. An **edge list** and an **adjacency map** encode one graph; the program rebuilds the connection set from each (normalising edges as \`(min, max)\` in a **set**) and prints \`True\` when they match. They match **only under stated assumptions**: undirected, no self-loops, no duplicate edges, same node set — edit one shape alone and the check prints \`False\`. Match the representation to the **operations** you need: the adjacency map reaches neighbours by key in expected **O(1)**; the edge list scans all edges in **O(E)**. Both store the graph in **O(V + E)** space.`,
+  review: `A **representation** is the concrete shape of your data, and the same connections fit many shapes. An **edge list** and an **adjacency map** encode one graph; the program rebuilds a **set of normalised \`(min, max)\` edges** from each and prints \`True\` when those edge sets match. This is an **example under stated assumptions** (undirected, no self-loops, no duplicate edges, same node set) — **not a general graph-equivalence validator**: because it compares only edge sets, some violations (a parallel/duplicate edge, a non-reciprocal entry, an isolated node) can still print \`True\`. Match the representation to the **operations** you need: the adjacency map **reaches** a node's neighbour set by key in expected **O(1)** then **enumerates** it in **O(degree)**; the edge list scans all edges in **O(E)**. Both store the graph in **O(V + E)** space.`,
 
   expectedOutput: "True\n3\n",
 
@@ -184,10 +196,22 @@ Neither shape is "more correct" — they trade off differently. The adjacency ma
       verifiedClaims: ["A graph can be represented by its edges or by an adjacency structure", "Adjacency lookup is faster than scanning an edge list for neighbours"],
       accessDate: "2026-09-20",
     },
+    {
+      url: "https://wiki.python.org/moin/TimeComplexity",
+      title: "TimeComplexity — Python Wiki",
+      section: "dict (Get Item, k in d) and set (x in s)",
+      topic: "dsa/representations",
+      purpose: "Ground the complexity case labels: a dict/set lookup is EXPECTED (average) O(1), with an amortized worst case of O(n) under hash collisions — so reaching a neighbour set is expected O(1)/worst O(V), distinct from the O(degree) enumeration cost.",
+      verifiedClaims: [
+        "dict Get Item and 'k in d' are Average Case O(1), Amortized Worst Case O(n)",
+        "set 'x in s' is Average O(1), Worst Case O(n)",
+      ],
+      accessDate: "2026-10-02",
+    },
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "11eb89feeb97c533",
+    contentHash: "37ea0b194a873226",
     verifiedAt: "2026-09-21",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

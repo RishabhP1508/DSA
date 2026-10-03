@@ -151,14 +151,44 @@ describe("B1 finding 1 — representations shows two EQUIVALENT encodings", () =
     expect(cx).toMatch(/no sort/);
   });
 
-  it("distinguishes expected O(1) key lookup from O(degree) neighbour enumeration", () => {
-    const adjOp = l.complexity.find((c) => /adjacency/i.test(c.operation));
-    const blob = `${adjOp?.note ?? ""} ${JSON.stringify(l.complexityExplanation)}`.toLowerCase();
-    expect(blob).toMatch(/o\(1\)/); // the keyed REACH is expected O(1)
-    expect(blob).toMatch(/o\(degree\)/); // reading/enumerating neighbours is O(degree)
-    // and the two are explicitly separated (reach vs read/enumerate)
-    expect(blob).toMatch(/reach|lookup/);
-    expect(blob).toMatch(/enumerat|read/);
+  it("separates REACHING a neighbour set from ENUMERATING it, as distinct rows", () => {
+    // Reaching the set (a dict key lookup) and reading its members (set
+    // iteration) are DIFFERENT operations with different costs; they must not be
+    // conflated into one row.
+    const reach = l.complexity.find((c) => /reach/i.test(c.operation));
+    const enumerate = l.complexity.find((c) => /enumerat/i.test(c.operation));
+    expect(reach, "a 'reach' row").toBeDefined();
+    expect(enumerate, "an 'enumerate' row").toBeDefined();
+    expect(reach!.operation).not.toBe(enumerate!.operation);
+  });
+
+  it("the REACH row is expected O(1), and its worst case is NOT O(degree)", () => {
+    // Reaching the set is a hashed dict lookup: expected O(1); the hashing worst
+    // case is O(V) (collisions), per the Python TimeComplexity reference. O(degree)
+    // is the ENUMERATION cost and must not appear as the reach's worst case.
+    const reach = l.complexity.find((c) => /reach/i.test(c.operation))!;
+    expect(reach.average?.replace(/\s/g, "")).toBe("O(1)");
+    expect(reach.worst).not.toMatch(/degree/i);
+    // the worst case acknowledges the hashing collision cost (linear in V), not O(1)
+    expect(reach.worst).toMatch(/O\(V\)|O\(n\)/);
+  });
+
+  it("the ENUMERATE row carries the O(degree) cost", () => {
+    const enumerate = l.complexity.find((c) => /enumerat/i.test(c.operation))!;
+    const bounds = [enumerate.best, enumerate.average, enumerate.worst].join(" ");
+    expect(bounds).toMatch(/degree/i);
+  });
+
+  it("the overall program time bound is labelled EXPECTED/AVERAGE, not strict worst", () => {
+    // The derivation relies on expected-O(1) dict/set ops, so an O(V+E) bound is
+    // an EXPECTED/average-case claim — not a guaranteed worst case. The true
+    // hashing worst case must be acknowledged (superlinear / collisions).
+    const t = l.complexityExplanation.time;
+    expect(["expected", "average"]).toContain(t.case);
+    const blob = JSON.stringify(l.complexityExplanation).toLowerCase();
+    expect(blob).toMatch(/collision|worst case|adversar|superlinear/);
+    // And the expected bound itself is linear in the graph size.
+    expect(t.bound.replace(/\s/g, "")).toMatch(/O\(V\+E\)/);
   });
 
   it("states the assumptions under which the two encodings are equal", () => {
@@ -170,6 +200,53 @@ describe("B1 finding 1 — representations shows two EQUIVALENT encodings", () =
     expect(blob).toContain("undirected");
     expect(blob).toMatch(/self-loop|self loop/);
     expect(blob).toMatch(/duplicate|parallel/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Finding 2 (wording) — the equality check's scope is stated honestly: it
+// compares normalized edge SETS and is NOT a general graph-equivalence
+// validator. Assumption violations can still print True, so the lesson must not
+// claim they "would break" the check.
+// ---------------------------------------------------------------------------
+describe("B1 finding 2 — equality check scope is qualified honestly", () => {
+  const l = byId("representations");
+
+  const prose = () =>
+    (
+      lessonProse(l) +
+      "\n" +
+      (l.complexityExplanation?.assumptions ?? []).join("\n") +
+      "\n" +
+      l.experiments.join("\n")
+    ).toLowerCase();
+
+  it("does NOT claim assumption violations would always break the check", () => {
+    const blob = prose();
+    // The old overgeneralisations must be gone.
+    expect(blob).not.toMatch(/would break it/);
+    expect(blob).not.toMatch(/edit one shape alone and the check prints `?false/);
+  });
+
+  it("states the check compares normalized edge sets (not a general validator)", () => {
+    const blob = prose();
+    expect(blob).toMatch(/normali[sz]ed edge set|set of \(min, max\)|edge set/);
+    // Explicitly distinguishes example-under-assumptions from a general validator.
+    expect(blob).toMatch(/not a (general|full|complete).*(validator|check|equivalence)/);
+  });
+
+  it("acknowledges violations that can STILL print True", () => {
+    const blob = prose();
+    // At least two of: parallel/duplicate multiplicity, non-reciprocal adjacency,
+    // isolated/extra vertex not in any edge — each can still compare equal.
+    const stillTrueSignals = [
+      /parallel|duplicate|multiplicit/, // duplicate edge collapses in a set
+      /reciprocal|both directions|one direction|only one/, // non-reciprocal adj
+      /isolated|no edges|vertex set|same nodes|extra (node|vertex)/, // vertex-set not checked
+    ].filter((re) => re.test(blob)).length;
+    expect(stillTrueSignals).toBeGreaterThanOrEqual(2);
+    // And it says such cases can still print True / are not detected.
+    expect(blob).toMatch(/still (print|return|compare).*true|not detect|cannot detect|won'?t catch/);
   });
 });
 

@@ -2,9 +2,16 @@
  * R9 / B1 finding 3 — aliasing must be visible in the RENDERED UI, derived
  * purely from recorded reference ids (never by re-executing learner code).
  *
- * These are rendered-output tests: they build real TraceEvent snapshots (as the
- * tracer would emit them) for three moments of the `variables-and-types`
- * program and assert what the ArrayVisualizer draws:
+ * SCOPE: these are SYNTHETIC UNIT tests. They build hand-constructed TraceEvent
+ * fixtures (NOT states captured from the bundled tracer) that mimic the shape
+ * the tracer emits, to exercise the ArrayVisualizer's aliasing logic in
+ * isolation across clean cases. The companion INTEGRATION test
+ * `src/visualizers/aliasing.real.test.tsx` captures ACTUAL tracer states from
+ * running the real `variables-and-types` lesson and renders from those — that is
+ * where "real trace states" are proven. Keep both: unit (here) + integration.
+ *
+ * These unit fixtures model three moments of the `variables-and-types` program
+ * and assert what the ArrayVisualizer draws:
  *   - before aliasing: `scores` alone — no "same object" note;
  *   - after `best = scores`: `scores` and `best` carry the SAME ref id, so the
  *     view labels them as one shared object;

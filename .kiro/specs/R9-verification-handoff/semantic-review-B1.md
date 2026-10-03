@@ -46,8 +46,38 @@ prerequisites are introduced before use.
 >   with a **positive control** proving the old `source: "i"` overlay WOULD have
 >   lit a false cell.
 >
+> **Amendment 4 (this round) — corrections from the third review:**
+> - *representations complexity (reach vs enumerate):* the adjacency row that
+>   wrongly gave O(degree) as the *worst case for reaching* the set is split into
+>   **two rows** — "reach a node's neighbour set" (a dict lookup: average **O(1)**,
+>   worst case **O(V)** under hash collisions) and "enumerate a node's neighbours"
+>   (**O(degree)** in all cases, set iteration). The overall program bound is now
+>   labelled **`case: "expected"`** O(V + E) — not strict worst case — because the
+>   derivation relies on expected-O(1) dict/set ops, with a worst-case
+>   `otherCases` note (superlinear under adversarial collisions). Case labels are
+>   grounded in the Python **TimeComplexity** reference (dict/set lookup: average
+>   O(1), amortized worst O(n)), now cited on the lesson and in `docs/references.md`.
+> - *representations equality scope:* the "would break it" / "edit one shape alone
+>   → False" claims are replaced. The check compares **normalised edge sets** and
+>   is **not a general graph-equivalence validator**: it does not verify vertex
+>   sets, reciprocity, or edge multiplicity, so some assumption violations (a
+>   parallel/duplicate edge, a non-reciprocal entry, an isolated extra node) can
+>   **still print `True`** — confirmed by a probe on the bundled runtime. New
+>   vocabulary ("Normalised edge set", "Not a general validator") and reworded
+>   explanation/edgeCases/review/commonMistakes make the distinction beginner-clear.
+> - *aliasing integration test:* the hand-built aliasing fixtures are relabelled
+>   as **synthetic unit tests**; a new **integration** test
+>   (`src/visualizers/aliasing.real.test.tsx`) runs the actual `variables-and-types`
+>   lesson through the **bundled tracer**, selects the real states before aliasing,
+>   after `best = scores`, and after `independent = list(scores)`, and renders the
+>   visualizer from those states — asserting the shared-object label from genuine
+>   recorded reference ids.
+> - *references index:* a claim-specific **`### dsa/representations`** entry was
+>   added to `docs/references.md` (ODS, Runestone graphs vocabulary, Python
+>   TimeComplexity), as AGENTS.md requires beyond the lesson's own `references`.
+>
 > **Machine verification on this branch:** `npm run check:all` → exit 0 (unit
-> **586** passed across **41** files; model solutions **161/161**; R6.4
+> **596** passed across **42** files; model solutions **161/161**; R6.4
 > mistake-rejection all five categories **161/161**; coverage-evidence **131
 > verified / 0 not-yet**; recognition **164**; hints **325**; all **131** lesson
 > outputs match). `npm run test:browser` → **18 passed / 5 skipped** (the 5 skips
@@ -87,7 +117,7 @@ four items corrected on this branch (new hash shown).
 | 8 | `references-mutation` | `src/content/lessons/references-mutation.ts` | References and Mutation | `5feb2cad2643ea0c` | ref-predict-1, ref-fix-1 |
 | 9 | `classes` | `src/content/lessons/classes.ts` | Classes and Objects | `8693b395b5881198` | class-complete-1, class-predict-1 |
 | 10 | `errors` | `src/content/lessons/errors.ts` | Errors and Exceptions | `c144f84f8a9c03e1` | err-complete-1, err-choose-1 |
-| 11 | `representations` | `src/content/lessons/representations.ts` | Representations of Data | `11eb89feeb97c533` *(fixed)* | repr-choose-1, repr-predict-1 |
+| 11 | `representations` | `src/content/lessons/representations.ts` | Representations of Data | `37ea0b194a873226` *(fixed)* | repr-choose-1, repr-predict-1 |
 | 12 | `complexity` | `src/content/lessons/complexity.ts` | Time and Space Complexity | `448bbae5526f4263` | cx-predict-1, cx-choose-1 |
 | 13 | `cases` | `src/content/lessons/cases.ts` | Best, Average, and Worst Cases | `1f31f7d42bd2adc4` | cases-predict-1, cases-choose-1 |
 | 14 | `amortized` | `src/content/lessons/amortized.ts` | Amortized Cost | `5b23a0c6bd8b3a52` | amort-predict-1, amort-choose-1 |
@@ -95,7 +125,7 @@ four items corrected on this branch (new hash shown).
 
 Prerequisite chain (introduced before use): variables-and-types → expressions →
 conditions → loops → functions → scope → io → references-mutation → classes →
-errors; DSA: representations (needs variables), complexity (needs loops+functions),
+errors; DSA: representations (needs variables + loops), complexity (needs loops+functions),
 cases (needs complexity), amortized (needs complexity+cases), correctness (needs
 loops). No forward references found.
 
@@ -126,11 +156,15 @@ your approval is still required.
   their recorded reference ids are equal, and draws **no** such label on
   `independent` (a different id). This is computed purely from the snapshot
   (`aliasNames` in `src/visualizers/helpers.ts`) — the learner's code is never
-  re-executed. Proven by the **rendered** test
-  `src/visualizers/ArrayVisualizer.aliasing.test.tsx` (before aliasing: no label;
-  after `best = scores`: label names `best`; after the copy: `independent` has no
-  label and `scores`'s label excludes it; equal-contents-different-id: no label).
-  The lesson prose now names this on-screen label.
+  re-executed. Proven at two levels: synthetic **unit** fixtures in
+  `src/visualizers/ArrayVisualizer.aliasing.test.tsx` (clean cases) and —
+  **amendment 4** — a real **integration** test
+  `src/visualizers/aliasing.real.test.tsx` that runs the actual lesson through the
+  bundled tracer and renders the visualizer from the genuine recorded states
+  before aliasing, after `best = scores`, and after `independent = list(scores)`.
+  The unit file's docstring was corrected to say it uses synthetic fixtures (it
+  had described them as real tracer states). The lesson prose names the on-screen
+  label.
 - **For the reviewer:** confirm the identity framing (`is` vs `==`) and the
   on-screen "same object" label read clearly for a first-time learner.
 
@@ -232,16 +266,17 @@ your approval is still required.
   `err-choose-1` (KeyError vs `in`) both correct and balanced. **No blocking
   concern.**
 
-### 11. `representations` — Representations of Data  — hash `11eb89feeb97c533`
+### 11. `representations` — Representations of Data  — hash `37ea0b194a873226`
 - **Teaches:** one small graph (nodes 0,1,2 with edges 0–1, 0–2, 1–2) in two
   equivalent encodings — an **edge list** `[(0, 1), (0, 2), (1, 2)]` and an
   **adjacency map** `{0: {1,2}, 1: {0,2}, 2: {0,1}}`. The program rebuilds the
   connection set from EACH with **plain for-loops** (normalising edges as
   `(min, max)`), prints that they are equal, then prints the count.
   `expectedOutput: "True\n3\n"`.
-- **Assessment:** teaching is correct; complexity table describes both
-  representations and the time explanation is reconciled with the program (no
-  sort). Two credible references (ODS, Runestone graphs).
+- **Assessment:** teaching is correct; complexity separates reach (expected O(1))
+  from enumerate (O(degree)) with honest case labels, and the equality check's
+  scope is qualified (edge-set compare, not a general validator). Three credible
+  references (ODS, Runestone graphs, Python TimeComplexity).
 - **Fix log (was: two NON-equivalent examples):** the original program showed
   `as_list = [0, 1, 1, 0]` and `as_dict = {0: [1], 1: [0]}` framed as "the same
   information," but they encoded different relationships. Replaced with the edge
@@ -270,9 +305,31 @@ your approval is still required.
   rewritten with **plain for-loops** instead of set comprehensions, and new
   vocabulary explains **`set`** and **nested loop**. The learning-path graph was
   re-validated (`verify:lessons`): no missing prereqs, no cycles.
+- **Fix log — deepened (amendment 4):**
+  - *Reach vs enumerate, with correct case labels:* the single adjacency row that
+    gave **O(degree)** as the *worst case for reaching* the set was wrong —
+    O(degree) is the enumeration cost. It is now **two rows**: "reach a node's
+    neighbour set" (a dict lookup — average **O(1)**, worst **O(V)** under hash
+    collisions) and "enumerate a node's neighbours" (**O(degree)**, set iteration,
+    all cases). Grounded in the Python **TimeComplexity** reference.
+  - *Expected, not strict worst, overall:* the program bound is now
+    `case: "expected"` **O(V + E)** (the derivation assumes expected-O(1) dict/set
+    ops), with a worst-case `otherCases` note (superlinear under adversarial
+    collisions). Tests assert the reach row's worst case is not O(degree), the
+    enumerate row carries O(degree), and the overall case is expected/average.
+  - *Equality scope qualified (not a general validator):* removed "would break it"
+    / "edit one shape alone → False". The check compares **normalised edge sets**;
+    it does not verify vertex sets, reciprocity, or multiplicity, so a
+    parallel/duplicate edge, a non-reciprocal entry, or an isolated extra node can
+    **still print `True`** (confirmed by a bundled-runtime probe). New vocabulary
+    and reworded prose make it an *example under assumptions*, not a validator.
+  - *References index:* added a claim-specific `### dsa/representations` entry to
+    `docs/references.md` (ODS, Runestone graphs vocabulary, Python TimeComplexity).
 - **For the reviewer:** confirm the edge-list/adjacency framing and the plain-loop
   rewrite are appropriate at foundations level (the dedicated
-  `graph-representations` lesson later goes deeper into adjacency list vs matrix).
+  `graph-representations` lesson later goes deeper into adjacency list vs matrix),
+  and that the reach-vs-enumerate split and the "not a general validator"
+  qualification read clearly.
 
 ### 12. `complexity` — Time and Space Complexity
 - **Teaches:** Big-O (O(1)/O(n)/O(n²)), input size n, time vs auxiliary space;
