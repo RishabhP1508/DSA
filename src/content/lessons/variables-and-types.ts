@@ -39,7 +39,7 @@ export const variablesAndTypes: LessonDefinition = {
   area: "Programming foundations",
   prerequisites: [],
 
-  explanation: `In Python you do not "declare" variables with a fixed type. A **variable is a name** that refers to a value — and every value is an *object* that carries its own type. When you write \`score = 42\`, Python creates the integer object \`42\` and points the name \`score\` at it.
+  explanation: `In Python you do not "declare" variables with a fixed type. A **variable is a name** that refers to a value — and every value is an *object* that carries its own type. When you write \`score = 42\`, the literal \`42\` evaluates to an \`int\` object and the name \`score\` is **bound** to it. (Binding a literal does not promise a brand-new object: CPython keeps a cache of small integers, so the same literal \`42\` elsewhere may reuse the very same \`int\` object — see the Python docs. The point is simply that \`score\` now refers to an \`int\`.)
 
 Because the name only *refers* to the object, you can point it at something of a different type later: \`score = 42.5\` makes \`score\` refer to a floating-point number instead. This is called **dynamic typing** — the type travels with the value, not with the name.
 
@@ -83,7 +83,7 @@ You can test this directly. The \`is\` operator compares **identity** — whethe
     scope: "program",
     variables: [
       { symbol: "n", meaning: "the number of appends performed on a list (this example does 1)" },
-      { symbol: "k", meaning: "the number of elements copied when making an independent list (here 3)" },
+      { symbol: "k", meaning: "the number of elements in the list when it is copied/printed (here 4: the 3 literals plus the appended 40)" },
     ],
     costModel:
       "Binding a name to an existing object is constant work (it copies a reference, not the object), and `is` compares identities in O(1). `list.append` is analysed with the amortized model: most appends are O(1), and the rare internal resize that copies all elements is spread across the cheap appends. Copying a list with `list(x)` is O(k) in the number of elements.",
@@ -91,12 +91,12 @@ You can test this directly. The \`is\` operator compares **identity** — whethe
       bound: "O(k)",
       case: "worst",
       explanation:
-        "The name bindings, the `is` identity checks, and the single append are each O(1) (append amortized O(1)). The one copy `list(scores)` is O(k): it allocates a new list and copies k elements. With a fixed small list that is constant here, but it is the only step that grows with the data size.",
+        "The name bindings and the `is` identity checks are each O(1). The single `best.append(40)` is amortized O(1), but its WORST case is O(k): when the backing array is full the append reallocates and copies all current elements. The copy `independent = list(scores)` is O(k) (allocate a new list, copy k elements). And the final `print(scores)` must format and emit all k elements, so it is O(k) too — the copy is NOT the only size-dependent step. Summing these size-dependent steps keeps the overall worst case at O(k).",
       otherCases: [
         {
           case: "amortized",
-          bound: "O(1)",
-          note: "Ignoring the copy, every binding/append/identity check is O(1) (append amortized O(1)).",
+          bound: "O(k)",
+          note: "Even ignoring the append's rare resize, both `list(scores)` and `print(scores)` are O(k), so the program is O(k) in the list length either way.",
         },
       ],
     },
@@ -108,18 +108,19 @@ You can test this directly. The \`is\` operator compares **identity** — whethe
       inputOutputNote: "The original list holds your data; the extra O(k) is the independent copy you deliberately made.",
     },
     derivation: [
-      { lines: [2, 4, 6, 8, 10], description: "Five name bindings to freshly created objects — each O(1).", cost: "O(1)", dimension: "time" },
-      { lines: [12], description: "Create a 3-element list literal — proportional to its fixed size, treated as O(1) here.", cost: "O(1)", dimension: "time" },
+      { lines: [2, 4, 6, 8, 10], description: "Five name bindings — each binds a name to an int/str/bool/None object (CPython may reuse a cached small int), O(1).", cost: "O(1)", dimension: "time" },
+      { lines: [12], description: "Build a 3-element list literal — proportional to its fixed size, treated as O(1) here.", cost: "O(1)", dimension: "time" },
       { lines: [13], description: "Alias: bind a second name to the same list. Copies only a reference.", cost: "O(1)", dimension: "time" },
-      { lines: [17], description: "Append one element — amortized O(1).", cost: "O(1)", dimension: "time" },
-      { lines: [19], description: "list(scores) makes a copy of k elements — O(k) time and space.", cost: "O(k)", dimension: "time" },
+      { lines: [17], description: "Append one element — amortized O(1), but WORST case O(k) when a full backing array is reallocated and all k current elements are copied.", cost: "O(k)", dimension: "time" },
+      { lines: [19], description: "list(scores) makes a copy of the k current elements — O(k) time and space.", cost: "O(k)", dimension: "time" },
+      { lines: [23], description: "print(scores) formats and emits all k elements — O(k) too, so the copy is not the only size-dependent step.", cost: "O(k)", dimension: "time" },
       { lines: [13], description: "Aliasing adds no storage; both names share one object.", cost: "O(1)", dimension: "space" },
     ],
     assumptions: [
       "Name binding copies a reference, not the referenced object.",
-      "CPython's list uses over-allocation so appends are amortized O(1).",
-      "`is` compares identity in O(1); `list(x)` copies k elements in O(k).",
-      "`type()` and `print()` of small values are treated as constant work.",
+      "CPython's list uses over-allocation so appends are amortized O(1), with an O(k) worst case on resize.",
+      "`is` compares identity in O(1); `list(x)` copies k elements in O(k); printing a list touches all k elements.",
+      "The individual int/str values here are small, so creating/formatting one value is treated as O(1).",
     ],
     tradeoffs:
       "Aliasing (`best = scores`) is O(1) and shares one object; a copy (`list(scores)`) is O(k) time and O(k) extra space for k elements but keeps the lists independent (`is` is then False).",
@@ -127,14 +128,14 @@ You can test this directly. The \`is\` operator compares **identity** — whethe
       { label: "append calls", definition: "executions of the append line (line 17)", countLines: [17] },
     ],
     fixedDataNote:
-      "This program uses fixed literal values and does exactly one append, so its total cost is constant for this run. The amortized O(1) claim describes what happens as you scale the number of appends up to n.",
+      "This run uses a fixed list (3 literals, then one append → k = 4 when it is copied and printed), so the work is small and constant here. The O(k) worst-case bound describes how the copy, the print, and a resizing append grow with the list length k.",
   },
 
   code,
 
   codeExplanations: [
     { line: 1, executable: false, explanation: "A comment. Comments explain code to humans and are ignored when the program runs." },
-    { line: 2, executable: true, explanation: "Create the integer object 42 and bind the name `score` to it. `score` now refers to an int." },
+    { line: 2, executable: true, explanation: "The literal 42 evaluates to an int object; the name `score` is bound to it (CPython may reuse a cached small int rather than allocate a new one). `score` now refers to an int." },
     { line: 3, executable: false, explanation: "Comment: the next line shows that reassignment changes which object the name refers to." },
     { line: 4, executable: true, explanation: "Rebind `score` to the float 42.5. The name now refers to a different object of a different type. Dynamic typing in action." },
     { line: 5, executable: false, explanation: "Comment introducing strings." },
@@ -277,7 +278,7 @@ You can test this directly. The \`is\` operator compares **identity** — whethe
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "59318c3da1069063",
+    contentHash: "769b36aaf693d104",
     verifiedAt: "2026-10-03",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

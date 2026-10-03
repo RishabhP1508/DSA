@@ -113,15 +113,43 @@ prerequisites are introduced before use.
 > B1 reverified-date summary: `representations` 2026-10-02; `functions`, `loops`,
 > `variables-and-types` 2026-10-03.
 >
-> **Machine verification on this branch:** `npm run check:all` → exit 0 (unit
-> **605** passed across **43** files; model solutions **161/161**; R6.4
-> mistake-rejection all five categories **161/161**; coverage-evidence **131
+> **Amendment 7 (Group 1 follow-up — on branch `fix/b1-group1-followup`, off
+> merged main `ce2339b`):** the reviewer read the full Group 1 lessons and found
+> specific claims to correct (not guessed alternatives). All fixed test-first
+> (`src/content/b1-group1-followup.facts.test.ts`, 15 cases) and reverified on the
+> bundled runtime (outputs unchanged):
+> - *variables-and-types* — stop claiming a literal "creates"/"freshly creates" a
+>   new int object (CPython reuses small ints); the copy length `k` is **4** (the
+>   append runs before `list(scores)`), not 3; the worst-case time section now
+>   notes the append's O(k) resize and that `print(scores)` is also O(k), so the
+>   copy is not the only size-dependent step (overall O(k) kept).
+> - *expressions* — `//` **floors the quotient** and the result type follows the
+>   operands (`7 // 2 == 3` int, `7.0 // 2 == 3.0` float); the "`/` → float" claim
+>   is scoped to int/float operands, not universal.
+> - *loops* — separate the for-loop O(n), n = len(nums), from the displayed while
+>   which is **O(1)** (fixed limit 3, independent of n); `case: worst` kept
+>   (sequential O(n)+O(1)); a generalized while bound uses a separate variable
+>   `m`; the Runestone book-index reference is replaced with the exact Accumulator
+>   Pattern page and the Python reference section/URL pairing is fixed.
+> - *functions* — remove the unrestricted "regardless of the values passed" /
+>   "any numeric inputs" claims (Python ints are arbitrary precision); keep O(1)
+>   `case: worst` for the small fixed-size operands and state that assumption;
+>   add the Python Numeric Types reference.
+> - New hashes: variables-and-types `769b36aaf693d104`, expressions
+>   `a43d57ba88b81166`, loops `ff5a1658e037ec10`, functions `8e233bf96888307b`;
+>   all four re-dated `2026-10-03` (only these four — the other 156 keep
+>   2026-09-21, `representations` keeps 2026-10-02). **No `semanticReview` flag
+>   changed; still 0 sign-offs.**
+>
+> **Machine verification (branch `fix/b1-group1-followup`):** `npm run check:all`
+> → exit 0 (unit **620** passed across **44** files; model solutions **161/161**;
+> R6.4 mistake-rejection all five categories **161/161**; coverage-evidence **131
 > verified / 0 not-yet**; recognition **164**; hints **325**; all **131** lesson
 > outputs match). `npm run test:browser` → **18 passed / 5 skipped**, result
-> retained from commit `45f3c40` (no browser-facing behaviour changed by this
-> round or the prior one: only reference metadata, the evidence-date generator,
-> and evidence `verifiedAt`/hash fields — none affect rendered behaviour). All
-> **160** items remain `semanticReview: false`.
+> retained from commit `45f3c40` (this round changes only learner-facing text,
+> complexity metadata, references, and evidence hash/date fields — no
+> browser-facing/rendered behaviour changed). All **160** items remain
+> `semanticReview: false`.
 
 **How to sign off AFTER you approve items** (set the env vars BEFORE the script):
 
@@ -147,11 +175,11 @@ four items corrected on this branch (new hash shown).
 
 | # | Lesson ID | File | Title | contentHash | Exercises |
 |---|---|---|---|---|---|
-| 1 | `variables-and-types` | `src/content/lessons/variables-and-types.ts` | Variables and Types | `59318c3da1069063` *(fixed)* | vt-predict-1, vt-fix-1, vt-choose-1 |
-| 2 | `expressions` | `src/content/lessons/expressions.ts` | Expressions and Operators | `f143fe2cdd58cb0a` | expr-predict-1, expr-choose-1 |
+| 1 | `variables-and-types` | `src/content/lessons/variables-and-types.ts` | Variables and Types | `769b36aaf693d104` *(fixed)* | vt-predict-1, vt-fix-1, vt-choose-1 |
+| 2 | `expressions` | `src/content/lessons/expressions.ts` | Expressions and Operators | `a43d57ba88b81166` *(fixed)* | expr-predict-1, expr-choose-1 |
 | 3 | `conditions` | `src/content/lessons/conditions.ts` | Conditions (if/elif/else) | `9c63d07d9bb2235d` | cond-fix-1, cond-predict-1 |
-| 4 | `loops` | `src/content/lessons/loops.ts` | Loops (for and while) | `60a8b338e1b51036` *(fixed)* | loop-fix-1, loop-complete-1 |
-| 5 | `functions` | `src/content/lessons/functions.ts` | Functions | `fb3892f19f580d34` *(fixed)* | func-complete-1, func-predict-1 |
+| 4 | `loops` | `src/content/lessons/loops.ts` | Loops (for and while) | `ff5a1658e037ec10` *(fixed)* | loop-fix-1, loop-complete-1 |
+| 5 | `functions` | `src/content/lessons/functions.ts` | Functions | `8e233bf96888307b` *(fixed)* | func-complete-1, func-predict-1 |
 | 6 | `scope` | `src/content/lessons/scope.ts` | Scope (Local vs Global) | `784f6b28a2aed1d6` | scope-predict-1, scope-choose-1 |
 | 7 | `io` | `src/content/lessons/io.ts` | Input and Output | `9ec7390e15aa8128` | io-fix-1, io-predict-1 |
 | 8 | `references-mutation` | `src/content/lessons/references-mutation.ts` | References and Mutation | `5feb2cad2643ea0c` | ref-predict-1, ref-fix-1 |
@@ -178,7 +206,7 @@ and my assessment. "Concern" = something a human should look at before approving
 "No blocking concern" = I found the content factually correct and well-posed, but
 your approval is still required.
 
-### 1. `variables-and-types` — Variables and Types  — hash `59318c3da1069063` · verified 2026-10-03
+### 1. `variables-and-types` — Variables and Types  — hash `769b36aaf693d104` · verified 2026-10-03
 - **Teaches:** names refer to objects; dynamic typing; `int/float/str/bool/None`;
   **aliasing** and **identity**. The program binds `best = scores`, prints
   `best is scores` (**True**, same object), appends through `best`, then makes a
@@ -205,23 +233,40 @@ your approval is still required.
   The unit file's docstring was corrected to say it uses synthetic fixtures (it
   had described them as real tracer states). The lesson prose names the on-screen
   label.
+- **Fix log — Group 1 follow-up (reviewer findings):** (a) the explanation and
+  line-2 note said Python "creates the integer object 42" and the derivation
+  called the bindings "freshly created objects" — corrected, since CPython may
+  **reuse a cached small int**; now the literal *evaluates to* an int object the
+  name is *bound to* (small-int reuse noted, cites Python int docs). (b) The copy
+  length `k` was described as "here 3", but `best.append(40)` runs **before**
+  `list(scores)`, so the copy has **4** elements — fixed. (c) The `case: worst`
+  time section treated the single append as the only size-dependent step; it now
+  notes the append's **O(k) resize** worst case AND that **`print(scores)` also
+  displays k elements**, so the copy is not the only size-dependent step. Overall
+  bound stays **O(k)**; derivation corrected.
 - **For the reviewer:** confirm the identity framing (`is` vs `==`) and the
   on-screen "same object" label read clearly for a first-time learner.
 
-### 2. `expressions` — Expressions and Operators
+### 2. `expressions` — Expressions and Operators  — hash `a43d57ba88b81166` · verified 2026-10-03
 - **Teaches:** precedence; `/` (float) vs `//` (floor) vs `%` (remainder) vs `**`;
   parentheses. `expectedOutput: "14 20 2\n3 32 2.5\n"`.
 - **Assessment:** correct, incl. the subtle `-1 % 5 == 4` (Python modulo follows
   the divisor's sign) in the edge-cases note, and `ZeroDivisionError`. Exercises
-  correct. **No blocking concern.**
-
-### 3. `conditions` — Conditions (if/elif/else)
+  correct.
+- **Fix log — Group 1 follow-up (reviewer findings):** `//` was described only as
+  "integer (floor) division → a whole number", which is true for the shown
+  `int//int` case but hides that a float operand yields a float. Now: `//` **floors
+  the quotient** and its result type follows the operands — `7 // 2 == 3` (int)
+  but `7.0 // 2 == 3.0` (float), verified on the bundled runtime. The
+  "`/` always gives a float" claim is now **scoped to the int/float operands
+  taught** (with a note that a custom class can define these operators), rather
+  than a universal claim; the reference `verifiedClaims` were scoped to match.
 - **Teaches:** first-true-branch wins, order matters, `==` vs `=`, comparison
   operators. `expectedOutput: "hot\n"`.
 - **Assessment:** correct. `cond-fix-1` cleanly demonstrates the broad-test-first
   ordering bug and its fix. **No blocking concern.**
 
-### 4. `loops` — Loops (for and while)  — hash `60a8b338e1b51036` · verified 2026-10-03
+### 4. `loops` — Loops (for and while)  — hash `ff5a1658e037ec10` · verified 2026-10-03
 - **Teaches:** for = once per item, while = until condition false, accumulator,
   infinite loop. `expectedOutput: "27\n0\n1\n2\n"` (unchanged — code unchanged).
 - **Assessment:** prose, complexity, and exercises (`loop-fix-1` missing
@@ -243,10 +288,21 @@ your approval is still required.
   pointer label is drawn. A **positive control** in the same file rebuilds the old
   `{ source: "i" }` overlay and asserts it WOULD have lit a false cell — proving
   the check has teeth.
+- **Fix log — Group 1 follow-up (reviewer findings):** the complexity folded the
+  two **sequential, independent** loops under one symbol `n` and implied the
+  displayed `while` scales with `n`. Corrected: `n = len(nums)` drives the
+  **for** loop (O(n)); the displayed **while** has the fixed limit 3, so it is
+  **O(1)** here, independent of `n`. The program stays **`case: worst` O(n)**
+  (sequential O(n) + O(1)). A *generalized* while bound is now a **separate
+  variable `m`** (O(n + m)), not conflated with `n`. References fixed: the
+  Runestone **book-index** link was replaced with the exact **fopp Accumulator
+  Pattern** page, and the Python reference section was cleaned to **"4.2 for
+  Statements"** (dropping the muddled `introduction.html` mix) — both verified on
+  the live pages.
 - **For the reviewer:** confirm you're comfortable that the array view carries no
   pointer here (the for-loop walks values, not indices).
 
-### 5. `functions` — Functions  — hash `fb3892f19f580d34` · verified 2026-10-03
+### 5. `functions` — Functions  — hash `8e233bf96888307b` · verified 2026-10-03
 - **Teaches:** `def`, parameters vs arguments, `return`, None-on-no-return,
   per-call frame + the call stack. `expectedOutput: "7\n"` (unchanged).
 - **Assessment:** correct, incl. "default parameter values evaluated once at
@@ -263,8 +319,17 @@ your approval is still required.
   appearing on the call to `add` and disappearing on return (call + return frames
   verified by `verify:lessons`, 9 events). Guarded by `b1-corrections.facts.test.ts`
   ("uses a call-stack binding, not recursion-on-answer").
-- **Minor (unchanged):** single reference (Python docs); a second independent
-  source would strengthen it. Left for your call.
+- **Fix log — Group 1 follow-up (reviewer findings):** the time analysis claimed
+  the cost is constant "**regardless of the values passed**" and the
+  `fixedDataNote` said "add would still be O(1) per call for **any numeric
+  inputs**." Both overclaims are removed: Python `int` is **arbitrary precision**,
+  so adding d-digit integers is O(d). The bound stays **O(1), `case: worst`** for
+  the displayed small, machine-word-sized operands (2 and 5), now stated as an
+  explicit assumption, with the large-integer caveat. A second reference (Python
+  **Numeric Types** docs) was added — which also resolves the earlier
+  single-reference nit.
+- **For the reviewer:** confirm the small-operand O(1) framing (and its
+  arbitrary-precision caveat) reads clearly.
 
 ### 6. `scope` — Scope (Local vs Global)
 - **Teaches:** local vs global, shadowing, `global` keyword, `UnboundLocalError`.
