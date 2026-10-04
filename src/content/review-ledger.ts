@@ -599,8 +599,8 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "loops",
     "kind": "lesson",
-    "reviewedHash": "deea373a486b5371",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "fcadc9eb125d967c",
+    "reviewedAt": "2026-10-04",
     "batch": 1
   },
   {
