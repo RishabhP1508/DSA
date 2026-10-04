@@ -87,12 +87,31 @@ describe("B1 G1 L2 — loops: for consumes an iterable, items one at a time", ()
     expect(forEntry!.definition.toLowerCase()).toContain("iterable");
   });
 
-  it("the Iterable vocabulary entry prefers 'iterates over' to 'consume' (items are not lost)", () => {
+  it("Iterable entry says 'one at a time' and does not use 'consume' or 'without removing'", () => {
     const itEntry = loops.vocabulary.find((v) => /^iterable$/i.test(v.term));
     expect(itEntry).toBeDefined();
     const d = itEntry!.definition.toLowerCase();
-    expect(d).toMatch(/iterate(s)? over|loop over|go through/);
+    expect(d).toMatch(/one at a time/);
     expect(d).not.toContain("consume");
+    // the "without removing them" phrasing is removed (over-promises re-traversal)
+    expect(d).not.toContain("without removing");
+  });
+
+  it("explanation does not claim items are kept/re-traversable via 'without removing them'", () => {
+    expect(loops.explanation.toLowerCase()).not.toContain("without removing");
+  });
+
+  it("does not imply EVERY iterable can be traversed again (list reuse must be scoped + countered)", () => {
+    const e = loops.explanation.toLowerCase();
+    // If re-traversal / looping-again is mentioned at all, it must (a) be scoped
+    // to a list and (b) include the generator counterexample so it is not read
+    // as a universal property of iterables.
+    if (/\b(again|re-?travers|loop(ed)? over again|multiple times)\b/.test(e)) {
+      expect(e).toMatch(/not every iterable|some .*(only once|yield .* once|generator)/);
+      expect(e).toMatch(/list/);
+    }
+    // never a blanket "every iterable can be reused/looped again"
+    expect(e).not.toMatch(/every iterable (can|may) (be )?(reused|looped|traversed)/);
   });
 
   it("the line-1 comment and a line explanation mention iterable", () => {
@@ -173,5 +192,14 @@ describe("B1 G1 L2 — loops: references include Python language reference §8.3
     const claims = (ref!.verifiedClaims ?? []).join(" ").toLowerCase();
     expect(claims).toMatch(/iterable/);
     expect(claims).toMatch(/break|continue|early|terminat/);
+  });
+
+  it("the §8.3 reference accessDate is the real fetch date 2026-10-04 (not the stale 2026-09-21)", () => {
+    const ref = loops.references.find((r) => /compound_stmts\.html/.test(r.url));
+    expect(ref!.accessDate).toBe("2026-10-04");
+  });
+
+  it("loops verifiedAt reflects today's reverification (2026-10-04)", () => {
+    expect(loops.evidence?.verifiedAt).toBe("2026-10-04");
   });
 });

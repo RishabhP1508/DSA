@@ -23,7 +23,7 @@ export const loops: LessonDefinition = {
   area: "Programming foundations",
   prerequisites: ["conditions"],
 
-  explanation: `A **loop** repeats work so you do not have to write it out by hand. A **for loop** iterates over an **iterable** — any object that can hand out its items one at a time, without removing them — running its body for each item in turn. A list like \`nums\` is the common example (strings, ranges, and dictionary views are iterables too). Here the loop adds every number in \`nums\` to a running \`total\`. This "accumulator" pattern (start at 0, add each item) is everywhere in DSA.
+  explanation: `A **loop** repeats work so you do not have to write it out by hand. A **for loop** iterates over an **iterable** — any object that provides its items one at a time — running its body for each item in turn. A list like \`nums\` is the common example (strings, ranges, and dictionary views are iterables too). Here the loop adds every number in \`nums\` to a running \`total\`. This "accumulator" pattern (start at 0, add each item) is everywhere in DSA. (Iterating a list does not change it: \`nums\` still contains its elements after the loop. Not every iterable behaves this way — some, like a generator, yield their items only once — but a plain list can be looped over again.)
 
 A **while loop** repeats *as long as* a condition is True. You must make progress toward making that condition False (here, \`i = i + 1\`), or the loop never ends — an **infinite loop**.
 
@@ -32,7 +32,7 @@ The key mental model: when a for loop **finishes normally**, its body runs **onc
   vocabulary: [
     { term: "Loop", definition: "A construct that repeats a block of code." },
     { term: "for loop", definition: "Runs its body once for each item an iterable provides (a list here); when it finishes normally that is once per item, but it can also stop early." },
-    { term: "Iterable", definition: "Any object a for loop can iterate over, reading its items one at a time without removing them — e.g. a list, string, range, or dictionary view." },
+    { term: "Iterable", definition: "Any object a for loop can iterate over, which provides its items one at a time — e.g. a list, string, range, or dictionary view." },
     { term: "while loop", definition: "Repeats while a condition remains True." },
     { term: "Iteration", definition: "One pass through the loop body." },
     { term: "Accumulator", definition: "A variable that builds up a result across iterations, e.g. a running total." },
@@ -168,7 +168,7 @@ The key mental model: when a for loop **finishes normally**, its body runs **onc
         "A break statement in the loop body terminates the loop early; a continue statement skips the rest of the body and continues with the next item.",
       ],
       conventions: ["Python 3.14 language reference"],
-      accessDate: "2026-09-21",
+      accessDate: "2026-10-04",
     },
     {
       url: "https://runestone.academy/ns/books/published/fopp/Iteration/TheAccumulatorPattern.html",
@@ -182,8 +182,8 @@ The key mental model: when a for loop **finishes normally**, its body runs **onc
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "9bf95b7a79e54c49",
-    verifiedAt: "2026-10-03",
+    contentHash: "fcadc9eb125d967c",
+    verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,
