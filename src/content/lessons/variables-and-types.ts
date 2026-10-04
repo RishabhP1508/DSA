@@ -29,7 +29,7 @@ best.append(40)
 # A COPY is a different object with equal contents -> 'is' is False.
 independent = list(scores)
 print(independent is scores)
-# Show the types and values we built.
+# Show the values we built.
 print(player, score, is_ready, result)
 print(scores)`;
 
@@ -65,11 +65,11 @@ You can test this directly. The \`is\` operator compares **identity** — whethe
     uses:
       "Every program uses variables to hold inputs, intermediate results, counters, and outputs.",
     tradeoffs:
-      "Dynamic typing is flexible and concise, but the same name can hold different types at different times, so you must keep track of what a name actually refers to.",
+      "Dynamic typing is flexible and concise, but the same name can refer to objects of different types at different times (the type belongs to the value, not the name), so you must keep track of what a name actually refers to.",
     commonMistakes:
       "Assuming `b = a` copies a list — it does not; both names refer to the same list. Expecting a reassignment of one name to affect another (it does not — reassignment only rebinds that one name).",
     edgeCases:
-      "`int` has unlimited precision (no overflow). `bool` is a subtype of `int` (True behaves like 1). `None` is a single shared object.",
+      "`int` has unlimited precision — there is no fixed-width integer overflow; an int just grows as large as it needs to, limited only by available memory. `bool` is a subtype of `int` (True behaves like 1). `None` is a single shared object.",
   },
 
   complexity: [
@@ -154,7 +154,7 @@ You can test this directly. The \`is\` operator compares **identity** — whethe
     { line: 18, executable: false, explanation: "Comment: a copy is a separate object with equal contents." },
     { line: 19, executable: true, explanation: "Build `independent = list(scores)` — a NEW list object with the same elements, a different identity." },
     { line: 20, executable: true, explanation: "Print `independent is scores`. It is False: equal contents, but a different object." },
-    { line: 21, executable: false, explanation: "Comment before the final output lines." },
+    { line: 21, executable: false, explanation: "Comment: the final lines print the values we built." },
     { line: 22, executable: true, explanation: "Print the current values. `score` is now 42.5 (its reassigned value), and `result` prints as None." },
     { line: 23, executable: true, explanation: "Print the list. It shows [10, 20, 30, 40] — the mutation through `best` is visible via `scores`." },
   ],
@@ -182,7 +182,7 @@ You can test this directly. The \`is\` operator compares **identity** — whethe
   experiments: [
     "Change line 13 to `best = list(scores)` (a copy). Re-run and watch how `scores` is no longer affected by the append.",
     "Add `print(type(score))` at the end and predict the type before running.",
-    "Reassign `score` to a string and observe that the name's type changes.",
+    "Reassign `score` to a string and observe that `score` now refers to an object of a different type (the name itself has no type).",
   ],
 
   exercises: [
@@ -216,11 +216,11 @@ You can test this directly. The \`is\` operator compares **identity** — whethe
       prompt:
         "You need `x` to hold a whole number that could be extremely large (hundreds of digits). Which Python type do you use, and do you need to worry about overflow?",
       expected:
-        "Use int. Python ints have unlimited precision, so there is no overflow.",
+        "Use int. Python ints have unlimited precision, so there is no fixed-width integer overflow — the value just grows as needed, limited only by available memory.",
       hints: [
         "Python has int, float, and complex numeric types.",
         "Which one represents whole numbers?",
-        "Python's int has arbitrary precision — no fixed width, no overflow.",
+        "Python's int has arbitrary precision — no fixed width to overflow; it grows as large as needed, bounded only by available memory.",
       ],
     },
   ],
@@ -278,7 +278,7 @@ You can test this directly. The \`is\` operator compares **identity** — whethe
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "769b36aaf693d104",
+    contentHash: "612fac88ec9babef",
     verifiedAt: "2026-10-03",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
