@@ -922,7 +922,7 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
     "id": "variables-and-types",
     "kind": "lesson",
     "reviewedHash": "612fac88ec9babef",
-    "reviewedAt": "2026-09-21",
+    "reviewedAt": "2026-10-04",
     "batch": 1
   },
   {
