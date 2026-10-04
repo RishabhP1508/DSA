@@ -281,7 +281,7 @@ You can test this directly. The \`is\` operator compares **identity** — whethe
     contentHash: "612fac88ec9babef",
     verifiedAt: "2026-10-03",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 1,
   },
 };
