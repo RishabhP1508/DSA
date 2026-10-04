@@ -39,6 +39,35 @@ export function assertIsoDate(date) {
 }
 
 /**
+ * Guard: a human sign-off cannot predate the content it reviews.
+ *
+ * The ledger records that a person READ an item at a specific content hash. That
+ * reading necessarily happens no earlier than the content was last verified
+ * (`evidence.verifiedAt`), because the hash being signed off is the hash produced
+ * by that verification. A `reviewedAt` strictly before `verifiedAt` is therefore
+ * incoherent — it is the signature of a stale/wrong clock (the bug that stamped
+ * 2026-09-21 onto a lesson verified 2026-10-03). Reject it loudly rather than
+ * recording an impossible timeline.
+ *
+ * Only enforced for items being signed off NOW and only when the item exposes a
+ * verification date; patterns/items without `evidence.verifiedAt` are unaffected.
+ * @param {string} key          "<kind>:<id>" for the error message
+ * @param {{evidence?:{verifiedAt?:string}}} item
+ * @param {string} signoffDate  validated ISO sign-off date
+ */
+export function assertSignoffNotBeforeVerified(key, item, signoffDate) {
+  const verifiedAt = item?.evidence?.verifiedAt;
+  // Only compare real ISO dates; a sentinel/absent verifiedAt is not a timeline.
+  if (typeof verifiedAt !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(verifiedAt)) return;
+  if (signoffDate < verifiedAt) {
+    throw new Error(
+      `sign-off date ${signoffDate} for ${key} is BEFORE the content's verifiedAt ${verifiedAt}; ` +
+        `a human review cannot predate the content it reviewed (check the clock used for SIGNOFF_DATE)`,
+    );
+  }
+}
+
+/**
  * Compute the ledger entry for one item.
  * @param {"lesson"|"pattern"} kind
  * @param {{id:string}} item
@@ -53,6 +82,8 @@ export function ledgerEntryFor(kind, item, batch, liveHash, prior, reviewedNow, 
 
   // Explicit human sign-off NOW: stamp the live hash + the validated date.
   if (reviewedNow.has(key)) {
+    // Guard: the sign-off date must not predate the content's verification date.
+    assertSignoffNotBeforeVerified(key, item, signoffDate);
     return { id: item.id, kind, reviewedHash: liveHash, reviewedAt: signoffDate, batch };
   }
 

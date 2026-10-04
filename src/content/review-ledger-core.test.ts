@@ -12,7 +12,7 @@
  */
 import { describe, it, expect } from "vitest";
 // @ts-expect-error - .mjs helper without types
-import { ledgerEntryFor, assertIsoDate, UNREVIEWED_SENTINEL } from "../../scripts/lib/review-ledger-core.mjs";
+import { ledgerEntryFor, assertIsoDate, assertSignoffNotBeforeVerified, UNREVIEWED_SENTINEL } from "../../scripts/lib/review-ledger-core.mjs";
 
 /** Mirror of codemod_add_evidence.mjs: review granted ONLY on a hash match. */
 function grantsSemanticReview(entry: { reviewedHash: string } | undefined, liveHash: string): boolean {
@@ -63,6 +63,45 @@ describe("ledgerEntryFor — prior items", () => {
     const entry = ledgerEntryFor("lesson", item, 1, liveHash, prior, new Set(), SIGNOFF);
     expect(entry.reviewedHash).toBe("1111111111111111"); // keeps OLD hash
     expect(grantsSemanticReview(entry, liveHash)).toBe(false); // pending
+  });
+});
+
+describe("sign-off date cannot predate the content's verifiedAt (clock-defect guard)", () => {
+  const liveHash = "612fac88ec9babef";
+  const verified = { id: "variables-and-types", evidence: { verifiedAt: "2026-10-03" } };
+
+  it("rejects signing off BEFORE the content was verified", () => {
+    // The exact defect: a 2026-09-21 sign-off on content verified 2026-10-03.
+    expect(() => assertSignoffNotBeforeVerified("lesson:variables-and-types", verified, "2026-09-21")).toThrow(
+      /before the content's verifiedAt/i,
+    );
+    // And it blocks the whole entry computation on sign-off.
+    expect(() =>
+      ledgerEntryFor("lesson", verified, 1, liveHash, undefined, new Set(["lesson:variables-and-types"]), "2026-09-21"),
+    ).toThrow(/before the content's verifiedAt/i);
+  });
+
+  it("accepts a sign-off on or after the verifiedAt date", () => {
+    expect(assertSignoffNotBeforeVerified("lesson:variables-and-types", verified, "2026-10-03")).toBeUndefined();
+    expect(assertSignoffNotBeforeVerified("lesson:variables-and-types", verified, "2026-10-04")).toBeUndefined();
+    const entry = ledgerEntryFor(
+      "lesson",
+      verified,
+      1,
+      liveHash,
+      undefined,
+      new Set(["lesson:variables-and-types"]),
+      "2026-10-04",
+    );
+    expect(entry.reviewedHash).toBe(liveHash);
+    expect(entry.reviewedAt).toBe("2026-10-04");
+  });
+
+  it("does nothing when the item has no real verifiedAt (patterns / sentinels)", () => {
+    expect(assertSignoffNotBeforeVerified("pattern:x", { id: "x" }, "2026-01-01")).toBeUndefined();
+    expect(
+      assertSignoffNotBeforeVerified("lesson:x", { id: "x", evidence: { verifiedAt: "unreviewed-pending-human-signoff" } }, "2026-01-01"),
+    ).toBeUndefined();
   });
 });
 
