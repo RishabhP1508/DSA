@@ -3718,7 +3718,7 @@ Object.assign(EXERCISE_RECOGNITION, {
     ],
     acceptableApproachIds: ["int"],
     modelExplanation:
-      "Use int: Python integers have unlimited precision, so a value of any size is exact and there is no overflow.",
+      "Use int: Python integers have unlimited precision, so a value of any size is exact — there is no fixed-width integer overflow, only the limit of available memory.",
   },
   "lesson:expressions:expr-choose-1": {
     scenario:
@@ -5164,7 +5164,7 @@ Object.assign(EXERCISE_HINTS, {
     "Key property: Python's int is not fixed-width; it grows to hold any magnitude exactly.",
     "Approach: store the value in a plain int rather than a float or any capped type.",
     "Reasoning: int gives exact arbitrary-precision arithmetic, while float would lose precision on hundreds of digits; there is no capped alternative to worry about here.",
-    "Answer: use int — Python integers have unlimited precision, so a value of any size is exact and there is no overflow.",
+    "Answer: use int — Python integers have unlimited precision, so a value of any size is exact; there is no fixed-width integer overflow, only the limit of available memory.",
   ],
   "lesson:expressions:expr-choose-1": [
     "Goal: choose the operator that gives the remainder of a divided by b, e.g. to test whether a is even.",
