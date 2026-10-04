@@ -44,20 +44,33 @@ describe("B1 G1 L2 — loops: operations no longer claims break/continue", () =>
     expect(ops).not.toContain("continue");
   });
 
-  it("continue is never introduced; break appears only as an early-exit example, not taught", () => {
+  it("no unexplained break/return/continue keyword examples in the main explanation", () => {
+    const e = loops.explanation.toLowerCase();
+    // the main explanation must not name these keywords (functions are not a
+    // prerequisite, so `return` is especially premature); it uses plain prose
+    expect(e).not.toMatch(/\bbreak\b/);
+    expect(e).not.toMatch(/\breturn\b/);
+    expect(e).not.toMatch(/\bcontinue\b/);
+  });
+
+  it("continue/return are not introduced anywhere learner-facing; break not taught", () => {
     const surfaces = [
       loops.explanation,
       loops.review,
       ...loops.vocabulary.map((v) => `${v.term} ${v.definition}`),
       ...loops.codeExplanations.map((c) => c.explanation),
     ].join("\n").toLowerCase();
-    // continue is out of scope entirely
     expect(surfaces).not.toMatch(/\bcontinue\b/);
-    // break may be named at most once, purely to illustrate early exit
+    expect(surfaces).not.toMatch(/\breturn\b/);
+    // break may still be referenced at most once (e.g. vocabulary/review), never taught
     const breakCount = (surfaces.match(/\bbreak\b/g) ?? []).length;
     expect(breakCount).toBeLessThanOrEqual(1);
-    // it is not presented as something this lesson teaches/demonstrates
-    expect(surfaces).not.toMatch(/\bbreak\b[^.]*\b(demonstrat|example below|try|use the break)/);
+  });
+
+  it("explanation states some loops can stop early in plain prose", () => {
+    const e = loops.explanation.toLowerCase();
+    expect(e).toMatch(/visits every item|every item/);
+    expect(e).toMatch(/stop early|some loops can stop/);
   });
 });
 
@@ -72,6 +85,14 @@ describe("B1 G1 L2 — loops: for consumes an iterable, items one at a time", ()
     const forEntry = loops.vocabulary.find((v) => /^for loop$/i.test(v.term));
     expect(forEntry).toBeDefined();
     expect(forEntry!.definition.toLowerCase()).toContain("iterable");
+  });
+
+  it("the Iterable vocabulary entry prefers 'iterates over' to 'consume' (items are not lost)", () => {
+    const itEntry = loops.vocabulary.find((v) => /^iterable$/i.test(v.term));
+    expect(itEntry).toBeDefined();
+    const d = itEntry!.definition.toLowerCase();
+    expect(d).toMatch(/iterate(s)? over|loop over|go through/);
+    expect(d).not.toContain("consume");
   });
 
   it("the line-1 comment and a line explanation mention iterable", () => {
@@ -120,6 +141,27 @@ describe("B1 G1 L2 — loops: complexity model is iterations × work per iterati
     }
     // affirmatively acknowledges the literal is fixed in this displayed code
     expect(blob.toLowerCase()).toMatch(/fixed (three|3)[- ]item|literal/);
+  });
+});
+
+describe("B1 G1 L2 — loops: tradeoffs framed by iterable vs condition, not known/unknown length", () => {
+  it("tradeoffs: for iterates an iterable (length may be unknown); while repeats on a condition", () => {
+    const t = loops.concepts.tradeoffs.toLowerCase();
+    expect(t).toContain("iterable");
+    expect(t).toMatch(/condition/);
+    // the misleading "known sequences vs unknown counts" framing is gone
+    expect(t).not.toMatch(/known sequence/);
+    // and it affirmatively allows unknown length for the for case
+    expect(t).toMatch(/length (is )?(unknown|not known)|even if .* length|without knowing/);
+  });
+});
+
+describe("B1 G1 L2 — loops: O(1) extra space is a unit-cost analysis (int digits can grow)", () => {
+  it("qualifies O(1) extra space as unit-cost / bounded-size value, consistent with time caveat", () => {
+    const blob = cx(loops).toLowerCase();
+    expect(blob).toMatch(/unit[- ]cost|treat(s|ed)? .*as (a )?(bounded|constant|fixed)[- ]size|bounded[- ]size value/);
+    // and ties it to the same arbitrary-precision reality as the time caveat
+    expect(blob).toMatch(/digits|arbitrary[- ]precision|grow/);
   });
 });
 

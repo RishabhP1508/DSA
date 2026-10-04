@@ -5,7 +5,7 @@
 
 import type { LessonDefinition } from "../../core/types";
 
-const code = `# A for loop consumes an iterable, taking one item at a time (here, a list).
+const code = `# A for loop iterates over an iterable, reading one item at a time (here, a list).
 nums = [4, 8, 15]
 total = 0
 for x in nums:
@@ -23,16 +23,16 @@ export const loops: LessonDefinition = {
   area: "Programming foundations",
   prerequisites: ["conditions"],
 
-  explanation: `A **loop** repeats work so you do not have to write it out by hand. A **for loop** consumes an **iterable** — any object that can hand out its items one at a time — and runs its body for each item in turn. A list like \`nums\` is the common example (strings, ranges, and dictionary views are iterables too). Here the loop adds every number in \`nums\` to a running \`total\`. This "accumulator" pattern (start at 0, add each item) is everywhere in DSA.
+  explanation: `A **loop** repeats work so you do not have to write it out by hand. A **for loop** iterates over an **iterable** — any object that can hand out its items one at a time, without removing them — running its body for each item in turn. A list like \`nums\` is the common example (strings, ranges, and dictionary views are iterables too). Here the loop adds every number in \`nums\` to a running \`total\`. This "accumulator" pattern (start at 0, add each item) is everywhere in DSA.
 
 A **while loop** repeats *as long as* a condition is True. You must make progress toward making that condition False (here, \`i = i + 1\`), or the loop never ends — an **infinite loop**.
 
-The key mental model: when a for loop **finishes normally**, its body runs **once per item** (n items → n iterations); it can also **stop early** before the iterable is exhausted (for example with \`break\` or a \`return\`), in which case it runs fewer times. A while loop runs until its condition becomes False. The number of iterations — together with how much work each iteration does — is what drives an algorithm's time complexity.`,
+The key mental model: when a for loop **finishes normally**, its body runs **once per item** (n items → n iterations). In this example the loop visits every item; some loops can stop early, so they run fewer times. A while loop runs until its condition becomes False. The number of iterations — together with how much work each iteration does — is what drives an algorithm's time complexity.`,
 
   vocabulary: [
     { term: "Loop", definition: "A construct that repeats a block of code." },
     { term: "for loop", definition: "Runs its body once for each item an iterable provides (a list here); when it finishes normally that is once per item, but it can also stop early." },
-    { term: "Iterable", definition: "Any object a for loop can consume by taking its items one at a time — e.g. a list, string, range, or dictionary view." },
+    { term: "Iterable", definition: "Any object a for loop can iterate over, reading its items one at a time without removing them — e.g. a list, string, range, or dictionary view." },
     { term: "while loop", definition: "Repeats while a condition remains True." },
     { term: "Iteration", definition: "One pass through the loop body." },
     { term: "Accumulator", definition: "A variable that builds up a result across iterations, e.g. a running total." },
@@ -43,7 +43,7 @@ The key mental model: when a for loop **finishes normally**, its body runs **onc
     purpose: "Loops process collections and repeat steps — the basis of searching, summing, scanning, and most algorithms.",
     operations: "Iterate an iterable such as a list (for), repeat on a condition (while), and accumulate results across iterations.",
     uses: "Summing, counting, searching, building lists, and driving pointer/window techniques.",
-    tradeoffs: "for loops are safest for known sequences; while loops handle unknown counts but risk running forever.",
+    tradeoffs: "A for loop is the natural choice when you are processing the items an iterable provides — it works even if the iterable's length is unknown, since it simply stops when the items run out. A while loop repeats according to a condition you write, which is flexible but risks running forever if the condition never becomes False.",
     commonMistakes: "Forgetting to advance a while loop's variable (infinite loop); off-by-one errors in ranges; modifying a list while iterating it.",
     edgeCases: "An empty sequence means a for loop body never runs; a while condition that starts False runs zero times.",
   },
@@ -67,13 +67,13 @@ The key mental model: when a for loop **finishes normally**, its body runs **onc
     space: {
       bound: "O(1)",
       case: "worst",
-      explanation: "The loop itself uses O(1) EXTRA space: only a fixed set of variables is kept (total, x, i) and nothing new is allocated per iteration, no matter how many items are looped. Separately, the list being iterated holds n items and so occupies O(n) storage — that is the data itself, not extra space introduced by the loop.",
-      inputOutputNote: "In THIS displayed code `nums` is created as a fixed three-item list literal `[4, 8, 15]`, so n = 3 here. Generalizing to a list of n items (e.g. one passed into a function), that list occupies O(n) storage while the loop still adds only O(1) extra space.",
+      explanation: "The loop itself uses O(1) EXTRA space under a UNIT-COST analysis — one that treats each value (the running `total`, the item `x`, the counter `i`) as a single bounded-size slot: only a fixed set of such variables is kept and nothing new is allocated per iteration, no matter how many items are looped. The same caveat as for time applies: Python integers are arbitrary-precision, so a `total` that grows very large needs more digits of storage, and under a bit-cost model that is no longer strictly constant. For the small numbers shown here the unit-cost O(1) is the right description. Separately, the list being iterated holds n items and so occupies O(n) storage — that is the data itself, not extra space introduced by the loop.",
+      inputOutputNote: "In THIS displayed code `nums` is created as a fixed three-item list literal `[4, 8, 15]`, so n = 3 here. Generalizing to a list of n items (e.g. one passed into a function), that list occupies O(n) storage while the loop still adds only O(1) extra space (treating each stored value as bounded-size).",
     },
     derivation: [
       { lines: [4, 5], description: "The for-loop body runs once per item in nums — n constant-time additions.", cost: "O(n)", dimension: "time" },
       { lines: [9, 10, 11], description: "The displayed while loop runs a FIXED 3 times (limit is the constant 3, independent of n), so O(1) here. A generalized limit m would make it O(m).", cost: "O(1)", dimension: "time" },
-      { lines: [3, 8], description: "A fixed number of accumulator/counter variables.", cost: "O(1)", dimension: "space" },
+      { lines: [3, 8], description: "A fixed number of accumulator/counter variables, each treated as a bounded-size slot (unit-cost). Arbitrary-precision growth of `total` would need more digits under a bit-cost model.", cost: "O(1)", dimension: "space" },
     ],
     assumptions: ["Total time is iterations × work per iteration.", "Each iteration's body is constant time (simple addition/print) FOR THE SMALL NUMBERS SHOWN; a heavier body, or arbitrary-precision addition on very large integers, would raise the per-iteration cost above O(1).", "Reading each list item is O(1).", "In this displayed code `nums` is a fixed three-item list literal, so n = 3; the O(n) bound describes the generalization to an n-item list."],
     tradeoffs: "Summing with a loop is O(n); Python's built-in sum(nums) is also O(n) but faster in practice and clearer. The loop is shown so the per-item cost is visible.",
@@ -87,7 +87,7 @@ The key mental model: when a for loop **finishes normally**, its body runs **onc
   code,
 
   codeExplanations: [
-    { line: 1, executable: false, explanation: "Comment: a for loop consumes an iterable (here a list), taking one item at a time." },
+    { line: 1, executable: false, explanation: "Comment: a for loop iterates over an iterable (here a list), reading one item at a time." },
     { line: 2, executable: true, explanation: "Create the list [4, 8, 15] and bind it to nums." },
     { line: 3, executable: true, explanation: "Initialise the accumulator total to 0." },
     { line: 4, executable: true, explanation: "Start the for loop; it draws items from the iterable nums one at a time, so x takes each value in turn (4, then 8, then 15)." },
@@ -142,7 +142,7 @@ The key mental model: when a for loop **finishes normally**, its body runs **onc
     },
   ],
 
-  review: `Loops repeat work: a **for** loop consumes an **iterable** (a list here), running its body once per item when it finishes normally — though it can stop early. A **while** loop runs until its condition is False (advance the counter or it loops forever). Time complexity is **iterations × work per iteration**: a single pass over n items with a constant-time body is **O(n)** time, using **O(1)** extra space (beyond the n-item list itself, which already occupies **O(n)** storage).`,
+  review: `Loops repeat work: a **for** loop iterates over an **iterable** (a list here), running its body once per item when it finishes normally — though it can stop early. A **while** loop runs until its condition is False (advance the counter or it loops forever). Time complexity is **iterations × work per iteration**: a single pass over n items with a constant-time body is **O(n)** time, using **O(1)** extra space (beyond the n-item list itself, which already occupies **O(n)** storage).`,
 
   expectedOutput: "27\n0\n1\n2\n",
 
@@ -161,7 +161,7 @@ The key mental model: when a for loop **finishes normally**, its body runs **onc
       title: "Compound statements — Python 3.14 documentation",
       section: "8.3. The for statement",
       topic: "foundations/loops",
-      purpose: "Authoritative language-reference definition that `for` consumes an iterable one item at a time, and the early-exit semantics (break terminates; continue advances to the next item).",
+      purpose: "Authoritative language-reference definition that `for` iterates over an iterable one item at a time, and the early-exit semantics (break terminates; continue advances to the next item).",
       verifiedClaims: [
         "The for statement iterates over the elements of a sequence (such as a string, tuple or list) or other iterable object.",
         "An iterator is created for the iterable and the suite is executed once for each item the iterator provides, until the iterator is exhausted.",
@@ -182,7 +182,7 @@ The key mental model: when a for loop **finishes normally**, its body runs **onc
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "9a26d9db90b7bab5",
+    contentHash: "9bf95b7a79e54c49",
     verifiedAt: "2026-10-03",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
