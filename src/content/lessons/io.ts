@@ -41,7 +41,7 @@ In this workspace you supply the input ahead of time (a "supplied input" box), a
     uses: "Reading parameters for an algorithm, printing traced results, interactive exercises.",
     tradeoffs: "Converting input is required for arithmetic but can fail on bad data (raises ValueError).",
     commonMistakes: "Doing math on the string from input() without converting; assuming input() strips more than the trailing newline.",
-    edgeCases: "int('abc') raises ValueError. If no input is supplied, input() gets an empty line (handle exhausted input).",
+    edgeCases: "int('abc') raises ValueError. A blank line (the user just presses Enter) makes input() return an empty string ''. But if the input is exhausted — there is no more line to read (EOF) — input() raises EOFError rather than returning ''.",
   },
 
   complexity: [
@@ -103,7 +103,7 @@ In this workspace you supply the input ahead of time (a "supplied input" box), a
     {
       id: "io-fix-1",
       kind: "fix-mistake",
-      prompt: "`double(text)` takes the string a user typed and should return TWICE the number it represents. This version forgets to convert the text to a number, so `'7'` becomes `'77'` (string repetition). Fix it.",
+      prompt: "The `double(text)` function below is already written for you — you only edit its body, not define a function from scratch (functions come in a later lesson). It takes the string a user typed and should return TWICE the number it represents, but this version forgets to convert the text to a number, so `'7'` becomes `'77'` (string repetition). Fix it.",
       starterCode: "def double(text):\n    n = text\n    return n * 2",
       expected: "def double(text):\n    n = int(text)\n    return n * 2",
       hints: ["What type does input()/the raw text have?", "Multiplying a string repeats it.", "Convert with int() before doing arithmetic."],
@@ -128,7 +128,7 @@ In this workspace you supply the input ahead of time (a "supplied input" box), a
       section: "input()",
       topic: "foundations/io",
       purpose: "Confirm input() reads a line and returns it as a string (trailing newline stripped).",
-      verifiedClaims: ["input() returns a string with the trailing newline removed"],
+      verifiedClaims: ["input() reads one line and returns it as a string with the trailing newline removed", "input() raises EOFError when the input is exhausted (end of file)"],
       accessDate: "2026-09-20",
     },
     {
@@ -143,8 +143,8 @@ In this workspace you supply the input ahead of time (a "supplied input" box), a
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "9ec7390e15aa8128",
-    verifiedAt: "2026-09-21",
+    contentHash: "c76bd4181538df89",
+    verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,

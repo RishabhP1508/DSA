@@ -23,11 +23,13 @@ export const correctness: LessonDefinition = {
   id: "correctness",
   title: "Correctness and Invariants",
   area: "DSA foundations",
-  prerequisites: ["loops"],
+  // The example and exercise are both functions (def sum_to / return), so
+  // functions is a genuine prerequisite alongside loops.
+  prerequisites: ["loops", "functions"],
 
-  explanation: `Fast is useless if the answer is wrong. **Correctness** means an algorithm returns the right result for **every** valid input — not just the one you happened to test. We reason about it with a few tools:
+  explanation: `Fast is useless if the answer is wrong. **Correctness** means an algorithm returns the right result for **every** valid input — the inputs allowed by its **contract** (precondition). For \`sum_to\` the contract is "\`n\` is a non-negative integer"; inputs outside the contract (such as a negative \`n\`) are not promised a meaningful answer, though here the loop guard happens to return 0 for them. We reason about correctness with a few tools:
 
-- A **loop invariant**: a statement that is true before the loop and stays true after each pass. Here the invariant is "\`total\` equals the sum of \`1..(i-1)\`." It holds at the start (total = 0 = empty sum), each pass preserves it (we add \`i\`, then advance \`i\`), and when the loop ends \`i = n+1\`, so total = sum of \`1..n\` — exactly what we want.
+- A **loop invariant**: a statement that is true before the loop and is restored after each **complete** pass (it may be momentarily broken mid-pass). Here the invariant is "\`total\` equals the sum of \`1..(i-1)\`." It holds at the start (total = 0 = empty sum). Within a pass it is briefly broken — \`total = total + i\` makes total the sum of \`1..i\` while \`i\` has not yet moved — and then \`i = i + 1\` **restores** it, so the invariant holds again at the top of the next pass. When the loop ends \`i = n+1\`, so total = sum of \`1..n\` — exactly what we want.
 - **Base/edge cases**: the smallest or unusual inputs. For \`n = 0\` the loop never runs and we correctly return 0 ("sum of nothing").
 - **Termination**: \`i\` increases every pass, so \`i <= n\` eventually fails — the loop always ends.
 
@@ -51,7 +53,7 @@ You will use this style of reasoning throughout: state what stays true, check th
   },
 
   complexity: [
-    { operation: "sum_to(n) loop", best: "O(n)", average: "O(n)", worst: "O(n)", space: "O(1)", note: "n additions; two variables. (A closed form n(n+1)/2 would be O(1).)" },
+    { operation: "sum_to(n) loop", best: "O(n)", average: "O(n)", worst: "O(n)", space: "O(1)", note: "n additions; two variables. (The closed form n(n+1)/2 does a fixed number of operations — O(1) under a unit-cost model; arbitrary-precision arithmetic on huge n costs more.)" },
   ],
 
   complexityExplanation: {
@@ -61,7 +63,7 @@ You will use this style of reasoning throughout: state what stays true, check th
     time: {
       bound: "O(n)",
       case: "worst",
-      explanation: "The loop runs from i = 1 to n, so it performs n additions — linear in n. (There is a closed-form shortcut, n(n+1)/2, that computes the same answer in O(1); the loop is shown so the invariant is visible.)",
+      explanation: "The loop runs from i = 1 to n, so it performs n additions — linear in n. (There is a closed-form shortcut, n(n+1)/2, that computes the same answer in a fixed number of arithmetic operations — O(1) under a unit-cost model where each op is constant; strictly, arbitrary-precision arithmetic on d-digit numbers costs more. The loop is shown so the invariant is visible.)",
     },
     space: {
       bound: "O(1)",
@@ -72,8 +74,8 @@ You will use this style of reasoning throughout: state what stays true, check th
       { lines: [6, 7, 8], description: "The loop body runs n times: one addition + one increment each.", cost: "O(n)", dimension: "time" },
       { lines: [3, 4], description: "Two variables held throughout.", cost: "O(1)", dimension: "space" },
     ],
-    assumptions: ["Additions are constant time for these magnitudes.", "n is a non-negative integer (precondition); negative n yields 0 as the loop never runs."],
-    tradeoffs: "The closed form total = n * (n + 1) // 2 gives the same result in O(1) time — faster, but the loop makes the invariant and step-by-step reasoning visible for learning.",
+    assumptions: ["Additions are constant time for these magnitudes (unit-cost model); arbitrary-precision arithmetic on very large numbers would cost more.", "Contract (precondition): n is a non-negative integer. A negative n is outside the contract, though the loop guard happens to return 0 for it."],
+    tradeoffs: "The closed form total = n * (n + 1) // 2 gives the same result in a FIXED number of arithmetic operations — O(1) under a unit-cost model that treats each arithmetic op as constant. (Strictly, since Python ints are arbitrary precision, multiplying numbers with d digits is more than O(1); for machine-word-sized n the unit-cost O(1) is the right description.) It is faster than the loop, but the loop makes the invariant and step-by-step reasoning visible for learning.",
     counters: [
       { label: "loop passes", definition: "executions of the accumulate line (line 7)", countLines: [7] },
     ],
@@ -89,8 +91,8 @@ You will use this style of reasoning throughout: state what stays true, check th
     { line: 4, executable: true, explanation: "Start i at 1 — the first term to add." },
     { line: 5, executable: false, explanation: "Comment states the loop invariant." },
     { line: 6, executable: true, explanation: "Loop while i <= n. i increases each pass, guaranteeing termination." },
-    { line: 7, executable: true, explanation: "Add i to total. This preserves the invariant (total now includes up to i)." },
-    { line: 8, executable: true, explanation: "Advance i. The invariant is restored for the next pass." },
+    { line: 7, executable: true, explanation: "Add i to total. Mid-iteration the invariant is temporarily BROKEN: total now includes 1..i, but i has not advanced, so it no longer equals the sum of 1..(i-1)." },
+    { line: 8, executable: true, explanation: "Advance i to i+1. This completes the iteration and RESTORES the invariant: total (= sum of 1..old i) once again equals the sum of 1..(new i - 1)." },
     { line: 9, executable: true, explanation: "Return total. At exit i = n+1, so total = sum of 1..n." },
     { line: 10, executable: false, explanation: "Blank line." },
     { line: 11, executable: true, explanation: "sum_to(5) = 1+2+3+4+5 = 15." },
@@ -107,7 +109,7 @@ You will use this style of reasoning throughout: state what stays true, check th
   experiments: [
     "Trace the invariant at each step: check total equals the sum of 1..(i-1) every pass.",
     "Run sum_to(1) and sum_to(0) to confirm the single-term and empty edge cases.",
-    "Replace the loop with the closed form n*(n+1)//2 and confirm identical results in O(1).",
+    "Replace the loop with the closed form n*(n+1)//2 and confirm identical results in a fixed number of operations (O(1) under a unit-cost model; the loop was O(n)).",
   ],
 
   exercises: [
@@ -128,7 +130,7 @@ You will use this style of reasoning throughout: state what stays true, check th
     },
   ],
 
-  review: `**Correctness** is being right for every valid input. Reason with a **loop invariant** (true before the loop and preserved each pass), check **edge cases** (empty/zero/single), and confirm **termination** (the loop makes progress). Here the invariant proves \`sum_to\` returns 1+…+n, and n = 0 works with no special case. The loop is **O(n)**; a closed form would be **O(1)**.`,
+  review: `**Correctness** is being right for every valid input. Reason with a **loop invariant** (true before the loop and preserved each pass), check **edge cases** (empty/zero/single), and confirm **termination** (the loop makes progress). Here the invariant proves \`sum_to\` returns 1+…+n for every valid input (its contract: n a non-negative integer), and n = 0 works with no special case. The loop is **O(n)**; the closed form n(n+1)/2 does a fixed number of operations — **O(1)** under a unit-cost model (arbitrary-precision arithmetic on very large n costs more).`,
 
   expectedOutput: "15\n0\n",
 
@@ -145,8 +147,8 @@ You will use this style of reasoning throughout: state what stays true, check th
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "9db456b486337f4e",
-    verifiedAt: "2026-09-21",
+    contentHash: "944aeb240d2884f6",
+    verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,

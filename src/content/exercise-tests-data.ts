@@ -1741,12 +1741,12 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Use `return n * n` in the body and `print(square(6))` to display 36.",
   ],
   "lesson:io:io-fix-1": [
-    "Goal: read one number and print its double (entering 5 should print 10, not '55').",
-    "The costly mistake is treating text as if it were a number: `input()` hands back a string.",
+    "Goal: return TWICE the number the string `text` represents — double('7') must return 14, not '77'.",
+    "The costly mistake is treating `text` as if it were a number: it is a string, so `text * 2` repeats the characters.",
     "Key insight: multiplying a string by 2 repeats the text, while multiplying an int by 2 doubles the value.",
-    "Approach: convert the input to an integer before doing arithmetic.",
-    "Pseudocode: read the line, convert it to int, then print that value times two.",
-    "Wrap the input in `int(...)` \u2014 `n = int(input('n: '))` \u2014 then `print(n * 2)` gives the double.",
+    "Approach: convert the `text` argument to an integer before doing arithmetic, then return the result.",
+    "Pseudocode: n = int(text); return n * 2.",
+    "Change `n = text` to `n = int(text)` so `return n * 2` returns the number doubled (an int), not the repeated string.",
   ],
   "lesson:references-mutation:ref-fix-1": [
     "Goal: return a list with its last element duplicated while leaving the caller's original list untouched.",
@@ -1765,12 +1765,12 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Inside `def reset(self):` write `self.value = 0`.",
   ],
   "lesson:errors:err-complete-1": [
-    "Goal: make the division print 'undefined' when the divisor is 0 instead of crashing.",
+    "Goal: safe_div(a, b) should RETURN the string 'undefined' when b is 0, and otherwise RETURN a / b.",
     "The risky operation is `a / b`, which raises when b is zero.",
     "Key insight: dividing by zero raises the specific exception ZeroDivisionError, which you can catch.",
-    "Approach: guard the division with try/except targeting that exception.",
-    "Pseudocode: try to print a / b; except ZeroDivisionError: print 'undefined'.",
-    "Put `print(a / b)` in the try and handle it with `except ZeroDivisionError: print('undefined')`.",
+    "Approach: guard the division with try/except targeting that exception, returning a value in each branch.",
+    "Pseudocode: try: return a / b; except ZeroDivisionError: return 'undefined'.",
+    "Put `return a / b` in the try and handle it with `except ZeroDivisionError: return 'undefined'` — the tests check the returned value, not printed output.",
   ],
   "lesson:correctness:correct-fix-1": [
     "Goal: sum_to(n) should add 1 through n inclusive (sum_to(3) is 6, not 3).",
@@ -3836,7 +3836,7 @@ Object.assign(EXERCISE_RECOGNITION, {
       "You will append exactly n items to a list and n is known in advance. You want to avoid the periodic resize/copy that a growing list performs.",
     approaches: [
       { id: "preallocate", label: "Preallocate a list of size n ([None] * n) and assign by index", requiredReasonIds: ["one-alloc-no-copies"] },
-      { id: "append-grow", label: "Start empty and append n times, letting the list grow", requiredReasonIds: [], rejectionFeedback: "Appending to a growing list triggers periodic doubling/reallocations; it is amortized O(n) overall but does repeated mid-loop copies you were asked to avoid." },
+      { id: "append-grow", label: "Start empty and append n times, letting the list grow", requiredReasonIds: [], rejectionFeedback: "Appending to a growing list triggers periodic reallocations: CPython over-allocates capacity by a proportional (not doubling) factor and may move the existing element references into the larger buffer. Building the whole list is O(n) total / amortized O(1) per append, but it does the repeated mid-loop reallocations you were asked to avoid." },
     ],
     reasons: [
       { id: "one-alloc-no-copies", text: "Because n is known, one [None]*n allocation reserves all space up front, so index assignment does zero mid-loop copies — a single O(n) allocation." },
@@ -5215,12 +5215,12 @@ Object.assign(EXERCISE_HINTS, {
     "Answer: pick the algorithm with the guaranteed O(n log n) worst case, because adversarial input could deliberately trigger the other's O(n²).",
   ],
   "lesson:amortized:amort-choose-1": [
-    "Goal: append exactly n known-in-advance items while avoiding the periodic resize-and-copy a growing list performs.",
-    "The avoidable cost is letting the list grow on demand: it reallocates and copies several times as capacity is exceeded.",
+    "Goal: append exactly n known-in-advance items while avoiding the periodic resize a growing list performs.",
+    "The avoidable cost is letting the list grow on demand: it reallocates several times as capacity is exceeded, moving the existing element references into the larger buffer each time.",
     "Key property: n is known up front, so the final capacity is fixed in advance.",
     "Approach: reserve all the capacity once, then fill by index.",
-    "Reasoning: preallocating does a single allocation and no mid-loop copies; relying on amortized append still pays occasional O(n) copies you can skip entirely when n is known.",
-    "Answer: preallocate a list of size n (e.g. [None] * n) and assign by index — one O(n) allocation and no mid-loop copies.",
+    "Reasoning: preallocating does a single allocation and no mid-loop reallocations; relying on amortized append still pays occasional O(n) resize steps (which move references) that you can skip entirely when n is known — the whole build is O(n) total / amortized O(1) per append either way.",
+    "Answer: preallocate a list of size n (e.g. [None] * n) and assign by index — one O(n) allocation and no mid-loop resizes.",
   ],
   "lesson:matrix-traversal:mat-predict-1": [
     "Goal: state the time complexity of visiting every cell of an R×C grid and justify why it is not O(R+C).",

@@ -22,14 +22,15 @@ export const conditions: LessonDefinition = {
   area: "Programming foundations",
   prerequisites: ["expressions"],
 
-  explanation: `A **condition** lets a program make a decision. An \`if\` statement runs a block of code only when its test is **True**. You can add \`elif\` ("else if") branches for more cases, and a final \`else\` for "none of the above".
+  explanation: `A **condition** lets a program make a decision. An \`if\` statement runs a block of code when its test is **true** — not only the literal \`True\`, but any value Python treats as true. This is called **truthiness**: non-zero numbers and non-empty containers (strings, lists, dicts) are **truthy**, while \`0\`, \`""\`, \`[]\`, \`None\`, and \`False\` are **falsy**. So \`if items:\` runs when \`items\` is a non-empty list. You can add \`elif\` ("else if") branches for more cases, and a final \`else\` for "none of the above".
 
 Python checks the tests **top to bottom** and runs the **first** one that is True — then it skips the rest. Order matters: because \`temp = 30\` satisfies \`temp >= 30\`, the label becomes \`"hot"\` and the \`elif\`/\`else\` are never tried.
 
 Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`) and can be combined with \`and\`, \`or\`, and \`not\`.`,
 
   vocabulary: [
-    { term: "Condition", definition: "A test that is either True or False, controlling which code runs." },
+    { term: "Condition", definition: "A test whose value controls which code runs; the branch runs when the value is truthy." },
+    { term: "Truthy / falsy", definition: "Values Python treats as true or false in a condition: 0, '', [], None, False are falsy; most other values (non-zero numbers, non-empty containers) are truthy." },
     { term: "Boolean", definition: "A value that is True or False." },
     { term: "if / elif / else", definition: "Branches: run the first block whose test is True; else runs if none match." },
     { term: "Comparison operator", definition: "==, !=, <, <=, >, >= — produce a Boolean." },
@@ -41,7 +42,7 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
     operations: "Compare values, combine tests with and/or/not, branch with if/elif/else.",
     uses: "Validating input, choosing an algorithm branch, handling edge cases, base cases in recursion.",
     tradeoffs: "Many elif branches can be clearer as a lookup table/dict; deeply nested ifs hurt readability.",
-    commonMistakes: "Using = (assignment) instead of == (comparison); wrong branch order so a broad test shadows a specific one; forgetting indentation defines the block.",
+    commonMistakes: "Writing = (assignment) instead of == (comparison) — in Python `if x = 5:` is a SyntaxError (the parser rejects it), not a silent bug as in some languages; wrong branch order so a broad test shadows a specific one; forgetting indentation defines the block.",
     edgeCases: "If no branch matches and there is no else, nothing runs. Only the first true branch executes.",
   },
 
@@ -76,10 +77,10 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
     { line: 3, executable: false, explanation: "Comment: Python runs the first True test." },
     { line: 4, executable: true, explanation: "Test temp >= 30. It is True (30 >= 30), so this branch is chosen." },
     { line: 5, executable: true, explanation: "Because the test was True, set label to 'hot'." },
-    { line: 6, executable: false, explanation: "This elif is skipped entirely — an earlier branch already matched." },
-    { line: 7, executable: false, explanation: "Not run: its branch was not selected." },
-    { line: 8, executable: false, explanation: "The else is skipped too." },
-    { line: 9, executable: false, explanation: "Not run." },
+    { line: 6, executable: false, explanation: "`elif temp >= 20:` is a real code statement. In THIS run (temp = 30) the first branch already matched, so this test is not reached and emits no event — but with a different input (e.g. temp = 25) it is reached and taken." },
+    { line: 7, executable: false, explanation: "`label = \"warm\"` is a real code statement. It runs when the elif is taken (e.g. temp = 25); in this run (temp = 30) it is not reached." },
+    { line: 8, executable: false, explanation: "`else:` is a real branch header. It is used only when no earlier test matches (e.g. temp = 10); in this run (temp = 30) it is not reached." },
+    { line: 9, executable: false, explanation: "`label = \"cold\"` is a real code statement in the else branch; it runs for low temperatures (e.g. temp = 10) and is not reached in this run (temp = 30)." },
     { line: 10, executable: true, explanation: "Print label → 'hot'." },
   ],
 
@@ -99,7 +100,7 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
     {
       id: "cond-fix-1",
       kind: "fix-mistake",
-      prompt: "`classify(temp)` should return 'hot' for temps >= 30, 'warm' for 20–29, else 'cold'. This version always returns 'warm' for hot temps. Fix the branch order.",
+      prompt: "The `classify(temp)` function below is already written for you — you only need to edit the if/elif order inside it (you are not writing a function from scratch; functions are covered in a later lesson). It should return 'hot' for temps >= 30, 'warm' for 20–29, else 'cold', but this version always returns 'warm' for hot temps. Fix the branch order.",
       starterCode: "def classify(temp):\n    if temp >= 20:\n        return 'warm'\n    elif temp >= 30:\n        return 'hot'\n    return 'cold'",
       expected: "def classify(temp):\n    if temp >= 30:\n        return 'hot'\n    elif temp >= 20:\n        return 'warm'\n    return 'cold'",
       hints: ["Which test is checked first?", "The broad test (>= 20) matches before the specific one (>= 30).", "Order branches from most specific/highest to least: check >= 30 first."],
@@ -139,8 +140,8 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "9c63d07d9bb2235d",
-    verifiedAt: "2026-09-21",
+    contentHash: "be2f2011ca4c5afe",
+    verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,

@@ -20,7 +20,9 @@ export const errors: LessonDefinition = {
   id: "errors",
   title: "Errors and Exceptions",
   area: "Programming foundations",
-  prerequisites: ["conditions"],
+  // The safe_div exercise asks the learner to WRITE a function (def), so
+  // functions is a genuine prerequisite alongside conditions.
+  prerequisites: ["conditions", "functions"],
 
   explanation: `When something goes wrong at runtime — indexing past the end of a list, dividing by zero, converting bad text to a number — Python **raises an exception**. If nothing handles it, the program stops and prints a traceback.
 
@@ -42,7 +44,7 @@ Catch **specific** exception types (\`IndexError\`, \`ValueError\`, \`KeyError\`
     uses: "Validating input, handling missing keys, guarding division, cleaning up resources.",
     tradeoffs: "try/except adds structure and safety; catching too broadly (bare except) hides real bugs.",
     commonMistakes: "Catching Exception/everything and silently passing; putting too much code in one try so you can't tell what failed; using exceptions for ordinary control flow.",
-    edgeCases: "An exception raised inside except propagates. finally always runs, even on return or another exception.",
+    edgeCases: "An exception raised inside except propagates. In normal control flow a `finally` block runs on every way out of the try — whether it succeeded, raised, or returned (so it is the place for cleanup); the only things that skip it are a hard process exit (e.g. os._exit) or the interpreter being killed.",
   },
 
   complexity: [
@@ -66,7 +68,7 @@ Catch **specific** exception types (\`IndexError\`, \`ValueError\`, \`KeyError\`
       { lines: [2], description: "One small fixed list.", cost: "O(1)", dimension: "space" },
     ],
     assumptions: ["List indexing and exception handling are constant-time for this small example."],
-    tradeoffs: "Checking a condition first (if index < len(nums)) also works and avoids raising; try/except is preferred when the failure is exceptional rather than expected.",
+    tradeoffs: "Checking a condition first also works and avoids raising, but write the bound correctly: `if index < len(nums)` alone is NOT safe because Python allows negative indices, so a sufficiently negative index passes `< len` yet still raises IndexError. A full guard is `if -len(nums) <= index < len(nums)` (or `0 <= index < len(nums)` if you only intend non-negative indices). try/except is preferred when the failure is exceptional rather than expected.",
     fixedDataNote: "Fixed list and a single caught error, so the run is constant work; there is no input size to scale.",
   },
 
@@ -74,7 +76,7 @@ Catch **specific** exception types (\`IndexError\`, \`ValueError\`, \`KeyError\`
 
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: some operations raise exceptions." },
-    { line: 2, executable: true, explanation: "Create the list [1, 2, 3]. Valid indices are 0, 1, 2." },
+    { line: 2, executable: true, explanation: "Create the list [1, 2, 3]. Its positive indices are 0, 1, 2 (Python also allows negative indices -1, -2, -3 from the end); index 5 is out of range either way." },
     { line: 3, executable: true, explanation: "Begin a try block — risky code goes here." },
     { line: 4, executable: false, explanation: "Comment: index 5 is out of range." },
     { line: 5, executable: true, explanation: "nums[5] does not exist, so this raises IndexError; the print never runs." },
@@ -141,8 +143,8 @@ Catch **specific** exception types (\`IndexError\`, \`ValueError\`, \`KeyError\`
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "c144f84f8a9c03e1",
-    verifiedAt: "2026-09-21",
+    contentHash: "40378ecd5eb1e320",
+    verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,

@@ -9,6 +9,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { PatternDefinition } from "../core/types";
 import { useEngine, PLAYBACK_SPEEDS } from "./useEngine";
+import { labelForLine } from "./line-label";
 import { CodeEditor } from "./CodeEditor";
 import { VariablesPanel } from "./VariablesPanel";
 import { Visualizer } from "../visualizers";
@@ -120,7 +121,10 @@ export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
           ) : lineExplanation ? (
             <p>
               <span className="line-badge">line {lineExplanation.line}</span>{" "}
-              {lineExplanation.executable ? "" : <em>(comment) </em>}
+              {(() => {
+                const label = labelForLine(pattern.walkthroughCode, lineExplanation.line);
+                return label ? <em>{label} </em> : "";
+              })()}
               {lineExplanation.explanation}
             </p>
           ) : (

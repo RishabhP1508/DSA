@@ -29,14 +29,14 @@ export const classes: LessonDefinition = {
 
   explanation: `A **class** is a blueprint that bundles **data** (attributes) with **behaviour** (methods). An **instance** is one object made from that blueprint. Classes are how we build the nodes and structures in later lessons — a linked-list node, a tree node, a graph — so this is an important foundation.
 
-The \`__init__\` method is the **constructor**: it runs when you create an instance and sets up its starting attributes. \`self\` is the current object; \`self.value = start\` stores data **on that specific instance**. A **method** like \`increment\` operates on the object's own data through \`self\`.
+The \`__init__\` method **initializes** a newly created instance — Python builds the object first, then runs \`__init__\` to set up its starting attributes (so it is the *initializer*; the lower-level creation step is \`__new__\`, which beginners rarely write). \`self\` is the current instance, and Python supplies it **automatically**: writing \`c.increment()\` is shorthand for \`Counter.increment(c)\`, so the instance \`c\` is passed in as the first parameter \`self\`. That is why the ordinary **instance methods** taught here (\`__init__\`, \`increment\`) list \`self\` first. (Not every method does — class methods and static methods, beyond this lesson, do not take \`self\` — so read this as "instance methods take \`self\` first".) \`self.value = start\` stores data **on that specific instance**, and a **method** like \`increment\` reaches the object's own data through \`self\`.
 
-Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 → 12), and print \`c.value\`, which is 12. Each instance has its own attributes, so two counters are independent.`,
+Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 → 12), and print \`c.value\`, which is 12. In this example each counter's \`value\` is bound separately through \`self.value\`, so incrementing one does not change another. But instances are not *guaranteed* to be independent: an attribute **binds a name to an object**, and two instances can end up referring to the **same** object — e.g. \`self.items = shared_list\` in \`__init__\` would make every instance share one list, and a class-level attribute (defined on the class, not through \`self\`) is shared by all instances too. Independence here comes from each instance having its **own attribute binding** (\`c.value\` and \`d.value\` are separate name bindings), not from the ints being distinct objects: two \`Counter(10)\`s may initially share the very same cached int (\`c.value is d.value\` can be \`True\`). Incrementing one does \`self.value = self.value + 1\`, which **rebinds only that instance's attribute** to a new int, leaving the other's binding untouched — so they diverge regardless of whether they first shared an int object.`,
 
   vocabulary: [
     { term: "Class", definition: "A blueprint describing the attributes and methods of a kind of object." },
     { term: "Instance / object", definition: "A concrete value created from a class." },
-    { term: "__init__ (constructor)", definition: "The method that initialises a new instance's attributes." },
+    { term: "__init__ (initializer)", definition: "The method that initializes a newly created instance's attributes. Often loosely called the constructor, though Python creates the object first (via __new__) and then calls __init__ to set it up." },
     { term: "self", definition: "A reference to the current instance, used to access its attributes/methods." },
     { term: "Attribute", definition: "A piece of data stored on an instance, e.g. self.value." },
     { term: "Method", definition: "A function defined in a class that operates on an instance." },
@@ -47,7 +47,7 @@ Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 �
     operations: "Define with class, initialise with __init__, add methods, create instances, read/write attributes.",
     uses: "Linked-list/tree/graph nodes, custom data structures, grouping related state.",
     tradeoffs: "Classes add structure and reuse but can be overkill for simple data (a tuple or dict may suffice).",
-    commonMistakes: "Forgetting self in method definitions or attribute access; confusing class-level and instance-level attributes; expecting two instances to share instance attributes (they don't).",
+    commonMistakes: "Forgetting self in method definitions or attribute access; confusing class-level and instance-level attributes; conflating a per-instance ATTRIBUTE BINDING with the OBJECT it points at — each instance has its own `self.value` binding, but that does not mean the referenced objects differ (two counters can share one cached int) nor that instances can never share a referenced object (e.g. if __init__ does `self.items = shared_list`, every instance's `items` points at the one shared list).",
     edgeCases: "Attributes not set in __init__ don't exist until assigned. Mutable class-level defaults are shared across instances (a common trap).",
   },
 
@@ -87,7 +87,7 @@ Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 �
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: a class bundles data and behaviour." },
     { line: 2, executable: true, explanation: "Define the class Counter (creates the class object)." },
-    { line: 3, executable: true, explanation: "Define the constructor __init__, which runs on instance creation." },
+    { line: 3, executable: true, explanation: "Define __init__, the initializer that runs right after the instance is created to set up its attributes." },
     { line: 4, executable: false, explanation: "Comment: self.value is per-instance data." },
     { line: 5, executable: true, explanation: "Store the starting value on this instance as self.value." },
     { line: 6, executable: false, explanation: "Blank line." },
@@ -132,7 +132,7 @@ Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 �
     },
   ],
 
-  review: `A **class** is a blueprint bundling **attributes** (data) and **methods** (behaviour); an **instance** is one object built from it. \`__init__\` initialises attributes via \`self\`, and each instance has its own state. k method calls that each do O(1) work is **O(k)** time with **O(1)** space. Classes power the node types in later structure lessons.`,
+  review: `A **class** is a blueprint bundling **attributes** (data) and **methods** (behaviour); an **instance** is one object built from it. \`__init__\` **initializes** a new instance via \`self\`, and \`c.method()\` automatically passes \`c\` in as \`self\`. Attributes set through \`self\` are per-instance; attributes defined on the class are shared, so instance independence is not automatic for class-level data. k method calls that each do O(1) work is **O(k)** time with **O(1)** space. Classes power the node types in later structure lessons.`,
 
   expectedOutput: "12\n",
 
@@ -149,8 +149,8 @@ Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 �
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "8693b395b5881198",
-    verifiedAt: "2026-09-21",
+    contentHash: "e57a6eba22fe7173",
+    verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,
