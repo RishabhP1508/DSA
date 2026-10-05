@@ -167,7 +167,7 @@ So \`add_item\` changes \`shared\` (mutation of a shared object), but \`try_rebi
     contentHash: "5eeecfc8bcb206fd",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 1,
   },
 };

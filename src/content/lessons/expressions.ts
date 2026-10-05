@@ -151,7 +151,7 @@ Python has three "division-like" operators that beginners often confuse. For the
     contentHash: "32b82b97f920056f",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 1,
   },
 };

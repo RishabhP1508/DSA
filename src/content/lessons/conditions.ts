@@ -143,7 +143,7 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
     contentHash: "be2f2011ca4c5afe",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 1,
   },
 };
