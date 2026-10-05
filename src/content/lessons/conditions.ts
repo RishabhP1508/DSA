@@ -77,10 +77,10 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
     { line: 3, executable: false, explanation: "Comment: Python runs the first True test." },
     { line: 4, executable: true, explanation: "Test temp >= 30. It is True (30 >= 30), so this branch is chosen." },
     { line: 5, executable: true, explanation: "Because the test was True, set label to 'hot'." },
-    { line: 6, executable: false, explanation: "This elif is skipped entirely — an earlier branch already matched." },
-    { line: 7, executable: false, explanation: "Not run: its branch was not selected." },
-    { line: 8, executable: false, explanation: "The else is skipped too." },
-    { line: 9, executable: false, explanation: "Not run." },
+    { line: 6, executable: false, explanation: "`elif temp >= 20:` is a real executable statement, but it is NOT REACHED in this run (an earlier branch already matched), so it produces no runtime event here. 'Not executable' refers to this trace, not to the syntax." },
+    { line: 7, executable: false, explanation: "`label = \"warm\"` would run only if the elif above were taken; it is a valid statement, just not reached in this run (no runtime event)." },
+    { line: 8, executable: false, explanation: "`else:` is an executable branch header, but it is skipped because the first test matched, so it is not reached in this run." },
+    { line: 9, executable: false, explanation: "`label = \"cold\"` belongs to the else branch; it is a real statement, not reached in this run (no runtime event)." },
     { line: 10, executable: true, explanation: "Print label → 'hot'." },
   ],
 
@@ -100,7 +100,7 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
     {
       id: "cond-fix-1",
       kind: "fix-mistake",
-      prompt: "`classify(temp)` should return 'hot' for temps >= 30, 'warm' for 20–29, else 'cold'. This version always returns 'warm' for hot temps. Fix the branch order.",
+      prompt: "The `classify(temp)` function below is already written for you — you only need to edit the if/elif order inside it (you are not writing a function from scratch; functions are covered in a later lesson). It should return 'hot' for temps >= 30, 'warm' for 20–29, else 'cold', but this version always returns 'warm' for hot temps. Fix the branch order.",
       starterCode: "def classify(temp):\n    if temp >= 20:\n        return 'warm'\n    elif temp >= 30:\n        return 'hot'\n    return 'cold'",
       expected: "def classify(temp):\n    if temp >= 30:\n        return 'hot'\n    elif temp >= 20:\n        return 'warm'\n    return 'cold'",
       hints: ["Which test is checked first?", "The broad test (>= 20) matches before the specific one (>= 30).", "Order branches from most specific/highest to least: check >= 30 first."],
@@ -140,7 +140,7 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "a2a4fa2253733ba5",
+    contentHash: "da6c82d01f92dd34",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

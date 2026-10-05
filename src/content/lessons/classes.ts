@@ -29,9 +29,9 @@ export const classes: LessonDefinition = {
 
   explanation: `A **class** is a blueprint that bundles **data** (attributes) with **behaviour** (methods). An **instance** is one object made from that blueprint. Classes are how we build the nodes and structures in later lessons — a linked-list node, a tree node, a graph — so this is an important foundation.
 
-The \`__init__\` method **initializes** a newly created instance — Python builds the object first, then runs \`__init__\` to set up its starting attributes (so it is the *initializer*; the lower-level creation step is \`__new__\`, which beginners rarely write). \`self\` is the current instance, and Python supplies it **automatically**: writing \`c.increment()\` is shorthand for \`Counter.increment(c)\`, so the instance \`c\` is passed in as the first parameter \`self\`. That is why every method lists \`self\` first. \`self.value = start\` stores data **on that specific instance**, and a **method** like \`increment\` reaches the object's own data through \`self\`.
+The \`__init__\` method **initializes** a newly created instance — Python builds the object first, then runs \`__init__\` to set up its starting attributes (so it is the *initializer*; the lower-level creation step is \`__new__\`, which beginners rarely write). \`self\` is the current instance, and Python supplies it **automatically**: writing \`c.increment()\` is shorthand for \`Counter.increment(c)\`, so the instance \`c\` is passed in as the first parameter \`self\`. That is why the ordinary **instance methods** taught here (\`__init__\`, \`increment\`) list \`self\` first. (Not every method does — class methods and static methods, beyond this lesson, do not take \`self\` — so read this as "instance methods take \`self\` first".) \`self.value = start\` stores data **on that specific instance**, and a **method** like \`increment\` reaches the object's own data through \`self\`.
 
-Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 → 12), and print \`c.value\`, which is 12. Attributes you assign through \`self\` (like \`self.value\`) are **per-instance**, so two counters' \`value\`s are independent. Beware, though: this independence is not automatic for *all* data — an attribute defined on the **class** itself (not on \`self\`) is **shared** by every instance, which matters when that shared value is mutable.`,
+Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 → 12), and print \`c.value\`, which is 12. In this example each counter's \`value\` is bound separately through \`self.value\`, so incrementing one does not change another. But instances are not *guaranteed* to be independent: an attribute **binds a name to an object**, and two instances can end up referring to the **same** object — e.g. \`self.items = shared_list\` in \`__init__\` would make every instance share one list, and a class-level attribute (defined on the class, not through \`self\`) is shared by all instances too. Independence here comes from each \`self.value\` binding to its own int, not from a blanket rule that separate instances can never share an object.`,
 
   vocabulary: [
     { term: "Class", definition: "A blueprint describing the attributes and methods of a kind of object." },
@@ -87,7 +87,7 @@ Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 �
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: a class bundles data and behaviour." },
     { line: 2, executable: true, explanation: "Define the class Counter (creates the class object)." },
-    { line: 3, executable: true, explanation: "Define the constructor __init__, which runs on instance creation." },
+    { line: 3, executable: true, explanation: "Define __init__, the initializer that runs right after the instance is created to set up its attributes." },
     { line: 4, executable: false, explanation: "Comment: self.value is per-instance data." },
     { line: 5, executable: true, explanation: "Store the starting value on this instance as self.value." },
     { line: 6, executable: false, explanation: "Blank line." },
@@ -149,7 +149,7 @@ Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 �
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "ddf1dc876e061ecd",
+    contentHash: "5bea8c28eff5028d",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

@@ -171,6 +171,15 @@ set** from each and prints whether they match.
   **enumerating** the neighbours (**O(degree)**, set iteration). The overall
   rebuild is therefore an **expected** O(V + E), not a guaranteed worst case.
   Accessed 2026-10-02.
+- [Python 3.14 — Hashing of numeric types](https://docs.python.org/3.14/library/stdtypes.html#hashing-of-numeric-types)
+  — the numeric hash reduces a value **modulo a prime P** = `sys.hash_info.modulus`
+  (**2147483647** on the bundled 32-bit CPython 3.14 build). Consulted to SCOPE
+  the hash-collision claim: the **nonnegative** family `0, P, 2P, 3P, …` all hash
+  to **0** (an achievable, unbounded set of colliding int keys), but this is NOT
+  a blanket "signed integers congruent mod P collide" — negatives carry a sign /
+  `-1`-avoidance adjustment. **Verified on the bundled runtime:** `hash(0) ==
+  hash(P) == hash(2*P) == 0`, yet `hash(-1) == -2` while `hash(P-1) == P-1`
+  (different, though `-1 ≡ P-1 (mod P)`). Accessed 2026-10-04.
 
 Scope note (recorded during R9/B1 review): the lesson's `from_edges == from_adj`
 check compares normalised **edge sets** only. It is an **example under stated
@@ -182,6 +191,23 @@ only one shape adds no edge). Verified on the bundled Pyodide (CPython 3.14.2):
 lesson output `True\n3\n` via `verify_lessons.mjs`, and the three still-True
 violation cases confirmed by a probe during review. Human semantic review of this
 lesson is still pending (`semanticReview: false`).
+
+### dsa/amortized — ⏳ authored, semantic review pending (R9/B1)
+
+- [Open Data Structures (Python) — 2. Array-Based Lists](https://opendatastructures.org/ods-python/2_Array_Based_Lists.html)
+  — the exact chapter consulted (replacing the earlier homepage link). It states
+  that over a sequence of n operations the **total** cost of growing/shrinking the
+  backing array is **O(n)**, so the **amortized** cost is **O(1)** per operation —
+  matching the lesson's O(n)-total / amortized-O(1) framing. Accessed 2026-10-04.
+
+Runtime evidence (bundled Pyodide, CPython 3.14.2), recorded during the R9/B1
+amendment: `struct.calcsize('P') == 4` (a **4-byte-pointer** build), and
+`sys.getsizeof` shows list capacity growing through **4, 8, 16, 24, 32, 40** — a
+**proportional (≈ ⅛), non-doubling** over-allocation. (An earlier packet probe
+recorded `2,4,8,12,16,20` by wrongly assuming an 8-byte pointer; corrected here.)
+A resize **may extend storage in place, or move the existing element references**
+into a larger block — it does not duplicate the objects themselves, and
+"relocate every reference" is a conceptual worst case, not a guarantee.
 
 ### (pending topics)
 

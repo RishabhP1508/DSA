@@ -103,7 +103,7 @@ In this workspace you supply the input ahead of time (a "supplied input" box), a
     {
       id: "io-fix-1",
       kind: "fix-mistake",
-      prompt: "`double(text)` takes the string a user typed and should return TWICE the number it represents. This version forgets to convert the text to a number, so `'7'` becomes `'77'` (string repetition). Fix it.",
+      prompt: "The `double(text)` function below is already written for you — you only edit its body, not define a function from scratch (functions come in a later lesson). It takes the string a user typed and should return TWICE the number it represents, but this version forgets to convert the text to a number, so `'7'` becomes `'77'` (string repetition). Fix it.",
       starterCode: "def double(text):\n    n = text\n    return n * 2",
       expected: "def double(text):\n    n = int(text)\n    return n * 2",
       hints: ["What type does input()/the raw text have?", "Multiplying a string repeats it.", "Convert with int() before doing arithmetic."],
@@ -143,7 +143,7 @@ In this workspace you supply the input ahead of time (a "supplied input" box), a
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "11eb36b9ad8fef7c",
+    contentHash: "c76bd4181538df89",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

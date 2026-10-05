@@ -52,9 +52,9 @@ Reporting a bound **without saying which case** is ambiguous, so always state it
   ],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
-    costModel: "Each equality comparison is one constant-time step. The loop may exit early on a match.",
+    scope: "function",
+    variables: [{ symbol: "n", meaning: "the number of elements in nums passed to one contains call" }],
+    costModel: "These bounds analyse a SINGLE call to contains(nums, target) over an n-element list; the displayed program then runs two specific calls to DEMONSTRATE the best and worst cases (it is not two separate algorithms). Each equality comparison is one constant-time step. The loop may exit early on a match.",
     time: {
       bound: "O(n)",
       case: "worst",
@@ -76,11 +76,11 @@ Reporting a bound **without saying which case** is ambiguous, so always state it
       { lines: [3], description: "One loop variable; no growth with n.", cost: "O(1)", dimension: "space" },
     ],
     assumptions: ["Comparisons are constant time.", "Average case assumes the target is present at a uniformly random position."],
-    tradeoffs: "If you search the same list many times, building a set once (O(n)) then querying in O(1) beats repeated O(n) linear searches — trading space for time.",
+    tradeoffs: "If you search the same list many times, building a set once (O(n)) then querying in EXPECTED (average) O(1) beats repeated O(n) linear searches — trading space for time. This assumes the elements are hashable and hash well; a set lookup is average O(1) but O(n) in the worst case under hash collisions.",
     counters: [
       { label: "comparisons", definition: "executions of the equality test (line 4)", countLines: [4] },
     ],
-    fixedDataNote: "The first call hits the best case (1 comparison); the second hits the worst case (3 comparisons on this 3-element list). The bounds generalise these counts to n.",
+    fixedDataNote: "The two calls in the displayed program demonstrate the extremes of a SINGLE contains call: the first call hits the best case (1 comparison), the second the worst case (3 comparisons on this 3-element list). The O(1)/O(n) bounds generalise one call's comparison count to n.",
   },
 
   code,
@@ -99,11 +99,19 @@ Reporting a bound **without saying which case** is ambiguous, so always state it
     { line: 11, executable: true, explanation: "contains([5,1,4], 9): no match → False after scanning all 3 elements." },
   ],
 
+  // `x` is the loop VALUE (`for x in nums`), not an index into `nums`. The array
+  // renderer treats an overlay's source as an index, so a `pointer: x` overlay
+  // marks nums[x] — e.g. on [2, 1, 4] the value x=2 (while visiting index 0)
+  // wrongly points at index 2 (which holds 4), and x=4 is out of range. A value
+  // cannot be turned into an index by lookup either, since duplicates make that
+  // ambiguous. There is no index variable in this `for x in` loop, so `nums`
+  // carries no overlay; the current element `x` is read from the variables panel.
+  // (Verified against the recorded trace of contains([2,1,4], ...).)
   bindings: [
     {
       variable: "nums",
       model: "array",
-      overlays: [{ role: "pointer", label: "x", source: "x" }],
+      overlays: [],
     },
   ],
 
@@ -151,8 +159,8 @@ Reporting a bound **without saying which case** is ambiguous, so always state it
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "1f31f7d42bd2adc4",
-    verifiedAt: "2026-09-21",
+    contentHash: "0a02e964bdeb39e7",
+    verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,

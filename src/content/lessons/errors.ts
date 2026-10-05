@@ -68,7 +68,7 @@ Catch **specific** exception types (\`IndexError\`, \`ValueError\`, \`KeyError\`
       { lines: [2], description: "One small fixed list.", cost: "O(1)", dimension: "space" },
     ],
     assumptions: ["List indexing and exception handling are constant-time for this small example."],
-    tradeoffs: "Checking a condition first (if index < len(nums)) also works and avoids raising; try/except is preferred when the failure is exceptional rather than expected.",
+    tradeoffs: "Checking a condition first also works and avoids raising, but write the bound correctly: `if index < len(nums)` alone is NOT safe because Python allows negative indices, so a sufficiently negative index passes `< len` yet still raises IndexError. A full guard is `if -len(nums) <= index < len(nums)` (or `0 <= index < len(nums)` if you only intend non-negative indices). try/except is preferred when the failure is exceptional rather than expected.",
     fixedDataNote: "Fixed list and a single caught error, so the run is constant work; there is no input size to scale.",
   },
 
@@ -76,7 +76,7 @@ Catch **specific** exception types (\`IndexError\`, \`ValueError\`, \`KeyError\`
 
   codeExplanations: [
     { line: 1, executable: false, explanation: "Comment: some operations raise exceptions." },
-    { line: 2, executable: true, explanation: "Create the list [1, 2, 3]. Valid indices are 0, 1, 2." },
+    { line: 2, executable: true, explanation: "Create the list [1, 2, 3]. Its positive indices are 0, 1, 2 (Python also allows negative indices -1, -2, -3 from the end); index 5 is out of range either way." },
     { line: 3, executable: true, explanation: "Begin a try block — risky code goes here." },
     { line: 4, executable: false, explanation: "Comment: index 5 is out of range." },
     { line: 5, executable: true, explanation: "nums[5] does not exist, so this raises IndexError; the print never runs." },
@@ -143,7 +143,7 @@ Catch **specific** exception types (\`IndexError\`, \`ValueError\`, \`KeyError\`
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "cefec6ec44b2230f",
+    contentHash: "40378ecd5eb1e320",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

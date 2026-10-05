@@ -1,8 +1,19 @@
-# R9 B1 Batch Semantic-Review Packet — 13 lessons
+# R9 B1 Batch Semantic-Review Packet (13 lessons)
 
-Full learner-facing content for the 13 remaining B1 (batch-1) lessons, plus the effective shared exercise-registry content (model solutions and recognition steps) each learner sees. Generated from the registry at the batch-corrections commit. The two already-approved lessons (variables-and-types, loops) are excluded.
+Generated from the IMPORTED, merged registry (`src/content/registry.ts`,
+after `attachExerciseData`), not by regex over source — so exercise hints,
+recognition, test contracts, and code with braces/quotes/f-string
+expressions are reproduced verbatim. Regenerate with
+`scripts/gen_b1_batch_packet.mjs`.
 
-All 13 items are `semanticReview: false` (pending). Hashes below are the post-correction hashes.
+All 13 items are `semanticReview: false` (pending). The two prior approvals
+(`variables-and-types`, `loops`) are intentionally excluded.
+
+**Prediction UI note (verified in `src/App.tsx`):** the Predict section renders
+each prediction's `prompt`/`answer`/`explanation` as a static disclosure. No
+current view consumes `atEventIndex` to pause interactive playback at that trace
+step — it is unused metadata in the shipped UI. This is recorded as an honest
+limitation and raised as a separate product-level gap, not proof of a playback pause.
 
 ---
 
@@ -10,12 +21,7 @@ All 13 items are `semanticReview: false` (pending). Hashes below are the post-co
 
 - **Area:** Programming foundations
 - **Prerequisites:** variables-and-types
-- **contentHash:** `32b82b97f920056f` · **verifiedAt:** 2026-10-04 · **semanticReview:** false
-- **expectedOutput:** ```
-14 20 2
-3 32 2.5
-
-```
+- **contentHash:** `32b82b97f920056f` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 An **expression** is any piece of code that produces a value: `2 + 3`, `x * 2`, `17 % 5`. Python evaluates the operators in a fixed order called **precedence** — for example `*` and `/` happen before `+` and `-`, just like in maths. So `2 + 3 * 4` is `2 + 12 = 14`, not `20`.
@@ -42,6 +48,9 @@ Python has three "division-like" operators that beginners often confuse. For the
 - **commonMistakes:** Thinking operators simply apply left-to-right and so reading `2 + 3 * 4` as `(2 + 3) * 4` — precedence decides the grouping (`*` binds before `+`), which is separate from the order operands are evaluated; expecting / to give an int (it gives a float); confusing % (remainder) with / (division).
 - **edgeCases:** Division by zero raises ZeroDivisionError. % with negatives follows the sign of the divisor in Python (e.g. -1 % 5 == 4).
 
+### Review summary
+Expressions produce values by applying **operators** in **precedence** order (`*`,`/` before `+`,`-`), which **parentheses** can override. Remember the three divisions: `/` (float), `//` (floor), `%` (remainder), plus `**` (power). Evaluating a fixed set of expressions is **O(1)** time and space.
+
 ### Code
 ```
 # An expression combines values and operators to produce one value.
@@ -55,23 +64,28 @@ print(x, y, z)
 # // floors the quotient (7 // 2 -> int 3; float operand -> float); ** is power; / is true division.
 print(7 // 2, 2 ** 5, 10 / 4)
 ```
+Expected output: ```
+14 20 2
+3 32 2.5
+
+```
 
 ### Line explanations
-- L1 (—): Comment: what an expression is.
-- L2 (—): Comment about precedence.
-- L3 (exec): 3 * 4 is evaluated first (12), then 2 + 12 gives 14. x becomes 14.
-- L4 (—): Comment about parentheses.
-- L5 (exec): (2 + 3) is forced first (5), then 5 * 4 gives 20. y becomes 20.
-- L6 (—): Comment about modulo.
-- L7 (exec): 17 % 5 is the remainder of 17 ÷ 5, which is 2. z becomes 2.
-- L8 (exec): Print x, y, z → 14 20 2.
-- L9 (—): Comment about //, ** and /.
-- L10 (exec): 7 // 2 is 3 (floor), 2 ** 5 is 32 (power), 10 / 4 is 2.5 (float). Prints 3 32 2.5.
+- L1 (no runtime event: comment/blank or not reached in this run): Comment: what an expression is.
+- L2 (no runtime event: comment/blank or not reached in this run): Comment about precedence.
+- L3 (produces a runtime event): 3 * 4 is evaluated first (12), then 2 + 12 gives 14. x becomes 14.
+- L4 (no runtime event: comment/blank or not reached in this run): Comment about parentheses.
+- L5 (produces a runtime event): (2 + 3) is forced first (5), then 5 * 4 gives 20. y becomes 20.
+- L6 (no runtime event: comment/blank or not reached in this run): Comment about modulo.
+- L7 (produces a runtime event): 17 % 5 is the remainder of 17 ÷ 5, which is 2. z becomes 2.
+- L8 (produces a runtime event): Print x, y, z → 14 20 2.
+- L9 (no runtime event: comment/blank or not reached in this run): Comment about //, ** and /.
+- L10 (produces a runtime event): 7 // 2 is 3 (floor), 2 ** 5 is 32 (power), 10 / 4 is 2.5 (float). Prints 3 32 2.5.
 
-### Complexity (table)
+### Complexity table
 - **Arithmetic on small ints** — best O(1), avg O(1), worst O(1). Fixed-size integer arithmetic is constant time.
 
-### Complexity reasoning
+### Complexity analysis (full structured object)
 ```
 {
   "scope": "program",
@@ -131,24 +145,29 @@ print(7 // 2, 2 ** 5, 10 / 4)
 }
 ```
 
-### Prediction
-- **atEventIndex 0** — Q: What is `2 + 3 * 4` in Python, and why?
-  - A: 14, because * has higher precedence than + so 3*4 happens first.
-  - Why: Multiplication binds tighter than addition, so it is 2 + (3*4) = 14, not (2+3)*4 = 20.
+### Visualization bindings
+- `x` → model **object**, overlays: (none)
+- Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
+
+### Predictions
+- **atEventIndex 0** (metadata; not used for a UI playback pause — see note above)
+  - Prompt: What is `2 + 3 * 4` in Python, and why?
+  - Answer: 14, because * has higher precedence than + so 3*4 happens first.
+  - Explanation: Multiplication binds tighter than addition, so it is 2 + (3*4) = 14, not (2+3)*4 = 20.
 
 ### Experiments
 - Change line 3 to add parentheses and predict the new value of x.
 - Print `-1 % 5` and `-7 // 2` and see how Python handles negatives.
 - Replace 10 / 4 with 10 // 4 and note the type change from float to int.
 
-### Exercises (with hints, graded solutions, and shared-registry content)
+### Exercises (effective, merged — what the learner receives)
 
 #### expr-predict-1 · kind: predict-state
 - **Prompt:** What does `10 / 2` evaluate to, and what type is it?
 - **Expected / model solution:** ```
 5.0, a float — for the int/float operands taught here, `/` (true division) yields a float, even when it divides evenly.
 ```
-- **Hints:**
+- **Hints (3 stages):**
   1. / is true division.
   2. On int/float operands, true division yields a float.
   3. 10 / 2 == 5.0 (not 5).
@@ -158,33 +177,24 @@ print(7 // 2, 2 ** 5, 10 / 4)
 - **Expected / model solution:** ```
 The modulo operator %. a % 2 == 0 means a is even.
 ```
-- **Hints:**
+- **Hints (6 stages):**
   1. Goal: choose the operator that gives the remainder of a divided by b, e.g. to test whether a is even.
   2. The naive detour is computing a quotient and subtracting back — that recomputes what one operator already gives you.
   3. Key property: you want the leftover after division, not the quotient.
   4. Approach: use the modulo operator rather than / or //.
   5. Reasoning: // gives the floor quotient and / gives a float, but only % yields the remainder you can test against zero.
   6. Answer: use the modulo operator % — a % b is the remainder, and a % 2 == 0 tests evenness.
-- **Shared exercise-registry effective content** (`lesson:expressions:expr-choose-1`):
-```
-{
-    scenario:
-      "You need the remainder of dividing a by b — for example, to test whether a is even.",
-    approaches: [
-      { id: "modulo", label: "Use the modulo operator %", requiredReasonIds: ["remainder-op"] },
-      { id: "floordiv", label: "Use floor division //", requiredReasonIds: [], rejectionFeedback: "// gives the quotient (how many times b fits), discarding the remainder — the opposite of what you need." },
-      { id: "truediv", label: "Use true division /", requiredReasonIds: [], rejectionFeedback: "/ gives a float quotient, not the integer remainder, so a % 2 == 0 cannot be expressed with it directly." },
-    ],
-    reasons: [
-      { id: "remainder-op", text: "% returns the remainder after division, so a % 2 == 0 is true exactly when a is even." },
-      { id: "gives-quotient", text: "This operator returns the quotient of the division, which is what we want.", contradictory: true },
-      { id: "needs-float", text: "You must convert to float first to find a remainder.", contradictory: true },
-    ],
-    acceptableApproachIds: ["modulo"],
-    modelExplanation:
-      "The modulo operator % yields the remainder; a % 2 == 0 tests evenness.",
-  }
-```
+- **Recognition — scenario:** You need the remainder of dividing a by b — for example, to test whether a is even.
+  - Approaches:
+    - [modulo] Use the modulo operator % (needs: remainder-op)
+    - [floordiv] Use floor division // — reject: // gives the quotient (how many times b fits), discarding the remainder — the opposite of what you need.
+    - [truediv] Use true division / — reject: / gives a float quotient, not the integer remainder, so a % 2 == 0 cannot be expressed with it directly.
+  - Reasons:
+    - [remainder-op] % returns the remainder after division, so a % 2 == 0 is true exactly when a is even.
+    - [gives-quotient] (contradictory) This operator returns the quotient of the division, which is what we want.
+    - [needs-float] (contradictory) You must convert to float first to find a remainder.
+  - Acceptable approach(es): modulo
+  - Model explanation: The modulo operator % yields the remainder; a % 2 == 0 tests evenness.
 
 ### References
 - [An Informal Introduction to Python — Python 3.14 documentation](https://docs.python.org/3.14/tutorial/introduction.html) — §Numbers (operators and division) (accessed 2026-09-20)
@@ -200,11 +210,7 @@ The modulo operator %. a % 2 == 0 means a is even.
 
 - **Area:** Programming foundations
 - **Prerequisites:** expressions
-- **contentHash:** `a2a4fa2253733ba5` · **verifiedAt:** 2026-10-04 · **semanticReview:** false
-- **expectedOutput:** ```
-hot
-
-```
+- **contentHash:** `a2a4fa2253733ba5` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 A **condition** lets a program make a decision. An `if` statement runs a block of code when its test is **true** — not only the literal `True`, but any value Python treats as true. This is called **truthiness**: non-zero numbers and non-empty containers (strings, lists, dicts) are **truthy**, while `0`, `""`, `[]`, `None`, and `False` are **falsy**. So `if items:` runs when `items` is a non-empty list. You can add `elif` ("else if") branches for more cases, and a final `else` for "none of the above".
@@ -229,6 +235,9 @@ Tests use **comparison operators** (`==`, `!=`, `<`, `<=`, `>`, `>=`) and can be
 - **commonMistakes:** Writing = (assignment) instead of == (comparison) — in Python `if x = 5:` is a SyntaxError (the parser rejects it), not a silent bug as in some languages; wrong branch order so a broad test shadows a specific one; forgetting indentation defines the block.
 - **edgeCases:** If no branch matches and there is no else, nothing runs. Only the first true branch executes.
 
+### Review summary
+Conditions branch with `if`/`elif`/`else`, running the **first** True test and skipping the rest, so **branch order matters**. Use `==` for comparison (not `=`). A fixed if-chain is **O(1)** time and space.
+
 ### Code
 ```
 # A condition chooses which block of code runs.
@@ -242,23 +251,27 @@ else:
     label = "cold"
 print(label)
 ```
+Expected output: ```
+hot
+
+```
 
 ### Line explanations
-- L1 (—): Comment: conditions choose which code runs.
-- L2 (exec): Set temp to 30.
-- L3 (—): Comment: Python runs the first True test.
-- L4 (exec): Test temp >= 30. It is True (30 >= 30), so this branch is chosen.
-- L5 (exec): Because the test was True, set label to 'hot'.
-- L6 (—): This elif is skipped entirely — an earlier branch already matched.
-- L7 (—): Not run: its branch was not selected.
-- L8 (—): The else is skipped too.
-- L9 (—): Not run.
-- L10 (exec): Print label → 'hot'.
+- L1 (no runtime event: comment/blank or not reached in this run): Comment: conditions choose which code runs.
+- L2 (produces a runtime event): Set temp to 30.
+- L3 (no runtime event: comment/blank or not reached in this run): Comment: Python runs the first True test.
+- L4 (produces a runtime event): Test temp >= 30. It is True (30 >= 30), so this branch is chosen.
+- L5 (produces a runtime event): Because the test was True, set label to 'hot'.
+- L6 (no runtime event: comment/blank or not reached in this run): `elif temp >= 20:` is a real executable statement, but it is NOT REACHED in this run (an earlier branch already matched), so it produces no runtime event here. 'Not executable' refers to this trace, not to the syntax.
+- L7 (no runtime event: comment/blank or not reached in this run): `label = "warm"` would run only if the elif above were taken; it is a valid statement, just not reached in this run (no runtime event).
+- L8 (no runtime event: comment/blank or not reached in this run): `else:` is an executable branch header, but it is skipped because the first test matched, so it is not reached in this run.
+- L9 (no runtime event: comment/blank or not reached in this run): `label = "cold"` belongs to the else branch; it is a real statement, not reached in this run (no runtime event).
+- L10 (produces a runtime event): Print label → 'hot'.
 
-### Complexity (table)
+### Complexity table
 - **Evaluate an if/elif chain** — best O(1), avg O(1), worst O(1). A fixed number of constant-time comparisons.
 
-### Complexity reasoning
+### Complexity analysis (full structured object)
 ```
 {
   "scope": "program",
@@ -316,20 +329,25 @@ print(label)
 }
 ```
 
-### Prediction
-- **atEventIndex 0** — Q: If temp were 20, what would label be?
-  - A: warm
-  - Why: temp >= 30 is False, but temp >= 20 is True, so the elif branch sets label to 'warm'.
+### Visualization bindings
+- `label` → model **object**, overlays: (none)
+- Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
+
+### Predictions
+- **atEventIndex 0** (metadata; not used for a UI playback pause — see note above)
+  - Prompt: If temp were 20, what would label be?
+  - Answer: warm
+  - Explanation: temp >= 30 is False, but temp >= 20 is True, so the elif branch sets label to 'warm'.
 
 ### Experiments
 - Change temp to 10 and predict which branch runs.
 - Swap the order of the >= 30 and >= 20 tests and see how the result changes for temp = 30.
 - Replace the chain with a single test using `and` to require two conditions.
 
-### Exercises (with hints, graded solutions, and shared-registry content)
+### Exercises (effective, merged — what the learner receives)
 
 #### cond-fix-1 · kind: fix-mistake
-- **Prompt:** `classify(temp)` should return 'hot' for temps >= 30, 'warm' for 20–29, else 'cold'. This version always returns 'warm' for hot temps. Fix the branch order.
+- **Prompt:** The `classify(temp)` function below is already written for you — you only need to edit the if/elif order inside it (you are not writing a function from scratch; functions are covered in a later lesson). It should return 'hot' for temps >= 30, 'warm' for 20–29, else 'cold', but this version always returns 'warm' for hot temps. Fix the branch order.
 - **Starter:** ```
 def classify(temp):
     if temp >= 20:
@@ -346,16 +364,20 @@ def classify(temp):
         return 'warm'
     return 'cold'
 ```
-- **Hints:**
+- **Hints (6 stages):**
   1. Goal: classify(temp) returns 'hot' (>=30), 'warm' (>=20), else 'cold'.
   2. The cost here is wrong branch ORDER: a broad test runs before a specific one.
   3. Key property: if-elif stops at the FIRST true test, so the most specific threshold must come first.
   4. Approach: order the thresholds from highest/most-specific to lowest.
   5. Pseudocode: if temp>=30 return 'hot'; elif temp>=20 return 'warm'; else return 'cold'.
   6. Fix: swap the first two branches so the >=30 test is checked before >=20.
-- **Shared exercise-registry effective content** (`lesson:conditions:cond-fix-1`):
-```
-[list('ABCE'), list('SFCS'), list('ADEE')]
+- **Coding test contract:** ```
+assert classify(35) == 'hot', 'temp 35 is hot (specific branch first)'
+assert classify(25) == 'warm', 'temp 25 is warm'
+assert classify(30) == 'hot', 'boundary 30 is hot'
+assert classify(20) == 'warm', 'boundary 20 is warm'
+assert classify(5) == 'cold', 'temp 5 is cold'
+print('OK')
 ```
 
 #### cond-predict-1 · kind: predict-state
@@ -363,7 +385,7 @@ def classify(temp):
 - **Expected / model solution:** ```
 One — temp >= 30 is True immediately, so no further tests run.
 ```
-- **Hints:**
+- **Hints (3 stages):**
   1. Python stops at the first True test.
   2. temp >= 30 is the first test.
   3. It is True, so exactly one comparison runs.
@@ -381,17 +403,7 @@ One — temp >= 30 is True immediately, so no further tests run.
 
 - **Area:** Programming foundations
 - **Prerequisites:** expressions
-- **contentHash:** `11eb36b9ad8fef7c` · **verifiedAt:** 2026-10-04 · **semanticReview:** false
-- **expectedOutput:** ```
-Name: Number: Hello Ada
-10
-
-```
-- **stdin:** ```
-Ada
-5
-
-```
+- **contentHash:** `11eb36b9ad8fef7c` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 Programs talk to the outside world through **input** and **output**. `input()` reads one line of text; `print()` writes values out.
@@ -414,7 +426,15 @@ In this workspace you supply the input ahead of time (a "supplied input" box), a
 - **commonMistakes:** Doing math on the string from input() without converting; assuming input() strips more than the trailing newline.
 - **edgeCases:** int('abc') raises ValueError. A blank line (the user just presses Enter) makes input() return an empty string ''. But if the input is exhausted — there is no more line to read (EOF) — input() raises EOFError rather than returning ''.
 
+### Review summary
+`input()` reads a line as a **string** (convert with `int()`/`float()` for math), and `print()` writes space-separated values plus a newline. Reading/printing text of length L is **O(L)** time and space; the classic bug is doing arithmetic on un-converted input.
+
 ### Code
+Supplied stdin: ```
+Ada
+5
+
+```
 ```
 # input() reads a line of text that you supply.
 name = input("Name: ")
@@ -424,20 +444,25 @@ n = int(input("Number: "))
 print("Hello", name)
 print(n * 2)
 ```
+Expected output: ```
+Name: Number: Hello Ada
+10
+
+```
 
 ### Line explanations
-- L1 (—): Comment: input() reads supplied text.
-- L2 (exec): Read a line into name. The prompt 'Name: ' is shown; name becomes the string 'Ada'.
-- L3 (—): Comment: input is a string; convert for math.
-- L4 (exec): Read '5' and convert it with int(), so n is the integer 5 (not the string '5').
-- L5 (—): Comment: print() writes output.
-- L6 (exec): Print 'Hello' and name, space-separated → 'Hello Ada'.
-- L7 (exec): Print n * 2. Because n is an int, this is 10 (not '55').
+- L1 (no runtime event: comment/blank or not reached in this run): Comment: input() reads supplied text.
+- L2 (produces a runtime event): Read a line into name. The prompt 'Name: ' is shown; name becomes the string 'Ada'.
+- L3 (no runtime event: comment/blank or not reached in this run): Comment: input is a string; convert for math.
+- L4 (produces a runtime event): Read '5' and convert it with int(), so n is the integer 5 (not the string '5').
+- L5 (no runtime event: comment/blank or not reached in this run): Comment: print() writes output.
+- L6 (produces a runtime event): Print 'Hello' and name, space-separated → 'Hello Ada'.
+- L7 (produces a runtime event): Print n * 2. Because n is an int, this is 10 (not '55').
 
-### Complexity (table)
+### Complexity table
 - **Read + convert + print** — best O(1), avg O(1), worst O(L). Linear in the length L of the text read/printed.
 
-### Complexity reasoning
+### Complexity analysis (full structured object)
 ```
 {
   "scope": "program",
@@ -504,20 +529,25 @@ print(n * 2)
 }
 ```
 
-### Prediction
-- **atEventIndex 0** — Q: If line 4 were `n = input('Number: ')` (no int()), what would `n * 2` print for input 5?
-  - A: '55' — because n would be the string '5', and '5' * 2 repeats the string.
-  - Why: input() returns a string; multiplying a string by 2 repeats it. Converting with int() is what makes n * 2 equal 10.
+### Visualization bindings
+- `name` → model **object**, overlays: (none)
+- Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
+
+### Predictions
+- **atEventIndex 0** (metadata; not used for a UI playback pause — see note above)
+  - Prompt: If line 4 were `n = input('Number: ')` (no int()), what would `n * 2` print for input 5?
+  - Answer: '55' — because n would be the string '5', and '5' * 2 repeats the string.
+  - Explanation: input() returns a string; multiplying a string by 2 repeats it. Converting with int() is what makes n * 2 equal 10.
 
 ### Experiments
 - Change the supplied input to a different name and number and re-run.
 - Remove int() on line 4 and observe the string-repetition behaviour of n * 2.
 - Supply a non-numeric second line and see the ValueError explanation.
 
-### Exercises (with hints, graded solutions, and shared-registry content)
+### Exercises (effective, merged — what the learner receives)
 
 #### io-fix-1 · kind: fix-mistake
-- **Prompt:** `double(text)` takes the string a user typed and should return TWICE the number it represents. This version forgets to convert the text to a number, so `'7'` becomes `'77'` (string repetition). Fix it.
+- **Prompt:** The `double(text)` function below is already written for you — you only edit its body, not define a function from scratch (functions come in a later lesson). It takes the string a user typed and should return TWICE the number it represents, but this version forgets to convert the text to a number, so `'7'` becomes `'77'` (string repetition). Fix it.
 - **Starter:** ```
 def double(text):
     n = text
@@ -528,16 +558,19 @@ def double(text):
     n = int(text)
     return n * 2
 ```
-- **Hints:**
-  1. Goal: read one number and print its double (entering 5 should print 10, not '55').
-  2. The costly mistake is treating text as if it were a number: `input()` hands back a string.
+- **Hints (6 stages):**
+  1. Goal: return TWICE the number the string `text` represents — double('7') must return 14, not '77'.
+  2. The costly mistake is treating `text` as if it were a number: it is a string, so `text * 2` repeats the characters.
   3. Key insight: multiplying a string by 2 repeats the text, while multiplying an int by 2 doubles the value.
-  4. Approach: convert the input to an integer before doing arithmetic.
-  5. Pseudocode: read the line, convert it to int, then print that value times two.
-  6. Wrap the input in `int(...)` — `n = int(input('n: '))` — then `print(n * 2)` gives the double.
-- **Shared exercise-registry effective content** (`lesson:io:io-fix-1`):
-```
-{double(\"7\")!r}
+  4. Approach: convert the `text` argument to an integer before doing arithmetic, then return the result.
+  5. Pseudocode: n = int(text); return n * 2.
+  6. Change `n = text` to `n = int(text)` so `return n * 2` returns the number doubled (an int), not the repeated string.
+- **Coding test contract:** ```
+assert double('7') == 14, f'double of 7 should be 14, got {double("7")!r} (string version gives 77)'
+assert double('3') == 6
+assert double('0') == 0
+assert double('-5') == -10
+print('OK')
 ```
 
 #### io-predict-1 · kind: predict-state
@@ -545,7 +578,7 @@ def double(text):
 - **Expected / model solution:** ```
 A string (str), always — even if the user types digits.
 ```
-- **Hints:**
+- **Hints (3 stages):**
   1. Think about what the user types.
   2. It is always text.
   3. input() returns a str; convert for numbers.
@@ -564,12 +597,7 @@ A string (str), always — even if the user types digits.
 
 - **Area:** Programming foundations
 - **Prerequisites:** conditions, functions
-- **contentHash:** `cefec6ec44b2230f` · **verifiedAt:** 2026-10-04 · **semanticReview:** false
-- **expectedOutput:** ```
-caught: index out of range
-after
-
-```
+- **contentHash:** `cefec6ec44b2230f` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 When something goes wrong at runtime — indexing past the end of a list, dividing by zero, converting bad text to a number — Python **raises an exception**. If nothing handles it, the program stops and prints a traceback.
@@ -593,6 +621,9 @@ Catch **specific** exception types (`IndexError`, `ValueError`, `KeyError`, `Zer
 - **commonMistakes:** Catching Exception/everything and silently passing; putting too much code in one try so you can't tell what failed; using exceptions for ordinary control flow.
 - **edgeCases:** An exception raised inside except propagates. In normal control flow a `finally` block runs on every way out of the try — whether it succeeded, raised, or returned (so it is the place for cleanup); the only things that skip it are a hard process exit (e.g. os._exit) or the interpreter being killed.
 
+### Review summary
+Runtime failures **raise exceptions**; unhandled ones crash the program. Use **try/except** with a **specific** exception type to recover and continue. Catch narrowly (IndexError, ValueError, …), not everything. Handling one error around constant-time code is **O(1)**.
+
 ### Code
 ```
 # Some operations fail at runtime by raising an exception.
@@ -606,23 +637,28 @@ except IndexError:
 # Execution continues normally after a handled exception.
 print("after")
 ```
+Expected output: ```
+caught: index out of range
+after
+
+```
 
 ### Line explanations
-- L1 (—): Comment: some operations raise exceptions.
-- L2 (exec): Create the list [1, 2, 3]. Valid indices are 0, 1, 2.
-- L3 (exec): Begin a try block — risky code goes here.
-- L4 (—): Comment: index 5 is out of range.
-- L5 (exec): nums[5] does not exist, so this raises IndexError; the print never runs.
-- L6 (exec): Control jumps here because the raised error is an IndexError.
-- L7 (—): Comment: we handle the error.
-- L8 (exec): Print the friendly message instead of crashing.
-- L9 (—): Comment: execution continues after handling.
-- L10 (exec): Print 'after' — the program did not crash, so this runs normally.
+- L1 (no runtime event: comment/blank or not reached in this run): Comment: some operations raise exceptions.
+- L2 (produces a runtime event): Create the list [1, 2, 3]. Its positive indices are 0, 1, 2 (Python also allows negative indices -1, -2, -3 from the end); index 5 is out of range either way.
+- L3 (produces a runtime event): Begin a try block — risky code goes here.
+- L4 (no runtime event: comment/blank or not reached in this run): Comment: index 5 is out of range.
+- L5 (produces a runtime event): nums[5] does not exist, so this raises IndexError; the print never runs.
+- L6 (produces a runtime event): Control jumps here because the raised error is an IndexError.
+- L7 (no runtime event: comment/blank or not reached in this run): Comment: we handle the error.
+- L8 (produces a runtime event): Print the friendly message instead of crashing.
+- L9 (no runtime event: comment/blank or not reached in this run): Comment: execution continues after handling.
+- L10 (produces a runtime event): Print 'after' — the program did not crash, so this runs normally.
 
-### Complexity (table)
+### Complexity table
 - **try/except around O(1) code** — best O(1), avg O(1), worst O(1). Exception setup is effectively constant here.
 
-### Complexity reasoning
+### Complexity analysis (full structured object)
 ```
 {
   "scope": "program",
@@ -681,22 +717,27 @@ print("after")
   "assumptions": [
     "List indexing and exception handling are constant-time for this small example."
   ],
-  "tradeoffs": "Checking a condition first (if index < len(nums)) also works and avoids raising; try/except is preferred when the failure is exceptional rather than expected.",
+  "tradeoffs": "Checking a condition first also works and avoids raising, but write the bound correctly: `if index < len(nums)` alone is NOT safe because Python allows negative indices, so a sufficiently negative index passes `< len` yet still raises IndexError. A full guard is `if -len(nums) <= index < len(nums)` (or `0 <= index < len(nums)` if you only intend non-negative indices). try/except is preferred when the failure is exceptional rather than expected.",
   "fixedDataNote": "Fixed list and a single caught error, so the run is constant work; there is no input size to scale."
 }
 ```
 
-### Prediction
-- **atEventIndex 0** — Q: Does line 5's print ('print(nums[5])') produce any output? Why?
-  - A: No — nums[5] raises IndexError before print runs, so control jumps straight to the except block.
-  - Why: The exception is raised while evaluating nums[5], so print never receives a value; execution moves to the matching except.
+### Visualization bindings
+- `nums` → model **array**, overlays: (none)
+- Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
+
+### Predictions
+- **atEventIndex 0** (metadata; not used for a UI playback pause — see note above)
+  - Prompt: Does line 5's print ('print(nums[5])') produce any output? Why?
+  - Answer: No — nums[5] raises IndexError before print runs, so control jumps straight to the except block.
+  - Explanation: The exception is raised while evaluating nums[5], so print never receives a value; execution moves to the matching except.
 
 ### Experiments
 - Change the index to 2 and see the try block succeed with no exception.
 - Catch a ValueError instead and observe that IndexError is no longer handled (it would propagate).
 - Add a `finally:` block and confirm it runs whether or not an error occurs.
 
-### Exercises (with hints, graded solutions, and shared-registry content)
+### Exercises (effective, merged — what the learner receives)
 
 #### err-complete-1 · kind: complete-code
 - **Prompt:** Complete `safe_div(a, b)` so dividing by 0 returns the string 'undefined' instead of crashing; otherwise return a / b.
@@ -712,16 +753,19 @@ def safe_div(a, b):
     except ZeroDivisionError:
         return 'undefined'
 ```
-- **Hints:**
-  1. Goal: make the division print 'undefined' when the divisor is 0 instead of crashing.
+- **Hints (6 stages):**
+  1. Goal: safe_div(a, b) should RETURN the string 'undefined' when b is 0, and otherwise RETURN a / b.
   2. The risky operation is `a / b`, which raises when b is zero.
   3. Key insight: dividing by zero raises the specific exception ZeroDivisionError, which you can catch.
-  4. Approach: guard the division with try/except targeting that exception.
-  5. Pseudocode: try to print a / b; except ZeroDivisionError: print 'undefined'.
-  6. Put `print(a / b)` in the try and handle it with `except ZeroDivisionError: print('undefined')`.
-- **Shared exercise-registry effective content** (`lesson:errors:err-complete-1`):
-```
-{safe_div(10, 0)!r}
+  4. Approach: guard the division with try/except targeting that exception, returning a value in each branch.
+  5. Pseudocode: try: return a / b; except ZeroDivisionError: return 'undefined'.
+  6. Put `return a / b` in the try and handle it with `except ZeroDivisionError: return 'undefined'` — the tests check the returned value, not printed output.
+- **Coding test contract:** ```
+assert safe_div(10, 0) == 'undefined', f"division by zero should return undefined, got {safe_div(10, 0)!r}"
+assert safe_div(6, 2) == 3
+assert safe_div(9, 0) == 'undefined'
+assert safe_div(7, 2) == 3.5
+print('OK')
 ```
 
 #### err-choose-1 · kind: choose-approach
@@ -729,37 +773,25 @@ def safe_div(a, b):
 - **Expected / model solution:** ```
 Both are valid. Use `if key in d` when a miss is common/expected (cheap check); use try/except KeyError when a miss is rare/exceptional. Avoid catching broad Exception.
 ```
-- **Hints:**
+- **Hints (6 stages):**
   1. Goal: decide whether to guard a possibly-missing dict key with `if key in d` or with try/except KeyError — and when each fits.
   2. The wrong instinct is a one-size rule; using exceptions for the common case (or `in` for the rare case) pays an avoidable cost either way.
   3. Key property: the right choice depends on how OFTEN the key is actually missing.
   4. Approach: match the guard to the expected frequency of a miss, and keep the except clause specific.
   5. Reasoning: a membership check is cheap when misses are frequent; exceptions are cheap when misses are rare but costly when they fire constantly — and a broad `except Exception` would mask unrelated bugs.
   6. Answer: both are valid — use `if key in d` when a miss is common, use try/except KeyError when a miss is rare/exceptional, and never catch broad Exception.
-- **Shared exercise-registry effective content** (`lesson:errors:err-choose-1`):
-```
-{
-    scenario:
-      "A key might be missing from a dict. You can guard with `if key in d`, or wrap the access in try/except KeyError. You must decide which fits — and when.",
-    approaches: [
-      { id: "membership-check", label: "Check with `if key in d` first", requiredReasonIds: ["miss-is-common"] },
-      { id: "try-except", label: "Catch KeyError with try/except", requiredReasonIds: ["miss-is-rare"] },
-      { id: "catch-broad", label: "Wrap it in try/except Exception", requiredReasonIds: [], rejectionFeedback: "Catching broad Exception hides unrelated bugs (typos, TypeErrors); catch only the specific KeyError you expect." },
-    ],
-    reasons: [
-      { id: "miss-is-common", text: "When a miss is common and expected, the `in` check is a cheap, explicit test that reads naturally in the normal flow." },
-      { id: "miss-is-rare", text: "When a miss is rare/exceptional, try/except KeyError keeps the common path fast and treats the absence as the exception it is." },
-      { id: "must-catch-broad", text: "You should always catch the broadest Exception type to be safe.", contradictory: true },
-      { id: "in-mutates", text: "Using `in` modifies the dictionary, so try/except is the only safe option.", contradictory: true },
-    ],
-    acceptableApproachIds: ["membership-check"],
-    alternatives: [
-      { approachId: "try-except", conditions: "When a missing key is rare/exceptional rather than part of the normal flow.", tradeoff: "Exceptions are costly on the error path but keep the common (present) path clean and fast.", requiredReasonIds: ["miss-is-rare"] },
-    ],
-    modelExplanation:
-      "Both are valid: use `if key in d` when a miss is common (cheap check); use try/except KeyError when a miss is rare/exceptional. Avoid catching broad Exception.",
-  }
-```
+- **Recognition — scenario:** A key might be missing from a dict. You can guard with `if key in d`, or wrap the access in try/except KeyError. You must decide which fits — and when.
+  - Approaches:
+    - [membership-check] Check with `if key in d` first (needs: miss-is-common)
+    - [try-except] Catch KeyError with try/except (needs: miss-is-rare)
+    - [catch-broad] Wrap it in try/except Exception — reject: Catching broad Exception hides unrelated bugs (typos, TypeErrors); catch only the specific KeyError you expect.
+  - Reasons:
+    - [miss-is-common] When a miss is common and expected, the `in` check is a cheap, explicit test that reads naturally in the normal flow.
+    - [miss-is-rare] When a miss is rare/exceptional, try/except KeyError keeps the common path fast and treats the absence as the exception it is.
+    - [must-catch-broad] (contradictory) You should always catch the broadest Exception type to be safe.
+    - [in-mutates] (contradictory) Using `in` modifies the dictionary, so try/except is the only safe option.
+  - Acceptable approach(es): membership-check
+  - Model explanation: Both are valid: use `if key in d` when a miss is common (cheap check); use try/except KeyError when a miss is rare/exceptional. Avoid catching broad Exception.
 
 ### References
 - [Errors and Exceptions — Python 3.14 documentation](https://docs.python.org/3.14/tutorial/errors.html) — §Handling Exceptions (accessed 2026-09-20)
@@ -775,11 +807,7 @@ Both are valid. Use `if key in d` when a miss is common/expected (cheap check); 
 
 - **Area:** Programming foundations
 - **Prerequisites:** loops
-- **contentHash:** `34076dce4cf0d3ba` · **verifiedAt:** 2026-10-03 · **semanticReview:** false
-- **expectedOutput:** ```
-7
-
-```
+- **contentHash:** `34076dce4cf0d3ba` · **verifiedAt:** 2026-10-03 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 A **function** gives a name to a reusable piece of work. You **define** it once with `def`, listing **parameters** (inputs), and later **call** it with **arguments** (actual values). The `return` statement hands a value back to whoever called the function.
@@ -804,6 +832,9 @@ Watching the call stack in the visualization makes this concrete: a frame appear
 - **commonMistakes:** Forgetting to return (the function then returns None); confusing parameters with arguments; expecting a function's local variables to exist outside it.
 - **edgeCases:** A function with no return statement returns None. Default parameter values are evaluated once, at definition time.
 
+### Review summary
+A **function** (defined with `def`) names reusable work, takes **arguments** into **parameters**, and hands back a value with `return` (or `None` if you omit it). Each call gets its own **frame** with its own locals. A non-recursive function that does fixed work is **O(1)** time and space per call.
+
 ### Code
 ```
 # A function packages reusable steps behind a name.
@@ -816,22 +847,26 @@ def add(a, b):
 answer = add(2, 5)
 print(answer)
 ```
+Expected output: ```
+7
+
+```
 
 ### Line explanations
-- L1 (—): Comment: a function packages reusable steps.
-- L2 (exec): Define the function add with parameters a and b. The def line runs to create the function object.
-- L3 (—): Comment describing parameters and the local variable.
-- L4 (exec): Inside a call, compute a + b and store it in the local variable result.
-- L5 (exec): Return result to the caller, ending this call.
-- L6 (—): Blank line.
-- L7 (—): Comment: we are about to call add.
-- L8 (exec): Call add(2, 5). A new frame binds a=2, b=5; the returned value 7 is stored in answer.
-- L9 (exec): Print answer → 7.
+- L1 (no runtime event: comment/blank or not reached in this run): Comment: a function packages reusable steps.
+- L2 (produces a runtime event): Define the function add with parameters a and b. The def line runs to create the function object.
+- L3 (no runtime event: comment/blank or not reached in this run): Comment describing parameters and the local variable.
+- L4 (produces a runtime event): Inside a call, compute a + b and store it in the local variable result.
+- L5 (produces a runtime event): Return result to the caller, ending this call.
+- L6 (no runtime event: comment/blank or not reached in this run): Blank line.
+- L7 (no runtime event: comment/blank or not reached in this run): Comment: we are about to call add.
+- L8 (produces a runtime event): Call add(2, 5). A new frame binds a=2, b=5; the returned value 7 is stored in answer.
+- L9 (produces a runtime event): Print answer → 7.
 
-### Complexity (table)
+### Complexity table
 - **Call add(a, b)** — best O(1), avg O(1), worst O(1), space O(1). One addition and one frame.
 
-### Complexity reasoning
+### Complexity analysis (full structured object)
 ```
 {
   "scope": "program",
@@ -897,17 +932,22 @@ print(answer)
 }
 ```
 
-### Prediction
-- **atEventIndex 0** — Q: What does add return if you call add(10, -3)?
-  - A: 7
-  - Why: It returns a + b = 10 + (-3) = 7.
+### Visualization bindings
+- `add` → model **recursion**, overlays: (none)
+- Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
+
+### Predictions
+- **atEventIndex 0** (metadata; not used for a UI playback pause — see note above)
+  - Prompt: What does add return if you call add(10, -3)?
+  - Answer: 7
+  - Explanation: It returns a + b = 10 + (-3) = 7.
 
 ### Experiments
 - Add a third parameter c and return a + b + c; update the call.
 - Remove the return statement and print the result of the call — it will be None.
 - Call add twice and watch two separate frames appear and disappear.
 
-### Exercises (with hints, graded solutions, and shared-registry content)
+### Exercises (effective, merged — what the learner receives)
 
 #### func-complete-1 · kind: complete-code
 - **Prompt:** Write a function `square(n)` that returns n times itself, then print square(6).
@@ -922,16 +962,18 @@ def square(n):
     return n * n
 print(square(6))
 ```
-- **Hints:**
+- **Hints (6 stages):**
   1. Goal: define square(n) returning n multiplied by itself, then print square(6) which should show 36.
   2. There is no repeated work to optimise; the point is to package one computation as a reusable function.
   3. Key insight: squaring a number is simply that number times itself.
   4. Approach: write a def with a return statement, then call it inside print.
   5. Pseudocode: def square(n): return n times n; then print(square(6)).
   6. Use `return n * n` in the body and `print(square(6))` to display 36.
-- **Shared exercise-registry effective content** (`lesson:functions:func-complete-1`):
-```
-[1, 2, 3]
+- **Coding test contract:** ```
+assert square(6) == 36
+assert square(0) == 0
+assert square(-3) == 9
+print('OK')
 ```
 
 #### func-predict-1 · kind: predict-state
@@ -939,7 +981,7 @@ print(square(6))
 - **Expected / model solution:** ```
 None — a function without an explicit return returns None.
 ```
-- **Hints:**
+- **Hints (3 stages):**
   1. Every function call produces some value.
   2. Without return, Python supplies a default.
   3. That default is None.
@@ -957,12 +999,7 @@ None — a function without an explicit return returns None.
 
 - **Area:** Programming foundations
 - **Prerequisites:** functions
-- **contentHash:** `612ab2035b310049` · **verifiedAt:** 2026-10-04 · **semanticReview:** false
-- **expectedOutput:** ```
-1
-10
-
-```
+- **contentHash:** `612ab2035b310049` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 **Scope** is the region of a program where a name is visible. A variable assigned **inside** a function is **local** to that function — it lives only during the call and is invisible outside. A variable assigned at the top level is **global**.
@@ -986,6 +1023,9 @@ The rule of thumb: assigning to a name inside a function makes it local (unless 
 - **commonMistakes:** Expecting an assignment inside a function to change a same-named global (it creates a local instead); reading then assigning a global without declaring `global` (raises UnboundLocalError).
 - **edgeCases:** If you reference a name before assigning it in a function where it's assigned later, Python treats it as local and raises UnboundLocalError.
 
+### Review summary
+**Scope** decides where a name is visible. Assigning inside a function creates a **local** that **shadows** any global of the same name, so it doesn't change the global — use `global` only if you truly must. Constant work in one frame is **O(1)** time and space.
+
 ### Code
 ```
 # 'count' here is a global variable.
@@ -1001,25 +1041,30 @@ def bump():
 print(bump())
 print(count)
 ```
+Expected output: ```
+1
+10
+
+```
 
 ### Line explanations
-- L1 (—): Comment: count here is global.
-- L2 (exec): Define the global variable count = 10.
-- L3 (—): Blank line.
-- L4 (exec): Define the function bump.
-- L5 (—): Comment: the inner count is a new local.
-- L6 (exec): Assigning count inside bump creates a LOCAL count = 0, separate from the global.
-- L7 (exec): Update the local count to 1. The global is untouched.
-- L8 (exec): Return the local count (1).
-- L9 (—): Blank line.
-- L10 (—): Comment: the local does not change the global.
-- L11 (exec): Call bump(); it returns 1, which is printed.
-- L12 (exec): Print the global count → still 10.
+- L1 (no runtime event: comment/blank or not reached in this run): Comment: count here is global.
+- L2 (produces a runtime event): Define the global variable count = 10.
+- L3 (no runtime event: comment/blank or not reached in this run): Blank line.
+- L4 (produces a runtime event): Define the function bump.
+- L5 (no runtime event: comment/blank or not reached in this run): Comment: the inner count is a new local.
+- L6 (produces a runtime event): Assigning count inside bump creates a LOCAL count = 0, separate from the global.
+- L7 (produces a runtime event): Update the local count to 1. The global is untouched.
+- L8 (produces a runtime event): Return the local count (1).
+- L9 (no runtime event: comment/blank or not reached in this run): Blank line.
+- L10 (no runtime event: comment/blank or not reached in this run): Comment: the local does not change the global.
+- L11 (produces a runtime event): Call bump(); it returns 1, which is printed.
+- L12 (produces a runtime event): Print the global count → still 10.
 
-### Complexity (table)
+### Complexity table
 - **Call bump()** — best O(1), avg O(1), worst O(1), space O(1). Constant work in one frame.
 
-### Complexity reasoning
+### Complexity analysis (full structured object)
 ```
 {
   "scope": "program",
@@ -1086,24 +1131,29 @@ print(count)
 }
 ```
 
-### Prediction
-- **atEventIndex 0** — Q: After bump() runs, what is the value of the GLOBAL count?
-  - A: 10
-  - Why: bump's count is a separate local variable; assigning it never changed the global, which stays 10.
+### Visualization bindings
+- `count` → model **object**, overlays: (none)
+- Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
+
+### Predictions
+- **atEventIndex 0** (metadata; not used for a UI playback pause — see note above)
+  - Prompt: After bump() runs, what is the value of the GLOBAL count?
+  - Answer: 10
+  - Explanation: bump's count is a separate local variable; assigning it never changed the global, which stays 10.
 
 ### Experiments
 - Add `global count` as the first line of bump and re-run; now the global changes.
 - Rename the local to `c` and confirm the two variables are clearly distinct in the panel.
 - Try reading count before assigning it inside bump to trigger UnboundLocalError.
 
-### Exercises (with hints, graded solutions, and shared-registry content)
+### Exercises (effective, merged — what the learner receives)
 
 #### scope-predict-1 · kind: predict-state
 - **Prompt:** A function assigns `x = 5` inside it. Does this change a global variable also named x?
 - **Expected / model solution:** ```
 No — the assignment creates a local x; the global x is unchanged (unless `global x` is declared).
 ```
-- **Hints:**
+- **Hints (3 stages):**
   1. Assigning inside a function usually creates a local.
   2. Locals are separate from globals of the same name.
   3. Only `global x` would make it modify the global.
@@ -1113,39 +1163,25 @@ No — the assignment creates a local x; the global x is unchanged (unless `glob
 - **Expected / model solution:** ```
 Prefer returning the new value and reassigning it at the call site; it avoids hidden side effects. `global` works but couples the function to that name.
 ```
-- **Hints:**
+- **Hints (6 stages):**
   1. Goal: decide the cleaner way for a function to update a module-level counter: declare it global, or return the new value.
   2. The hidden cost of global is a side effect: the function silently mutates outside state, making it harder to test and reason about.
   3. Key property: a function that only reads inputs and returns outputs is easier to reason about than one that reaches out to mutate a name.
   4. Approach: have the function return the new value and let the caller reassign it.
   5. Reasoning: returning keeps the function pure and testable; global works but couples it to one specific name and introduces hidden coupling.
   6. Answer: prefer returning the new value and reassigning at the call site — it avoids hidden side effects, whereas global ties the function to that specific name.
-- **Shared exercise-registry effective content** (`lesson:scope:scope-choose-1`):
-```
-{
-    scenario:
-      "A function must update a module-level counter. You can declare the name `global` inside the function, or return the new value and reassign it at the call site.",
-    approaches: [
-      { id: "return-value", label: "Return the new value and reassign at the call site", requiredReasonIds: ["no-hidden-side-effects"] },
-      { id: "global-decl", label: "Declare the name `global` and mutate it in place", requiredReasonIds: [], rejectionFeedback: "`global` works but couples the function to one specific module name and introduces a hidden side effect, making it harder to test and reuse." },
-      { id: "nonlocal-decl", label: "Use `nonlocal`", requiredReasonIds: [], rejectionFeedback: "`nonlocal` targets an enclosing function's local, not a module-level name, so it does not apply to a module-level counter." },
-    ],
-    reasons: [
-      { id: "no-hidden-side-effects", text: "Returning the value and reassigning it keeps the data flow explicit and avoids hidden side effects, so the function stays easy to test and decoupled from any particular name." },
-      { id: "global-works-coupled", text: "`global` does correctly update the module-level name, so it works when shared mutable state is genuinely wanted — at the cost of coupling the function to that specific name." },
-      { id: "global-is-cleanest", text: "Mutating a global is the cleanest option because it avoids any return value.", contradictory: true },
-      { id: "cannot-return", text: "A function cannot return a value to update a counter, so a declaration is required.", contradictory: true },
-    ],
-    acceptableApproachIds: ["return-value"],
-    alternatives: [
-      { approachId: "global-decl", conditions: "When a quick script truly needs shared mutable module state and the coupling is acceptable.", tradeoff: "Introduces a hidden side effect and binds the function to that module name, hurting testability.", requiredReasonIds: ["global-works-coupled"] },
-    ],
-    reflectionPrompt:
-      "Think of a case where a hidden side effect from `global` would make a bug hard to track down.",
-    modelExplanation:
-      "Prefer returning the new value and reassigning it at the call site — it avoids hidden side effects. `global` works but couples the function to that specific name.",
-  }
-```
+- **Recognition — scenario:** A function must update a module-level counter. You can declare the name `global` inside the function, or return the new value and reassign it at the call site.
+  - Approaches:
+    - [return-value] Return the new value and reassign at the call site (needs: no-hidden-side-effects)
+    - [global-decl] Declare the name `global` and mutate it in place — reject: `global` works but couples the function to one specific module name and introduces a hidden side effect, making it harder to test and reuse.
+    - [nonlocal-decl] Use `nonlocal` — reject: `nonlocal` targets an enclosing function's local, not a module-level name, so it does not apply to a module-level counter.
+  - Reasons:
+    - [no-hidden-side-effects] Returning the value and reassigning it keeps the data flow explicit and avoids hidden side effects, so the function stays easy to test and decoupled from any particular name.
+    - [global-works-coupled] `global` does correctly update the module-level name, so it works when shared mutable state is genuinely wanted — at the cost of coupling the function to that specific name.
+    - [global-is-cleanest] (contradictory) Mutating a global is the cleanest option because it avoids any return value.
+    - [cannot-return] (contradictory) A function cannot return a value to update a counter, so a declaration is required.
+  - Acceptable approach(es): return-value
+  - Model explanation: Prefer returning the new value and reassigning it at the call site — it avoids hidden side effects. `global` works but couples the function to that specific name.
 
 ### References
 - [Classes — Python 3.14 documentation](https://docs.python.org/3.14/tutorial/classes.html) — §Python Scopes and Namespaces (accessed 2026-09-20)
@@ -1158,12 +1194,7 @@ Prefer returning the new value and reassigning it at the call site; it avoids hi
 
 - **Area:** Programming foundations
 - **Prerequisites:** functions, variables-and-types
-- **contentHash:** `d1261afa910cc3e3` · **verifiedAt:** 2026-10-04 · **semanticReview:** false
-- **expectedOutput:** ```
-[1, 2, 3]
-5
-
-```
+- **contentHash:** `d1261afa910cc3e3` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 When you pass a value to a function, Python passes a **reference to the object** — the parameter becomes **another local name for the same object** the caller named. The object's **contents are not copied**; what is copied is the reference (the arrow pointing at the object), so the caller and the function now have two names for one shared object. This has two consequences that surprise beginners:
@@ -1188,6 +1219,9 @@ So `add_item` changes `shared` (mutation of a shared object), but `try_rebind` l
 - **commonMistakes:** Expecting `n = n + 100` inside a function to change the caller; accidentally mutating a shared default argument or shared list.
 - **edgeCases:** An immutable object (int, str, tuple) can't itself be changed, so rebinding a parameter bound to one never affects the caller. But "immutable" is not a blanket guarantee the caller is safe: a tuple can CONTAIN a mutable object (e.g. ([1, 2], 3)), and mutating that inner list through the shared reference IS visible to the caller — the tuple's own slots are fixed, but the objects they point at may be mutable.
 
+### Review summary
+Python passes **references**: caller and parameter share the same object. **Mutating** a shared mutable object (list.append) is visible to the caller; **rebinding** a parameter (n = ...) is not. To protect a caller's data, copy it (O(n)). Passing a reference is **O(1)** and makes no copy.
+
 ### Code
 ```
 # Arguments are passed by object reference.
@@ -1207,29 +1241,34 @@ def try_rebind(n):
 try_rebind(x)
 print(x)
 ```
+Expected output: ```
+[1, 2, 3]
+5
+
+```
 
 ### Line explanations
-- L1 (—): Comment: arguments are passed by object reference.
-- L2 (exec): Define add_item(bag, item).
-- L3 (—): Comment: mutating the list is visible to the caller.
-- L4 (exec): append mutates the SAME list object the caller passed in.
-- L5 (—): Blank line.
-- L6 (exec): Create the list [1, 2] and bind it to shared.
-- L7 (exec): Call add_item(shared, 3). bag and shared refer to the same list, so it becomes [1, 2, 3].
-- L8 (exec): Print shared → [1, 2, 3]. The mutation is visible here.
-- L9 (—): Blank line.
-- L10 (—): Comment: rebinding a parameter does not affect the caller.
-- L11 (exec): Set x = 5 (an immutable int).
-- L12 (exec): Define try_rebind(n).
-- L13 (exec): n = n + 100 rebinds the LOCAL n to a new int; it does not change x.
-- L14 (—): Blank line.
-- L15 (exec): Call try_rebind(x). Inside, n becomes 105, but x is untouched.
-- L16 (exec): Print x → still 5.
+- L1 (no runtime event: comment/blank or not reached in this run): Comment: arguments are passed by object reference.
+- L2 (produces a runtime event): Define add_item(bag, item).
+- L3 (no runtime event: comment/blank or not reached in this run): Comment: mutating the list is visible to the caller.
+- L4 (produces a runtime event): append mutates the SAME list object the caller passed in.
+- L5 (no runtime event: comment/blank or not reached in this run): Blank line.
+- L6 (produces a runtime event): Create the list [1, 2] and bind it to shared.
+- L7 (produces a runtime event): Call add_item(shared, 3). bag and shared refer to the same list, so it becomes [1, 2, 3].
+- L8 (produces a runtime event): Print shared → [1, 2, 3]. The mutation is visible here.
+- L9 (no runtime event: comment/blank or not reached in this run): Blank line.
+- L10 (no runtime event: comment/blank or not reached in this run): Comment: rebinding a parameter does not affect the caller.
+- L11 (produces a runtime event): Set x = 5 (an immutable int).
+- L12 (produces a runtime event): Define try_rebind(n).
+- L13 (produces a runtime event): n = n + 100 rebinds the LOCAL n to a new int; it does not change x.
+- L14 (no runtime event: comment/blank or not reached in this run): Blank line.
+- L15 (produces a runtime event): Call try_rebind(x). Inside, n becomes 105, but x is untouched.
+- L16 (produces a runtime event): Print x → still 5.
 
-### Complexity (table)
+### Complexity table
 - **append to a shared list** — best O(1), avg O(1), worst O(n) amortized O(1). One element added; occasional resize.
 
-### Complexity reasoning
+### Complexity analysis (full structured object)
 ```
 {
   "scope": "program",
@@ -1239,16 +1278,16 @@ print(x)
       "meaning": "the number of elements in the list (this run uses a small fixed list)"
     }
   ],
-  "costModel": "append is amortized O(1); passing an argument copies only a reference (O(1)), never the object.",
+  "costModel": "append is amortized O(1); passing an argument copies only a reference (O(1)), never the object. The teaching point is the per-call reference behaviour (mutation vs rebinding), which is O(1); the whole program also PRINTS the list, which touches every element.",
   "time": {
-    "bound": "O(1)",
-    "case": "amortized",
-    "explanation": "Both function calls do constant work: passing arguments copies references (O(1)), append is amortized O(1), and rebinding is O(1). No loops."
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "The reference-behaviour steps this lesson is about are each O(1): passing an argument copies a reference (O(1)), append is amortized O(1), and rebinding a parameter is O(1) — there are no loops in the helpers. The whole program, however, also calls `print(shared)` (line 8), which formats and emits all the list's elements; for a general n-element list that is O(n). So the per-call behaviour is O(1) but the program as a whole is O(n), driven by printing n elements (assuming each element formats in bounded time)."
   },
   "space": {
     "bound": "O(1)",
-    "case": "amortized",
-    "explanation": "No copy of the list is made when passing it — only a reference is shared — so passing costs no extra space proportional to n. append adds one slot.",
+    "case": "worst",
+    "explanation": "No copy of the list is made when passing it — only a reference is shared — so passing costs no extra space proportional to n. append adds one slot. Auxiliary space is O(1) (the n-element list is the data, not auxiliary space the calls introduce).",
     "inputOutputNote": "The list `shared` holds your data; it is not auxiliary space created by the calls."
   },
   "derivation": [
@@ -1270,10 +1309,18 @@ print(x)
     },
     {
       "lines": [
-        16
+        15
       ],
-      "description": "Pass an int and rebind locally — O(1).",
+      "description": "Call try_rebind(x): pass an int and rebind the parameter locally — O(1). (The print of x is on line 16.)",
       "cost": "O(1)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        8
+      ],
+      "description": "print(shared) formats and emits every element of the list — O(n) for an n-element list (the only size-dependent step).",
+      "cost": "O(n)",
       "dimension": "time"
     },
     {
@@ -1287,7 +1334,8 @@ print(x)
   ],
   "assumptions": [
     "Passing an argument shares a reference (no implicit deep copy).",
-    "append is amortized O(1) in CPython."
+    "append is amortized O(1) in CPython.",
+    "Each element formats/prints in bounded time, so print(shared) is O(n) in the number of elements."
   ],
   "tradeoffs": "If a helper must not change the caller's list, pass a copy (list(bag)) — O(n) time and space, protecting the original. Note list(bag) is a SHALLOW copy: the new list is independent, but it still shares references to the SAME inner objects, so mutating a nested object (e.g. a sublist) is still visible to the caller. Use copy.deepcopy for fully independent nested data.",
   "counters": [
@@ -1303,24 +1351,29 @@ print(x)
 }
 ```
 
-### Prediction
-- **atEventIndex 0** — Q: After both calls, what are `shared` and `x`?
-  - A: shared is [1, 2, 3]; x is 5.
-  - Why: add_item mutates the shared list (visible), while try_rebind only rebinds a local copy of the reference to x, leaving x unchanged.
+### Visualization bindings
+- `shared` → model **array**, overlays: (none)
+- Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
+
+### Predictions
+- **atEventIndex 0** (metadata; not used for a UI playback pause — see note above)
+  - Prompt: After both calls, what are `shared` and `x`?
+  - Answer: shared is [1, 2, 3]; x is 5.
+  - Explanation: add_item mutates the shared list (visible), while try_rebind only rebinds a local copy of the reference to x, leaving x unchanged.
 
 ### Experiments
 - Make add_item do `bag = bag + [item]` instead of append, and see that shared no longer changes (rebinding vs mutating).
 - Pass list(shared) into add_item and confirm the original is protected.
 - Try mutating a tuple inside a function to see why immutables can't be changed.
 
-### Exercises (with hints, graded solutions, and shared-registry content)
+### Exercises (effective, merged — what the learner receives)
 
 #### ref-predict-1 · kind: predict-state
 - **Prompt:** A function does `lst.append(9)` on the list you pass in. Does your original list change?
 - **Expected / model solution:** ```
 Yes — append mutates the shared list object, so the caller sees the 9.
 ```
-- **Hints:**
+- **Hints (3 stages):**
   1. Is the list copied or shared when passed?
   2. It is shared (a reference).
   3. append mutates that shared object, so the caller sees it.
@@ -1338,16 +1391,26 @@ def doubled(lst):
     copy.append(copy[-1])
     return copy
 ```
-- **Hints:**
+- **Hints (6 stages):**
   1. Goal: return a list with its last element duplicated while leaving the caller's original list untouched.
   2. The expense is mutating shared state: appending to the passed-in list changes the caller's data.
   3. Key insight: the parameter and the caller's variable point at the same list, so in-place edits leak out.
   4. Approach: work on a private copy of the argument instead of the original.
   5. Pseudocode: copy the list; append the copy's last element to the copy; return the copy.
   6. Start with `copy = list(lst)` and operate on `copy`, so the caller's list is never modified.
-- **Shared exercise-registry effective content** (`lesson:references-mutation:ref-fix-1`):
-```
-[1, 2, 3]
+- **Coding test contract:** ```
+src = [1, 2, 3]
+out = doubled(src)
+assert src == [1, 2, 3], f'caller list must be intact, got {src}'
+assert out == [1, 2, 3, 3], f'result should append the last element, got {out}'
+assert out is not src
+# A second, different input so a hard-coded return cannot pass.
+src2 = [9, 8]
+out2 = doubled(src2)
+assert src2 == [9, 8], f'caller list must be intact, got {src2}'
+assert out2 == [9, 8, 8], f'result should append the last element, got {out2}'
+assert out2 is not src2
+print('OK')
 ```
 
 ### References
@@ -1362,18 +1425,14 @@ def doubled(lst):
 
 - **Area:** Programming foundations
 - **Prerequisites:** functions, references-mutation
-- **contentHash:** `ddf1dc876e061ecd` · **verifiedAt:** 2026-10-04 · **semanticReview:** false
-- **expectedOutput:** ```
-12
-
-```
+- **contentHash:** `ddf1dc876e061ecd` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 A **class** is a blueprint that bundles **data** (attributes) with **behaviour** (methods). An **instance** is one object made from that blueprint. Classes are how we build the nodes and structures in later lessons — a linked-list node, a tree node, a graph — so this is an important foundation.
 
-The `__init__` method **initializes** a newly created instance — Python builds the object first, then runs `__init__` to set up its starting attributes (so it is the *initializer*; the lower-level creation step is `__new__`, which beginners rarely write). `self` is the current instance, and Python supplies it **automatically**: writing `c.increment()` is shorthand for `Counter.increment(c)`, so the instance `c` is passed in as the first parameter `self`. That is why every method lists `self` first. `self.value = start` stores data **on that specific instance**, and a **method** like `increment` reaches the object's own data through `self`.
+The `__init__` method **initializes** a newly created instance — Python builds the object first, then runs `__init__` to set up its starting attributes (so it is the *initializer*; the lower-level creation step is `__new__`, which beginners rarely write). `self` is the current instance, and Python supplies it **automatically**: writing `c.increment()` is shorthand for `Counter.increment(c)`, so the instance `c` is passed in as the first parameter `self`. That is why the ordinary **instance methods** taught here (`__init__`, `increment`) list `self` first. (Not every method does — class methods and static methods, beyond this lesson, do not take `self` — so read this as "instance methods take `self` first".) `self.value = start` stores data **on that specific instance**, and a **method** like `increment` reaches the object's own data through `self`.
 
-Here we make a `Counter` starting at 10, call `increment` twice (10 → 11 → 12), and print `c.value`, which is 12. Attributes you assign through `self` (like `self.value`) are **per-instance**, so two counters' `value`s are independent. Beware, though: this independence is not automatic for *all* data — an attribute defined on the **class** itself (not on `self`) is **shared** by every instance, which matters when that shared value is mutable.
+Here we make a `Counter` starting at 10, call `increment` twice (10 → 11 → 12), and print `c.value`, which is 12. In this example each counter's `value` is bound separately through `self.value`, so incrementing one does not change another. But instances are not *guaranteed* to be independent: an attribute **binds a name to an object**, and two instances can end up referring to the **same** object — e.g. `self.items = shared_list` in `__init__` would make every instance share one list, and a class-level attribute (defined on the class, not through `self`) is shared by all instances too. Independence here comes from each `self.value` binding to its own int, not from a blanket rule that separate instances can never share an object.
 
 ### Vocabulary
 - **Class** — A blueprint describing the attributes and methods of a kind of object.
@@ -1390,6 +1449,9 @@ Here we make a `Counter` starting at 10, call `increment` twice (10 → 11 → 1
 - **tradeoffs:** Classes add structure and reuse but can be overkill for simple data (a tuple or dict may suffice).
 - **commonMistakes:** Forgetting self in method definitions or attribute access; confusing class-level and instance-level attributes; expecting two instances to share instance attributes (they don't).
 - **edgeCases:** Attributes not set in __init__ don't exist until assigned. Mutable class-level defaults are shared across instances (a common trap).
+
+### Review summary
+A **class** is a blueprint bundling **attributes** (data) and **methods** (behaviour); an **instance** is one object built from it. `__init__` **initializes** a new instance via `self`, and `c.method()` automatically passes `c` in as `self`. Attributes set through `self` are per-instance; attributes defined on the class are shared, so instance independence is not automatic for class-level data. k method calls that each do O(1) work is **O(k)** time with **O(1)** space. Classes power the node types in later structure lessons.
 
 ### Code
 ```
@@ -1409,28 +1471,32 @@ c.increment()
 c.increment()
 print(c.value)
 ```
+Expected output: ```
+12
+
+```
 
 ### Line explanations
-- L1 (—): Comment: a class bundles data and behaviour.
-- L2 (exec): Define the class Counter (creates the class object).
-- L3 (exec): Define the constructor __init__, which runs on instance creation.
-- L4 (—): Comment: self.value is per-instance data.
-- L5 (exec): Store the starting value on this instance as self.value.
-- L6 (—): Blank line.
-- L7 (exec): Define the method increment.
-- L8 (—): Comment: methods use self to reach the object's data.
-- L9 (exec): Add 1 to this instance's value.
-- L10 (—): Comment: create and use an instance.
-- L11 (—): Comment continues (or blank).
-- L12 (exec): Create a Counter with start=10; __init__ sets value to 10.
-- L13 (exec): First increment: value becomes 11.
-- L14 (exec): Second increment: value becomes 12.
-- L15 (exec): Print c.value → 12.
+- L1 (no runtime event: comment/blank or not reached in this run): Comment: a class bundles data and behaviour.
+- L2 (produces a runtime event): Define the class Counter (creates the class object).
+- L3 (produces a runtime event): Define __init__, the initializer that runs right after the instance is created to set up its attributes.
+- L4 (no runtime event: comment/blank or not reached in this run): Comment: self.value is per-instance data.
+- L5 (produces a runtime event): Store the starting value on this instance as self.value.
+- L6 (no runtime event: comment/blank or not reached in this run): Blank line.
+- L7 (produces a runtime event): Define the method increment.
+- L8 (no runtime event: comment/blank or not reached in this run): Comment: methods use self to reach the object's data.
+- L9 (produces a runtime event): Add 1 to this instance's value.
+- L10 (no runtime event: comment/blank or not reached in this run): Comment: create and use an instance.
+- L11 (no runtime event: comment/blank or not reached in this run): Comment continues (or blank).
+- L12 (produces a runtime event): Create a Counter with start=10; __init__ sets value to 10.
+- L13 (produces a runtime event): First increment: value becomes 11.
+- L14 (produces a runtime event): Second increment: value becomes 12.
+- L15 (produces a runtime event): Print c.value → 12.
 
-### Complexity (table)
+### Complexity table
 - **increment()** — best O(1), avg O(1), worst O(1), space O(1). One attribute update per call.
 
-### Complexity reasoning
+### Complexity analysis (full structured object)
 ```
 {
   "scope": "program",
@@ -1503,17 +1569,22 @@ print(c.value)
 }
 ```
 
-### Prediction
-- **atEventIndex 0** — Q: If you created a second counter d = Counter(0) and called d.increment() once, would c.value change?
-  - A: No — c and d are independent instances; d.increment() only changes d.value.
-  - Why: Each instance has its own value attribute, so incrementing d does not affect c.
+### Visualization bindings
+- `c` → model **object**, overlays: (none)
+- Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
+
+### Predictions
+- **atEventIndex 0** (metadata; not used for a UI playback pause — see note above)
+  - Prompt: If you created a second counter d = Counter(0) and called d.increment() once, would c.value change?
+  - Answer: No — c and d are independent instances; d.increment() only changes d.value.
+  - Explanation: Each instance has its own value attribute, so incrementing d does not affect c.
 
 ### Experiments
 - Add a method decrement() and call it; watch value go back down.
 - Create two counters and confirm they hold independent values.
 - Add a second attribute in __init__ and display it in the object view.
 
-### Exercises (with hints, graded solutions, and shared-registry content)
+### Exercises (effective, merged — what the learner receives)
 
 #### class-complete-1 · kind: complete-code
 - **Prompt:** Give Counter a `reset()` method that sets value back to 0.
@@ -1532,16 +1603,22 @@ class Counter:
     def reset(self):
         self.value = 0
 ```
-- **Hints:**
+- **Hints (6 stages):**
   1. Goal: add a reset() method to Counter that sets its value attribute back to 0.
   2. There is no repeated computation; the task is knowing where instance state lives.
   3. Key insight: an instance's data is stored on `self`, and methods change it through `self`.
   4. Approach: define a method that assigns 0 to the value attribute on self.
   5. Pseudocode: def reset(self): set self's value to zero.
   6. Inside `def reset(self):` write `self.value = 0`.
-- **Shared exercise-registry effective content** (`lesson:classes:class-complete-1`):
-```
-{c.value}
+- **Coding test contract:** ```
+c = Counter(5)
+assert c.value == 5
+c.reset()
+assert c.value == 0, f'reset should zero value, got {c.value}'
+c2 = Counter(0)
+c2.reset()
+assert c2.value == 0
+print('OK')
 ```
 
 #### class-predict-1 · kind: predict-state
@@ -1549,7 +1626,7 @@ class Counter:
 - **Expected / model solution:** ```
 12
 ```
-- **Hints:**
+- **Hints (3 stages):**
   1. Start is 10.
   2. Each increment adds 1.
   3. 10 + 1 + 1 = 12.
@@ -1566,16 +1643,12 @@ class Counter:
 
 - **Area:** DSA foundations
 - **Prerequisites:** loops, functions
-- **contentHash:** `dc3852d9fb149174` · **verifiedAt:** 2026-10-04 · **semanticReview:** false
-- **expectedOutput:** ```
-9
-
-```
+- **contentHash:** `dc3852d9fb149174` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 **Complexity** describes how an algorithm's cost grows as its input grows — without tying us to a specific computer or clock. We measure **time complexity** (how many basic steps) and **space complexity** (how much extra memory), both as functions of the **input size**, usually called `n`.
 
-We summarise growth with **Big-O**: `O(n)` ("linear") means the work grows **at most** in proportion to n (Big-O is an *upper bound*); `O(1)` ("constant") means it does not depend on n; `O(n²)` ("quadratic") grows with the square of n. Big-O ignores constant factors and small terms, because we care about the *shape* of the growth for large inputs. (When the work grows *exactly* in proportion to n — an upper **and** matching lower bound — that tight bound is written Θ(n); for `find_max` below, O(n) is in fact tight.)
+We summarise growth with **Big-O**: `O(n)` ("linear") means the work grows **at most** in proportion to n (Big-O is an *upper bound*); `O(1)` ("constant") means it does not depend on n; `O(n²)` ("quadratic") grows with the square of n. Big-O ignores constant factors and small terms, because we care about the *shape* of the growth for large inputs. (A **tight** bound — where the same function is both an upper bound *and* a lower bound, up to constant factors, for all sufficiently large n — is written Θ(n). This is not literal exact proportionality: Θ(n) allows any constant multiple, like 2n or n/3. For `find_max` below, O(n) is in fact tight, i.e. Θ(n).)
 
 `find_max` scans the list once, comparing each of the n elements to the best-so-far. That is **n comparisons → O(n) time**, and because it always inspects every element this bound is tight (the same O(n) in the best, average, and worst case). It keeps just one extra variable (`best`), so it uses **O(1) auxiliary space**. The visualization's counter lets you confirm the comparison count matches n as you change the input.
 
@@ -1587,7 +1660,7 @@ A **precondition**: `find_max` assumes the list is **non-empty**. On `find_max([
 - **Space complexity** — How much extra (auxiliary) memory grows with input size.
 - **Big-O** — Notation for an upper bound on growth, ignoring constants and lower-order terms.
 - **Constant time O(1)** — Cost independent of input size.
-- **Linear time O(n)** — Cost grows at most in proportion to n (an upper bound). When it grows exactly in proportion, the tight bound is Θ(n).
+- **Linear time O(n)** — Cost grows at most in proportion to n (an upper bound, ignoring constant factors). When n is also a lower bound up to constants for large n, the tight bound is written Θ(n).
 - **Auxiliary space** — Extra memory beyond the input itself.
 
 ### Concepts
@@ -1597,6 +1670,9 @@ A **precondition**: `find_max` assumes the list is **non-empty**. On `find_max([
 - **tradeoffs:** Faster time often costs more space (e.g. hashing) and vice versa; Big-O hides constants that matter for small n.
 - **commonMistakes:** Assuming any nested loops mean O(n²): nesting alone does not establish that bound — it is TWO FULL n-length loops (an inner loop that runs n times for each of the n outer iterations) that give n×n = O(n²); sequential loops instead add → O(n), and an inner loop that runs a constant or sub-n number of times does not reach O(n²); counting the input as auxiliary space; treating measured time as proof of Big-O.
 - **edgeCases:** Empty input (n = 0) is outside this function's precondition: `best = nums[0]` raises IndexError before the loop is even reached (it does not return a value). A single element: the loop runs once and returns that element.
+
+### Review summary
+Complexity measures how cost grows with input size **n**, summarised with **Big-O** (O(1) constant, O(n) linear, O(n²) quadratic). A single scan like `find_max` is **O(n) time** and **O(1) auxiliary space** (and that O(n) is tight — Θ(n) — because every element is always inspected). Watch out: sequential loops add (O(n)); you reach O(n²) only when one full n-length loop is nested inside another (nesting alone is not enough); and measured time is evidence, not proof, of Big-O.
 
 ### Code
 ```
@@ -1610,22 +1686,26 @@ def find_max(nums):
 
 print(find_max([3, 9, 2, 7]))
 ```
+Expected output: ```
+9
+
+```
 
 ### Line explanations
-- L1 (—): Comment: scan the list once to find the largest.
-- L2 (exec): Define find_max(nums).
-- L3 (exec): Assume the first element is the best so far.
-- L4 (exec): Loop over every element x (this is the source of the O(n) work).
-- L5 (exec): Compare x to best — one constant-time comparison per element.
-- L6 (exec): If x is larger, update best.
-- L7 (exec): Return the largest value found.
-- L8 (—): Blank line.
-- L9 (exec): Call find_max on [3, 9, 2, 7]; the result 9 is printed.
+- L1 (no runtime event: comment/blank or not reached in this run): Comment: scan the list once to find the largest.
+- L2 (produces a runtime event): Define find_max(nums).
+- L3 (produces a runtime event): Assume the first element is the best so far.
+- L4 (produces a runtime event): Loop over every element x (this is the source of the O(n) work).
+- L5 (produces a runtime event): Compare x to best — one constant-time comparison per element.
+- L6 (produces a runtime event): If x is larger, update best.
+- L7 (produces a runtime event): Return the largest value found.
+- L8 (no runtime event: comment/blank or not reached in this run): Blank line.
+- L9 (produces a runtime event): Call find_max on [3, 9, 2, 7]; the result 9 is printed.
 
-### Complexity (table)
+### Complexity table
 - **find_max scan** — best O(n), avg O(n), worst O(n), space O(1). Every element is compared once; one extra variable.
 
-### Complexity reasoning
+### Complexity analysis (full structured object)
 ```
 {
   "scope": "program",
@@ -1700,24 +1780,29 @@ print(find_max([3, 9, 2, 7]))
 }
 ```
 
-### Prediction
-- **atEventIndex 0** — Q: If nums had 1000 elements instead of 4, roughly how many comparisons would find_max do?
-  - A: About 1000 — one per element (O(n)).
-  - Why: The loop does one comparison per element, so the count scales linearly with n: ~1000 comparisons for 1000 elements.
+### Visualization bindings
+- `nums` → model **array**, overlays: (none)
+- Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
+
+### Predictions
+- **atEventIndex 0** (metadata; not used for a UI playback pause — see note above)
+  - Prompt: If nums had 1000 elements instead of 4, roughly how many comparisons would find_max do?
+  - Answer: About 1000 — one per element (O(n)).
+  - Explanation: The loop does one comparison per element, so the count scales linearly with n: ~1000 comparisons for 1000 elements.
 
 ### Experiments
 - Add elements to nums and watch the 'elements scanned' counter grow one-for-one.
 - Put the largest number first and note the 'best updated' counter stays low while 'elements scanned' still equals n.
 - Reason about why sorting to find the max (O(n log n)) is worse than this single O(n) scan.
 
-### Exercises (with hints, graded solutions, and shared-registry content)
+### Exercises (effective, merged — what the learner receives)
 
 #### cx-predict-1 · kind: predict-state
 - **Prompt:** An algorithm does two SEPARATE loops over the same n-element list (one after the other). Is it O(n) or O(n²)?
 - **Expected / model solution:** ```
 O(n) — sequential loops add: n + n = 2n, which is O(n). You reach O(n²) only when one full n-length loop is NESTED inside another (the inner loop runs n times for each of the n outer iterations); nesting by itself is not enough.
 ```
-- **Hints:**
+- **Hints (3 stages):**
   1. Are the loops nested or one-after-another?
   2. Sequential costs add; a full n-length loop nested inside another full n-length loop multiplies.
   3. n + n = 2n = O(n); n × n = O(n²).
@@ -1727,33 +1812,24 @@ O(n) — sequential loops add: n + n = 2n, which is O(n). You reach O(n²) only 
 - **Expected / model solution:** ```
 O(n): you must look at every element at least once (any unexamined element could be the max), so you cannot do better than linear.
 ```
-- **Hints:**
+- **Hints (6 stages):**
   1. Goal: determine the best achievable time complexity for finding the maximum of an unsorted list in a single examination.
   2. The tempting error is assuming you can somehow shortcut and skip elements the way binary search skips in sorted data.
   3. Key property: the list is unsorted, so any element you don't look at could be the maximum.
   4. Approach: accept that a full linear scan is required and reason about its lower bound.
   5. Reasoning: skipping even one element risks missing the true max, so no algorithm can be certain without inspecting all n — sorting first would be worse at O(n log n).
   6. Answer: O(n) is optimal — any unexamined element could be the maximum, so you must inspect every element at least once.
-- **Shared exercise-registry effective content** (`lesson:complexity:cx-choose-1`):
-```
-{
-    scenario:
-      "You must find the maximum of an unsorted list, examining it only once. What is the best time complexity achievable?",
-    approaches: [
-      { id: "linear-scan", label: "A single O(n) linear scan tracking the running max", requiredReasonIds: ["must-see-every"] },
-      { id: "sort-first", label: "Sort the list, then take the last element", requiredReasonIds: [], rejectionFeedback: "Sorting is O(n log n) — slower than necessary; you don't need total order just to find one maximum." },
-      { id: "binary-search", label: "Binary search for the maximum", requiredReasonIds: [], rejectionFeedback: "Binary search needs a sorted array; the list is unsorted, so there is no ordering to exploit." },
-    ],
-    reasons: [
-      { id: "must-see-every", text: "Any element you never examine could be the maximum, so you must look at every element at least once — that forces at least linear time." },
-      { id: "sublinear-possible", text: "You can find the max without inspecting every element, so sublinear time is achievable.", contradictory: true },
-      { id: "already-ordered", text: "The list is already ordered, so you can jump straight to the max.", contradictory: true },
-    ],
-    acceptableApproachIds: ["linear-scan"],
-    modelExplanation:
-      "O(n): any unexamined element could be the maximum, so you must inspect every element at least once — you cannot do better than linear.",
-  }
-```
+- **Recognition — scenario:** You must find the maximum of an unsorted list, examining it only once. What is the best time complexity achievable?
+  - Approaches:
+    - [linear-scan] A single O(n) linear scan tracking the running max (needs: must-see-every)
+    - [sort-first] Sort the list, then take the last element — reject: Sorting is O(n log n) — slower than necessary; you don't need total order just to find one maximum.
+    - [binary-search] Binary search for the maximum — reject: Binary search needs a sorted array; the list is unsorted, so there is no ordering to exploit.
+  - Reasons:
+    - [must-see-every] Any element you never examine could be the maximum, so you must look at every element at least once — that forces at least linear time.
+    - [sublinear-possible] (contradictory) You can find the max without inspecting every element, so sublinear time is achievable.
+    - [already-ordered] (contradictory) The list is already ordered, so you can jump straight to the max.
+  - Acceptable approach(es): linear-scan
+  - Model explanation: O(n): any unexamined element could be the maximum, so you must inspect every element at least once — you cannot do better than linear.
 
 ### References
 - [Big-O Notation — Problem Solving with Algorithms and DS using Python (Runestone)](https://runestone.academy/ns/books/published/pythonds3/AlgorithmAnalysis/BigONotation.html) — §Big-O Notation (accessed 2026-09-20)
@@ -1768,12 +1844,7 @@ O(n): you must look at every element at least once (any unexamined element could
 
 - **Area:** DSA foundations
 - **Prerequisites:** complexity
-- **contentHash:** `1f31f7d42bd2adc4` · **verifiedAt:** 2026-09-21 · **semanticReview:** false
-- **expectedOutput:** ```
-True
-False
-
-```
+- **contentHash:** `1f31f7d42bd2adc4` · **verifiedAt:** 2026-09-21 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 The same algorithm can do very different amounts of work depending on the **specific input**. We describe this with three cases:
@@ -1798,6 +1869,9 @@ Reporting a bound **without saying which case** is ambiguous, so always state it
 - **commonMistakes:** Quoting a bound without its case; assuming best case is typical; confusing average case with best case.
 - **edgeCases:** Empty list: contains returns False after zero comparisons. Duplicate targets: returns at the first match.
 
+### Review summary
+The same algorithm's cost varies with the input: **best** (luckiest, e.g. O(1) early match), **worst** (unluckiest, e.g. O(n) absent target — the guarantee), and **average** (expected, ~n/2 → O(n)). Always **state the case** with a bound. Early exits improve the best case but not the worst.
+
 ### Code
 ```
 # Linear search: stop as soon as we find the target.
@@ -1812,34 +1886,39 @@ print(contains([5, 1, 4], 5))
 # Target absent -> scans everything (worst case).
 print(contains([5, 1, 4], 9))
 ```
+Expected output: ```
+True
+False
+
+```
 
 ### Line explanations
-- L1 (—): Comment: linear search with early exit.
-- L2 (exec): Define contains(nums, target).
-- L3 (exec): Loop over each element (up to n comparisons in the worst case).
-- L4 (exec): Compare the current element to target.
-- L5 (exec): Return True immediately on a match — this enables the O(1) best case.
-- L6 (exec): If the loop finishes with no match, return False (worst case scanned all n).
-- L7 (—): Blank line.
-- L8 (—): Comment: best case (target first).
-- L9 (exec): contains([5,1,4], 5): matches at index 0 → True after one comparison.
-- L10 (—): Comment: worst case (target absent).
-- L11 (exec): contains([5,1,4], 9): no match → False after scanning all 3 elements.
+- L1 (no runtime event: comment/blank or not reached in this run): Comment: linear search with early exit.
+- L2 (produces a runtime event): Define contains(nums, target).
+- L3 (produces a runtime event): Loop over each element (up to n comparisons in the worst case).
+- L4 (produces a runtime event): Compare the current element to target.
+- L5 (produces a runtime event): Return True immediately on a match — this enables the O(1) best case.
+- L6 (produces a runtime event): If the loop finishes with no match, return False (worst case scanned all n).
+- L7 (no runtime event: comment/blank or not reached in this run): Blank line.
+- L8 (no runtime event: comment/blank or not reached in this run): Comment: best case (target first).
+- L9 (produces a runtime event): contains([5,1,4], 5): matches at index 0 → True after one comparison.
+- L10 (no runtime event: comment/blank or not reached in this run): Comment: worst case (target absent).
+- L11 (produces a runtime event): contains([5,1,4], 9): no match → False after scanning all 3 elements.
 
-### Complexity (table)
+### Complexity table
 - **linear search** — best O(1), avg O(n), worst O(n), space O(1). Best: match at index 0. Worst: absent → scan all n.
 
-### Complexity reasoning
+### Complexity analysis (full structured object)
 ```
 {
-  "scope": "program",
+  "scope": "function",
   "variables": [
     {
       "symbol": "n",
-      "meaning": "the number of elements in nums"
+      "meaning": "the number of elements in nums passed to one contains call"
     }
   ],
-  "costModel": "Each equality comparison is one constant-time step. The loop may exit early on a match.",
+  "costModel": "These bounds analyse a SINGLE call to contains(nums, target) over an n-element list; the displayed program then runs two specific calls to DEMONSTRATE the best and worst cases (it is not two separate algorithms). Each equality comparison is one constant-time step. The loop may exit early on a match.",
   "time": {
     "bound": "O(n)",
     "case": "worst",
@@ -1894,7 +1973,7 @@ print(contains([5, 1, 4], 9))
     "Comparisons are constant time.",
     "Average case assumes the target is present at a uniformly random position."
   ],
-  "tradeoffs": "If you search the same list many times, building a set once (O(n)) then querying in O(1) beats repeated O(n) linear searches — trading space for time.",
+  "tradeoffs": "If you search the same list many times, building a set once (O(n)) then querying in EXPECTED (average) O(1) beats repeated O(n) linear searches — trading space for time. This assumes the elements are hashable and hash well; a set lookup is average O(1) but O(n) in the worst case under hash collisions.",
   "counters": [
     {
       "label": "comparisons",
@@ -1904,28 +1983,33 @@ print(contains([5, 1, 4], 9))
       ]
     }
   ],
-  "fixedDataNote": "The first call hits the best case (1 comparison); the second hits the worst case (3 comparisons on this 3-element list). The bounds generalise these counts to n."
+  "fixedDataNote": "The two calls in the displayed program demonstrate the extremes of a SINGLE contains call: the first call hits the best case (1 comparison), the second the worst case (3 comparisons on this 3-element list). The O(1)/O(n) bounds generalise one call's comparison count to n."
 }
 ```
 
-### Prediction
-- **atEventIndex 0** — Q: For a 100-element list, how many comparisons does the best case take, and the worst case?
-  - A: Best: 1 (match at index 0). Worst: 100 (absent → scan all).
-  - Why: The early return gives O(1) best case; an absent target forces scanning all n = 100 elements in the worst case.
+### Visualization bindings
+- `nums` → model **array**, overlays: (none)
+- Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
+
+### Predictions
+- **atEventIndex 0** (metadata; not used for a UI playback pause — see note above)
+  - Prompt: For a 100-element list, how many comparisons does the best case take, and the worst case?
+  - Answer: Best: 1 (match at index 0). Worst: 100 (absent → scan all).
+  - Explanation: The early return gives O(1) best case; an absent target forces scanning all n = 100 elements in the worst case.
 
 ### Experiments
 - Search for the last element and count comparisons — it equals n (a worst-case-like scan).
 - Search an empty list and confirm zero comparisons and a False result.
 - Change the target to one that appears twice and see it returns at the first occurrence.
 
-### Exercises (with hints, graded solutions, and shared-registry content)
+### Exercises (effective, merged — what the learner receives)
 
 #### cases-predict-1 · kind: predict-state
 - **Prompt:** State the case: linear search where the target is the LAST element. Best, average, or worst-like?
 - **Expected / model solution:** ```
 Worst-like: it scans all n elements before finding it, which is the maximum work O(n).
 ```
-- **Hints:**
+- **Hints (3 stages):**
   1. How many elements are checked before the match?
   2. All of them.
   3. That is the maximum → worst-case O(n).
@@ -1935,32 +2019,23 @@ Worst-like: it scans all n elements before finding it, which is the maximum work
 - **Expected / model solution:** ```
 The guaranteed O(n log n) worst case, because untrusted/adversarial input could deliberately trigger the other's O(n²) worst case.
 ```
-- **Hints:**
+- **Hints (6 stages):**
   1. Goal: choose between two sorts for untrusted input — one O(n log n) worst case, one that averages O(n log n) but degrades to O(n²).
   2. The trap is judging by average case: on adversarial input the average tells you nothing about what an attacker can force.
   3. Key property: the input is untrusted/adversarial, so an attacker can deliberately hit the worst case.
   4. Approach: choose on the WORST-case bound, not the average.
   5. Reasoning: a guaranteed worst case can't be exploited, whereas the second sort's O(n²) worst case could be triggered by crafted input to cause a denial of service; the average-case sort would be fine only for trusted/random data.
   6. Answer: pick the algorithm with the guaranteed O(n log n) worst case, because adversarial input could deliberately trigger the other's O(n²).
-- **Shared exercise-registry effective content** (`lesson:cases:cases-choose-1`):
-```
-{
-    scenario:
-      "Two sorting algorithms handle n items: one is O(n log n) in the WORST case; the other averages O(n log n) but degrades to O(n²) in the worst case. The input is untrusted and possibly adversarial.",
-    approaches: [
-      { id: "guaranteed-worst", label: "Choose the guaranteed O(n log n) worst-case algorithm", requiredReasonIds: ["adversary-triggers-worst"] },
-      { id: "best-average", label: "Choose the better average-case algorithm", requiredReasonIds: [], rejectionFeedback: "Average-case assumes random/benign input; an adversary can craft the exact input that triggers the O(n²) worst case, so the average bound gives no guarantee here." },
-    ],
-    reasons: [
-      { id: "adversary-triggers-worst", text: "Untrusted input can be crafted to hit the quadratic worst case, so only a guaranteed worst-case bound protects you against a deliberate attack." },
-      { id: "average-is-guarantee", text: "The average-case bound guarantees performance even on worst-case adversarial input.", contradictory: true },
-      { id: "worst-case-irrelevant", text: "Worst-case behavior never occurs in practice, so it can be ignored.", contradictory: true },
-    ],
-    acceptableApproachIds: ["guaranteed-worst"],
-    modelExplanation:
-      "Pick the algorithm with the guaranteed O(n log n) worst case: untrusted/adversarial input could deliberately trigger the other's O(n²) worst case.",
-  }
-```
+- **Recognition — scenario:** Two sorting algorithms handle n items: one is O(n log n) in the WORST case; the other averages O(n log n) but degrades to O(n²) in the worst case. The input is untrusted and possibly adversarial.
+  - Approaches:
+    - [guaranteed-worst] Choose the guaranteed O(n log n) worst-case algorithm (needs: adversary-triggers-worst)
+    - [best-average] Choose the better average-case algorithm — reject: Average-case assumes random/benign input; an adversary can craft the exact input that triggers the O(n²) worst case, so the average bound gives no guarantee here.
+  - Reasons:
+    - [adversary-triggers-worst] Untrusted input can be crafted to hit the quadratic worst case, so only a guaranteed worst-case bound protects you against a deliberate attack.
+    - [average-is-guarantee] (contradictory) The average-case bound guarantees performance even on worst-case adversarial input.
+    - [worst-case-irrelevant] (contradictory) Worst-case behavior never occurs in practice, so it can be ignored.
+  - Acceptable approach(es): guaranteed-worst
+  - Model explanation: Pick the algorithm with the guaranteed O(n log n) worst case: untrusted/adversarial input could deliberately trigger the other's O(n²) worst case.
 
 ### References
 - [Analysis / Big-O — Problem Solving with Algorithms and DS using Python (Runestone)](https://runestone.academy/ns/books/published/pythonds3/AlgorithmAnalysis/BigONotation.html) — §Best/worst/average case discussion (accessed 2026-09-20)
@@ -1973,12 +2048,7 @@ The guaranteed O(n log n) worst case, because untrusted/adversarial input could 
 
 - **Area:** DSA foundations
 - **Prerequisites:** complexity, cases
-- **contentHash:** `5feb5a93f07dcd08` · **verifiedAt:** 2026-10-04 · **semanticReview:** false
-- **expectedOutput:** ```
-[0, 1, 2, 3, 4]
-5
-
-```
+- **contentHash:** `5feb5a93f07dcd08` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 Some operations are *usually* cheap but *occasionally* expensive. **Amortized analysis** asks: averaged over a long sequence of operations, what is the cost **per operation**?
@@ -1989,17 +2059,20 @@ So appending n items is **O(n) total**, or **O(1) amortized each** — even thou
 
 ### Vocabulary
 - **Amortized cost** — The average cost per operation across a long sequence, even if individual ops vary.
-- **Resize / reallocation** — Allocating a larger backing array and copying elements when the current one is full.
+- **Resize / reallocation** — Growing the backing array when it is full: the allocator may extend the storage in place, or allocate a new larger block and move the existing element references into it (the references, not the objects they point at).
 - **Geometric growth** — Growing capacity by a multiplicative factor, making expensive resizes rare.
 - **Worst-case single op** — The most one individual operation can cost (here, O(n) on a resize).
 
 ### Concepts
 - **purpose:** Amortized analysis explains why 'append is O(1)' is true on average despite occasional costly resizes.
-- **operations:** Repeated appends; the rare resize copies elements; the cost is averaged over the sequence.
+- **operations:** Repeated appends; the rare resize may move the element references into a larger array; the cost is averaged over the sequence.
 - **uses:** Dynamic arrays, hash-table resizing, and any structure that occasionally reorganises.
 - **tradeoffs:** Amortized O(1) is great for throughput but a single op can spike to O(n) — relevant for real-time deadlines.
 - **commonMistakes:** Claiming every append is O(1) worst case (a resize is O(n)); confusing amortized with average-case over random inputs (amortized is over an operation sequence, no randomness needed).
 - **edgeCases:** The very first append allocates; appends right after a resize are cheap again until the next capacity boundary.
+
+### Review summary
+**Amortized cost** is the average per-operation cost over a sequence. `list.append` is **amortized O(1)** — cheap most of the time, with rare O(n) resizes that geometric growth makes infrequent — so n appends are **O(n) total**. Amortized O(1) does not mean every single call is O(1); one resize is O(n).
 
 ### Code
 ```
@@ -2010,20 +2083,25 @@ for i in range(5):
 print(data)
 print(len(data))
 ```
+Expected output: ```
+[0, 1, 2, 3, 4]
+5
+
+```
 
 ### Line explanations
-- L1 (—): Comment: build a list by appending.
-- L2 (exec): Start with an empty list.
-- L3 (exec): Loop i = 0..4 (n = 5 iterations).
-- L4 (exec): Append i. Usually O(1); occasionally triggers a resize that moves the k current element references into a larger array (O(k)).
-- L5 (exec): Print the built list → [0, 1, 2, 3, 4].
-- L6 (exec): Print its length → 5.
+- L1 (no runtime event: comment/blank or not reached in this run): Comment: build a list by appending.
+- L2 (produces a runtime event): Start with an empty list.
+- L3 (produces a runtime event): Loop i = 0..4 (n = 5 iterations).
+- L4 (produces a runtime event): Append i. Usually O(1); occasionally triggers a resize that moves the k current element references into a larger array (O(k)).
+- L5 (produces a runtime event): Print the built list → [0, 1, 2, 3, 4].
+- L6 (produces a runtime event): Print its length → 5.
 
-### Complexity (table)
-- **append (single)** — best O(1), avg O(1), worst O(n). Worst = a resize copying n elements.
+### Complexity table
+- **append (single)** — best O(1), avg O(1), worst O(n). Worst = a resize that moves the n current element references into a larger array.
 - **n appends (total)** — best O(n), avg O(n), worst O(n), space O(n). Amortized O(1) each; O(n) total; list holds n items.
 
-### Complexity reasoning
+### Complexity analysis (full structured object)
 ```
 {
   "scope": "program",
@@ -2033,23 +2111,11 @@ print(len(data))
       "meaning": "the number of appends performed (5 in this run)"
     }
   ],
-  "costModel": "A non-resizing append is O(1). A resizing append copies the current k elements: O(k). Capacity grows geometrically, so resizes are rare.",
+  "costModel": "A non-resizing append is O(1). A resizing append may move the current k element references into a larger array: O(k) in the worst case. Capacity grows by a proportional factor, so resizes are rare.",
   "time": {
     "bound": "O(n)",
     "case": "worst",
-    "explanation": "This program's scope is the whole construction: building the list with n appends is O(n) TOTAL time. Most of the n appends drop into a spare slot in O(1). The occasional resize moves all current element references into a larger array, but because capacity grows by a multiplicative factor each time, those moves form a geometric series whose total across all n appends is only a CONSTANT MULTIPLE of n (the exact constant depends on the growth factor; CPython grows capacity by roughly an eighth each time, so the total move work is a modest constant times n). Constant-multiple-of-n total work plus the n cheap appends is O(n) total — which is O(1) AMORTIZED per append.",
-    "otherCases": [
-      {
-        "case": "amortized",
-        "bound": "O(1)",
-        "note": "Per append: total O(n) work spread over n appends is O(1) each on average over the sequence."
-      },
-      {
-        "case": "worst",
-        "bound": "O(n)",
-        "note": "A single append that triggers a resize moves all n current element references once."
-      }
-    ]
+    "explanation": "This program's scope is the whole construction: building the list with n appends is O(n) TOTAL time. Most of the n appends drop into a spare slot in O(1). The occasional resize grows the backing array — it may extend the storage in place, or (worst case) allocate a larger block and move all current element references into it — but because capacity grows by a proportional factor each time, those resizes form a geometric series whose total across all n appends is only a CONSTANT MULTIPLE of n (the exact constant depends on the growth factor; CPython over-allocates by roughly an eighth each time, NOT doubling). Measured on the bundled runtime with struct.calcsize('P') == 4 (a 4-byte-pointer build), getsizeof shows the capacity growing through 4, 8, 16, 24, 32, 40 — a proportional, non-doubling pattern. Constant-multiple-of-n total work plus the n cheap appends is O(n) total — which is O(1) AMORTIZED per append."
   },
   "space": {
     "bound": "O(n)",
@@ -2088,7 +2154,7 @@ print(len(data))
     "CPython over-allocates list capacity geometrically, giving amortized O(1) append.",
     "range(n) yields values in O(1) each."
   ],
-  "tradeoffs": "If you know the final size, preallocating (e.g. [None] * n) avoids resizes entirely, trading a one-time O(n) allocation for zero mid-loop copies.",
+  "tradeoffs": "If you know the final size, preallocating (e.g. [None] * n) avoids resizes entirely, trading a one-time O(n) allocation for zero mid-loop reallocations.",
   "counters": [
     {
       "label": "appends",
@@ -2102,26 +2168,31 @@ print(len(data))
 }
 ```
 
-### Prediction
-- **atEventIndex 0** — Q: Appending n items to a list: what is the TOTAL time, and the per-append AMORTIZED time?
-  - A: O(n) total; O(1) amortized per append.
-  - Why: Cheap appends plus rare geometric resizes sum to O(n) total, which is O(1) averaged over the n appends.
+### Visualization bindings
+- `data` → model **array**, overlays: pointer:i("i")
+- Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
+
+### Predictions
+- **atEventIndex 0** (metadata; not used for a UI playback pause — see note above)
+  - Prompt: Appending n items to a list: what is the TOTAL time, and the per-append AMORTIZED time?
+  - Answer: O(n) total; O(1) amortized per append.
+  - Explanation: Cheap appends plus rare geometric resizes sum to O(n) total, which is O(1) averaged over the n appends.
 
 ### Experiments
 - Increase the range and watch the 'appends' counter equal n while the list grows to n.
 - Preallocate with data = [None] * 5 and assign by index instead of appending; compare the approach.
 - Reason about why growing capacity by +1 each time (instead of ×2) would make appends O(n) amortized.
 
-### Exercises (with hints, graded solutions, and shared-registry content)
+### Exercises (effective, merged — what the learner receives)
 
 #### amort-predict-1 · kind: predict-state
 - **Prompt:** True or false: every individual list.append is O(1) in the worst case.
 - **Expected / model solution:** ```
 False — a single append that triggers a resize is O(n). Appends are O(1) AMORTIZED, not O(1) worst case.
 ```
-- **Hints:**
+- **Hints (3 stages):**
   1. What happens when the backing array is full?
-  2. It reallocates and copies all elements.
+  2. It reallocates to a larger array, possibly moving the existing element references.
   3. So one append can be O(n); the O(1) is amortized.
 
 #### amort-choose-1 · kind: choose-approach
@@ -2129,38 +2200,30 @@ False — a single append that triggers a resize is O(n). Appends are O(1) AMORT
 - **Expected / model solution:** ```
 Preallocate a list of size n (e.g. [None] * n) and assign by index; this does one O(n) allocation and no mid-loop copies.
 ```
-- **Hints:**
-  1. Goal: append exactly n known-in-advance items while avoiding the periodic resize-and-copy a growing list performs.
-  2. The avoidable cost is letting the list grow on demand: it reallocates and copies several times as capacity is exceeded.
+- **Hints (6 stages):**
+  1. Goal: append exactly n known-in-advance items while avoiding the periodic resize a growing list performs.
+  2. The avoidable cost is letting the list grow on demand: it reallocates several times as capacity is exceeded, moving the existing element references into the larger buffer each time.
   3. Key property: n is known up front, so the final capacity is fixed in advance.
   4. Approach: reserve all the capacity once, then fill by index.
-  5. Reasoning: preallocating does a single allocation and no mid-loop copies; relying on amortized append still pays occasional O(n) copies you can skip entirely when n is known.
-  6. Answer: preallocate a list of size n (e.g. [None] * n) and assign by index — one O(n) allocation and no mid-loop copies.
-- **Shared exercise-registry effective content** (`lesson:amortized:amort-choose-1`):
-```
-{
-    scenario:
-      "You will append exactly n items to a list and n is known in advance. You want to avoid the periodic resize/copy that a growing list performs.",
-    approaches: [
-      { id: "preallocate", label: "Preallocate a list of size n ([None] * n) and assign by index", requiredReasonIds: ["one-alloc-no-copies"] },
-      { id: "append-grow", label: "Start empty and append n times, letting the list grow", requiredReasonIds: [], rejectionFeedback: "Appending to a growing list triggers periodic doubling/reallocations; it is amortized O(n) overall but does repeated mid-loop copies you were asked to avoid." },
-    ],
-    reasons: [
-      { id: "one-alloc-no-copies", text: "Because n is known, one [None]*n allocation reserves all space up front, so index assignment does zero mid-loop copies — a single O(n) allocation." },
-      { id: "append-never-copies", text: "Appending to a Python list never causes any reallocation or copying.", contradictory: true },
-      { id: "size-unknown", text: "The final size is unknown, so preallocation is impossible.", contradictory: true },
-    ],
-    acceptableApproachIds: ["preallocate"],
-    modelExplanation:
-      "Preallocate a list of size n (e.g. [None] * n) and assign by index: one O(n) allocation and no mid-loop copies.",
-  }
-```
+  5. Reasoning: preallocating does a single allocation and no mid-loop reallocations; relying on amortized append still pays occasional O(n) resize steps (which move references) that you can skip entirely when n is known — the whole build is O(n) total / amortized O(1) per append either way.
+  6. Answer: preallocate a list of size n (e.g. [None] * n) and assign by index — one O(n) allocation and no mid-loop resizes.
+- **Recognition — scenario:** You will append exactly n items to a list and n is known in advance. You want to avoid the periodic resize/copy that a growing list performs.
+  - Approaches:
+    - [preallocate] Preallocate a list of size n ([None] * n) and assign by index (needs: one-alloc-no-copies)
+    - [append-grow] Start empty and append n times, letting the list grow — reject: Appending to a growing list triggers periodic reallocations: CPython over-allocates capacity by a proportional (not doubling) factor and may move the existing element references into the larger buffer. Building the whole list is O(n) total / amortized O(1) per append, but it does the repeated mid-loop reallocations you were asked to avoid.
+  - Reasons:
+    - [one-alloc-no-copies] Because n is known, one [None]*n allocation reserves all space up front, so index assignment does zero mid-loop copies — a single O(n) allocation.
+    - [append-never-copies] (contradictory) Appending to a Python list never causes any reallocation or copying.
+    - [size-unknown] (contradictory) The final size is unknown, so preallocation is impossible.
+  - Acceptable approach(es): preallocate
+  - Model explanation: Preallocate a list of size n (e.g. [None] * n) and assign by index: one O(n) allocation and no mid-loop copies.
 
 ### References
 - [Design and History FAQ — How are lists implemented in CPython?](https://docs.python.org/3/faq/design.html#how-are-lists-implemented-in-cpython) — §List implementation / over-allocation (accessed 2026-09-20)
   - verified: CPython lists are dynamic arrays that over-allocate, giving amortized O(1) append
-- [Open Data Structures](https://opendatastructures.org/) — §ArrayStack / amortized analysis of dynamic arrays (accessed 2026-09-20)
-  - verified: Dynamic arrays that grow capacity by a multiplicative factor achieve amortized O(1) append; the total copy/move work over n appends is a constant multiple of n
+- [Open Data Structures (Python) — 2. Array-Based Lists](https://opendatastructures.org/ods-python/2_Array_Based_Lists.html) — §Chapter 2 intro: amortized cost of growing/shrinking the backing array (accessed 2026-10-04)
+  - verified: Over a sequence of n operations the total cost of growing and shrinking the backing array is O(n)
+  - verified: Some individual operations are more expensive, but the amortized cost over all n operations is O(1) per operation
 
 ---
 
@@ -2168,12 +2231,7 @@ Preallocate a list of size n (e.g. [None] * n) and assign by index; this does on
 
 - **Area:** DSA foundations
 - **Prerequisites:** loops, functions
-- **contentHash:** `23fa1c0da21c5d26` · **verifiedAt:** 2026-10-04 · **semanticReview:** false
-- **expectedOutput:** ```
-15
-0
-
-```
+- **contentHash:** `23fa1c0da21c5d26` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 Fast is useless if the answer is wrong. **Correctness** means an algorithm returns the right result for **every** valid input — the inputs allowed by its **contract** (precondition). For `sum_to` the contract is "`n` is a non-negative integer"; inputs outside the contract (such as a negative `n`) are not promised a meaningful answer, though here the loop guard happens to return 0 for them. We reason about correctness with a few tools:
@@ -2199,6 +2257,9 @@ You will use this style of reasoning throughout: state what stays true, check th
 - **commonMistakes:** Testing one input and assuming general correctness; ignoring empty/zero/negative inputs; off-by-one errors that break the invariant at the boundary.
 - **edgeCases:** n = 0 (empty sum → 0), n = 1 (single term), and — if allowed — negative n (loop never runs, returns 0).
 
+### Review summary
+**Correctness** is being right for every valid input. Reason with a **loop invariant** (true before the loop and preserved each pass), check **edge cases** (empty/zero/single), and confirm **termination** (the loop makes progress). Here the invariant proves `sum_to` returns 1+…+n for every valid input (its contract: n a non-negative integer), and n = 0 works with no special case. The loop is **O(n)**; the closed form n(n+1)/2 does a fixed number of operations — **O(1)** under a unit-cost model (arbitrary-precision arithmetic on very large n costs more).
+
 ### Code
 ```
 # Sum 1 + 2 + ... + n. We argue WHY this is correct.
@@ -2215,26 +2276,31 @@ print(sum_to(5))
 # Edge case: n = 0 means "sum of nothing" = 0.
 print(sum_to(0))
 ```
+Expected output: ```
+15
+0
+
+```
 
 ### Line explanations
-- L1 (—): Comment: we will argue why this is correct.
-- L2 (exec): Define sum_to(n).
-- L3 (exec): Start total at 0 — the sum of no terms.
-- L4 (exec): Start i at 1 — the first term to add.
-- L5 (—): Comment states the loop invariant.
-- L6 (exec): Loop while i <= n. i increases each pass, guaranteeing termination.
-- L7 (exec): Add i to total. Mid-iteration the invariant is temporarily BROKEN: total now includes 1..i, but i has not advanced, so it no longer equals the sum of 1..(i-1).
-- L8 (exec): Advance i to i+1. This completes the iteration and RESTORES the invariant: total (= sum of 1..old i) once again equals the sum of 1..(new i - 1).
-- L9 (exec): Return total. At exit i = n+1, so total = sum of 1..n.
-- L10 (—): Blank line.
-- L11 (exec): sum_to(5) = 1+2+3+4+5 = 15.
-- L12 (—): Comment: the n = 0 edge case.
-- L13 (exec): sum_to(0): loop never runs, returns 0 — correct 'sum of nothing'.
+- L1 (no runtime event: comment/blank or not reached in this run): Comment: we will argue why this is correct.
+- L2 (produces a runtime event): Define sum_to(n).
+- L3 (produces a runtime event): Start total at 0 — the sum of no terms.
+- L4 (produces a runtime event): Start i at 1 — the first term to add.
+- L5 (no runtime event: comment/blank or not reached in this run): Comment states the loop invariant.
+- L6 (produces a runtime event): Loop while i <= n. i increases each pass, guaranteeing termination.
+- L7 (produces a runtime event): Add i to total. Mid-iteration the invariant is temporarily BROKEN: total now includes 1..i, but i has not advanced, so it no longer equals the sum of 1..(i-1).
+- L8 (produces a runtime event): Advance i to i+1. This completes the iteration and RESTORES the invariant: total (= sum of 1..old i) once again equals the sum of 1..(new i - 1).
+- L9 (produces a runtime event): Return total. At exit i = n+1, so total = sum of 1..n.
+- L10 (no runtime event: comment/blank or not reached in this run): Blank line.
+- L11 (produces a runtime event): sum_to(5) = 1+2+3+4+5 = 15.
+- L12 (no runtime event: comment/blank or not reached in this run): Comment: the n = 0 edge case.
+- L13 (produces a runtime event): sum_to(0): loop never runs, returns 0 — correct 'sum of nothing'.
 
-### Complexity (table)
-- **sum_to(n) loop** — best O(n), avg O(n), worst O(n), space O(1). n additions; two variables. (A closed form n(n+1)/2 would be O(1).)
+### Complexity table
+- **sum_to(n) loop** — best O(n), avg O(n), worst O(n), space O(1). n additions; two variables. (The closed form n(n+1)/2 does a fixed number of operations — O(1) under a unit-cost model; arbitrary-precision arithmetic on huge n costs more.)
 
-### Complexity reasoning
+### Complexity analysis (full structured object)
 ```
 {
   "scope": "program",
@@ -2294,17 +2360,22 @@ print(sum_to(0))
 }
 ```
 
-### Prediction
-- **atEventIndex 0** — Q: At the moment the loop exits for n = 5, what is i, and what does that tell you about total?
-  - A: i = 6 (= n+1); the invariant then says total = sum of 1..5 = 15.
-  - Why: The loop stops when i > n, i.e. i = n+1 = 6. The invariant 'total = sum of 1..(i-1)' becomes total = sum of 1..5, which is 15.
+### Visualization bindings
+- `total` → model **object**, overlays: (none)
+- Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
+
+### Predictions
+- **atEventIndex 0** (metadata; not used for a UI playback pause — see note above)
+  - Prompt: At the moment the loop exits for n = 5, what is i, and what does that tell you about total?
+  - Answer: i = 6 (= n+1); the invariant then says total = sum of 1..5 = 15.
+  - Explanation: The loop stops when i > n, i.e. i = n+1 = 6. The invariant 'total = sum of 1..(i-1)' becomes total = sum of 1..5, which is 15.
 
 ### Experiments
 - Trace the invariant at each step: check total equals the sum of 1..(i-1) every pass.
 - Run sum_to(1) and sum_to(0) to confirm the single-term and empty edge cases.
-- Replace the loop with the closed form n*(n+1)//2 and confirm identical results in O(1).
+- Replace the loop with the closed form n*(n+1)//2 and confirm identical results in a fixed number of operations (O(1) under a unit-cost model; the loop was O(n)).
 
-### Exercises (with hints, graded solutions, and shared-registry content)
+### Exercises (effective, merged — what the learner receives)
 
 #### correct-fix-1 · kind: fix-mistake
 - **Prompt:** This version has an off-by-one bug: it omits n. Fix the loop condition.
@@ -2326,16 +2397,18 @@ def sum_to(n):
         i = i + 1
     return total
 ```
-- **Hints:**
+- **Hints (6 stages):**
   1. Goal: sum_to(n) should add 1 through n inclusive (sum_to(3) is 6, not 3).
   2. The bug is an off-by-one in the loop boundary that drops the final term n.
   3. Key insight: `i < n` stops before i equals n, so n itself is never added.
   4. Approach: extend the loop condition so it includes n.
   5. Pseudocode: total = 0, i = 1; while i is at most n: add i to total, increment i; return total.
   6. Change the condition to `while i <= n:` so the last term n is included.
-- **Shared exercise-registry effective content** (`lesson:correctness:correct-fix-1`):
-```
-{sum_to(5)}
+- **Coding test contract:** ```
+assert sum_to(5) == 15, f'1+..+5 == 15, got {sum_to(5)}'
+assert sum_to(1) == 1
+assert sum_to(0) == 0
+print('OK')
 ```
 
 #### correct-predict-1 · kind: predict-state
@@ -2343,7 +2416,7 @@ def sum_to(n):
 - **Expected / model solution:** ```
 Because the loop condition 1 <= 0 is False immediately, the body never runs, and total stays at its initial 0 — the sum of no terms.
 ```
-- **Hints:**
+- **Hints (3 stages):**
   1. Does the loop body run when n = 0?
   2. The condition is False from the start.
   3. So total keeps its initial value, 0.
@@ -2358,12 +2431,7 @@ Because the loop condition 1 <= 0 is False immediately, the body never runs, and
 
 - **Area:** DSA foundations
 - **Prerequisites:** variables-and-types, loops
-- **contentHash:** `f9e6e64ce44f97f1` · **verifiedAt:** 2026-10-04 · **semanticReview:** false
-- **expectedOutput:** ```
-True
-3
-
-```
+- **contentHash:** `f9e6e64ce44f97f1` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 A **data structure** is a way of *representing* information so that the operations you care about are efficient. The same facts can be stored in different shapes, and the shape you pick determines which operations are fast.
@@ -2400,6 +2468,9 @@ Neither shape is "more correct" — they trade off differently. The adjacency ma
 - **commonMistakes:** Treating this edge-set check as a general graph-equivalence validator — it is not: a parallel/duplicate edge, a non-reciprocal entry, or an isolated extra node can still compare equal; forgetting the assumptions (undirected, no self-loops, no duplicate edges, same node set); double-counting an undirected edge the map stores from both ends.
 - **edgeCases:** Empty graph (no edges). The check only compares normalised edge SETS, so it is reliable just under the stated assumptions. Some violations still print True (it cannot catch them): a parallel/duplicate edge collapses in the set (multiplicity lost), a non-reciprocal adjacency entry normalises to the same edge, and an isolated node present in only one shape adds no edge. It is NOT a general graph-equivalence validator (which would also compare vertex sets and, for directed graphs, edge direction).
 
+### Review summary
+A **representation** is the concrete shape of your data, and the same connections fit many shapes. An **edge list** and an **adjacency map** encode one graph; the program rebuilds a **set of normalised `(min, max)` edges** from each and prints `True` when those edge sets match. This is an **example under stated assumptions** (undirected, no self-loops, no duplicate edges, same node set) — **not a general graph-equivalence validator**: because it compares only edge sets, some violations (a parallel/duplicate edge, a non-reciprocal entry, an isolated node) can still print `True`. Match the representation to the **operations** you need: the adjacency map **reaches** a node's neighbour set by key in expected **O(1)** then **enumerates** it in **O(degree)**; the edge list scans all edges in **O(E)**. Both store the graph in **O(V + E)** space.
+
 ### Code
 ```
 # One small graph, two shapes for the SAME connections.
@@ -2423,35 +2494,40 @@ for node in adj:
 print(from_edges == from_adj)
 print(len(from_edges))
 ```
+Expected output: ```
+True
+3
+
+```
 
 ### Line explanations
-- L1 (—): Comment: the same connections stored two ways.
-- L2 (—): Comment: the edge list representation.
-- L3 (exec): Build the edge list: three undirected edges as pairs (0,1), (0,2), (1,2).
-- L4 (—): Comment: the adjacency map representation.
-- L5 (exec): Build the adjacency map: each node mapped to the SET of its neighbours.
-- L6 (—): Blank line.
-- L7 (—): Comment: rebuild and compare the connections from each shape.
-- L8 (—): Comment: store each edge as (smaller, larger) so both shapes look the same.
-- L9 (exec): Start an empty set to collect connections rebuilt from the edge list.
-- L10 (exec): Loop over each pair (u, v) in the edge list.
-- L11 (exec): Add the normalised edge (min, max) to the set. A set ignores duplicates.
-- L12 (—): Blank line.
-- L13 (exec): Start an empty set to collect connections rebuilt from the adjacency map.
-- L14 (exec): Loop over each node (key) in the adjacency map.
-- L15 (exec): Nested loop: for that node, loop over each of its neighbours.
-- L16 (exec): Add the normalised (min, max) edge. The map lists each edge from both ends; the set collapses the duplicate.
-- L17 (—): Blank line.
-- L18 (—): Comment: equal sets mean the two encodings describe the same graph.
-- L19 (exec): Print whether the two rebuilt connection sets are equal — True proves equivalence.
-- L20 (exec): Print how many distinct connections there are — 3 for this graph.
+- L1 (no runtime event: comment/blank or not reached in this run): Comment: the same connections stored two ways.
+- L2 (no runtime event: comment/blank or not reached in this run): Comment: the edge list representation.
+- L3 (produces a runtime event): Build the edge list: three undirected edges as pairs (0,1), (0,2), (1,2).
+- L4 (no runtime event: comment/blank or not reached in this run): Comment: the adjacency map representation.
+- L5 (produces a runtime event): Build the adjacency map: each node mapped to the SET of its neighbours.
+- L6 (no runtime event: comment/blank or not reached in this run): Blank line.
+- L7 (no runtime event: comment/blank or not reached in this run): Comment: rebuild and compare the connections from each shape.
+- L8 (no runtime event: comment/blank or not reached in this run): Comment: store each edge as (smaller, larger) so both shapes look the same.
+- L9 (produces a runtime event): Start an empty set to collect connections rebuilt from the edge list.
+- L10 (produces a runtime event): Loop over each pair (u, v) in the edge list.
+- L11 (produces a runtime event): Add the normalised edge (min, max) to the set. A set ignores duplicates.
+- L12 (no runtime event: comment/blank or not reached in this run): Blank line.
+- L13 (produces a runtime event): Start an empty set to collect connections rebuilt from the adjacency map.
+- L14 (produces a runtime event): Loop over each node (key) in the adjacency map.
+- L15 (produces a runtime event): Nested loop: for that node, loop over each of its neighbours.
+- L16 (produces a runtime event): Add the normalised (min, max) edge. The map lists each edge from both ends; the set collapses the duplicate.
+- L17 (no runtime event: comment/blank or not reached in this run): Blank line.
+- L18 (no runtime event: comment/blank or not reached in this run): Comment: equal sets mean the two encodings describe the same graph.
+- L19 (produces a runtime event): Print whether the two rebuilt connection sets are equal — True proves equivalence.
+- L20 (produces a runtime event): Print how many distinct connections there are — 3 for this graph.
 
-### Complexity (table)
+### Complexity table
 - **Edge list: find a node's neighbours** — best O(E), avg O(E), worst O(E), space O(E). No key: must scan every edge. Plain list scan (no hashing), so O(E) in all cases. Storing all edges is O(E).
-- **Adjacency map: reach a node's neighbour set** — best O(1), avg O(1), worst O(V), space O(V + E). A single hashed dict key lookup: expected O(1) (Python dict Get Item, average O(1)). The hashing worst case is O(V) when keys collide — reachable with integer keys congruent modulo sys.hash_info.modulus, though the labels 0,1,2 here hash distinctly. This is only REACHING the set — not reading its members.
+- **Adjacency map: reach a node's neighbour set** — best O(1), avg O(1), worst O(V), space O(V + E). A single hashed dict key lookup: expected O(1) (Python dict Get Item, average O(1)). The hashing worst case is O(V) when keys collide — reachable with integer keys from the nonnegative family 0, P, 2P, ... (P = sys.hash_info.modulus), though the labels 0,1,2 here hash distinctly. This is only REACHING the set — not reading its members.
 - **Adjacency map: enumerate a node's neighbours** — best O(degree), avg O(degree), worst O(degree), space O(1). Iterating the reached set visits each neighbour once — linear in that node's degree, in all cases (set iteration is O(size)).
 
-### Complexity reasoning
+### Complexity analysis (full structured object)
 ```
 {
   "scope": "program",
@@ -2469,12 +2545,12 @@ print(len(from_edges))
   "time": {
     "bound": "O(V + E)",
     "case": "expected",
-    "explanation": "The first loop runs once per edge (E iterations). The nested loop visits each node and each of its neighbours — every undirected edge is seen from both ends — which is O(V + E). Comparing the two sets of E pairs is O(E). There is NO sort in the program (we print a count, not a sorted list), so no O(E log E) term. This O(V + E) is the EXPECTED (average) case: it assumes the set inserts and set-equality hashing are O(1) each. Under hash collisions the dict/set operations degrade toward O(n) per step, making the worst case superlinear. Integer keys CAN be made to collide — any ints that are equal modulo sys.hash_info.modulus share a hash (for example 0 and the modulus 2147483647 both hash to 0) — so the pathological worst case is a real property of the data structure, not impossible. The specific labels in THIS graph (0, 1, 2) hash to the distinct values 0, 1, 2, so they do not collide and this run stays in the expected O(V + E) case.",
+    "explanation": "The first loop runs once per edge (E iterations). The nested loop visits each node and each of its neighbours — every undirected edge is seen from both ends — which is O(V + E). Comparing the two sets of E pairs is O(E). There is NO sort in the program (we print a count, not a sorted list), so no O(E log E) term. This O(V + E) is the EXPECTED (average) case: it assumes the set inserts and set-equality hashing are O(1) each. Under hash collisions the dict/set operations degrade toward O(n) per step, making the worst case superlinear. Integer keys CAN be made to collide — on the bundled runtime (CPython 3.14, where sys.hash_info.modulus = P = 2147483647) the NONNEGATIVE multiples 0, P, 2P, 3P all hash to 0, giving an unbounded family of colliding int keys — so the pathological worst case is a real property of the data structure, not impossible. (This is the nonnegative case of Python's numeric-hash rule, hash(x) = x mod P for x >= 0; it does NOT mean every pair of signed integers congruent mod P collides — negatives get a sign/-1-avoidance adjustment, so e.g. hash(-1) = -2 while hash(P-1) = P-1, which are different.) The specific labels in THIS graph (0, 1, 2) hash to the distinct values 0, 1, 2, so they do not collide and this run stays in the expected O(V + E) case.",
     "otherCases": [
       {
         "case": "worst",
         "bound": "superlinear (hashing collisions)",
-        "note": "If many keys share a hash bucket (achievable with integer keys that are congruent modulo sys.hash_info.modulus), each set insert / membership step degrades toward O(n), pushing the rebuild + comparison above O(V + E). This is the documented dict/set worst case; the specific labels 0, 1, 2 here hash distinctly and do not trigger it."
+        "note": "If many keys share a hash bucket (achievable with integer keys from the nonnegative family 0, P, 2P, ... where P = sys.hash_info.modulus, which all hash to 0), each set insert / membership step degrades toward O(n), pushing the rebuild + comparison above O(V + E). This is the documented dict/set worst case; the specific labels 0, 1, 2 here hash distinctly and do not trigger it."
       }
     ]
   },
@@ -2532,57 +2608,54 @@ print(len(from_edges))
 }
 ```
 
-### Prediction
-- **atEventIndex 0** — Q: Which representation answers 'who are the neighbours of node 0?' faster: the edge list or the adjacency map?
-  - A: The adjacency map, in expected O(1) to reach node 0's set (then O(degree) to read it).
-  - Why: The adjacency map indexes node 0 directly to its neighbour set via a hashed key lookup (expected O(1)); the edge list has no key, so it must scan all E edges to collect node 0's neighbours.
+### Visualization bindings
+- `edges` → model **array**, overlays: (none)
+- `adj` → model **dict**, overlays: (none)
+- Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
+
+### Predictions
+- **atEventIndex 0** (metadata; not used for a UI playback pause — see note above)
+  - Prompt: Which representation answers 'who are the neighbours of node 0?' faster: the edge list or the adjacency map?
+  - Answer: The adjacency map, in expected O(1) to reach node 0's set (then O(degree) to read it).
+  - Explanation: The adjacency map indexes node 0 directly to its neighbour set via a hashed key lookup (expected O(1)); the edge list has no key, so it must scan all E edges to collect node 0's neighbours.
 
 ### Experiments
 - Add a GENUINELY NEW edge to the edge list only — change line 3 to `edges = [(0, 1), (0, 2), (1, 2), (0, 3)]`. The adjacency map still has no node 3, so the sets differ and the equality check now prints False (and the count becomes 4).
 - Keep them in sync instead: add (0, 3) to the edge list AND put 3 in the map (`adj[0]` gains 3 and `adj[3] = {0}`); the check returns to True.
 - Count how many steps it takes to list node 0's neighbours from the edge list (scan all edges) versus the adjacency map (one key lookup).
 
-### Exercises (with hints, graded solutions, and shared-registry content)
+### Exercises (effective, merged — what the learner receives)
 
 #### repr-choose-1 · kind: choose-approach
 - **Prompt:** You frequently ask 'who are the neighbours of node X?' on a changing graph. Which representation fits best: an edge list, or an adjacency map?
 - **Expected / model solution:** ```
 An adjacency map — reaching a node's neighbours is an expected O(1) key lookup, versus scanning all E edges in an edge list.
 ```
-- **Hints:**
+- **Hints (6 stages):**
   1. Goal: pick a representation for changing data you repeatedly query as 'is key K present, and what is its value?' — a list of pairs or a dict.
   2. The costly choice is a list of (key, value) pairs: every lookup scans the whole list.
   3. Key property: the dominant operation is keyed lookup by K, which a hash table serves directly.
   4. Approach: store the data in a dict keyed by K rather than a list of pairs.
   5. Reasoning: a dict hashes straight to the entry in expected O(1), while a list of pairs forces an O(n) scan per query — and the data changing doesn't hurt the dict.
   6. Answer: use a dict — keyed lookup is expected O(1), versus O(n) scanning a list of pairs.
-- **Shared exercise-registry effective content** (`lesson:representations:repr-choose-1`):
-```
-{
-    scenario:
-      "On changing data, you frequently ask 'is key K present, and what is its value?'. You can store the data as a list of (key, value) pairs or as a dict.",
-    approaches: [
-      { id: "dict", label: "Use a dict keyed by K", requiredReasonIds: ["o1-lookup"] },
-      { id: "list-pairs", label: "Keep a list of (key, value) pairs", requiredReasonIds: [], rejectionFeedback: "Finding a key in a list of pairs means scanning until you hit it — O(n) per lookup — which is wasteful for frequent keyed queries." },
-      { id: "sorted-list", label: "Keep a list of pairs sorted by key and binary-search", requiredReasonIds: [], rejectionFeedback: "Binary search needs the list kept sorted, and inserts/deletes on changing data cost O(n); a dict gives expected O(1) without that upkeep." },
-    ],
-    reasons: [
-      { id: "o1-lookup", text: "A dict hashes the key, so 'is K present and what is its value?' is answered in expected O(1), versus O(n) scanning a list of pairs." },
-      { id: "preserves-order-only", text: "A list of pairs answers keyed lookups faster because it preserves insertion order.", contradictory: true },
-      { id: "list-is-constant", text: "Searching a list of pairs for a key is O(1).", contradictory: true },
-    ],
-    acceptableApproachIds: ["dict"],
-    modelExplanation:
-      "A dict: keyed lookup is expected O(1), versus O(n) scanning a list of pairs.",
-  }
-```
+- **Recognition — scenario:** On changing data, you frequently ask 'is key K present, and what is its value?'. You can store the data as a list of (key, value) pairs or as a dict.
+  - Approaches:
+    - [dict] Use a dict keyed by K (needs: o1-lookup)
+    - [list-pairs] Keep a list of (key, value) pairs — reject: Finding a key in a list of pairs means scanning until you hit it — O(n) per lookup — which is wasteful for frequent keyed queries.
+    - [sorted-list] Keep a list of pairs sorted by key and binary-search — reject: Binary search needs the list kept sorted, and inserts/deletes on changing data cost O(n); a dict gives expected O(1) without that upkeep.
+  - Reasons:
+    - [o1-lookup] A dict hashes the key, so 'is K present and what is its value?' is answered in expected O(1), versus O(n) scanning a list of pairs.
+    - [preserves-order-only] (contradictory) A list of pairs answers keyed lookups faster because it preserves insertion order.
+    - [list-is-constant] (contradictory) Searching a list of pairs for a key is O(1).
+  - Acceptable approach(es): dict
+  - Model explanation: A dict: keyed lookup is expected O(1), versus O(n) scanning a list of pairs.
 
 #### repr-predict-1 · kind: predict-state
 - **Prompt:** You add the new edge (0, 3) to the edge list but NOT to the adjacency map. Will `from_edges == from_adj` print True or False, and why?
 - **Expected / model solution:** ```
 False — the edge list now has a connection (0, 3) that the adjacency map does not, so the two rebuilt sets differ (and the printed count rises to 4).
 ```
-- **Hints:**
+- **Hints (3 stages):**
   1. Does the adjacency map know about node 3?
   2. No — only the edge list changed.
   3. So from_edges has (0,3) but from_adj does not → the sets are unequal → False.
@@ -2601,5 +2674,8 @@ False — the edge list now has a connection (0, 3) that the adjacency map does 
 - [TimeComplexity — Python Wiki](https://wiki.python.org/moin/TimeComplexity) — §dict (Get Item, k in d) and set (x in s) (accessed 2026-10-02)
   - verified: dict Get Item and 'k in d' are Average Case O(1), Amortized Worst Case O(n)
   - verified: set 'x in s' is Average O(1), Worst Case O(n)
+- [Built-in Types — Hashing of numeric types — Python 3.14 documentation](https://docs.python.org/3.14/library/stdtypes.html#hashing-of-numeric-types) — §Hashing of numeric types (accessed 2026-10-04)
+  - verified: The numeric hash reduces a value modulo P = sys.hash_info.modulus; nonnegative multiples of P (0, P, 2P, ...) all hash to 0
+  - verified: Signed integers congruent modulo P do NOT generally share a hash: hash(-1) = -2 while hash(P-1) = P-1 on the bundled runtime
 
 ---

@@ -53,7 +53,7 @@ You will use this style of reasoning throughout: state what stays true, check th
   },
 
   complexity: [
-    { operation: "sum_to(n) loop", best: "O(n)", average: "O(n)", worst: "O(n)", space: "O(1)", note: "n additions; two variables. (A closed form n(n+1)/2 would be O(1).)" },
+    { operation: "sum_to(n) loop", best: "O(n)", average: "O(n)", worst: "O(n)", space: "O(1)", note: "n additions; two variables. (The closed form n(n+1)/2 does a fixed number of operations — O(1) under a unit-cost model; arbitrary-precision arithmetic on huge n costs more.)" },
   ],
 
   complexityExplanation: {
@@ -109,7 +109,7 @@ You will use this style of reasoning throughout: state what stays true, check th
   experiments: [
     "Trace the invariant at each step: check total equals the sum of 1..(i-1) every pass.",
     "Run sum_to(1) and sum_to(0) to confirm the single-term and empty edge cases.",
-    "Replace the loop with the closed form n*(n+1)//2 and confirm identical results in O(1).",
+    "Replace the loop with the closed form n*(n+1)//2 and confirm identical results in a fixed number of operations (O(1) under a unit-cost model; the loop was O(n)).",
   ],
 
   exercises: [
@@ -130,7 +130,7 @@ You will use this style of reasoning throughout: state what stays true, check th
     },
   ],
 
-  review: `**Correctness** is being right for every valid input. Reason with a **loop invariant** (true before the loop and preserved each pass), check **edge cases** (empty/zero/single), and confirm **termination** (the loop makes progress). Here the invariant proves \`sum_to\` returns 1+…+n, and n = 0 works with no special case. The loop is **O(n)**; a closed form would be **O(1)**.`,
+  review: `**Correctness** is being right for every valid input. Reason with a **loop invariant** (true before the loop and preserved each pass), check **edge cases** (empty/zero/single), and confirm **termination** (the loop makes progress). Here the invariant proves \`sum_to\` returns 1+…+n for every valid input (its contract: n a non-negative integer), and n = 0 works with no special case. The loop is **O(n)**; the closed form n(n+1)/2 does a fixed number of operations — **O(1)** under a unit-cost model (arbitrary-precision arithmetic on very large n costs more).`,
 
   expectedOutput: "15\n0\n",
 
@@ -147,7 +147,7 @@ You will use this style of reasoning throughout: state what stays true, check th
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "23fa1c0da21c5d26",
+    contentHash: "944aeb240d2884f6",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

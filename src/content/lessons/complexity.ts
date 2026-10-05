@@ -23,7 +23,7 @@ export const complexity: LessonDefinition = {
 
   explanation: `**Complexity** describes how an algorithm's cost grows as its input grows — without tying us to a specific computer or clock. We measure **time complexity** (how many basic steps) and **space complexity** (how much extra memory), both as functions of the **input size**, usually called \`n\`.
 
-We summarise growth with **Big-O**: \`O(n)\` ("linear") means the work grows **at most** in proportion to n (Big-O is an *upper bound*); \`O(1)\` ("constant") means it does not depend on n; \`O(n²)\` ("quadratic") grows with the square of n. Big-O ignores constant factors and small terms, because we care about the *shape* of the growth for large inputs. (When the work grows *exactly* in proportion to n — an upper **and** matching lower bound — that tight bound is written Θ(n); for \`find_max\` below, O(n) is in fact tight.)
+We summarise growth with **Big-O**: \`O(n)\` ("linear") means the work grows **at most** in proportion to n (Big-O is an *upper bound*); \`O(1)\` ("constant") means it does not depend on n; \`O(n²)\` ("quadratic") grows with the square of n. Big-O ignores constant factors and small terms, because we care about the *shape* of the growth for large inputs. (A **tight** bound — where the same function is both an upper bound *and* a lower bound, up to constant factors, for all sufficiently large n — is written Θ(n). This is not literal exact proportionality: Θ(n) allows any constant multiple, like 2n or n/3. For \`find_max\` below, O(n) is in fact tight, i.e. Θ(n).)
 
 \`find_max\` scans the list once, comparing each of the n elements to the best-so-far. That is **n comparisons → O(n) time**, and because it always inspects every element this bound is tight (the same O(n) in the best, average, and worst case). It keeps just one extra variable (\`best\`), so it uses **O(1) auxiliary space**. The visualization's counter lets you confirm the comparison count matches n as you change the input.
 
@@ -35,7 +35,7 @@ A **precondition**: \`find_max\` assumes the list is **non-empty**. On \`find_ma
     { term: "Space complexity", definition: "How much extra (auxiliary) memory grows with input size." },
     { term: "Big-O", definition: "Notation for an upper bound on growth, ignoring constants and lower-order terms." },
     { term: "Constant time O(1)", definition: "Cost independent of input size." },
-    { term: "Linear time O(n)", definition: "Cost grows at most in proportion to n (an upper bound). When it grows exactly in proportion, the tight bound is Θ(n)." },
+    { term: "Linear time O(n)", definition: "Cost grows at most in proportion to n (an upper bound, ignoring constant factors). When n is also a lower bound up to constants for large n, the tight bound is written Θ(n)." },
     { term: "Auxiliary space", definition: "Extra memory beyond the input itself." },
   ],
 
@@ -163,7 +163,7 @@ A **precondition**: \`find_max\` assumes the list is **non-empty**. On \`find_ma
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "dc3852d9fb149174",
+    contentHash: "de74e7e7e0ad82d6",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

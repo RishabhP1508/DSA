@@ -8,6 +8,11 @@
  */
 import { describe, it, expect } from "vitest";
 import { lessons } from "./registry";
+import { REVIEW_LEDGER_BY_KEY } from "./review-ledger";
+// @ts-expect-error - .mjs helpers without types
+import { contentHashOf } from "../../scripts/lib/content-hash.mjs";
+// @ts-expect-error - .mjs helpers without types
+import { ledgerEntryFor, assertSignoffNotBeforeVerified, UNREVIEWED_SENTINEL } from "../../scripts/lib/review-ledger-core.mjs";
 import type { LessonDefinition } from "../core/types";
 
 const byId = (id: string): LessonDefinition => {
@@ -115,10 +120,16 @@ describe("amortized: program total O(n); constant-multiple bound; references mov
   it("uses a constant-multiple-of-n bound for total copying", () => {
     expect(cx(l).toLowerCase()).toMatch(/constant multiple of n|a constant times n|c\s*\*\s*n|proportional to n/);
   });
-  it("program-scope total construction time is reported as O(n)", () => {
-    // scope is program; the total must be visible as O(n) somewhere in the model
+  it("program-scope TIME bound (not just some O(n) in the blob) is O(n)", () => {
+    // Assert the actual time.bound + scope, so a faulty O(1) time bound cannot
+    // slip through via the space field containing 'O(n)'.
     expect(l.complexityExplanation.scope).toBe("program");
-    expect(cx(l)).toMatch(/O\(n\)/);
+    expect(l.complexityExplanation.time.bound.replace(/\s/g, "")).toBe("O(n)");
+    // per-append amortized O(1) stays visible in the operation table (not as a
+    // program-scope alternative bound):
+    const table = JSON.stringify(l.complexity).toLowerCase();
+    expect(table).toMatch(/append \(single\)/);
+    expect(table).toMatch(/n appends \(total\)/);
   });
   it("explains a resize MOVES references, not copies the objects themselves", () => {
     const p = (prose(l) + cx(l)).toLowerCase();
@@ -221,14 +232,182 @@ describe("errors: 'finally' wording qualified for normal control flow", () => {
   });
 });
 
-// ── global invariant: all 13 remain pending; the 2 approvals preserved ──
-describe("batch review-flag invariants", () => {
-  const PENDING = ["expressions","conditions","io","errors","functions","scope","references-mutation","classes","complexity","cases","amortized","correctness","representations"];
-  it("all 13 batch items remain semanticReview:false", () => {
-    for (const id of PENDING) expect(byId(id).evidence?.semanticReview).toBe(false);
+// ── Amendment: effective shared exercise content (merged registry) ──
+describe("amendment — effective exercise hints match the exercise contract", () => {
+  const effExercise = (lid: string, exid: string) => {
+    const ex = byId(lid).exercises.find((e) => e.id === exid);
+    if (!ex) throw new Error(`exercise ${lid}:${exid} not found`);
+    return ex;
+  };
+  const hintBlob = (lid: string, exid: string) => (effExercise(lid, exid).hints ?? []).join("\n").toLowerCase();
+
+  it("io-fix-1 hints use the `text` argument + int(text) + return (not input()/print)", () => {
+    const h = hintBlob("io", "io-fix-1");
+    expect(h).toMatch(/int\(text\)/);
+    expect(h).toMatch(/return/);
+    expect(h).not.toMatch(/input\(/);
+    expect(h).not.toMatch(/\bprint\(n/);
   });
-  it("the two prior approvals are preserved", () => {
+
+  it("err-complete-1 hints return values (not print) and note the tests check the return", () => {
+    const h = hintBlob("errors", "err-complete-1");
+    expect(h).toMatch(/return a \/ b|return the|return 'undefined'|returned value/);
+    expect(h).not.toMatch(/print\(a \/ b\)|print\('undefined'\)/);
+  });
+});
+
+describe("amendment — amort-choose-1 recognition no longer says 'doubling'", () => {
+  const ex = () => byId("amortized").exercises.find((e) => e.id === "amort-choose-1")!;
+  it("rejection feedback / recognition describe proportional over-allocation (doubling only when negated)", () => {
+    const rec = JSON.stringify(ex().recognition ?? {}).toLowerCase();
+    expect(rec).toMatch(/proportional|over-allocat/);
+    // "doubling" may appear ONLY in a negation like "not doubling"; never as a
+    // bare claim that CPython doubles.
+    const bareDoubling = /(?<!not )doubling/.test(rec.replace(/not doubling/g, ""));
+    expect(bareDoubling).toBe(false);
+  });
+});
+
+// ── Amendment: residual prose + scope (Tasks 5–7) ──
+describe("amendment — residual prose corrections", () => {
+  it("classes line-3 explanation calls __init__ the initializer, not 'the constructor'", () => {
+    const e3 = byId("classes").codeExplanations.find((c) => c.line === 3)!;
+    expect(e3.explanation.toLowerCase()).toContain("initializer");
+    expect(e3.explanation.toLowerCase()).not.toMatch(/\bthe constructor\b/);
+  });
+  it("classes explains instances can share an object via self (not blanket independence)", () => {
+    expect(byId("classes").explanation.toLowerCase()).toMatch(/self\.items|share the same object|same object/);
+  });
+  it("complexity defines a tight (Theta) bound as matching bounds up to constants for large n", () => {
+    expect(byId("complexity").explanation.toLowerCase()).toMatch(/up to constant factors.*(large|sufficiently large) n|matching/);
+  });
+  it("errors index guard warns that a bare `< len` is unsafe for negative indices", () => {
+    // the index-check cost tradeoff lives in the complexity tradeoffs text
+    const t = (byId("errors").complexityExplanation.tradeoffs ?? "").toLowerCase();
+    expect(t).toMatch(/negative/);
+    expect(t).toMatch(/-len\(nums\)|0 <= index/); // a correct full-range guard is shown
+  });
+  it("conditions/io exercises document that the function wrapper is provided", () => {
+    expect(byId("conditions").exercises.find((e) => e.id === "cond-fix-1")!.prompt.toLowerCase()).toMatch(/already written|edit .*(body|order)/);
+    expect(byId("io").exercises.find((e) => e.id === "io-fix-1")!.prompt.toLowerCase()).toMatch(/already written|edit its body/);
+  });
+  it("conditions line 6 explanation separates 'not reached in this run' from 'comment'", () => {
+    const e6 = byId("conditions").codeExplanations.find((c) => c.line === 6)!;
+    expect(e6.explanation.toLowerCase()).toMatch(/not reached|no runtime event/);
+  });
+});
+
+describe("amendment — complexity scope consistency", () => {
+  it("cases analysis scope is a single function call (not the two-call program)", () => {
+    expect(byId("cases").complexityExplanation.scope).toBe("function");
+  });
+  it("references-mutation derivation references try_rebind on line 15 (print x on line 16)", () => {
+    const cx = JSON.stringify(byId("references-mutation").complexityExplanation);
+    // the call step must cite line 15
+    expect(cx).toMatch(/"lines":\s*\[15\][^}]*try_rebind/);
+  });
+  it("references-mutation accounts for print(shared) touching n elements (O(n) program)", () => {
+    const cx = JSON.stringify(byId("references-mutation").complexityExplanation).toLowerCase();
+    expect(cx).toMatch(/print\(shared\)|every element|n element/);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// Review-flag integrity (sign-off COMPATIBLE).
+//
+// A permanent "all 13 remain false" assertion would make this suite fail the
+// moment the user legitimately signs any of them off — turning a regression
+// guard into a prohibition on the very approval it is meant to lead to. Instead
+// we assert the DURABLE integrity rule (a true flag must agree with the current
+// content hash and the authorized review ledger; an item without a matching
+// ledger entry stays pending) and record the amendment-time snapshot as
+// non-blocking EVIDENCE. The hard enforcement lives in review-ledger.test.ts;
+// here we add a batch-scoped integrity check plus an ISOLATED fixture proving
+// the sign-off mechanism accepts an authorized review and rejects stale /
+// unauthorized evidence — WITHOUT signing off any live lesson.
+// ─────────────────────────────────────────────────────────────────────────
+describe("B1 batch — review-flag integrity (survives a future legitimate sign-off)", () => {
+  const BATCH = ["expressions","conditions","io","errors","functions","scope","references-mutation","classes","complexity","cases","amortized","correctness","representations"];
+
+  it("INVARIANT: any batch item flagged semanticReview:true agrees with its current hash + ledger", () => {
+    // Does NOT require any item to be true; it only forbids an INCONSISTENT true.
+    // This passes today (all pending) and keeps passing after a real sign-off,
+    // because a legitimate sign-off updates the ledger to the current hash.
+    for (const id of BATCH) {
+      const l = byId(id);
+      if (l.evidence?.semanticReview === true) {
+        const entry = REVIEW_LEDGER_BY_KEY.get(`lesson:${id}`);
+        expect(entry, `${id} is approved but has no ledger entry`).toBeTruthy();
+        expect(entry!.reviewedHash, `${id} approval must match current content hash`).toBe(contentHashOf(l));
+      }
+    }
+  });
+
+  it("INVARIANT: a batch item without a current-hash ledger entry is NOT approved", () => {
+    for (const id of BATCH) {
+      const l = byId(id);
+      const entry = REVIEW_LEDGER_BY_KEY.get(`lesson:${id}`);
+      const ledgerMatches = !!entry && entry.reviewedHash === contentHashOf(l);
+      if (!ledgerMatches) {
+        expect(l.evidence?.semanticReview).toBe(false);
+      }
+    }
+  });
+
+  it("EVIDENCE (non-blocking snapshot at this amendment): 2 approved repo-wide, 13 batch pending", () => {
+    // Recorded as the amendment's observed state. If a later authorized sign-off
+    // changes these numbers, that is EXPECTED — this is evidence, not a ceiling.
+    const batchApprovedNow = BATCH.filter((id) => byId(id).evidence?.semanticReview === true);
+    const batchPendingNow = BATCH.filter((id) => byId(id).evidence?.semanticReview !== true);
+    // snapshot values observed when this amendment was authored:
+    expect(batchApprovedNow.length + batchPendingNow.length).toBe(13);
+    // the two prior approvals are the only repo-wide approvals at amendment time
     expect(byId("variables-and-types").evidence?.semanticReview).toBe(true);
     expect(byId("loops").evidence?.semanticReview).toBe(true);
+  });
+});
+
+describe("B1 batch — sign-off mechanism accepts authorized review, rejects stale/unauthorized (isolated fixture)", () => {
+  // Pure, in-memory fixture — NEVER mutates a live lesson's evidence or the real
+  // ledger. Mirrors the codemod rule: semanticReview granted iff the ledger
+  // entry's reviewedHash equals the item's live content hash.
+  const grants = (reviewedHash: string, liveHash: string) => reviewedHash === liveHash;
+  const fixtureItem = { id: "fixture-lesson", evidence: { verifiedAt: "2026-10-04" } };
+  const liveHash = "0123456789abcdef";
+
+  it("ACCEPTS a legitimately authorized sign-off at the current hash", () => {
+    const entry = ledgerEntryFor(
+      "lesson", fixtureItem, 1, liveHash,
+      /* prior */ undefined,
+      /* reviewedNow */ new Set(["lesson:fixture-lesson"]),
+      /* signoffDate */ "2026-10-04",
+    );
+    expect(entry.reviewedHash).toBe(liveHash);
+    expect(entry.reviewedAt).toBe("2026-10-04");
+    expect(grants(entry.reviewedHash, liveHash)).toBe(true);
+  });
+
+  it("REJECTS a stale sign-off: a content edit (new hash) no longer matches the ledger", () => {
+    const entry = ledgerEntryFor(
+      "lesson", fixtureItem, 1, liveHash, undefined,
+      new Set(["lesson:fixture-lesson"]), "2026-10-04",
+    );
+    const editedHash = "fedcba9876543210"; // content changed after review
+    expect(grants(entry.reviewedHash, editedHash)).toBe(false);
+  });
+
+  it("REJECTS an unauthorized item: not in reviewedNow and no prior => sentinel, never granted", () => {
+    const entry = ledgerEntryFor(
+      "lesson", fixtureItem, 1, liveHash, undefined,
+      /* reviewedNow (empty) */ new Set<string>(), "2026-10-04",
+    );
+    expect(entry.reviewedHash).toBe(UNREVIEWED_SENTINEL);
+    expect(grants(entry.reviewedHash, liveHash)).toBe(false);
+  });
+
+  it("REJECTS a sign-off dated before the content's verifiedAt (clock-defect guard)", () => {
+    expect(() =>
+      assertSignoffNotBeforeVerified("lesson:fixture-lesson", fixtureItem, "2026-09-01"),
+    ).toThrow(/before the content's verifiedAt/i);
   });
 });
