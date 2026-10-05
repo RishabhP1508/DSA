@@ -291,9 +291,14 @@ describe("amendment — residual prose corrections", () => {
     expect(byId("conditions").exercises.find((e) => e.id === "cond-fix-1")!.prompt.toLowerCase()).toMatch(/already written|edit .*(body|order)/);
     expect(byId("io").exercises.find((e) => e.id === "io-fix-1")!.prompt.toLowerCase()).toMatch(/already written|edit its body/);
   });
-  it("conditions line 6 explanation separates 'not reached in this run' from 'comment'", () => {
-    const e6 = byId("conditions").codeExplanations.find((c) => c.line === 6)!;
-    expect(e6.explanation.toLowerCase()).toMatch(/not reached|no runtime event/);
+  it("conditions line 6 explanation calls it a real code statement, scopes 'not reached' to THIS run, and notes another input reaches it", () => {
+    const e6 = byId("conditions").codeExplanations.find((c) => c.line === 6)!.explanation.toLowerCase();
+    expect(e6).toMatch(/real code statement|code statement/);
+    expect(e6).toMatch(/this run|not reached/);
+    // reachability is input-dependent, not a fixed property of the line
+    expect(e6).toMatch(/temp = 25|different input|is reached/);
+    // must NOT call a real statement a comment
+    expect(e6).not.toContain("comment");
   });
 });
 

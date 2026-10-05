@@ -150,7 +150,7 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
             <p>
               <span className="line-badge">line {lineExplanation.line}</span>{" "}
               {(() => {
-                const label = labelForLine(lesson.code, lineExplanation.line, lineExplanation.executable);
+                const label = labelForLine(lesson.code, lineExplanation.line);
                 return label ? <em>{label} </em> : "";
               })()}
               {lineExplanation.explanation}

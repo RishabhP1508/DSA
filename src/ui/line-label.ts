@@ -1,46 +1,67 @@
 /**
- * R9/B1 amendment (finding 5) — honest line-label classification.
+ * R9/B1 amendment (finding 5, revised) — line labels, with STATIC source
+ * classification kept strictly separate from RUNTIME reachability.
  *
- * The `executable` boolean on a codeExplanation means "this line produces a
- * runtime event" (false for comments, blanks, AND for real statements that were
- * not reached in the current trace). The UI previously rendered EVERY
- * `executable: false` line as literally "(comment)", which mislabels genuine
- * code statements that simply were not reached (e.g. the skipped `elif`/`else`
- * branch in the conditions lesson).
+ * Two independent questions:
+ *   1. STATIC: what KIND of source line is this? — comment / blank / code.
+ *      Determined ONLY from the source text. The authored `executable` flag is
+ *      NOT a reachability signal and MUST NOT feed this classification: a
+ *      `codeExplanation.executable === false` on a real statement means "this
+ *      authored line emits no runtime event" (true of comments/blanks), it does
+ *      NOT mean the statement was skipped in some trace.
+ *   2. RUNTIME: was this line actually reached? — answerable only from the
+ *      RECORDED EVENTS of a specific run (the set of lines that fired a `line`
+ *      event). Never inferred from `executable`.
  *
- * This helper separates STATIC source classification (is the line text a comment
- * or blank?) from the trace-dependent executable flag, so the label is honest:
- *   - a comment line (text starts with `#`)         → "(comment)"
- *   - a blank line                                   → "(blank)"
- *   - a real statement with executable === false     → "(not reached in this run)"
- *   - a real statement with executable === true      → no label
- *
- * It does NOT claim an `executable: true` line is guaranteed to run in every
- * possible trace; it only labels what the authored flag + source text say.
+ * The workspace renders the explanation for the line of its CURRENT recorded
+ * event, so ordinary code shown there was reached by definition and must not be
+ * labelled "not reached". A reachability label is only produced when the caller
+ * supplies the real set of executed lines (see `reachabilityLabel`).
  */
-export type LineLabelKind = "comment" | "blank" | "not-reached" | "none";
 
-/** Classify the one source line (1-indexed) behind a codeExplanation. */
-export function classifyLine(sourceLine: string | undefined, executable: boolean): LineLabelKind {
+/** Static source-kind of a line — depends ONLY on the source text. */
+export type LineKind = "comment" | "blank" | "code";
+
+/** Classify a source line (its text) as comment, blank, or code. */
+export function classifyLine(sourceLine: string | undefined): LineKind {
   const text = (sourceLine ?? "").trim();
   if (text === "") return "blank";
   if (text.startsWith("#")) return "comment";
-  // A real code statement: label only when it produced no event in this trace.
-  return executable ? "none" : "not-reached";
+  return "code";
 }
 
-/** Human-facing parenthetical for a line label kind ("" when none). */
-export function lineLabelText(kind: LineLabelKind): string {
+/** Static parenthetical for a line kind ("" for code — code gets no static tag). */
+export function lineKindText(kind: LineKind): string {
   switch (kind) {
     case "comment": return "(comment)";
     case "blank": return "(blank)";
-    case "not-reached": return "(not reached in this run)";
     default: return "";
   }
 }
 
-/** Convenience: get the label text for an explanation against the lesson source. */
-export function labelForLine(code: string, line: number, executable: boolean): string {
+/**
+ * Static label for a source line, from its text alone. Used by the UI next to
+ * the current-line explanation: a comment/blank is tagged; real code is not
+ * (and is never tagged "not reached" from the static flag).
+ */
+export function labelForLine(code: string, line: number): string {
   const sourceLine = code.split("\n")[line - 1];
-  return lineLabelText(classifyLine(sourceLine, executable));
+  return lineKindText(classifyLine(sourceLine));
+}
+
+/**
+ * RUNTIME reachability label, derived from ACTUAL recorded events.
+ * @param kind          the line's static kind
+ * @param line          1-indexed source line
+ * @param executedLines the set of source lines that fired a `line` event in the run
+ * Returns "(not reached in this run)" ONLY for a code line that is absent from
+ * the recorded events; otherwise "" (comments/blanks and reached code get none).
+ */
+export function reachabilityLabel(
+  kind: LineKind,
+  line: number,
+  executedLines: ReadonlySet<number>,
+): string {
+  if (kind !== "code") return "";
+  return executedLines.has(line) ? "" : "(not reached in this run)";
 }

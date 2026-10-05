@@ -14,7 +14,7 @@ import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { lessons } from "../src/content/registry.ts";
-import { classifyLine, lineLabelText } from "../src/ui/line-label.ts";
+import { classifyLine, lineKindText } from "../src/ui/line-label.ts";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const IDS = [
@@ -74,15 +74,17 @@ for (const id of IDS) {
   md.push(`Expected output: ${fence(l.expectedOutput)}`);
   md.push("");
   md.push("### Line explanations");
+  md.push("Labels are STATIC source classification (comment / blank / code). The");
+  md.push("packet is generated without running a trace, so it makes NO per-line");
+  md.push("reachability claim; reachability is a runtime property shown in the");
+  md.push("workspace from recorded events, not inferred from the authored flag.");
   const srcLines = l.code.split("\n");
   for (const c of l.codeExplanations) {
-    // Honest label from the SAME classifier the UI uses (static source text +
-    // the executable flag): comment / blank / not-reached / (none).
-    const kind = classifyLine(srcLines[c.line - 1], c.executable);
-    const label = kind === "none"
-      ? "(produces a runtime event in this trace)"
-      : lineLabelText(kind);
-    md.push(`- L${c.line} ${label}: ${c.explanation}`);
+    // STATIC classification only (source text), never a reachability claim —
+    // there is no recorded trace here to support one.
+    const kind = classifyLine(srcLines[c.line - 1]);
+    const label = kind === "code" ? "" : " " + lineKindText(kind);
+    md.push(`- L${c.line}${label}: ${c.explanation}`);
   }
   md.push("");
   md.push("### Complexity table");

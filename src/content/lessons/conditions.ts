@@ -77,10 +77,10 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
     { line: 3, executable: false, explanation: "Comment: Python runs the first True test." },
     { line: 4, executable: true, explanation: "Test temp >= 30. It is True (30 >= 30), so this branch is chosen." },
     { line: 5, executable: true, explanation: "Because the test was True, set label to 'hot'." },
-    { line: 6, executable: false, explanation: "`elif temp >= 20:` is a real executable statement, but it is NOT REACHED in this run (an earlier branch already matched), so it produces no runtime event here. 'Not executable' refers to this trace, not to the syntax." },
-    { line: 7, executable: false, explanation: "`label = \"warm\"` would run only if the elif above were taken; it is a valid statement, just not reached in this run (no runtime event)." },
-    { line: 8, executable: false, explanation: "`else:` is an executable branch header, but it is skipped because the first test matched, so it is not reached in this run." },
-    { line: 9, executable: false, explanation: "`label = \"cold\"` belongs to the else branch; it is a real statement, not reached in this run (no runtime event)." },
+    { line: 6, executable: false, explanation: "`elif temp >= 20:` is a real code statement. In THIS run (temp = 30) the first branch already matched, so this test is not reached and emits no event — but with a different input (e.g. temp = 25) it is reached and taken." },
+    { line: 7, executable: false, explanation: "`label = \"warm\"` is a real code statement. It runs when the elif is taken (e.g. temp = 25); in this run (temp = 30) it is not reached." },
+    { line: 8, executable: false, explanation: "`else:` is a real branch header. It is used only when no earlier test matches (e.g. temp = 10); in this run (temp = 30) it is not reached." },
+    { line: 9, executable: false, explanation: "`label = \"cold\"` is a real code statement in the else branch; it runs for low temperatures (e.g. temp = 10) and is not reached in this run (temp = 30)." },
     { line: 10, executable: true, explanation: "Print label → 'hot'." },
   ],
 
@@ -140,7 +140,7 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "da6c82d01f92dd34",
+    contentHash: "be2f2011ca4c5afe",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

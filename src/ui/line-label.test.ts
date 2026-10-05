@@ -1,47 +1,83 @@
 // @vitest-environment node
 /**
- * R9/B1 amendment (finding 5) — the UI line label must distinguish a genuine
- * comment/blank from a real code statement that was simply NOT REACHED in the
- * current trace. Previously every `executable: false` line was labeled
- * "(comment)", which mislabeled skipped statements (e.g. the conditions
- * elif/else branch).
+ * R9/B1 amendment (finding 5, revised) — line labels keep STATIC source
+ * classification separate from RUNTIME reachability. The authored `executable`
+ * flag is NOT a reachability signal and must never produce a "not reached"
+ * label; reachability comes only from actual recorded events.
  */
-import { describe, it, expect } from "vitest";
-import { classifyLine, lineLabelText, labelForLine } from "./line-label";
-import { lessons } from "../content/registry";
+import { describe, it, expect, beforeAll } from "vitest";
+import { classifyLine, lineKindText, labelForLine, reachabilityLabel } from "./line-label";
+import { conditions } from "../content/lessons/conditions";
+// @ts-expect-error mjs harness has no types
+import { runProgram } from "../../scripts/lib/pyodide-harness.mjs";
+import type { TraceEvent } from "../core/types";
 
-describe("classifyLine — static source classification vs executable flag", () => {
-  it("labels a comment line as comment regardless of executable", () => {
-    expect(classifyLine("# a comment", false)).toBe("comment");
-    expect(lineLabelText(classifyLine("    # indented comment", false))).toBe("(comment)");
+describe("classifyLine — STATIC source classification (text only, no executable flag)", () => {
+  it("identifies comments, blanks, and code purely from the source text", () => {
+    expect(classifyLine("# a comment")).toBe("comment");
+    expect(classifyLine("    # indented comment")).toBe("comment");
+    expect(classifyLine("")).toBe("blank");
+    expect(classifyLine("   ")).toBe("blank");
+    expect(classifyLine("elif temp >= 20:")).toBe("code");
+    expect(classifyLine("    label = 'warm'")).toBe("code");
   });
-  it("labels a blank line as blank", () => {
-    expect(classifyLine("", false)).toBe("blank");
-    expect(classifyLine("    ", false)).toBe("blank");
+  it("static label tags comments/blanks only; code gets no static tag", () => {
+    expect(lineKindText(classifyLine("# c"))).toBe("(comment)");
+    expect(lineKindText(classifyLine(""))).toBe("(blank)");
+    expect(lineKindText(classifyLine("x = 1"))).toBe("");
   });
-  it("labels a real statement with executable:false as NOT REACHED (not a comment)", () => {
-    expect(classifyLine("    label = 'warm'", false)).toBe("not-reached");
-    expect(lineLabelText(classifyLine("elif temp >= 20:", false))).toBe("(not reached in this run)");
-  });
-  it("gives no label to an executable:true statement", () => {
-    expect(classifyLine("x = 1", true)).toBe("none");
-    expect(lineLabelText(classifyLine("x = 1", true))).toBe("");
+  it("labelForLine never emits a reachability claim (code → no tag)", () => {
+    // conditions line 6 is `elif temp >= 20:` — real code, so a STATIC label is
+    // empty; it must NOT be "(not reached...)" and must NOT be "(comment)".
+    const label = labelForLine(conditions.code, 6);
+    expect(label).toBe("");
+    expect(labelForLine(conditions.code, 1)).toBe("(comment)"); // actual comment
   });
 });
 
-describe("labelForLine — against the real conditions lesson", () => {
-  const conditions = lessons.find((l) => l.id === "conditions")!;
-  // In the conditions trace, the elif/else branch (lines 6–9) is a real set of
-  // CODE statements that is not reached — it must NOT be labeled "(comment)".
-  it("the skipped elif header (line 6) is labeled not-reached, never comment", () => {
-    const label = labelForLine(conditions.code, 6, false);
-    expect(label).toBe("(not reached in this run)");
-    expect(label).not.toBe("(comment)");
+describe("reachabilityLabel — derived ONLY from recorded events, never from the authored flag", () => {
+  it("labels code absent from the executed set as not-reached; present code gets no label", () => {
+    const executed = new Set<number>([2, 4, 5, 10]); // e.g. a temp>=30 run
+    expect(reachabilityLabel("code", 6, executed)).toBe("(not reached in this run)");
+    expect(reachabilityLabel("code", 5, executed)).toBe("");
   });
-  it("an actual comment line (line 1) is labeled comment", () => {
-    expect(labelForLine(conditions.code, 1, false)).toBe("(comment)");
+  it("never labels comments/blanks as not-reached", () => {
+    const executed = new Set<number>([2, 4, 5, 10]);
+    expect(reachabilityLabel("comment", 1, executed)).toBe("");
+    expect(reachabilityLabel("blank", 99, executed)).toBe("");
   });
-  it("a reached statement (line 4: the if test) carries no label", () => {
-    expect(labelForLine(conditions.code, 4, true)).toBe("");
+});
+
+describe("REGRESSION — alternate branch (temp = 25): line 7 is reached, must NOT be 'not reached'", () => {
+  // The lesson's authored `executable` flag is a single value independent of the
+  // input; inferring reachability from it mislabels whichever branch is taken.
+  // With temp = 25 the elif body (line 7, `label = "warm"`) genuinely runs.
+  let executed = new Set<number>();
+  beforeAll(async () => {
+    const alt = conditions.code.replace("temp = 30", "temp = 25");
+    const res = await runProgram(alt, "");
+    expect(res.status).toBe("completed");
+    executed = new Set<number>(
+      (res.events as TraceEvent[]).filter((e) => e.kind === "line").map((e) => e.line),
+    );
+  }, 120_000);
+
+  it("the recorded trace reaches line 7 (and not line 5) for temp = 25", () => {
+    expect(executed.has(7)).toBe(true);
+    expect(executed.has(5)).toBe(false);
+  });
+  it("line 7 (reached code) gets NO 'not reached' label from real events", () => {
+    expect(reachabilityLabel("code", 7, executed)).toBe("");
+  });
+  it("line 5 (the untaken 'hot' body) IS 'not reached' in this run", () => {
+    expect(reachabilityLabel("code", 5, executed)).toBe("(not reached in this run)");
+  });
+  it("the authored executable flag does NOT decide this — only events do", () => {
+    // conditions line 7 is authored executable:false (it emits no event in the
+    // default temp=30 trace), yet with temp=25 it IS reached. Proving the label
+    // is event-derived, not flag-derived.
+    const e7 = conditions.codeExplanations.find((c) => c.line === 7);
+    expect(e7?.executable).toBe(false); // authored flag (default-trace oriented)
+    expect(reachabilityLabel("code", 7, executed)).toBe(""); // but reached here
   });
 });

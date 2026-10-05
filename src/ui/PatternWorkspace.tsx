@@ -122,7 +122,7 @@ export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
             <p>
               <span className="line-badge">line {lineExplanation.line}</span>{" "}
               {(() => {
-                const label = labelForLine(pattern.walkthroughCode, lineExplanation.line, lineExplanation.executable);
+                const label = labelForLine(pattern.walkthroughCode, lineExplanation.line);
                 return label ? <em>{label} </em> : "";
               })()}
               {lineExplanation.explanation}
