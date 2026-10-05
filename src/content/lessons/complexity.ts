@@ -23,9 +23,11 @@ export const complexity: LessonDefinition = {
 
   explanation: `**Complexity** describes how an algorithm's cost grows as its input grows — without tying us to a specific computer or clock. We measure **time complexity** (how many basic steps) and **space complexity** (how much extra memory), both as functions of the **input size**, usually called \`n\`.
 
-We summarise growth with **Big-O**: \`O(n)\` ("linear") means the work grows in direct proportion to n; \`O(1)\` ("constant") means it does not depend on n; \`O(n²)\` ("quadratic") grows with the square of n. Big-O ignores constant factors and small terms, because we care about the *shape* of the growth for large inputs.
+We summarise growth with **Big-O**: \`O(n)\` ("linear") means the work grows **at most** in proportion to n (Big-O is an *upper bound*); \`O(1)\` ("constant") means it does not depend on n; \`O(n²)\` ("quadratic") grows with the square of n. Big-O ignores constant factors and small terms, because we care about the *shape* of the growth for large inputs. (When the work grows *exactly* in proportion to n — an upper **and** matching lower bound — that tight bound is written Θ(n); for \`find_max\` below, O(n) is in fact tight.)
 
-\`find_max\` scans the list once, comparing each of the n elements to the best-so-far. That is **n comparisons → O(n) time**. It keeps just one extra variable (\`best\`), so it uses **O(1) auxiliary space**. The visualization's counter lets you confirm the comparison count matches n as you change the input.`,
+\`find_max\` scans the list once, comparing each of the n elements to the best-so-far. That is **n comparisons → O(n) time**, and because it always inspects every element this bound is tight (the same O(n) in the best, average, and worst case). It keeps just one extra variable (\`best\`), so it uses **O(1) auxiliary space**. The visualization's counter lets you confirm the comparison count matches n as you change the input.
+
+A **precondition**: \`find_max\` assumes the list is **non-empty**. On \`find_max([])\` the line \`best = nums[0]\` raises \`IndexError\` (there is no element 0), so an empty list is outside the contract rather than returning a value.`,
 
   vocabulary: [
     { term: "Input size (n)", definition: "The quantity that the cost is measured against, e.g. the number of elements." },
@@ -33,7 +35,7 @@ We summarise growth with **Big-O**: \`O(n)\` ("linear") means the work grows in 
     { term: "Space complexity", definition: "How much extra (auxiliary) memory grows with input size." },
     { term: "Big-O", definition: "Notation for an upper bound on growth, ignoring constants and lower-order terms." },
     { term: "Constant time O(1)", definition: "Cost independent of input size." },
-    { term: "Linear time O(n)", definition: "Cost grows in proportion to n." },
+    { term: "Linear time O(n)", definition: "Cost grows at most in proportion to n (an upper bound). When it grows exactly in proportion, the tight bound is Θ(n)." },
     { term: "Auxiliary space", definition: "Extra memory beyond the input itself." },
   ],
 
@@ -42,8 +44,8 @@ We summarise growth with **Big-O**: \`O(n)\` ("linear") means the work grows in 
     operations: "Count how basic steps and extra memory grow with n; summarise with Big-O.",
     uses: "Choosing between approaches, spotting bottlenecks, justifying a data structure.",
     tradeoffs: "Faster time often costs more space (e.g. hashing) and vice versa; Big-O hides constants that matter for small n.",
-    commonMistakes: "Assuming two loops always means O(n²) (they may be sequential → O(n)); counting the input as auxiliary space; treating measured time as proof of Big-O.",
-    edgeCases: "Empty input (n = 0): the loop body never runs. A single element: one comparison.",
+    commonMistakes: "Assuming any nested loops mean O(n²): nesting alone does not establish that bound — it is TWO FULL n-length loops (an inner loop that runs n times for each of the n outer iterations) that give n×n = O(n²); sequential loops instead add → O(n), and an inner loop that runs a constant or sub-n number of times does not reach O(n²); counting the input as auxiliary space; treating measured time as proof of Big-O.",
+    edgeCases: "Empty input (n = 0) is outside this function's precondition: `best = nums[0]` raises IndexError before the loop is even reached (it does not return a value). A single element: the loop runs once and returns that element.",
   },
 
   complexity: [
@@ -93,11 +95,18 @@ We summarise growth with **Big-O**: \`O(n)\` ("linear") means the work grows in 
     { line: 9, executable: true, explanation: "Call find_max on [3, 9, 2, 7]; the result 9 is printed." },
   ],
 
+  // `best` holds a VALUE (the running maximum), not an index into `nums`. The
+  // array renderer interprets an overlay's source as an index position, so a
+  // "highlight: best" overlay would mark nums[best] — e.g. with [3,9,2,7] the
+  // value best=3 would wrongly highlight index 3 (which holds 7), and best=9 is
+  // out of range entirely. There is no index variable to track here, so `nums`
+  // carries no overlay; the running `best` is read directly from the variables
+  // panel. (Verified against the recorded trace: best takes values 3 then 9.)
   bindings: [
     {
       variable: "nums",
       model: "array",
-      overlays: [{ role: "highlight", label: "best?", source: "best" }],
+      overlays: [],
     },
   ],
 
@@ -116,8 +125,8 @@ We summarise growth with **Big-O**: \`O(n)\` ("linear") means the work grows in 
       id: "cx-predict-1",
       kind: "predict-state",
       prompt: "An algorithm does two SEPARATE loops over the same n-element list (one after the other). Is it O(n) or O(n²)?",
-      expected: "O(n) — sequential loops add: n + n = 2n, which is O(n). Only NESTED loops multiply to O(n²).",
-      hints: ["Are the loops nested or one-after-another?", "Sequential costs add; nested costs multiply.", "n + n = 2n = O(n)."],
+      expected: "O(n) — sequential loops add: n + n = 2n, which is O(n). You reach O(n²) only when one full n-length loop is NESTED inside another (the inner loop runs n times for each of the n outer iterations); nesting by itself is not enough.",
+      hints: ["Are the loops nested or one-after-another?", "Sequential costs add; a full n-length loop nested inside another full n-length loop multiplies.", "n + n = 2n = O(n); n × n = O(n²)."],
     },
     {
       id: "cx-choose-1",
@@ -128,7 +137,7 @@ We summarise growth with **Big-O**: \`O(n)\` ("linear") means the work grows in 
     },
   ],
 
-  review: `Complexity measures how cost grows with input size **n**, summarised with **Big-O** (O(1) constant, O(n) linear, O(n²) quadratic). A single scan like \`find_max\` is **O(n) time** and **O(1) auxiliary space**. Watch out: sequential loops add (O(n)), only nested loops multiply (O(n²)), and measured time is evidence, not proof, of Big-O.`,
+  review: `Complexity measures how cost grows with input size **n**, summarised with **Big-O** (O(1) constant, O(n) linear, O(n²) quadratic). A single scan like \`find_max\` is **O(n) time** and **O(1) auxiliary space** (and that O(n) is tight — Θ(n) — because every element is always inspected). Watch out: sequential loops add (O(n)); you reach O(n²) only when one full n-length loop is nested inside another (nesting alone is not enough); and measured time is evidence, not proof, of Big-O.`,
 
   expectedOutput: "9\n",
 
@@ -154,8 +163,8 @@ We summarise growth with **Big-O**: \`O(n)\` ("linear") means the work grows in 
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "448bbae5526f4263",
-    verifiedAt: "2026-09-21",
+    contentHash: "dc3852d9fb149174",
+    verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,

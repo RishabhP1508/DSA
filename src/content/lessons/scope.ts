@@ -28,7 +28,7 @@ export const scope: LessonDefinition = {
 
 This matters because a local variable can **shadow** a global one with the same name. In this lesson \`bump\` assigns \`count = 0\`, which creates a brand-new *local* \`count\`. Changing it does not touch the global \`count\`, so after the call the global is still \`10\`.
 
-The rule of thumb: assigning to a name inside a function makes it local (unless you use the \`global\` keyword). Reading a name that isn't local falls back to the enclosing/global scope. Keeping state local is usually what you want — it prevents functions from accidentally clobbering each other's data.`,
+The rule of thumb: assigning to a name inside a function makes it local (unless you use the \`global\` keyword). Reading a name that isn't local falls back to an outer scope — the **enclosing scope** (the body of a function that this one is defined inside, if any) and then the **global** (module-level) scope. Keeping state local is usually what you want — it prevents functions from accidentally clobbering each other's data.`,
 
   vocabulary: [
     { term: "Scope", definition: "The region of code where a name is visible/usable." },
@@ -130,8 +130,8 @@ The rule of thumb: assigning to a name inside a function makes it local (unless 
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "784f6b28a2aed1d6",
-    verifiedAt: "2026-09-21",
+    contentHash: "612ab2035b310049",
+    verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,

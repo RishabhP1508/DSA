@@ -22,14 +22,15 @@ export const conditions: LessonDefinition = {
   area: "Programming foundations",
   prerequisites: ["expressions"],
 
-  explanation: `A **condition** lets a program make a decision. An \`if\` statement runs a block of code only when its test is **True**. You can add \`elif\` ("else if") branches for more cases, and a final \`else\` for "none of the above".
+  explanation: `A **condition** lets a program make a decision. An \`if\` statement runs a block of code when its test is **true** — not only the literal \`True\`, but any value Python treats as true. This is called **truthiness**: non-zero numbers and non-empty containers (strings, lists, dicts) are **truthy**, while \`0\`, \`""\`, \`[]\`, \`None\`, and \`False\` are **falsy**. So \`if items:\` runs when \`items\` is a non-empty list. You can add \`elif\` ("else if") branches for more cases, and a final \`else\` for "none of the above".
 
 Python checks the tests **top to bottom** and runs the **first** one that is True — then it skips the rest. Order matters: because \`temp = 30\` satisfies \`temp >= 30\`, the label becomes \`"hot"\` and the \`elif\`/\`else\` are never tried.
 
 Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`) and can be combined with \`and\`, \`or\`, and \`not\`.`,
 
   vocabulary: [
-    { term: "Condition", definition: "A test that is either True or False, controlling which code runs." },
+    { term: "Condition", definition: "A test whose value controls which code runs; the branch runs when the value is truthy." },
+    { term: "Truthy / falsy", definition: "Values Python treats as true or false in a condition: 0, '', [], None, False are falsy; most other values (non-zero numbers, non-empty containers) are truthy." },
     { term: "Boolean", definition: "A value that is True or False." },
     { term: "if / elif / else", definition: "Branches: run the first block whose test is True; else runs if none match." },
     { term: "Comparison operator", definition: "==, !=, <, <=, >, >= — produce a Boolean." },
@@ -41,7 +42,7 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
     operations: "Compare values, combine tests with and/or/not, branch with if/elif/else.",
     uses: "Validating input, choosing an algorithm branch, handling edge cases, base cases in recursion.",
     tradeoffs: "Many elif branches can be clearer as a lookup table/dict; deeply nested ifs hurt readability.",
-    commonMistakes: "Using = (assignment) instead of == (comparison); wrong branch order so a broad test shadows a specific one; forgetting indentation defines the block.",
+    commonMistakes: "Writing = (assignment) instead of == (comparison) — in Python `if x = 5:` is a SyntaxError (the parser rejects it), not a silent bug as in some languages; wrong branch order so a broad test shadows a specific one; forgetting indentation defines the block.",
     edgeCases: "If no branch matches and there is no else, nothing runs. Only the first true branch executes.",
   },
 
@@ -139,8 +140,8 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "9c63d07d9bb2235d",
-    verifiedAt: "2026-09-21",
+    contentHash: "a2a4fa2253733ba5",
+    verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,

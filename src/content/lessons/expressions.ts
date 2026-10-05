@@ -26,12 +26,14 @@ export const expressions: LessonDefinition = {
 
 You can override precedence with **parentheses**: \`(2 + 3) * 4\` forces the addition first, giving \`20\`.
 
+Precedence is about **grouping** — which operator claims its operands first — not about the order the operands are computed. Python still **evaluates the operands left to right**; precedence only decides how they are then combined. In \`a() + b() * c()\`, Python calls \`a\`, \`b\`, \`c\` in that left-to-right order, but \`*\` groups \`b() * c()\` before the \`+\` adds \`a()\`.
+
 Python has three "division-like" operators that beginners often confuse. For the numeric operands taught here (\`int\` and \`float\`): \`/\` is **true division** and gives a float (\`10 / 4 == 2.5\`); \`//\` is **floor division** — it *floors the quotient* (rounds toward negative infinity), and its result **type** follows the operands: two ints give an int (\`7 // 2 == 3\`) while a float operand gives a float (\`7.0 // 2 == 3.0\`); \`%\` is the **remainder** (\`17 % 5 == 2\`). \`**\` is exponentiation (\`2 ** 5 == 32\`). (These are the behaviours of the built-in numeric types; a custom class can define these operators to do anything.)`,
 
   vocabulary: [
     { term: "Expression", definition: "Code that evaluates to a single value, e.g. 2 + 3 * 4." },
     { term: "Operator", definition: "A symbol that combines values, e.g. +, -, *, /, %, //, **." },
-    { term: "Precedence", definition: "The order operators are applied; * and / bind tighter than + and -." },
+    { term: "Precedence", definition: "Which operators bind their operands first (group tighter); * and / bind tighter than + and -. Precedence decides grouping — it is separate from the left-to-right order in which Python evaluates the operands." },
     { term: "True division (/)", definition: "For the built-in int/float operands taught here, `/` yields a float, e.g. 10 / 4 == 2.5 (even 4 / 2 == 2.0). (Other numeric types differ: complex operands give a complex.)" },
     { term: "Floor division (//)", definition: "Floors the quotient (rounds toward -infinity); two ints give an int (7 // 2 == 3), a float operand gives a float (7.0 // 2 == 3.0)." },
     { term: "Modulo (%)", definition: "The remainder after division, e.g. 17 % 5 == 2." },
@@ -42,7 +44,7 @@ Python has three "division-like" operators that beginners often confuse. For the
     operations: "Arithmetic (+, -, *, /, //, %, **), grouping with parentheses, and mixing with variables.",
     uses: "Index math, running totals, converting between units, checking divisibility with %.",
     tradeoffs: "Relying on precedence keeps code short but can mislead readers; parentheses make intent explicit.",
-    commonMistakes: "Assuming left-to-right evaluation (ignoring precedence); expecting / to give an int (it gives a float); confusing % (remainder) with / (division).",
+    commonMistakes: "Thinking operators simply apply left-to-right and so reading `2 + 3 * 4` as `(2 + 3) * 4` — precedence decides the grouping (`*` binds before `+`), which is separate from the order operands are evaluated; expecting / to give an int (it gives a float); confusing % (remainder) with / (division).",
     edgeCases: "Division by zero raises ZeroDivisionError. % with negatives follows the sign of the divisor in Python (e.g. -1 % 5 == 4).",
   },
 
@@ -146,8 +148,8 @@ Python has three "division-like" operators that beginners often confuse. For the
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "d2d21f9a9f3353b0",
-    verifiedAt: "2026-10-03",
+    contentHash: "32b82b97f920056f",
+    verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,

@@ -20,7 +20,7 @@ export const amortized: LessonDefinition = {
 
   explanation: `Some operations are *usually* cheap but *occasionally* expensive. **Amortized analysis** asks: averaged over a long sequence of operations, what is the cost **per operation**?
 
-A Python list is the classic example. \`append\` normally just drops the item into a spare slot — **O(1)**. But when the underlying array is full, Python allocates a bigger array and **copies all existing elements** — an **O(n)** event. Crucially, Python grows the array by a *multiplicative factor*, so those expensive copies happen rarely and get geometrically less frequent. Spreading their total cost across all the cheap appends gives **amortized O(1)** per append.
+A Python list is the classic example. \`append\` normally just drops the item into a spare slot — **O(1)**. But when the underlying array is full, Python allocates a bigger array and **moves the existing element references across** — an **O(n)** event. (It copies the *references* — the slots that point at the objects — into the new array; the objects themselves are not duplicated.) Crucially, Python grows the array by a *multiplicative factor*, so those expensive moves happen rarely and get geometrically less frequent. Their total cost across all n appends is only a **constant multiple of n**, so spreading it over the appends gives **amortized O(1)** per append.
 
 So appending n items is **O(n) total**, or **O(1) amortized each** — even though a single append can occasionally cost O(n). Amortized O(1) is a promise about the *average over the sequence*, not about every individual call.`,
 
@@ -50,11 +50,12 @@ So appending n items is **O(n) total**, or **O(1) amortized each** — even thou
     variables: [{ symbol: "n", meaning: "the number of appends performed (5 in this run)" }],
     costModel: "A non-resizing append is O(1). A resizing append copies the current k elements: O(k). Capacity grows geometrically, so resizes are rare.",
     time: {
-      bound: "O(1)",
-      case: "amortized",
-      explanation: "Most of the n appends drop into a spare slot in O(1). The occasional resize copies all current elements, but because capacity grows by a factor each time, the total copying across all n appends is bounded by about 2n. Adding that to the n cheap appends is still O(n) total — i.e. O(1) amortized per append.",
+      bound: "O(n)",
+      case: "worst",
+      explanation: "This program's scope is the whole construction: building the list with n appends is O(n) TOTAL time. Most of the n appends drop into a spare slot in O(1). The occasional resize moves all current element references into a larger array, but because capacity grows by a multiplicative factor each time, those moves form a geometric series whose total across all n appends is only a CONSTANT MULTIPLE of n (the exact constant depends on the growth factor; CPython grows capacity by roughly an eighth each time, so the total move work is a modest constant times n). Constant-multiple-of-n total work plus the n cheap appends is O(n) total — which is O(1) AMORTIZED per append.",
       otherCases: [
-        { case: "worst", bound: "O(n)", note: "A single append that triggers a resize copies all n current elements once." },
+        { case: "amortized", bound: "O(1)", note: "Per append: total O(n) work spread over n appends is O(1) each on average over the sequence." },
+        { case: "worst", bound: "O(n)", note: "A single append that triggers a resize moves all n current element references once." },
       ],
     },
     space: {
@@ -65,7 +66,7 @@ So appending n items is **O(n) total**, or **O(1) amortized each** — even thou
     },
     derivation: [
       { lines: [3], description: "The loop runs n times (n appends).", cost: "O(n)", dimension: "time" },
-      { lines: [4], description: "Each append is amortized O(1); the rare resize copies elements but is spread out.", cost: "O(1)", dimension: "time" },
+      { lines: [4], description: "Each append is amortized O(1); the rare resize moves element references into a larger array, but the geometric growth spreads that cost so the total is a constant multiple of n.", cost: "O(1)", dimension: "time" },
       { lines: [2, 4], description: "The list grows to hold n elements.", cost: "O(n)", dimension: "space" },
     ],
     assumptions: ["CPython over-allocates list capacity geometrically, giving amortized O(1) append.", "range(n) yields values in O(1) each."],
@@ -82,7 +83,7 @@ So appending n items is **O(n) total**, or **O(1) amortized each** — even thou
     { line: 1, executable: false, explanation: "Comment: build a list by appending." },
     { line: 2, executable: true, explanation: "Start with an empty list." },
     { line: 3, executable: true, explanation: "Loop i = 0..4 (n = 5 iterations)." },
-    { line: 4, executable: true, explanation: "Append i. Usually O(1); occasionally triggers a resize that copies elements (O(k))." },
+    { line: 4, executable: true, explanation: "Append i. Usually O(1); occasionally triggers a resize that moves the k current element references into a larger array (O(k))." },
     { line: 5, executable: true, explanation: "Print the built list → [0, 1, 2, 3, 4]." },
     { line: 6, executable: true, explanation: "Print its length → 5." },
   ],
@@ -141,15 +142,15 @@ So appending n items is **O(n) total**, or **O(1) amortized each** — even thou
       title: "Open Data Structures",
       section: "ArrayStack / amortized analysis of dynamic arrays",
       topic: "dsa/amortized",
-      purpose: "Cross-check the amortized O(1) analysis of geometric-growth dynamic arrays.",
-      verifiedClaims: ["Doubling-capacity dynamic arrays achieve amortized O(1) append"],
+      purpose: "Cross-check the amortized O(1) analysis of geometric-growth dynamic arrays (total resize work is a constant multiple of n for any multiplicative growth factor, not only doubling).",
+      verifiedClaims: ["Dynamic arrays that grow capacity by a multiplicative factor achieve amortized O(1) append; the total copy/move work over n appends is a constant multiple of n"],
       accessDate: "2026-09-20",
     },
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "5b23a0c6bd8b3a52",
-    verifiedAt: "2026-09-21",
+    contentHash: "5feb5a93f07dcd08",
+    verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,

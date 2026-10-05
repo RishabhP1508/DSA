@@ -29,14 +29,14 @@ export const classes: LessonDefinition = {
 
   explanation: `A **class** is a blueprint that bundles **data** (attributes) with **behaviour** (methods). An **instance** is one object made from that blueprint. Classes are how we build the nodes and structures in later lessons — a linked-list node, a tree node, a graph — so this is an important foundation.
 
-The \`__init__\` method is the **constructor**: it runs when you create an instance and sets up its starting attributes. \`self\` is the current object; \`self.value = start\` stores data **on that specific instance**. A **method** like \`increment\` operates on the object's own data through \`self\`.
+The \`__init__\` method **initializes** a newly created instance — Python builds the object first, then runs \`__init__\` to set up its starting attributes (so it is the *initializer*; the lower-level creation step is \`__new__\`, which beginners rarely write). \`self\` is the current instance, and Python supplies it **automatically**: writing \`c.increment()\` is shorthand for \`Counter.increment(c)\`, so the instance \`c\` is passed in as the first parameter \`self\`. That is why every method lists \`self\` first. \`self.value = start\` stores data **on that specific instance**, and a **method** like \`increment\` reaches the object's own data through \`self\`.
 
-Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 → 12), and print \`c.value\`, which is 12. Each instance has its own attributes, so two counters are independent.`,
+Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 → 12), and print \`c.value\`, which is 12. Attributes you assign through \`self\` (like \`self.value\`) are **per-instance**, so two counters' \`value\`s are independent. Beware, though: this independence is not automatic for *all* data — an attribute defined on the **class** itself (not on \`self\`) is **shared** by every instance, which matters when that shared value is mutable.`,
 
   vocabulary: [
     { term: "Class", definition: "A blueprint describing the attributes and methods of a kind of object." },
     { term: "Instance / object", definition: "A concrete value created from a class." },
-    { term: "__init__ (constructor)", definition: "The method that initialises a new instance's attributes." },
+    { term: "__init__ (initializer)", definition: "The method that initializes a newly created instance's attributes. Often loosely called the constructor, though Python creates the object first (via __new__) and then calls __init__ to set it up." },
     { term: "self", definition: "A reference to the current instance, used to access its attributes/methods." },
     { term: "Attribute", definition: "A piece of data stored on an instance, e.g. self.value." },
     { term: "Method", definition: "A function defined in a class that operates on an instance." },
@@ -132,7 +132,7 @@ Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 �
     },
   ],
 
-  review: `A **class** is a blueprint bundling **attributes** (data) and **methods** (behaviour); an **instance** is one object built from it. \`__init__\` initialises attributes via \`self\`, and each instance has its own state. k method calls that each do O(1) work is **O(k)** time with **O(1)** space. Classes power the node types in later structure lessons.`,
+  review: `A **class** is a blueprint bundling **attributes** (data) and **methods** (behaviour); an **instance** is one object built from it. \`__init__\` **initializes** a new instance via \`self\`, and \`c.method()\` automatically passes \`c\` in as \`self\`. Attributes set through \`self\` are per-instance; attributes defined on the class are shared, so instance independence is not automatic for class-level data. k method calls that each do O(1) work is **O(k)** time with **O(1)** space. Classes power the node types in later structure lessons.`,
 
   expectedOutput: "12\n",
 
@@ -149,8 +149,8 @@ Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 �
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "8693b395b5881198",
-    verifiedAt: "2026-09-21",
+    contentHash: "ddf1dc876e061ecd",
+    verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,

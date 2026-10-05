@@ -41,7 +41,7 @@ In this workspace you supply the input ahead of time (a "supplied input" box), a
     uses: "Reading parameters for an algorithm, printing traced results, interactive exercises.",
     tradeoffs: "Converting input is required for arithmetic but can fail on bad data (raises ValueError).",
     commonMistakes: "Doing math on the string from input() without converting; assuming input() strips more than the trailing newline.",
-    edgeCases: "int('abc') raises ValueError. If no input is supplied, input() gets an empty line (handle exhausted input).",
+    edgeCases: "int('abc') raises ValueError. A blank line (the user just presses Enter) makes input() return an empty string ''. But if the input is exhausted — there is no more line to read (EOF) — input() raises EOFError rather than returning ''.",
   },
 
   complexity: [
@@ -128,7 +128,7 @@ In this workspace you supply the input ahead of time (a "supplied input" box), a
       section: "input()",
       topic: "foundations/io",
       purpose: "Confirm input() reads a line and returns it as a string (trailing newline stripped).",
-      verifiedClaims: ["input() returns a string with the trailing newline removed"],
+      verifiedClaims: ["input() reads one line and returns it as a string with the trailing newline removed", "input() raises EOFError when the input is exhausted (end of file)"],
       accessDate: "2026-09-20",
     },
     {
@@ -143,8 +143,8 @@ In this workspace you supply the input ahead of time (a "supplied input" box), a
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "9ec7390e15aa8128",
-    verifiedAt: "2026-09-21",
+    contentHash: "11eb36b9ad8fef7c",
+    verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,

@@ -20,7 +20,9 @@ export const errors: LessonDefinition = {
   id: "errors",
   title: "Errors and Exceptions",
   area: "Programming foundations",
-  prerequisites: ["conditions"],
+  // The safe_div exercise asks the learner to WRITE a function (def), so
+  // functions is a genuine prerequisite alongside conditions.
+  prerequisites: ["conditions", "functions"],
 
   explanation: `When something goes wrong at runtime — indexing past the end of a list, dividing by zero, converting bad text to a number — Python **raises an exception**. If nothing handles it, the program stops and prints a traceback.
 
@@ -42,7 +44,7 @@ Catch **specific** exception types (\`IndexError\`, \`ValueError\`, \`KeyError\`
     uses: "Validating input, handling missing keys, guarding division, cleaning up resources.",
     tradeoffs: "try/except adds structure and safety; catching too broadly (bare except) hides real bugs.",
     commonMistakes: "Catching Exception/everything and silently passing; putting too much code in one try so you can't tell what failed; using exceptions for ordinary control flow.",
-    edgeCases: "An exception raised inside except propagates. finally always runs, even on return or another exception.",
+    edgeCases: "An exception raised inside except propagates. In normal control flow a `finally` block runs on every way out of the try — whether it succeeded, raised, or returned (so it is the place for cleanup); the only things that skip it are a hard process exit (e.g. os._exit) or the interpreter being killed.",
   },
 
   complexity: [
@@ -141,8 +143,8 @@ Catch **specific** exception types (\`IndexError\`, \`ValueError\`, \`KeyError\`
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "c144f84f8a9c03e1",
-    verifiedAt: "2026-09-21",
+    contentHash: "cefec6ec44b2230f",
+    verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,

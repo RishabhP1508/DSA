@@ -28,7 +28,7 @@ export const referencesMutation: LessonDefinition = {
   area: "Programming foundations",
   prerequisites: ["functions", "variables-and-types"],
 
-  explanation: `When you pass a value to a function, Python passes a **reference to the object** — both the caller's variable and the parameter point at the **same object**. This has two consequences that surprise beginners:
+  explanation: `When you pass a value to a function, Python passes a **reference to the object** — the parameter becomes **another local name for the same object** the caller named. The object's **contents are not copied**; what is copied is the reference (the arrow pointing at the object), so the caller and the function now have two names for one shared object. This has two consequences that surprise beginners:
 
 1. If the object is **mutable** (like a list) and the function **mutates it in place** (e.g. \`bag.append(item)\`), the caller sees the change — because there is only one list.
 2. If the function **rebinds** the parameter to a new object (e.g. \`n = n + 100\`), the caller's variable is **unaffected** — rebinding only changes what the local name points to, not the caller's name.
@@ -36,7 +36,7 @@ export const referencesMutation: LessonDefinition = {
 So \`add_item\` changes \`shared\` (mutation of a shared object), but \`try_rebind\` leaves \`x\` at 5 (rebinding a local). Understanding this distinction — mutation versus rebinding — prevents a whole category of bugs.`,
 
   vocabulary: [
-    { term: "Reference", definition: "A pointer to an object; variables and parameters hold references, not copies." },
+    { term: "Reference", definition: "A binding to an object (not a copy of the object). Passing an argument copies the reference, so the parameter is another local name for the same object; the object's contents are not copied." },
     { term: "Mutable object", definition: "An object that can be changed in place, e.g. list, dict, set." },
     { term: "Immutable object", definition: "An object that cannot change, e.g. int, str, tuple." },
     { term: "Mutation", definition: "Changing an object in place (list.append), visible through every reference to it." },
@@ -49,7 +49,7 @@ So \`add_item\` changes \`shared\` (mutation of a shared object), but \`try_rebi
     uses: "Passing structures to helpers that modify them; deliberately copying to avoid shared-state bugs.",
     tradeoffs: "Mutating in place is memory-efficient but can cause spooky action at a distance; copying is safe but costs O(n).",
     commonMistakes: "Expecting `n = n + 100` inside a function to change the caller; accidentally mutating a shared default argument or shared list.",
-    edgeCases: "Immutable objects (int, str, tuple) can't be mutated, so functions can only rebind them locally — the caller is never affected.",
+    edgeCases: "An immutable object (int, str, tuple) can't itself be changed, so rebinding a parameter bound to one never affects the caller. But \"immutable\" is not a blanket guarantee the caller is safe: a tuple can CONTAIN a mutable object (e.g. ([1, 2], 3)), and mutating that inner list through the shared reference IS visible to the caller — the tuple's own slots are fixed, but the objects they point at may be mutable.",
   },
 
   complexity: [
@@ -78,7 +78,7 @@ So \`add_item\` changes \`shared\` (mutation of a shared object), but \`try_rebi
       { lines: [7], description: "Sharing a reference adds no storage proportional to n.", cost: "O(1)", dimension: "space" },
     ],
     assumptions: ["Passing an argument shares a reference (no implicit deep copy).", "append is amortized O(1) in CPython."],
-    tradeoffs: "If a helper must not change the caller's list, pass a copy (list(bag)) — that is O(n) time and space but protects the original.",
+    tradeoffs: "If a helper must not change the caller's list, pass a copy (list(bag)) — O(n) time and space, protecting the original. Note list(bag) is a SHALLOW copy: the new list is independent, but it still shares references to the SAME inner objects, so mutating a nested object (e.g. a sublist) is still visible to the caller. Use copy.deepcopy for fully independent nested data.",
     counters: [{ label: "append calls", definition: "executions of the append line (line 4)", countLines: [4] }],
     fixedDataNote: "This run uses a 2-element list and one append, so the work is constant; the amortized O(1) claim is about scaling appends to n.",
   },
@@ -132,7 +132,7 @@ So \`add_item\` changes \`shared\` (mutation of a shared object), but \`try_rebi
       prompt: "A helper should NOT modify the caller's list, but it does. Change it to leave the original intact.",
       starterCode: "def doubled(lst):\n    lst.append(lst[-1])\n    return lst",
       expected: "def doubled(lst):\n    copy = list(lst)\n    copy.append(copy[-1])\n    return copy",
-      hints: ["The problem is mutating the shared list.", "Work on a copy instead.", "Use list(lst) to make an independent copy first."],
+      hints: ["The problem is mutating the shared list.", "Work on a copy instead.", "Use list(lst) to make an independent (shallow) copy first — enough here since the elements are plain ints."],
     },
   ],
 
@@ -151,8 +151,8 @@ So \`add_item\` changes \`shared\` (mutation of a shared object), but \`try_rebi
       accessDate: "2026-09-20",
     },
     {
-      url: "https://docs.python.org/3/reference/datamodel.html",
-      title: "Data model — Python Language Reference",
+      url: "https://docs.python.org/3.14/reference/datamodel.html",
+      title: "Data model — Python 3.14 Language Reference",
       section: "Objects, values and types (mutability)",
       topic: "foundations/references-mutation",
       purpose: "Cross-check which built-in types are mutable vs immutable.",
@@ -162,8 +162,8 @@ So \`add_item\` changes \`shared\` (mutation of a shared object), but \`try_rebi
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "5feb2cad2643ea0c",
-    verifiedAt: "2026-09-21",
+    contentHash: "d1261afa910cc3e3",
+    verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,

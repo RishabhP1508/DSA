@@ -72,7 +72,7 @@ Neither shape is "more correct" — they trade off differently. The adjacency ma
 
   complexity: [
     { operation: "Edge list: find a node's neighbours", best: "O(E)", average: "O(E)", worst: "O(E)", space: "O(E)", note: "No key: must scan every edge. Plain list scan (no hashing), so O(E) in all cases. Storing all edges is O(E)." },
-    { operation: "Adjacency map: reach a node's neighbour set", best: "O(1)", average: "O(1)", worst: "O(V)", space: "O(V + E)", note: "A single hashed dict key lookup: expected O(1) (Python dict Get Item, average O(1)); the hashing worst case is O(V) if keys collide. This is only REACHING the set — not reading its members." },
+    { operation: "Adjacency map: reach a node's neighbour set", best: "O(1)", average: "O(1)", worst: "O(V)", space: "O(V + E)", note: "A single hashed dict key lookup: expected O(1) (Python dict Get Item, average O(1)). The hashing worst case is O(V) when keys collide — reachable with integer keys congruent modulo sys.hash_info.modulus, though the labels 0,1,2 here hash distinctly. This is only REACHING the set — not reading its members." },
     { operation: "Adjacency map: enumerate a node's neighbours", best: "O(degree)", average: "O(degree)", worst: "O(degree)", space: "O(1)", note: "Iterating the reached set visits each neighbour once — linear in that node's degree, in all cases (set iteration is O(size))." },
   ],
 
@@ -86,12 +86,12 @@ Neither shape is "more correct" — they trade off differently. The adjacency ma
     time: {
       bound: "O(V + E)",
       case: "expected",
-      explanation: "The first loop runs once per edge (E iterations). The nested loop visits each node and each of its neighbours — every undirected edge is seen from both ends — which is O(V + E). Comparing the two sets of E pairs is O(E). There is NO sort in the program (we print a count, not a sorted list), so no O(E log E) term. This O(V + E) is the EXPECTED (average) case: it assumes the set inserts and set-equality hashing are O(1) each. Under adversarial hash collisions the dict/set operations degrade to O(n), making the worst case superlinear — but that does not happen for ordinary integer keys like these.",
+      explanation: "The first loop runs once per edge (E iterations). The nested loop visits each node and each of its neighbours — every undirected edge is seen from both ends — which is O(V + E). Comparing the two sets of E pairs is O(E). There is NO sort in the program (we print a count, not a sorted list), so no O(E log E) term. This O(V + E) is the EXPECTED (average) case: it assumes the set inserts and set-equality hashing are O(1) each. Under hash collisions the dict/set operations degrade toward O(n) per step, making the worst case superlinear. Integer keys CAN be made to collide — any ints that are equal modulo sys.hash_info.modulus share a hash (for example 0 and the modulus 2147483647 both hash to 0) — so the pathological worst case is a real property of the data structure, not impossible. The specific labels in THIS graph (0, 1, 2) hash to the distinct values 0, 1, 2, so they do not collide and this run stays in the expected O(V + E) case.",
       otherCases: [
         {
           case: "worst",
           bound: "superlinear (hashing collisions)",
-          note: "If every key hashed to one bucket, each set insert / membership step would be O(n) instead of O(1), so the rebuild + comparison would be well above O(V + E). This is the documented dict/set worst case, not reachable with these integer node labels.",
+          note: "If many keys share a hash bucket (achievable with integer keys that are congruent modulo sys.hash_info.modulus), each set insert / membership step degrades toward O(n), pushing the rebuild + comparison above O(V + E). This is the documented dict/set worst case; the specific labels 0, 1, 2 here hash distinctly and do not trigger it.",
         },
       ],
     },
@@ -239,8 +239,8 @@ Neither shape is "more correct" — they trade off differently. The adjacency ma
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "d145cc3190c48bc8",
-    verifiedAt: "2026-10-02",
+    contentHash: "f9e6e64ce44f97f1",
+    verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,
     reviewBatch: 1,
