@@ -71,16 +71,16 @@ Expected output: ```
 ```
 
 ### Line explanations
-- L1 (no runtime event: comment/blank or not reached in this run): Comment: what an expression is.
-- L2 (no runtime event: comment/blank or not reached in this run): Comment about precedence.
-- L3 (produces a runtime event): 3 * 4 is evaluated first (12), then 2 + 12 gives 14. x becomes 14.
-- L4 (no runtime event: comment/blank or not reached in this run): Comment about parentheses.
-- L5 (produces a runtime event): (2 + 3) is forced first (5), then 5 * 4 gives 20. y becomes 20.
-- L6 (no runtime event: comment/blank or not reached in this run): Comment about modulo.
-- L7 (produces a runtime event): 17 % 5 is the remainder of 17 ÷ 5, which is 2. z becomes 2.
-- L8 (produces a runtime event): Print x, y, z → 14 20 2.
-- L9 (no runtime event: comment/blank or not reached in this run): Comment about //, ** and /.
-- L10 (produces a runtime event): 7 // 2 is 3 (floor), 2 ** 5 is 32 (power), 10 / 4 is 2.5 (float). Prints 3 32 2.5.
+- L1 (comment): Comment: what an expression is.
+- L2 (comment): Comment about precedence.
+- L3 (produces a runtime event in this trace): 3 * 4 is evaluated first (12), then 2 + 12 gives 14. x becomes 14.
+- L4 (comment): Comment about parentheses.
+- L5 (produces a runtime event in this trace): (2 + 3) is forced first (5), then 5 * 4 gives 20. y becomes 20.
+- L6 (comment): Comment about modulo.
+- L7 (produces a runtime event in this trace): 17 % 5 is the remainder of 17 ÷ 5, which is 2. z becomes 2.
+- L8 (produces a runtime event in this trace): Print x, y, z → 14 20 2.
+- L9 (comment): Comment about //, ** and /.
+- L10 (produces a runtime event in this trace): 7 // 2 is 3 (floor), 2 ** 5 is 32 (power), 10 / 4 is 2.5 (float). Prints 3 32 2.5.
 
 ### Complexity table
 - **Arithmetic on small ints** — best O(1), avg O(1), worst O(1). Fixed-size integer arithmetic is constant time.
@@ -146,7 +146,8 @@ Expected output: ```
 ```
 
 ### Visualization bindings
-- `x` → model **object**, overlays: (none)
+- `x` → model **object**
+  - overlays: (none)
 - Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
 
 ### Predictions
@@ -210,7 +211,7 @@ The modulo operator %. a % 2 == 0 means a is even.
 
 - **Area:** Programming foundations
 - **Prerequisites:** expressions
-- **contentHash:** `a2a4fa2253733ba5` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
+- **contentHash:** `da6c82d01f92dd34` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 A **condition** lets a program make a decision. An `if` statement runs a block of code when its test is **true** — not only the literal `True`, but any value Python treats as true. This is called **truthiness**: non-zero numbers and non-empty containers (strings, lists, dicts) are **truthy**, while `0`, `""`, `[]`, `None`, and `False` are **falsy**. So `if items:` runs when `items` is a non-empty list. You can add `elif` ("else if") branches for more cases, and a final `else` for "none of the above".
@@ -257,16 +258,16 @@ hot
 ```
 
 ### Line explanations
-- L1 (no runtime event: comment/blank or not reached in this run): Comment: conditions choose which code runs.
-- L2 (produces a runtime event): Set temp to 30.
-- L3 (no runtime event: comment/blank or not reached in this run): Comment: Python runs the first True test.
-- L4 (produces a runtime event): Test temp >= 30. It is True (30 >= 30), so this branch is chosen.
-- L5 (produces a runtime event): Because the test was True, set label to 'hot'.
-- L6 (no runtime event: comment/blank or not reached in this run): `elif temp >= 20:` is a real executable statement, but it is NOT REACHED in this run (an earlier branch already matched), so it produces no runtime event here. 'Not executable' refers to this trace, not to the syntax.
-- L7 (no runtime event: comment/blank or not reached in this run): `label = "warm"` would run only if the elif above were taken; it is a valid statement, just not reached in this run (no runtime event).
-- L8 (no runtime event: comment/blank or not reached in this run): `else:` is an executable branch header, but it is skipped because the first test matched, so it is not reached in this run.
-- L9 (no runtime event: comment/blank or not reached in this run): `label = "cold"` belongs to the else branch; it is a real statement, not reached in this run (no runtime event).
-- L10 (produces a runtime event): Print label → 'hot'.
+- L1 (comment): Comment: conditions choose which code runs.
+- L2 (produces a runtime event in this trace): Set temp to 30.
+- L3 (comment): Comment: Python runs the first True test.
+- L4 (produces a runtime event in this trace): Test temp >= 30. It is True (30 >= 30), so this branch is chosen.
+- L5 (produces a runtime event in this trace): Because the test was True, set label to 'hot'.
+- L6 (not reached in this run): `elif temp >= 20:` is a real executable statement, but it is NOT REACHED in this run (an earlier branch already matched), so it produces no runtime event here. 'Not executable' refers to this trace, not to the syntax.
+- L7 (not reached in this run): `label = "warm"` would run only if the elif above were taken; it is a valid statement, just not reached in this run (no runtime event).
+- L8 (not reached in this run): `else:` is an executable branch header, but it is skipped because the first test matched, so it is not reached in this run.
+- L9 (not reached in this run): `label = "cold"` belongs to the else branch; it is a real statement, not reached in this run (no runtime event).
+- L10 (produces a runtime event in this trace): Print label → 'hot'.
 
 ### Complexity table
 - **Evaluate an if/elif chain** — best O(1), avg O(1), worst O(1). A fixed number of constant-time comparisons.
@@ -330,7 +331,8 @@ hot
 ```
 
 ### Visualization bindings
-- `label` → model **object**, overlays: (none)
+- `label` → model **object**
+  - overlays: (none)
 - Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
 
 ### Predictions
@@ -403,7 +405,7 @@ One — temp >= 30 is True immediately, so no further tests run.
 
 - **Area:** Programming foundations
 - **Prerequisites:** expressions
-- **contentHash:** `11eb36b9ad8fef7c` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
+- **contentHash:** `c76bd4181538df89` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 Programs talk to the outside world through **input** and **output**. `input()` reads one line of text; `print()` writes values out.
@@ -451,13 +453,13 @@ Name: Number: Hello Ada
 ```
 
 ### Line explanations
-- L1 (no runtime event: comment/blank or not reached in this run): Comment: input() reads supplied text.
-- L2 (produces a runtime event): Read a line into name. The prompt 'Name: ' is shown; name becomes the string 'Ada'.
-- L3 (no runtime event: comment/blank or not reached in this run): Comment: input is a string; convert for math.
-- L4 (produces a runtime event): Read '5' and convert it with int(), so n is the integer 5 (not the string '5').
-- L5 (no runtime event: comment/blank or not reached in this run): Comment: print() writes output.
-- L6 (produces a runtime event): Print 'Hello' and name, space-separated → 'Hello Ada'.
-- L7 (produces a runtime event): Print n * 2. Because n is an int, this is 10 (not '55').
+- L1 (comment): Comment: input() reads supplied text.
+- L2 (produces a runtime event in this trace): Read a line into name. The prompt 'Name: ' is shown; name becomes the string 'Ada'.
+- L3 (comment): Comment: input is a string; convert for math.
+- L4 (produces a runtime event in this trace): Read '5' and convert it with int(), so n is the integer 5 (not the string '5').
+- L5 (comment): Comment: print() writes output.
+- L6 (produces a runtime event in this trace): Print 'Hello' and name, space-separated → 'Hello Ada'.
+- L7 (produces a runtime event in this trace): Print n * 2. Because n is an int, this is 10 (not '55').
 
 ### Complexity table
 - **Read + convert + print** — best O(1), avg O(1), worst O(L). Linear in the length L of the text read/printed.
@@ -530,7 +532,8 @@ Name: Number: Hello Ada
 ```
 
 ### Visualization bindings
-- `name` → model **object**, overlays: (none)
+- `name` → model **object**
+  - overlays: (none)
 - Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
 
 ### Predictions
@@ -597,7 +600,7 @@ A string (str), always — even if the user types digits.
 
 - **Area:** Programming foundations
 - **Prerequisites:** conditions, functions
-- **contentHash:** `cefec6ec44b2230f` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
+- **contentHash:** `40378ecd5eb1e320` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 When something goes wrong at runtime — indexing past the end of a list, dividing by zero, converting bad text to a number — Python **raises an exception**. If nothing handles it, the program stops and prints a traceback.
@@ -644,16 +647,16 @@ after
 ```
 
 ### Line explanations
-- L1 (no runtime event: comment/blank or not reached in this run): Comment: some operations raise exceptions.
-- L2 (produces a runtime event): Create the list [1, 2, 3]. Its positive indices are 0, 1, 2 (Python also allows negative indices -1, -2, -3 from the end); index 5 is out of range either way.
-- L3 (produces a runtime event): Begin a try block — risky code goes here.
-- L4 (no runtime event: comment/blank or not reached in this run): Comment: index 5 is out of range.
-- L5 (produces a runtime event): nums[5] does not exist, so this raises IndexError; the print never runs.
-- L6 (produces a runtime event): Control jumps here because the raised error is an IndexError.
-- L7 (no runtime event: comment/blank or not reached in this run): Comment: we handle the error.
-- L8 (produces a runtime event): Print the friendly message instead of crashing.
-- L9 (no runtime event: comment/blank or not reached in this run): Comment: execution continues after handling.
-- L10 (produces a runtime event): Print 'after' — the program did not crash, so this runs normally.
+- L1 (comment): Comment: some operations raise exceptions.
+- L2 (produces a runtime event in this trace): Create the list [1, 2, 3]. Its positive indices are 0, 1, 2 (Python also allows negative indices -1, -2, -3 from the end); index 5 is out of range either way.
+- L3 (produces a runtime event in this trace): Begin a try block — risky code goes here.
+- L4 (comment): Comment: index 5 is out of range.
+- L5 (produces a runtime event in this trace): nums[5] does not exist, so this raises IndexError; the print never runs.
+- L6 (produces a runtime event in this trace): Control jumps here because the raised error is an IndexError.
+- L7 (comment): Comment: we handle the error.
+- L8 (produces a runtime event in this trace): Print the friendly message instead of crashing.
+- L9 (comment): Comment: execution continues after handling.
+- L10 (produces a runtime event in this trace): Print 'after' — the program did not crash, so this runs normally.
 
 ### Complexity table
 - **try/except around O(1) code** — best O(1), avg O(1), worst O(1). Exception setup is effectively constant here.
@@ -723,7 +726,8 @@ after
 ```
 
 ### Visualization bindings
-- `nums` → model **array**, overlays: (none)
+- `nums` → model **array**
+  - overlays: (none)
 - Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
 
 ### Predictions
@@ -791,6 +795,10 @@ Both are valid. Use `if key in d` when a miss is common/expected (cheap check); 
     - [must-catch-broad] (contradictory) You should always catch the broadest Exception type to be safe.
     - [in-mutates] (contradictory) Using `in` modifies the dictionary, so try/except is the only safe option.
   - Acceptable approach(es): membership-check
+  - Conditional alternatives (acceptable when their stated conditions hold):
+    - approach [try-except] — when: When a missing key is rare/exceptional rather than part of the normal flow.
+      tradeoff: Exceptions are costly on the error path but keep the common (present) path clean and fast.
+      required reason(s): miss-is-rare
   - Model explanation: Both are valid: use `if key in d` when a miss is common (cheap check); use try/except KeyError when a miss is rare/exceptional. Avoid catching broad Exception.
 
 ### References
@@ -853,15 +861,15 @@ Expected output: ```
 ```
 
 ### Line explanations
-- L1 (no runtime event: comment/blank or not reached in this run): Comment: a function packages reusable steps.
-- L2 (produces a runtime event): Define the function add with parameters a and b. The def line runs to create the function object.
-- L3 (no runtime event: comment/blank or not reached in this run): Comment describing parameters and the local variable.
-- L4 (produces a runtime event): Inside a call, compute a + b and store it in the local variable result.
-- L5 (produces a runtime event): Return result to the caller, ending this call.
-- L6 (no runtime event: comment/blank or not reached in this run): Blank line.
-- L7 (no runtime event: comment/blank or not reached in this run): Comment: we are about to call add.
-- L8 (produces a runtime event): Call add(2, 5). A new frame binds a=2, b=5; the returned value 7 is stored in answer.
-- L9 (produces a runtime event): Print answer → 7.
+- L1 (comment): Comment: a function packages reusable steps.
+- L2 (produces a runtime event in this trace): Define the function add with parameters a and b. The def line runs to create the function object.
+- L3 (comment): Comment describing parameters and the local variable.
+- L4 (produces a runtime event in this trace): Inside a call, compute a + b and store it in the local variable result.
+- L5 (produces a runtime event in this trace): Return result to the caller, ending this call.
+- L6 (blank): Blank line.
+- L7 (comment): Comment: we are about to call add.
+- L8 (produces a runtime event in this trace): Call add(2, 5). A new frame binds a=2, b=5; the returned value 7 is stored in answer.
+- L9 (produces a runtime event in this trace): Print answer → 7.
 
 ### Complexity table
 - **Call add(a, b)** — best O(1), avg O(1), worst O(1), space O(1). One addition and one frame.
@@ -933,7 +941,8 @@ Expected output: ```
 ```
 
 ### Visualization bindings
-- `add` → model **recursion**, overlays: (none)
+- `add` → model **recursion**
+  - overlays: (none)
 - Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
 
 ### Predictions
@@ -1048,18 +1057,18 @@ Expected output: ```
 ```
 
 ### Line explanations
-- L1 (no runtime event: comment/blank or not reached in this run): Comment: count here is global.
-- L2 (produces a runtime event): Define the global variable count = 10.
-- L3 (no runtime event: comment/blank or not reached in this run): Blank line.
-- L4 (produces a runtime event): Define the function bump.
-- L5 (no runtime event: comment/blank or not reached in this run): Comment: the inner count is a new local.
-- L6 (produces a runtime event): Assigning count inside bump creates a LOCAL count = 0, separate from the global.
-- L7 (produces a runtime event): Update the local count to 1. The global is untouched.
-- L8 (produces a runtime event): Return the local count (1).
-- L9 (no runtime event: comment/blank or not reached in this run): Blank line.
-- L10 (no runtime event: comment/blank or not reached in this run): Comment: the local does not change the global.
-- L11 (produces a runtime event): Call bump(); it returns 1, which is printed.
-- L12 (produces a runtime event): Print the global count → still 10.
+- L1 (comment): Comment: count here is global.
+- L2 (produces a runtime event in this trace): Define the global variable count = 10.
+- L3 (blank): Blank line.
+- L4 (produces a runtime event in this trace): Define the function bump.
+- L5 (comment): Comment: the inner count is a new local.
+- L6 (produces a runtime event in this trace): Assigning count inside bump creates a LOCAL count = 0, separate from the global.
+- L7 (produces a runtime event in this trace): Update the local count to 1. The global is untouched.
+- L8 (produces a runtime event in this trace): Return the local count (1).
+- L9 (blank): Blank line.
+- L10 (comment): Comment: the local does not change the global.
+- L11 (produces a runtime event in this trace): Call bump(); it returns 1, which is printed.
+- L12 (produces a runtime event in this trace): Print the global count → still 10.
 
 ### Complexity table
 - **Call bump()** — best O(1), avg O(1), worst O(1), space O(1). Constant work in one frame.
@@ -1132,7 +1141,8 @@ Expected output: ```
 ```
 
 ### Visualization bindings
-- `count` → model **object**, overlays: (none)
+- `count` → model **object**
+  - overlays: (none)
 - Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
 
 ### Predictions
@@ -1181,6 +1191,11 @@ Prefer returning the new value and reassigning it at the call site; it avoids hi
     - [global-is-cleanest] (contradictory) Mutating a global is the cleanest option because it avoids any return value.
     - [cannot-return] (contradictory) A function cannot return a value to update a counter, so a declaration is required.
   - Acceptable approach(es): return-value
+  - Conditional alternatives (acceptable when their stated conditions hold):
+    - approach [global-decl] — when: When a quick script truly needs shared mutable module state and the coupling is acceptable.
+      tradeoff: Introduces a hidden side effect and binds the function to that module name, hurting testability.
+      required reason(s): global-works-coupled
+  - Reflection prompt (ungraded): Think of a case where a hidden side effect from `global` would make a bug hard to track down.
   - Model explanation: Prefer returning the new value and reassigning it at the call site — it avoids hidden side effects. `global` works but couples the function to that specific name.
 
 ### References
@@ -1194,7 +1209,7 @@ Prefer returning the new value and reassigning it at the call site; it avoids hi
 
 - **Area:** Programming foundations
 - **Prerequisites:** functions, variables-and-types
-- **contentHash:** `d1261afa910cc3e3` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
+- **contentHash:** `5eeecfc8bcb206fd` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 When you pass a value to a function, Python passes a **reference to the object** — the parameter becomes **another local name for the same object** the caller named. The object's **contents are not copied**; what is copied is the reference (the arrow pointing at the object), so the caller and the function now have two names for one shared object. This has two consequences that surprise beginners:
@@ -1248,22 +1263,22 @@ Expected output: ```
 ```
 
 ### Line explanations
-- L1 (no runtime event: comment/blank or not reached in this run): Comment: arguments are passed by object reference.
-- L2 (produces a runtime event): Define add_item(bag, item).
-- L3 (no runtime event: comment/blank or not reached in this run): Comment: mutating the list is visible to the caller.
-- L4 (produces a runtime event): append mutates the SAME list object the caller passed in.
-- L5 (no runtime event: comment/blank or not reached in this run): Blank line.
-- L6 (produces a runtime event): Create the list [1, 2] and bind it to shared.
-- L7 (produces a runtime event): Call add_item(shared, 3). bag and shared refer to the same list, so it becomes [1, 2, 3].
-- L8 (produces a runtime event): Print shared → [1, 2, 3]. The mutation is visible here.
-- L9 (no runtime event: comment/blank or not reached in this run): Blank line.
-- L10 (no runtime event: comment/blank or not reached in this run): Comment: rebinding a parameter does not affect the caller.
-- L11 (produces a runtime event): Set x = 5 (an immutable int).
-- L12 (produces a runtime event): Define try_rebind(n).
-- L13 (produces a runtime event): n = n + 100 rebinds the LOCAL n to a new int; it does not change x.
-- L14 (no runtime event: comment/blank or not reached in this run): Blank line.
-- L15 (produces a runtime event): Call try_rebind(x). Inside, n becomes 105, but x is untouched.
-- L16 (produces a runtime event): Print x → still 5.
+- L1 (comment): Comment: arguments are passed by object reference.
+- L2 (produces a runtime event in this trace): Define add_item(bag, item).
+- L3 (comment): Comment: mutating the list is visible to the caller.
+- L4 (produces a runtime event in this trace): append mutates the SAME list object the caller passed in.
+- L5 (blank): Blank line.
+- L6 (produces a runtime event in this trace): Create the list [1, 2] and bind it to shared.
+- L7 (produces a runtime event in this trace): Call add_item(shared, 3). bag and shared refer to the same list, so it becomes [1, 2, 3].
+- L8 (produces a runtime event in this trace): Print shared → [1, 2, 3]. The mutation is visible here.
+- L9 (blank): Blank line.
+- L10 (comment): Comment: rebinding a parameter does not affect the caller.
+- L11 (produces a runtime event in this trace): Set x = 5 (an immutable int).
+- L12 (produces a runtime event in this trace): Define try_rebind(n).
+- L13 (produces a runtime event in this trace): n = n + 100 rebinds the LOCAL n to a new int; it does not change x.
+- L14 (blank): Blank line.
+- L15 (produces a runtime event in this trace): Call try_rebind(x). Inside, n becomes 105, but x is untouched.
+- L16 (produces a runtime event in this trace): Print x → still 5.
 
 ### Complexity table
 - **append to a shared list** — best O(1), avg O(1), worst O(n) amortized O(1). One element added; occasional resize.
@@ -1282,13 +1297,13 @@ Expected output: ```
   "time": {
     "bound": "O(n)",
     "case": "worst",
-    "explanation": "The reference-behaviour steps this lesson is about are each O(1): passing an argument copies a reference (O(1)), append is amortized O(1), and rebinding a parameter is O(1) — there are no loops in the helpers. The whole program, however, also calls `print(shared)` (line 8), which formats and emits all the list's elements; for a general n-element list that is O(n). So the per-call behaviour is O(1) but the program as a whole is O(n), driven by printing n elements (assuming each element formats in bounded time)."
+    "explanation": "The reference-behaviour steps this lesson is about are each O(1): passing an argument copies a reference (O(1)) and rebinding a parameter is O(1) — there are no loops in the helpers. Two steps are nonetheless size-dependent in the whole program: `print(shared)` (line 8) formats and emits all n elements → O(n); and the `append` (line 4) is amortized O(1) but its WORST case is O(n) when it triggers a resize. So the per-call reference behaviour is O(1), while the program as a whole is O(n) (assuming each element formats in bounded time)."
   },
   "space": {
-    "bound": "O(1)",
+    "bound": "O(n)",
     "case": "worst",
-    "explanation": "No copy of the list is made when passing it — only a reference is shared — so passing costs no extra space proportional to n. append adds one slot. Auxiliary space is O(1) (the n-element list is the data, not auxiliary space the calls introduce).",
-    "inputOutputNote": "The list `shared` holds your data; it is not auxiliary space created by the calls."
+    "explanation": "Passing the list adds NO space proportional to n — only a reference is shared (that part is genuinely O(1)). But the whole program's auxiliary space is O(n): `print(shared)` builds a formatted representation of the list whose length grows with n (a temporary Unicode buffer sized to the output), and a resizing `append` may allocate a larger backing array. Both are temporary allocations proportional to the list size. (The n-element list itself is the data, not auxiliary space; the O(n) here is the extra memory the program's print/append transiently need.)",
+    "inputOutputNote": "Passing a reference is O(1) extra space; the O(n) is the transient formatting buffer that `print(shared)` builds (and a possible resize), under a bounded-size-per-element model."
   },
   "derivation": [
     {
@@ -1303,7 +1318,7 @@ Expected output: ```
       "lines": [
         4
       ],
-      "description": "append one element — amortized O(1).",
+      "description": "append one element — amortized O(1), worst case O(n) on a resize.",
       "cost": "O(1)",
       "dimension": "time"
     },
@@ -1319,7 +1334,7 @@ Expected output: ```
       "lines": [
         8
       ],
-      "description": "print(shared) formats and emits every element of the list — O(n) for an n-element list (the only size-dependent step).",
+      "description": "print(shared) formats and emits every element of the list — O(n) for an n-element list. (The append on line 4 is also size-dependent in its worst case, so printing is not the only such step.)",
       "cost": "O(n)",
       "dimension": "time"
     },
@@ -1327,15 +1342,23 @@ Expected output: ```
       "lines": [
         7
       ],
-      "description": "Sharing a reference adds no storage proportional to n.",
+      "description": "Passing a reference adds no storage proportional to n.",
       "cost": "O(1)",
+      "dimension": "space"
+    },
+    {
+      "lines": [
+        8
+      ],
+      "description": "print(shared) builds a formatted string proportional to the list length — O(n) transient space.",
+      "cost": "O(n)",
       "dimension": "space"
     }
   ],
   "assumptions": [
     "Passing an argument shares a reference (no implicit deep copy).",
-    "append is amortized O(1) in CPython.",
-    "Each element formats/prints in bounded time, so print(shared) is O(n) in the number of elements."
+    "append is amortized O(1) in CPython (worst case O(n) on a resize).",
+    "Each element formats in bounded time/space, so print(shared) uses O(n) time and transient O(n) space in the number of elements."
   ],
   "tradeoffs": "If a helper must not change the caller's list, pass a copy (list(bag)) — O(n) time and space, protecting the original. Note list(bag) is a SHALLOW copy: the new list is independent, but it still shares references to the SAME inner objects, so mutating a nested object (e.g. a sublist) is still visible to the caller. Use copy.deepcopy for fully independent nested data.",
   "counters": [
@@ -1352,7 +1375,8 @@ Expected output: ```
 ```
 
 ### Visualization bindings
-- `shared` → model **array**, overlays: (none)
+- `shared` → model **array**
+  - overlays: (none)
 - Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
 
 ### Predictions
@@ -1425,14 +1449,14 @@ print('OK')
 
 - **Area:** Programming foundations
 - **Prerequisites:** functions, references-mutation
-- **contentHash:** `ddf1dc876e061ecd` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
+- **contentHash:** `e57a6eba22fe7173` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 A **class** is a blueprint that bundles **data** (attributes) with **behaviour** (methods). An **instance** is one object made from that blueprint. Classes are how we build the nodes and structures in later lessons — a linked-list node, a tree node, a graph — so this is an important foundation.
 
 The `__init__` method **initializes** a newly created instance — Python builds the object first, then runs `__init__` to set up its starting attributes (so it is the *initializer*; the lower-level creation step is `__new__`, which beginners rarely write). `self` is the current instance, and Python supplies it **automatically**: writing `c.increment()` is shorthand for `Counter.increment(c)`, so the instance `c` is passed in as the first parameter `self`. That is why the ordinary **instance methods** taught here (`__init__`, `increment`) list `self` first. (Not every method does — class methods and static methods, beyond this lesson, do not take `self` — so read this as "instance methods take `self` first".) `self.value = start` stores data **on that specific instance**, and a **method** like `increment` reaches the object's own data through `self`.
 
-Here we make a `Counter` starting at 10, call `increment` twice (10 → 11 → 12), and print `c.value`, which is 12. In this example each counter's `value` is bound separately through `self.value`, so incrementing one does not change another. But instances are not *guaranteed* to be independent: an attribute **binds a name to an object**, and two instances can end up referring to the **same** object — e.g. `self.items = shared_list` in `__init__` would make every instance share one list, and a class-level attribute (defined on the class, not through `self`) is shared by all instances too. Independence here comes from each `self.value` binding to its own int, not from a blanket rule that separate instances can never share an object.
+Here we make a `Counter` starting at 10, call `increment` twice (10 → 11 → 12), and print `c.value`, which is 12. In this example each counter's `value` is bound separately through `self.value`, so incrementing one does not change another. But instances are not *guaranteed* to be independent: an attribute **binds a name to an object**, and two instances can end up referring to the **same** object — e.g. `self.items = shared_list` in `__init__` would make every instance share one list, and a class-level attribute (defined on the class, not through `self`) is shared by all instances too. Independence here comes from each instance having its **own attribute binding** (`c.value` and `d.value` are separate name bindings), not from the ints being distinct objects: two `Counter(10)`s may initially share the very same cached int (`c.value is d.value` can be `True`). Incrementing one does `self.value = self.value + 1`, which **rebinds only that instance's attribute** to a new int, leaving the other's binding untouched — so they diverge regardless of whether they first shared an int object.
 
 ### Vocabulary
 - **Class** — A blueprint describing the attributes and methods of a kind of object.
@@ -1447,7 +1471,7 @@ Here we make a `Counter` starting at 10, call `increment` twice (10 → 11 → 1
 - **operations:** Define with class, initialise with __init__, add methods, create instances, read/write attributes.
 - **uses:** Linked-list/tree/graph nodes, custom data structures, grouping related state.
 - **tradeoffs:** Classes add structure and reuse but can be overkill for simple data (a tuple or dict may suffice).
-- **commonMistakes:** Forgetting self in method definitions or attribute access; confusing class-level and instance-level attributes; expecting two instances to share instance attributes (they don't).
+- **commonMistakes:** Forgetting self in method definitions or attribute access; confusing class-level and instance-level attributes; conflating a per-instance ATTRIBUTE BINDING with the OBJECT it points at — each instance has its own `self.value` binding, but that does not mean the referenced objects differ (two counters can share one cached int) nor that instances can never share a referenced object (e.g. if __init__ does `self.items = shared_list`, every instance's `items` points at the one shared list).
 - **edgeCases:** Attributes not set in __init__ don't exist until assigned. Mutable class-level defaults are shared across instances (a common trap).
 
 ### Review summary
@@ -1477,21 +1501,21 @@ Expected output: ```
 ```
 
 ### Line explanations
-- L1 (no runtime event: comment/blank or not reached in this run): Comment: a class bundles data and behaviour.
-- L2 (produces a runtime event): Define the class Counter (creates the class object).
-- L3 (produces a runtime event): Define __init__, the initializer that runs right after the instance is created to set up its attributes.
-- L4 (no runtime event: comment/blank or not reached in this run): Comment: self.value is per-instance data.
-- L5 (produces a runtime event): Store the starting value on this instance as self.value.
-- L6 (no runtime event: comment/blank or not reached in this run): Blank line.
-- L7 (produces a runtime event): Define the method increment.
-- L8 (no runtime event: comment/blank or not reached in this run): Comment: methods use self to reach the object's data.
-- L9 (produces a runtime event): Add 1 to this instance's value.
-- L10 (no runtime event: comment/blank or not reached in this run): Comment: create and use an instance.
-- L11 (no runtime event: comment/blank or not reached in this run): Comment continues (or blank).
-- L12 (produces a runtime event): Create a Counter with start=10; __init__ sets value to 10.
-- L13 (produces a runtime event): First increment: value becomes 11.
-- L14 (produces a runtime event): Second increment: value becomes 12.
-- L15 (produces a runtime event): Print c.value → 12.
+- L1 (comment): Comment: a class bundles data and behaviour.
+- L2 (produces a runtime event in this trace): Define the class Counter (creates the class object).
+- L3 (produces a runtime event in this trace): Define __init__, the initializer that runs right after the instance is created to set up its attributes.
+- L4 (comment): Comment: self.value is per-instance data.
+- L5 (produces a runtime event in this trace): Store the starting value on this instance as self.value.
+- L6 (blank): Blank line.
+- L7 (produces a runtime event in this trace): Define the method increment.
+- L8 (comment): Comment: methods use self to reach the object's data.
+- L9 (produces a runtime event in this trace): Add 1 to this instance's value.
+- L10 (blank): Comment: create and use an instance.
+- L11 (comment): Comment continues (or blank).
+- L12 (produces a runtime event in this trace): Create a Counter with start=10; __init__ sets value to 10.
+- L13 (produces a runtime event in this trace): First increment: value becomes 11.
+- L14 (produces a runtime event in this trace): Second increment: value becomes 12.
+- L15 (produces a runtime event in this trace): Print c.value → 12.
 
 ### Complexity table
 - **increment()** — best O(1), avg O(1), worst O(1), space O(1). One attribute update per call.
@@ -1570,7 +1594,8 @@ Expected output: ```
 ```
 
 ### Visualization bindings
-- `c` → model **object**, overlays: (none)
+- `c` → model **object**
+  - overlays: (none)
 - Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
 
 ### Predictions
@@ -1643,7 +1668,7 @@ print('OK')
 
 - **Area:** DSA foundations
 - **Prerequisites:** loops, functions
-- **contentHash:** `dc3852d9fb149174` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
+- **contentHash:** `de74e7e7e0ad82d6` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 **Complexity** describes how an algorithm's cost grows as its input grows — without tying us to a specific computer or clock. We measure **time complexity** (how many basic steps) and **space complexity** (how much extra memory), both as functions of the **input size**, usually called `n`.
@@ -1692,15 +1717,15 @@ Expected output: ```
 ```
 
 ### Line explanations
-- L1 (no runtime event: comment/blank or not reached in this run): Comment: scan the list once to find the largest.
-- L2 (produces a runtime event): Define find_max(nums).
-- L3 (produces a runtime event): Assume the first element is the best so far.
-- L4 (produces a runtime event): Loop over every element x (this is the source of the O(n) work).
-- L5 (produces a runtime event): Compare x to best — one constant-time comparison per element.
-- L6 (produces a runtime event): If x is larger, update best.
-- L7 (produces a runtime event): Return the largest value found.
-- L8 (no runtime event: comment/blank or not reached in this run): Blank line.
-- L9 (produces a runtime event): Call find_max on [3, 9, 2, 7]; the result 9 is printed.
+- L1 (comment): Comment: scan the list once to find the largest.
+- L2 (produces a runtime event in this trace): Define find_max(nums).
+- L3 (produces a runtime event in this trace): Assume the first element is the best so far.
+- L4 (produces a runtime event in this trace): Loop over every element x (this is the source of the O(n) work).
+- L5 (produces a runtime event in this trace): Compare x to best — one constant-time comparison per element.
+- L6 (produces a runtime event in this trace): If x is larger, update best.
+- L7 (produces a runtime event in this trace): Return the largest value found.
+- L8 (blank): Blank line.
+- L9 (produces a runtime event in this trace): Call find_max on [3, 9, 2, 7]; the result 9 is printed.
 
 ### Complexity table
 - **find_max scan** — best O(n), avg O(n), worst O(n), space O(1). Every element is compared once; one extra variable.
@@ -1781,7 +1806,8 @@ Expected output: ```
 ```
 
 ### Visualization bindings
-- `nums` → model **array**, overlays: (none)
+- `nums` → model **array**
+  - overlays: (none)
 - Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
 
 ### Predictions
@@ -1844,7 +1870,7 @@ O(n): you must look at every element at least once (any unexamined element could
 
 - **Area:** DSA foundations
 - **Prerequisites:** complexity
-- **contentHash:** `1f31f7d42bd2adc4` · **verifiedAt:** 2026-09-21 · **semanticReview:** false · **reviewBatch:** 1
+- **contentHash:** `0a02e964bdeb39e7` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 The same algorithm can do very different amounts of work depending on the **specific input**. We describe this with three cases:
@@ -1893,17 +1919,17 @@ False
 ```
 
 ### Line explanations
-- L1 (no runtime event: comment/blank or not reached in this run): Comment: linear search with early exit.
-- L2 (produces a runtime event): Define contains(nums, target).
-- L3 (produces a runtime event): Loop over each element (up to n comparisons in the worst case).
-- L4 (produces a runtime event): Compare the current element to target.
-- L5 (produces a runtime event): Return True immediately on a match — this enables the O(1) best case.
-- L6 (produces a runtime event): If the loop finishes with no match, return False (worst case scanned all n).
-- L7 (no runtime event: comment/blank or not reached in this run): Blank line.
-- L8 (no runtime event: comment/blank or not reached in this run): Comment: best case (target first).
-- L9 (produces a runtime event): contains([5,1,4], 5): matches at index 0 → True after one comparison.
-- L10 (no runtime event: comment/blank or not reached in this run): Comment: worst case (target absent).
-- L11 (produces a runtime event): contains([5,1,4], 9): no match → False after scanning all 3 elements.
+- L1 (comment): Comment: linear search with early exit.
+- L2 (produces a runtime event in this trace): Define contains(nums, target).
+- L3 (produces a runtime event in this trace): Loop over each element (up to n comparisons in the worst case).
+- L4 (produces a runtime event in this trace): Compare the current element to target.
+- L5 (produces a runtime event in this trace): Return True immediately on a match — this enables the O(1) best case.
+- L6 (produces a runtime event in this trace): If the loop finishes with no match, return False (worst case scanned all n).
+- L7 (blank): Blank line.
+- L8 (comment): Comment: best case (target first).
+- L9 (produces a runtime event in this trace): contains([5,1,4], 5): matches at index 0 → True after one comparison.
+- L10 (comment): Comment: worst case (target absent).
+- L11 (produces a runtime event in this trace): contains([5,1,4], 9): no match → False after scanning all 3 elements.
 
 ### Complexity table
 - **linear search** — best O(1), avg O(n), worst O(n), space O(1). Best: match at index 0. Worst: absent → scan all n.
@@ -1988,7 +2014,8 @@ False
 ```
 
 ### Visualization bindings
-- `nums` → model **array**, overlays: (none)
+- `nums` → model **array**
+  - overlays: (none)
 - Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
 
 ### Predictions
@@ -2048,12 +2075,12 @@ The guaranteed O(n log n) worst case, because untrusted/adversarial input could 
 
 - **Area:** DSA foundations
 - **Prerequisites:** complexity, cases
-- **contentHash:** `5feb5a93f07dcd08` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
+- **contentHash:** `eb623945ef0610d5` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 Some operations are *usually* cheap but *occasionally* expensive. **Amortized analysis** asks: averaged over a long sequence of operations, what is the cost **per operation**?
 
-A Python list is the classic example. `append` normally just drops the item into a spare slot — **O(1)**. But when the underlying array is full, Python allocates a bigger array and **moves the existing element references across** — an **O(n)** event. (It copies the *references* — the slots that point at the objects — into the new array; the objects themselves are not duplicated.) Crucially, Python grows the array by a *multiplicative factor*, so those expensive moves happen rarely and get geometrically less frequent. Their total cost across all n appends is only a **constant multiple of n**, so spreading it over the appends gives **amortized O(1)** per append.
+A Python list is the classic example. `append` normally just drops the item into a spare slot — **O(1)**. But when the underlying array is full, Python grows it: the allocator **may be able to extend the storage in place**, or it may allocate a bigger block and **relocate the existing element references into it** — and that relocation is the **O(n)** worst case for a single append. (When references are relocated, it is the *references* — the slots that point at the objects — that move, not the objects themselves, which are not duplicated.) Crucially, Python grows capacity by a *multiplicative factor*, so these resizes happen rarely and get geometrically less frequent. Their total cost across all n appends is only a **constant multiple of n**, so spreading it over the appends gives **amortized O(1)** per append.
 
 So appending n items is **O(n) total**, or **O(1) amortized each** — even though a single append can occasionally cost O(n). Amortized O(1) is a promise about the *average over the sequence*, not about every individual call.
 
@@ -2090,12 +2117,12 @@ Expected output: ```
 ```
 
 ### Line explanations
-- L1 (no runtime event: comment/blank or not reached in this run): Comment: build a list by appending.
-- L2 (produces a runtime event): Start with an empty list.
-- L3 (produces a runtime event): Loop i = 0..4 (n = 5 iterations).
-- L4 (produces a runtime event): Append i. Usually O(1); occasionally triggers a resize that moves the k current element references into a larger array (O(k)).
-- L5 (produces a runtime event): Print the built list → [0, 1, 2, 3, 4].
-- L6 (produces a runtime event): Print its length → 5.
+- L1 (comment): Comment: build a list by appending.
+- L2 (produces a runtime event in this trace): Start with an empty list.
+- L3 (produces a runtime event in this trace): Loop i = 0..4 (n = 5 iterations).
+- L4 (produces a runtime event in this trace): Append i. Usually O(1); occasionally triggers a resize that moves the k current element references into a larger array (O(k)).
+- L5 (produces a runtime event in this trace): Print the built list → [0, 1, 2, 3, 4].
+- L6 (produces a runtime event in this trace): Print its length → 5.
 
 ### Complexity table
 - **append (single)** — best O(1), avg O(1), worst O(n). Worst = a resize that moves the n current element references into a larger array.
@@ -2169,7 +2196,8 @@ Expected output: ```
 ```
 
 ### Visualization bindings
-- `data` → model **array**, overlays: pointer:i("i")
+- `data` → model **array**
+  - overlay: role=pointer, source=`i`, label="i"
 - Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
 
 ### Predictions
@@ -2231,7 +2259,7 @@ Preallocate a list of size n (e.g. [None] * n) and assign by index; this does on
 
 - **Area:** DSA foundations
 - **Prerequisites:** loops, functions
-- **contentHash:** `23fa1c0da21c5d26` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
+- **contentHash:** `944aeb240d2884f6` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 Fast is useless if the answer is wrong. **Correctness** means an algorithm returns the right result for **every** valid input — the inputs allowed by its **contract** (precondition). For `sum_to` the contract is "`n` is a non-negative integer"; inputs outside the contract (such as a negative `n`) are not promised a meaningful answer, though here the loop guard happens to return 0 for them. We reason about correctness with a few tools:
@@ -2283,19 +2311,19 @@ Expected output: ```
 ```
 
 ### Line explanations
-- L1 (no runtime event: comment/blank or not reached in this run): Comment: we will argue why this is correct.
-- L2 (produces a runtime event): Define sum_to(n).
-- L3 (produces a runtime event): Start total at 0 — the sum of no terms.
-- L4 (produces a runtime event): Start i at 1 — the first term to add.
-- L5 (no runtime event: comment/blank or not reached in this run): Comment states the loop invariant.
-- L6 (produces a runtime event): Loop while i <= n. i increases each pass, guaranteeing termination.
-- L7 (produces a runtime event): Add i to total. Mid-iteration the invariant is temporarily BROKEN: total now includes 1..i, but i has not advanced, so it no longer equals the sum of 1..(i-1).
-- L8 (produces a runtime event): Advance i to i+1. This completes the iteration and RESTORES the invariant: total (= sum of 1..old i) once again equals the sum of 1..(new i - 1).
-- L9 (produces a runtime event): Return total. At exit i = n+1, so total = sum of 1..n.
-- L10 (no runtime event: comment/blank or not reached in this run): Blank line.
-- L11 (produces a runtime event): sum_to(5) = 1+2+3+4+5 = 15.
-- L12 (no runtime event: comment/blank or not reached in this run): Comment: the n = 0 edge case.
-- L13 (produces a runtime event): sum_to(0): loop never runs, returns 0 — correct 'sum of nothing'.
+- L1 (comment): Comment: we will argue why this is correct.
+- L2 (produces a runtime event in this trace): Define sum_to(n).
+- L3 (produces a runtime event in this trace): Start total at 0 — the sum of no terms.
+- L4 (produces a runtime event in this trace): Start i at 1 — the first term to add.
+- L5 (comment): Comment states the loop invariant.
+- L6 (produces a runtime event in this trace): Loop while i <= n. i increases each pass, guaranteeing termination.
+- L7 (produces a runtime event in this trace): Add i to total. Mid-iteration the invariant is temporarily BROKEN: total now includes 1..i, but i has not advanced, so it no longer equals the sum of 1..(i-1).
+- L8 (produces a runtime event in this trace): Advance i to i+1. This completes the iteration and RESTORES the invariant: total (= sum of 1..old i) once again equals the sum of 1..(new i - 1).
+- L9 (produces a runtime event in this trace): Return total. At exit i = n+1, so total = sum of 1..n.
+- L10 (blank): Blank line.
+- L11 (produces a runtime event in this trace): sum_to(5) = 1+2+3+4+5 = 15.
+- L12 (comment): Comment: the n = 0 edge case.
+- L13 (produces a runtime event in this trace): sum_to(0): loop never runs, returns 0 — correct 'sum of nothing'.
 
 ### Complexity table
 - **sum_to(n) loop** — best O(n), avg O(n), worst O(n), space O(1). n additions; two variables. (The closed form n(n+1)/2 does a fixed number of operations — O(1) under a unit-cost model; arbitrary-precision arithmetic on huge n costs more.)
@@ -2361,7 +2389,8 @@ Expected output: ```
 ```
 
 ### Visualization bindings
-- `total` → model **object**, overlays: (none)
+- `total` → model **object**
+  - overlays: (none)
 - Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
 
 ### Predictions
@@ -2431,7 +2460,7 @@ Because the loop condition 1 <= 0 is False immediately, the body never runs, and
 
 - **Area:** DSA foundations
 - **Prerequisites:** variables-and-types, loops
-- **contentHash:** `f9e6e64ce44f97f1` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
+- **contentHash:** `13848cb935af1779` · **verifiedAt:** 2026-10-04 · **semanticReview:** false · **reviewBatch:** 1
 
 ### Explanation
 A **data structure** is a way of *representing* information so that the operations you care about are efficient. The same facts can be stored in different shapes, and the shape you pick determines which operations are fast.
@@ -2501,26 +2530,26 @@ True
 ```
 
 ### Line explanations
-- L1 (no runtime event: comment/blank or not reached in this run): Comment: the same connections stored two ways.
-- L2 (no runtime event: comment/blank or not reached in this run): Comment: the edge list representation.
-- L3 (produces a runtime event): Build the edge list: three undirected edges as pairs (0,1), (0,2), (1,2).
-- L4 (no runtime event: comment/blank or not reached in this run): Comment: the adjacency map representation.
-- L5 (produces a runtime event): Build the adjacency map: each node mapped to the SET of its neighbours.
-- L6 (no runtime event: comment/blank or not reached in this run): Blank line.
-- L7 (no runtime event: comment/blank or not reached in this run): Comment: rebuild and compare the connections from each shape.
-- L8 (no runtime event: comment/blank or not reached in this run): Comment: store each edge as (smaller, larger) so both shapes look the same.
-- L9 (produces a runtime event): Start an empty set to collect connections rebuilt from the edge list.
-- L10 (produces a runtime event): Loop over each pair (u, v) in the edge list.
-- L11 (produces a runtime event): Add the normalised edge (min, max) to the set. A set ignores duplicates.
-- L12 (no runtime event: comment/blank or not reached in this run): Blank line.
-- L13 (produces a runtime event): Start an empty set to collect connections rebuilt from the adjacency map.
-- L14 (produces a runtime event): Loop over each node (key) in the adjacency map.
-- L15 (produces a runtime event): Nested loop: for that node, loop over each of its neighbours.
-- L16 (produces a runtime event): Add the normalised (min, max) edge. The map lists each edge from both ends; the set collapses the duplicate.
-- L17 (no runtime event: comment/blank or not reached in this run): Blank line.
-- L18 (no runtime event: comment/blank or not reached in this run): Comment: equal sets mean the two encodings describe the same graph.
-- L19 (produces a runtime event): Print whether the two rebuilt connection sets are equal — True proves equivalence.
-- L20 (produces a runtime event): Print how many distinct connections there are — 3 for this graph.
+- L1 (comment): Comment: the same connections stored two ways.
+- L2 (comment): Comment: the edge list representation.
+- L3 (produces a runtime event in this trace): Build the edge list: three undirected edges as pairs (0,1), (0,2), (1,2).
+- L4 (comment): Comment: the adjacency map representation.
+- L5 (produces a runtime event in this trace): Build the adjacency map: each node mapped to the SET of its neighbours.
+- L6 (blank): Blank line.
+- L7 (comment): Comment: rebuild and compare the connections from each shape.
+- L8 (comment): Comment: store each edge as (smaller, larger) so both shapes look the same.
+- L9 (produces a runtime event in this trace): Start an empty set to collect connections rebuilt from the edge list.
+- L10 (produces a runtime event in this trace): Loop over each pair (u, v) in the edge list.
+- L11 (produces a runtime event in this trace): Add the normalised edge (min, max) to the set. A set ignores duplicates.
+- L12 (blank): Blank line.
+- L13 (produces a runtime event in this trace): Start an empty set to collect connections rebuilt from the adjacency map.
+- L14 (produces a runtime event in this trace): Loop over each node (key) in the adjacency map.
+- L15 (produces a runtime event in this trace): Nested loop: for that node, loop over each of its neighbours.
+- L16 (produces a runtime event in this trace): Add the normalised (min, max) edge. The map lists each edge from both ends; the set collapses the duplicate.
+- L17 (blank): Blank line.
+- L18 (comment): Comment: equal sets mean the two encodings describe the same graph.
+- L19 (produces a runtime event in this trace): Print whether the two rebuilt connection sets are equal — True proves equivalence.
+- L20 (produces a runtime event in this trace): Print how many distinct connections there are — 3 for this graph.
 
 ### Complexity table
 - **Edge list: find a node's neighbours** — best O(E), avg O(E), worst O(E), space O(E). No key: must scan every edge. Plain list scan (no hashing), so O(E) in all cases. Storing all edges is O(E).
@@ -2609,8 +2638,10 @@ True
 ```
 
 ### Visualization bindings
-- `edges` → model **array**, overlays: (none)
-- `adj` → model **dict**, overlays: (none)
+- `edges` → model **array**
+  - overlays: (none)
+- `adj` → model **dict**
+  - overlays: (none)
 - Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.
 
 ### Predictions

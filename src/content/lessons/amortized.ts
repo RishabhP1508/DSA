@@ -20,7 +20,7 @@ export const amortized: LessonDefinition = {
 
   explanation: `Some operations are *usually* cheap but *occasionally* expensive. **Amortized analysis** asks: averaged over a long sequence of operations, what is the cost **per operation**?
 
-A Python list is the classic example. \`append\` normally just drops the item into a spare slot — **O(1)**. But when the underlying array is full, Python allocates a bigger array and **moves the existing element references across** — an **O(n)** event. (It copies the *references* — the slots that point at the objects — into the new array; the objects themselves are not duplicated.) Crucially, Python grows the array by a *multiplicative factor*, so those expensive moves happen rarely and get geometrically less frequent. Their total cost across all n appends is only a **constant multiple of n**, so spreading it over the appends gives **amortized O(1)** per append.
+A Python list is the classic example. \`append\` normally just drops the item into a spare slot — **O(1)**. But when the underlying array is full, Python grows it: the allocator **may be able to extend the storage in place**, or it may allocate a bigger block and **relocate the existing element references into it** — and that relocation is the **O(n)** worst case for a single append. (When references are relocated, it is the *references* — the slots that point at the objects — that move, not the objects themselves, which are not duplicated.) Crucially, Python grows capacity by a *multiplicative factor*, so these resizes happen rarely and get geometrically less frequent. Their total cost across all n appends is only a **constant multiple of n**, so spreading it over the appends gives **amortized O(1)** per append.
 
 So appending n items is **O(n) total**, or **O(1) amortized each** — even though a single append can occasionally cost O(n). Amortized O(1) is a promise about the *average over the sequence*, not about every individual call.`,
 
@@ -148,7 +148,7 @@ So appending n items is **O(n) total**, or **O(1) amortized each** — even thou
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "13340c29f360a190",
+    contentHash: "eb623945ef0610d5",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

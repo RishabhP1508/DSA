@@ -31,7 +31,7 @@ export const classes: LessonDefinition = {
 
 The \`__init__\` method **initializes** a newly created instance — Python builds the object first, then runs \`__init__\` to set up its starting attributes (so it is the *initializer*; the lower-level creation step is \`__new__\`, which beginners rarely write). \`self\` is the current instance, and Python supplies it **automatically**: writing \`c.increment()\` is shorthand for \`Counter.increment(c)\`, so the instance \`c\` is passed in as the first parameter \`self\`. That is why the ordinary **instance methods** taught here (\`__init__\`, \`increment\`) list \`self\` first. (Not every method does — class methods and static methods, beyond this lesson, do not take \`self\` — so read this as "instance methods take \`self\` first".) \`self.value = start\` stores data **on that specific instance**, and a **method** like \`increment\` reaches the object's own data through \`self\`.
 
-Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 → 12), and print \`c.value\`, which is 12. In this example each counter's \`value\` is bound separately through \`self.value\`, so incrementing one does not change another. But instances are not *guaranteed* to be independent: an attribute **binds a name to an object**, and two instances can end up referring to the **same** object — e.g. \`self.items = shared_list\` in \`__init__\` would make every instance share one list, and a class-level attribute (defined on the class, not through \`self\`) is shared by all instances too. Independence here comes from each \`self.value\` binding to its own int, not from a blanket rule that separate instances can never share an object.`,
+Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 → 12), and print \`c.value\`, which is 12. In this example each counter's \`value\` is bound separately through \`self.value\`, so incrementing one does not change another. But instances are not *guaranteed* to be independent: an attribute **binds a name to an object**, and two instances can end up referring to the **same** object — e.g. \`self.items = shared_list\` in \`__init__\` would make every instance share one list, and a class-level attribute (defined on the class, not through \`self\`) is shared by all instances too. Independence here comes from each instance having its **own attribute binding** (\`c.value\` and \`d.value\` are separate name bindings), not from the ints being distinct objects: two \`Counter(10)\`s may initially share the very same cached int (\`c.value is d.value\` can be \`True\`). Incrementing one does \`self.value = self.value + 1\`, which **rebinds only that instance's attribute** to a new int, leaving the other's binding untouched — so they diverge regardless of whether they first shared an int object.`,
 
   vocabulary: [
     { term: "Class", definition: "A blueprint describing the attributes and methods of a kind of object." },
@@ -47,7 +47,7 @@ Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 �
     operations: "Define with class, initialise with __init__, add methods, create instances, read/write attributes.",
     uses: "Linked-list/tree/graph nodes, custom data structures, grouping related state.",
     tradeoffs: "Classes add structure and reuse but can be overkill for simple data (a tuple or dict may suffice).",
-    commonMistakes: "Forgetting self in method definitions or attribute access; confusing class-level and instance-level attributes; expecting two instances to share instance attributes (they don't).",
+    commonMistakes: "Forgetting self in method definitions or attribute access; confusing class-level and instance-level attributes; conflating a per-instance ATTRIBUTE BINDING with the OBJECT it points at — each instance has its own `self.value` binding, but that does not mean the referenced objects differ (two counters can share one cached int) nor that instances can never share a referenced object (e.g. if __init__ does `self.items = shared_list`, every instance's `items` points at the one shared list).",
     edgeCases: "Attributes not set in __init__ don't exist until assigned. Mutable class-level defaults are shared across instances (a common trap).",
   },
 
@@ -149,7 +149,7 @@ Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 → 11 �
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "5bea8c28eff5028d",
+    contentHash: "e57a6eba22fe7173",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: false,

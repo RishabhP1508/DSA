@@ -97,6 +97,24 @@ work or packaging.
   packaging.
 - **FU-1 / FU-2** curriculum follow-ups unresolved (Task Scheduler cooldown
   scheduling; Meeting Rooms II concurrent-overlap counting).
+- **FU-3 (product, non-blocking) — prediction `atEventIndex` is authored but not
+  consumed by any view.** Every lesson's `prediction[].atEventIndex` names a
+  recorded trace step, but `App.tsx` (the Predict section) renders each
+  prediction as a static `prompt`/`answer`/`explanation` disclosure, and no
+  component reads `atEventIndex` to drive playback (confirmed R9/B1 2026-10-04:
+  `grep` finds zero non-test, non-content consumers). Raised explicitly here (not
+  only as a packet footnote) so it is tracked.
+  - *Intended behaviour:* at the authored step, the playback timeline should
+    PAUSE on that recorded event and surface the prediction prompt before
+    revealing the answer, so the learner predicts the upcoming state in context
+    (rather than reading a detached Q&A).
+  - *Acceptance check:* a browser (Playwright) test that opens a lesson, advances
+    playback, and asserts the timeline halts at `atEventIndex` with the prompt
+    shown and the answer hidden until revealed; plus a unit assertion that each
+    `atEventIndex` is a valid in-range index of that lesson's recorded trace.
+  - *Scope:* this is a UI/product capability, deliberately deferred with the
+    other UI work in §7 — NOT a batch-content correction. The B1 review packet
+    records the current limitation honestly rather than implying a pause exists.
 
 *(Resolved by the R6 amendment, no longer open: the previously-listed "26 coding
 exercises not machine-runnable" — now 161/161 runnable — and "87 recognition

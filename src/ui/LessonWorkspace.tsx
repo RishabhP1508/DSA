@@ -10,6 +10,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { LessonDefinition } from "../core/types";
 import { useEngine, PLAYBACK_SPEEDS } from "./useEngine";
+import { labelForLine } from "./line-label";
 import { CodeEditor } from "./CodeEditor";
 import { VariablesPanel } from "./VariablesPanel";
 import { ComplexityPanel } from "./ComplexityPanel";
@@ -148,7 +149,10 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
           ) : lineExplanation ? (
             <p>
               <span className="line-badge">line {lineExplanation.line}</span>{" "}
-              {lineExplanation.executable ? "" : <em>(comment) </em>}
+              {(() => {
+                const label = labelForLine(lesson.code, lineExplanation.line, lineExplanation.executable);
+                return label ? <em>{label} </em> : "";
+              })()}
               {lineExplanation.explanation}
             </p>
           ) : (

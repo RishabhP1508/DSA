@@ -14,6 +14,7 @@ import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { lessons } from "../src/content/registry.ts";
+import { classifyLine, lineLabelText } from "../src/ui/line-label.ts";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const IDS = [
@@ -73,7 +74,16 @@ for (const id of IDS) {
   md.push(`Expected output: ${fence(l.expectedOutput)}`);
   md.push("");
   md.push("### Line explanations");
-  for (const c of l.codeExplanations) md.push(`- L${c.line} ${c.executable ? "(produces a runtime event)" : "(no runtime event: comment/blank or not reached in this run)"}: ${c.explanation}`);
+  const srcLines = l.code.split("\n");
+  for (const c of l.codeExplanations) {
+    // Honest label from the SAME classifier the UI uses (static source text +
+    // the executable flag): comment / blank / not-reached / (none).
+    const kind = classifyLine(srcLines[c.line - 1], c.executable);
+    const label = kind === "none"
+      ? "(produces a runtime event in this trace)"
+      : lineLabelText(kind);
+    md.push(`- L${c.line} ${label}: ${c.explanation}`);
+  }
   md.push("");
   md.push("### Complexity table");
   for (const row of (l.complexity ?? [])) {
@@ -85,10 +95,19 @@ for (const id of IDS) {
   md.push("");
   md.push("### Visualization bindings");
   for (const b of (l.bindings ?? [])) {
-    const ov = (b.overlays ?? []).length
-      ? (b.overlays).map((o) => `${o.role}:${o.source}("${o.label}")`).join(", ")
-      : "(none)";
-    md.push(`- \`${b.variable}\` → model **${b.model}**, overlays: ${ov}`);
+    md.push(`- \`${b.variable}\` → model **${b.model}**${b.rationale ? ` — rationale: ${b.rationale}` : ""}`);
+    if ((b.overlays ?? []).length) {
+      for (const o of b.overlays) {
+        // emit every authored overlay field, not just a label
+        const extra = Object.entries(o)
+          .filter(([k]) => !["role", "source", "label"].includes(k))
+          .map(([k, v]) => `${k}=${JSON.stringify(v)}`)
+          .join(", ");
+        md.push(`  - overlay: role=${o.role}, source=\`${o.source}\`, label="${o.label}"${extra ? ", " + extra : ""}`);
+      }
+    } else {
+      md.push("  - overlays: (none)");
+    }
   }
   md.push("- Real-trace note: array bindings carry NO value-as-index overlay (a loop VALUE is not an index); verified by the `*.overlay.real.test.tsx` rendered-trace regressions.");
   md.push("");
@@ -126,6 +145,15 @@ for (const id of IDS) {
         md.push(`    - [${rs.id}]${rs.contradictory ? " (contradictory)" : ""} ${rs.text}`);
       }
       md.push(`  - Acceptable approach(es): ${(r.acceptableApproachIds ?? []).join(", ")}`);
+      if ((r.alternatives ?? []).length) {
+        md.push(`  - Conditional alternatives (acceptable when their stated conditions hold):`);
+        for (const alt of r.alternatives) {
+          md.push(`    - approach [${alt.approachId}] — when: ${alt.conditions}`);
+          md.push(`      tradeoff: ${alt.tradeoff}`);
+          md.push(`      required reason(s): ${(alt.requiredReasonIds ?? []).join(", ")}`);
+        }
+      }
+      if (r.reflectionPrompt) md.push(`  - Reflection prompt (ungraded): ${r.reflectionPrompt}`);
       md.push(`  - Model explanation: ${r.modelExplanation}`);
     }
     if (ex.tests) md.push(`- **Coding test contract:** ${fence(ex.tests)}`);
