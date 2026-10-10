@@ -166,7 +166,7 @@ A **precondition**: \`find_max\` assumes the list is **non-empty**. On \`find_ma
     contentHash: "de74e7e7e0ad82d6",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 1,
   },
 };

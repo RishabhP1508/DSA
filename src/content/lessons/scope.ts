@@ -133,7 +133,7 @@ The rule of thumb: assigning to a name inside a function makes it local (unless 
     contentHash: "612ab2035b310049",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 1,
   },
 };

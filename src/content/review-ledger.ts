@@ -32,8 +32,8 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "amortized",
     "kind": "lesson",
-    "reviewedHash": "ce94e80ff544fa4f",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "eb623945ef0610d5",
+    "reviewedAt": "2026-10-05",
     "batch": 1
   },
   {
@@ -144,15 +144,15 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "cases",
     "kind": "lesson",
-    "reviewedHash": "3071b09105a0b4fe",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "0a02e964bdeb39e7",
+    "reviewedAt": "2026-10-05",
     "batch": 1
   },
   {
     "id": "classes",
     "kind": "lesson",
-    "reviewedHash": "21447fd00300d564",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "e57a6eba22fe7173",
+    "reviewedAt": "2026-10-05",
     "batch": 1
   },
   {
@@ -165,15 +165,15 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "complexity",
     "kind": "lesson",
-    "reviewedHash": "e8a0d4d6d10a6c0b",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "de74e7e7e0ad82d6",
+    "reviewedAt": "2026-10-05",
     "batch": 1
   },
   {
     "id": "conditions",
     "kind": "lesson",
-    "reviewedHash": "6c798609f0518c64",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "be2f2011ca4c5afe",
+    "reviewedAt": "2026-10-05",
     "batch": 1
   },
   {
@@ -186,8 +186,8 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "correctness",
     "kind": "lesson",
-    "reviewedHash": "76121f369b7dcc0c",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "944aeb240d2884f6",
+    "reviewedAt": "2026-10-05",
     "batch": 1
   },
   {
@@ -361,8 +361,8 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "errors",
     "kind": "lesson",
-    "reviewedHash": "ebcb0f13434b9c81",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "40378ecd5eb1e320",
+    "reviewedAt": "2026-10-05",
     "batch": 1
   },
   {
@@ -375,8 +375,8 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "expressions",
     "kind": "lesson",
-    "reviewedHash": "f468a4884157f52b",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "32b82b97f920056f",
+    "reviewedAt": "2026-10-05",
     "batch": 1
   },
   {
@@ -396,8 +396,8 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "functions",
     "kind": "lesson",
-    "reviewedHash": "7d799d6d7e822e95",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "34076dce4cf0d3ba",
+    "reviewedAt": "2026-10-05",
     "batch": 1
   },
   {
@@ -487,8 +487,8 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "io",
     "kind": "lesson",
-    "reviewedHash": "6f85c9e72a228543",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "c76bd4181538df89",
+    "reviewedAt": "2026-10-05",
     "batch": 1
   },
   {
@@ -732,15 +732,15 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "references-mutation",
     "kind": "lesson",
-    "reviewedHash": "bdfd71de6dbf2fdf",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "5eeecfc8bcb206fd",
+    "reviewedAt": "2026-10-05",
     "batch": 1
   },
   {
     "id": "representations",
     "kind": "lesson",
-    "reviewedHash": "c8890b6f2e543964",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "13848cb935af1779",
+    "reviewedAt": "2026-10-05",
     "batch": 1
   },
   {
@@ -760,8 +760,8 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "scope",
     "kind": "lesson",
-    "reviewedHash": "fa66cb266bc57f18",
-    "reviewedAt": "2026-09-20",
+    "reviewedHash": "612ab2035b310049",
+    "reviewedAt": "2026-10-05",
     "batch": 1
   },
   {
