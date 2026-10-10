@@ -33,7 +33,7 @@ This is implemented code, not a proposal that Kiro must integrate.
 
 ## Final verification
 
-Validated source tree: `d9692d6d58b5e2cbacbb865b13f596c8feec0c3a`, based on
+Validated source tree: `f975ec5c23675c45dd59f2aad6047eb982241131`, based on
 merged main `f0213e5`. Checks completed on native Windows on 2026-10-10:
 
 | Check | Result |
@@ -51,9 +51,12 @@ merged main `f0213e5`. Checks completed on native Windows on 2026-10-10:
 | Package-builder fixture | Pass; freeze/hash/no-overwrite/space-path assertions |
 | Locked dependency audit | Zero known vulnerabilities at verification time |
 
-The aggregate ran against the byte-identical working tree that became the
-source commit above; both full browser suites ran with that commit checked out.
-Later release-record changes are documentation only. Lint reports 32 warnings
+The aggregate and Chrome suite ran against the byte-identical working tree that
+became the source commit above; the Edge suite ran with that commit checked out.
+This includes the native launcher exit-code correction and local-file font
+assets required by the production CSP. The release harness waits for completed
+draft hydration before checking an imported draft and its backup. Later
+release-record changes are documentation only. Lint reports 32 warnings
 (primarily development Fast Refresh and React effect guidance), zero errors.
 The semantic checker retains 25 advisory operation-versus-whole-program/cost
 model comparisons; these scopes were examined in the recorded subject reviews.
