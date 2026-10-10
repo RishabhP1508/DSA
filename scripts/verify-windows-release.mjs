@@ -230,7 +230,15 @@ async function browserAcceptance(channel, expected, outputDir) {
       await (await chosen).setFiles({name: 'windows-release.py', mimeType: 'text/x-python', buffer: Buffer.from('\ufeff' + SOURCE.replace(/\n/g, '\r\n'), 'utf8')});
       await expect(page.locator('.save-status')).toContainText('Imported “windows-release” into a new draft');
       assert.equal(primary.audit.workers.length, workersBeforeImport, 'Import executed personal source');
-      draftSlot = await page.getByRole('combobox', {name: 'Select draft'}).inputValue();
+      const draftSelector = page.getByRole('combobox', {name: 'Select draft'});
+      // Import publishes its status before the asynchronous draft-list refresh.
+      // Until the new option exists, the native select can expose Scratchpad's
+      // old value even though React has already selected the imported slot.
+      const importedOption = draftSelector.getByRole('option', {name: 'windows-release', exact: true});
+      await expect(importedOption).toHaveCount(1);
+      draftSlot = await importedOption.getAttribute('value');
+      assert.match(draftSlot, /^import-\d+$/);
+      await expect(draftSelector).toHaveValue(draftSlot);
       await page.getByRole('textbox', {name: /Input for input/}).fill(STDIN);
       await page.getByRole('button', {name: /Save draft/}).click();
       await expect(page.locator('.save-status')).toContainText('Saved');
@@ -238,6 +246,7 @@ async function browserAcceptance(channel, expected, outputDir) {
       await completed(page, 'release hello café\n42\n');
       await page.screenshot({path: path.join(outputDir, `${channel}-release-playground.png`), fullPage: true});
       await page.reload(); await navigate(page, 'Playground');
+      await expect(page.getByRole('button', {name: /Save draft/})).toBeEnabled();
       await expect(page.getByRole('combobox', {name: 'Select draft'})).toHaveValue(draftSlot);
       await expect(page.getByRole('textbox', {name: /Input for input/})).toHaveValue(STDIN);
       await expect(page.locator('.cm-content')).toContainText('release hello');
@@ -250,6 +259,8 @@ async function browserAcceptance(channel, expected, outputDir) {
       const backup = await downloadBackup(page, path.join(outputDir, `${channel}-fixture-backup.json`));
       assert.equal(backup.envelope.app, 'dsa-visual-lab'); assert.equal(backup.envelope.backupVersion, 2);
       assert.equal(backup.envelope.data.lessons['dp-base-cases'].completed, true);
+      assert(backup.envelope.data.drafts[draftSlot], `Selected imported draft ${draftSlot} is absent from the exported backup`);
+      assert.equal(backup.envelope.data.preferences.lastDraftSlot, draftSlot);
       assert.equal(backup.envelope.data.drafts[draftSlot].source, SOURCE);
       assert.equal(backup.envelope.data.drafts[draftSlot].stdin, STDIN);
       await page.getByLabel('Backup file to restore').setInputFiles({name: 'foreign.json', mimeType: 'application/json', buffer: Buffer.from('{"app":"foreign"}')});
@@ -267,6 +278,7 @@ async function browserAcceptance(channel, expected, outputDir) {
       await other.reload(); await openLesson(other);
       await expect(other.getByRole('button', {name: /✓ Completed/}).first()).toBeDisabled();
       await navigate(other, 'Playground');
+      await expect(other.getByRole('button', {name: /Save draft/})).toBeEnabled();
       await expect(other.getByRole('combobox', {name: 'Select draft'})).toHaveValue(draftSlot);
       await expect(other.getByRole('textbox', {name: /Input for input/})).toHaveValue(STDIN);
       await expect(other.locator('.cm-content')).toContainText('release hello');

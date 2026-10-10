@@ -15,7 +15,9 @@ export default defineConfig({
     // The run worker is an ES module worker.
     format: 'es',
   },
-  build: { rollupOptions: { input: { app: 'index.html', runner: 'runner-bridge.html' } } },
+  // Keep even small font subsets as local files: production font-src permits
+  // only this origin, so Vite's default data-URL inlining would be blocked.
+  build: { assetsInlineLimit: 0, rollupOptions: { input: { app: 'index.html', runner: 'runner-bridge.html' } } },
   // Pyodide is served from /public/pyodide (not bundled), so keep Vite from
   // trying to pre-bundle or resolve it.
   optimizeDeps: {
