@@ -11,7 +11,7 @@ code and dependency notices. No account, API key or AI service is required.
 
 ## Run the Windows package
 
-Use the supplied `DSA-Visual-Lab-1.0.0-Windows-x64.zip`:
+Download [DSA-Visual-Lab-1.0.0-Windows-x64.zip](https://github.com/RishabhP1508/DSA/releases/download/v1.0.0/DSA-Visual-Lab-1.0.0-Windows-x64.zip), then:
 
 1. Extract the entire ZIP to a normal folder. Keep its contents together.
 2. Double-click `Start.cmd` inside the extracted folder.
@@ -27,10 +27,12 @@ occupied, the launcher reports the conflict. It does not stop another app or a
 different DSA build. If startup fails, read the message in the launcher window
 and resolve the named port conflict before restarting.
 
-The prebuilt ZIP was delivered separately and is not checked into this
-repository. The [1.0.0 delivery record](docs/releases/1.0.0.md) contains its exact
-filename, checksum, runtime versions and test results. This repository contains
-the source and tools for building another package.
+The ZIP and its [SHA256 checksum](https://github.com/RishabhP1508/DSA/releases/download/v1.0.0/DSA-Visual-Lab-1.0.0-Windows-x64.zip.sha256)
+are available on the [1.0.0 release page](https://github.com/RishabhP1508/DSA/releases/tag/v1.0.0).
+Choose the named Windows ZIP under Assets. GitHub's automatic Source code
+archives contain repository source, without the portable Windows build.
+The [delivery record](docs/releases/1.0.0.md) lists the checksum, runtime versions
+and test results. This repository also contains the tools for building a package.
 
 ## Learn and practice
 
