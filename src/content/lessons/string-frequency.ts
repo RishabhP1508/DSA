@@ -42,7 +42,7 @@ This "one pass building a map" shape is everywhere: it turns "how many / does it
   },
 
   complexity: [
-    { operation: "Count frequencies", best: "O(n)", average: "O(n)", worst: "O(n)", space: "O(k)", note: "One pass; k distinct keys (bounded by alphabet)." },
+    { operation: "Count frequencies", best: "O(n)", average: "O(n)", worst: "O(n*k)", space: "O(k)", note: "Expected O(n); collision-heavy map operations can cost O(k) each. A fixed-size alphabet bounds k." },
   ],
 
   complexityExplanation: {
@@ -141,13 +141,14 @@ This "one pass building a map" shape is everywhere: it turns "how many / does it
       verifiedClaims: ["dict get/set are average-case O(1)"],
       accessDate: "2026-09-20",
     },
+    {"url":"https://docs.python.org/3.14/tutorial/controlflow.html#defining-functions","title":"Python defining functions","section":"Return statements","topic":"string-frequency","purpose":"Check the specific delegated-review correction against the source.","verifiedClaims":["Returning a value supplies it to the caller; printing writes output and does not replace return."],"accessDate":"2026-10-10"},
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "da860bb3f3672121",
-    verifiedAt: "2026-09-21",
+    contentHash: "6378ad9293f6eb22",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

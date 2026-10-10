@@ -19,7 +19,10 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    {
+      name: process.env.PLAYWRIGHT_CHANNEL ?? "chromium",
+      use: { ...devices["Desktop Chrome"], channel: process.env.PLAYWRIGHT_CHANNEL },
+    },
   ],
   webServer: {
     // Serve the built app on the app origin. The runner-origin work (R2.5) will

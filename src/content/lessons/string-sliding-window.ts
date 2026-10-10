@@ -50,7 +50,7 @@ Crucially, \`start\` only ever moves **forward**, and \`i\` moves forward once p
   },
 
   complexity: [
-    { operation: "Longest unique substring", best: "O(n)", average: "O(n)", worst: "O(n)", space: "O(k)", note: "Each edge advances at most n times; map holds k distinct chars." },
+    { operation: "Longest unique substring", best: "O(n)", average: "O(n)", worst: "O(n*k)", space: "O(k)", note: "Expected O(n) with bounded-size keys; collision-heavy map work can reach O(n*k). Each edge only advances; k is the distinct-character count." },
   ],
 
   complexityExplanation: {
@@ -167,13 +167,15 @@ Crucially, \`start\` only ever moves **forward**, and \`i\` moves forward once p
       verifiedClaims: ["Variable windows expand on the right and contract on the left to maintain a constraint"],
       accessDate: "2026-09-20",
     },
+    {"url":"https://leetcode.com/problems/longest-substring-without-repeating-characters/description/","title":"Longest Substring Without Repeating Characters","section":"Examples and constraints","topic":"string-sliding-window","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["The answer is a contiguous substring, not a subsequence."],"accessDate":"2026-10-10"},
+    {"url":"https://usaco.guide/silver/two-pointers","title":"USACO Two Pointers","section":"Sliding Window","topic":"string-sliding-window","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Monotone pointers bound total movement linearly."],"accessDate":"2026-10-10"},
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "2bd6c27b57f2f7a1",
-    verifiedAt: "2026-09-21",
+    contentHash: "7171e5e78b2bfe19",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

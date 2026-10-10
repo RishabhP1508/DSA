@@ -45,7 +45,7 @@ export const EXERCISE_TESTS: Record<string, string> = {
   "lesson:matrix-traversal:mat-complete-1":
     "assert grid_sum([[1, 2, 3], [4, 5, 6]]) == 21, f'sum of 1..6 == 21, got {grid_sum([[1,2,3],[4,5,6]])}'\nassert grid_sum([[5]]) == 5, 'single cell'\nassert grid_sum([[1, 1], [1, 1], [1, 1]]) == 6, 'ragged? no — 3x2 of ones'\nassert grid_sum([[0, 0], [0, 0]]) == 0\nprint('OK')",
   "lesson:intervals:int-fix-1":
-    "out = merge([[2, 3], [1, 5], [4, 6]])\nnorm = [list(x) for x in out]\nassert norm == [[1, 6]], f'overlapping intervals merge to [1,6], got {norm}'\nout2 = merge([[1, 2], [5, 6]])\nassert [list(x) for x in out2] == [[1, 2], [5, 6]]\n# touching intervals [1,3],[3,5] must merge (needs <= and the sort): a version\n# using strict < would leave them separate.\nout3 = merge([[3, 5], [1, 3]])\nassert [list(x) for x in out3] == [[1, 5]], f'touching intervals should merge, got {out3}'\nprint('OK')",
+    "out = merge([[2, 3], [1, 5], [4, 6]])\nnorm = [list(x) for x in out]\nassert merge([]) == [], 'empty input'\nassert merge([[2, 2]]) == [[2, 2]], 'singleton closed interval'\nassert merge([[1, 5], [1, 5], [2, 3]]) == [[1, 5]], 'duplicates and nesting'\nassert norm == [[1, 6]], f'overlapping intervals merge to [1,6], got {norm}'\nout2 = merge([[1, 2], [5, 6]])\nassert [list(x) for x in out2] == [[1, 2], [5, 6]]\n# touching intervals [1,3],[3,5] must merge (needs <= and the sort): a version\n# using strict < would leave them separate.\nout3 = merge([[3, 5], [1, 3]])\nassert [list(x) for x in out3] == [[1, 5]], f'touching intervals should merge, got {out3}'\nprint('OK')",
 
   // ── Strings ────────────────────────────────────────────────────────────
   "lesson:string-frequency:sf-complete-1":
@@ -1301,11 +1301,11 @@ export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
   },
   "lesson:sliding-window:sw-choose-1": {
     scenario:
-      "Problem: 'largest sum of exactly k consecutive elements.' Which pattern applies, and why not prefix sums or Kadane?",
+      "Problem: 'largest sum of exactly k consecutive elements.' Compare a fixed-size window with prefix sums, including auxiliary space, and explain why ordinary Kadane solves a different problem.",
     approaches: [
       { id: "fixed-window", label: "Fixed-size sliding window", requiredReasonIds: ["fixed-width-incremental"] },
       { id: "kadane", label: "Kadane's algorithm", requiredReasonIds: [], rejectionFeedback: "Kadane finds the best any-length subarray; here the width is pinned at exactly k, a different question." },
-      { id: "prefix-sums", label: "Prefix sums", requiredReasonIds: [], rejectionFeedback: "Prefix sums answer arbitrary ranges but are overkill for a single fixed width that updates incrementally." },
+      { id: "prefix-sums", label: "Prefix sums", requiredReasonIds: [], rejectionFeedback: "Prefix sums are correct for width-k ranges too; explain the prefix difference and the O(n) auxiliary-space tradeoff." },
     ],
     reasons: [
       { id: "fixed-width-incremental", text: "The block is contiguous and of fixed width k, so slide the window updating the sum in O(1) (add entering, drop leaving) — O(n)." },
@@ -1314,10 +1314,10 @@ export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
     ],
     acceptableApproachIds: ["fixed-window"],
     alternatives: [
-      { approachId: "prefix-sums", conditions: "When you already have (or will reuse) a prefix-sum array for other range queries.", tradeoff: "Correct but heavier than a single incremental window for one fixed width.", requiredReasonIds: ["prefix-range-diff"] },
+      { approachId: "prefix-sums", conditions: "For valid k when O(n) auxiliary storage is acceptable; especially useful if the prefix array is reused for other queries.", tradeoff: "Correct in O(n) total time, but uses an O(n) prefix array instead of O(1) window state.", requiredReasonIds: ["prefix-range-diff"] },
     ],
     modelExplanation:
-      "Fixed-size sliding window: the width is fixed at k and the sum updates incrementally for an O(n) solution. Kadane is for any-length subarrays; prefix sums are overkill for one fixed width.",
+      "A fixed-size sliding window takes O(n) time and O(1) auxiliary space. Prefix sums are also correct in O(n) total time with O(n) auxiliary space. Ordinary Kadane maximizes over any length and does not enforce k.",
   },
   "lesson:kadane:kad-choose-1": {
     scenario:
@@ -1729,7 +1729,7 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "You need one running total that survives across iterations rather than recomputing anything.",
     "Key insight: a number is even exactly when dividing by 2 leaves no remainder.",
     "Approach: loop over the list and increment an accumulator whenever the evenness test passes.",
-    "Pseudocode: count = 0; for each x in nums: if x is even, add one to count; print count.",
+    "Pseudocode: count = 0; for each x in nums: if x is even, add one to count; return count after the loop.",
     "Inside `if x % 2 == 0:` put `count = count + 1` so each even value bumps the tally.",
   ],
   "lesson:functions:func-complete-1": [
@@ -1781,11 +1781,11 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Change the condition to `while i <= n:` so the last term n is included.",
   ],
   "lesson:array-traversal:arr-trav-complete-1": [
-    "Goal: add up every element of nums and print the total (here 17).",
+    "Goal: add up every element of nums and return the total from sum_all (17 for the example).",
     "You need one accumulator carried across the loop rather than recomputing sums.",
     "Key insight: index i lets you read each element as nums[i] during the range walk.",
     "Approach: loop over the indices and fold each element into a running total.",
-    "Pseudocode: total = 0; for i in range(len(nums)): add nums[i] to total; print total.",
+    "Pseudocode: total = 0; for i in range(len(nums)): add nums[i] to total; return total after the loop.",
     "Inside the loop write `total = total + nums[i]` to accumulate every element.",
   ],
   "lesson:two-pointers:tp-fix-1": [
@@ -1832,17 +1832,17 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Goal: pick the pattern for 'largest sum of exactly k consecutive elements.'",
     "The naive cost is re-summing every length-k block; that repeats work you can update incrementally.",
     "Key insight: the target block is contiguous and of fixed width k, so its sum updates by one add and one subtract per step.",
-    "Approach: use a fixed-size sliding window, not Kadane and not prefix sums.",
+    "Approach: a fixed-size window keeps O(1) auxiliary space. Prefix sums are also correct, using O(n) auxiliary space; ordinary Kadane does not enforce the width.",
     "Pseudocode: sum the first k; slide right updating the sum; track the maximum sum seen.",
-    "Choose the fixed-size sliding window: Kadane handles any-length subarrays and prefix sums answer arbitrary ranges, neither matching 'exactly k'.",
+    "Choose the fixed-size sliding window for O(n) time and O(1) auxiliary space. Prefix sums are a valid alternative with O(n) auxiliary space. Ordinary Kadane handles any-length subarrays, not exactly k.",
   ],
   "lesson:kadane:kad-fix-1": [
     "Goal: return the maximum-sum contiguous subarray, correct even when every number is negative.",
     "Seeding the running sum at 0 is the bug: it lets an empty selection win when all values are negative.",
     "Key insight: with all negatives the best subarray is the single least-negative element, not 0.",
     "Approach: initialise both best and current from the first element, then scan the rest.",
-    "Pseudocode: best = current = nums[0]; for x in nums[1:]: current = max(x, current + x); best = max(best, current).",
-    "Seed `best = nums[0]` and `current = nums[0]` and iterate over `nums[1:]` so an all-negative array returns its largest element.",
+    "Pseudocode: best = current = nums[0]; for i from 1 to len(nums)-1: current = max(nums[i], current + nums[i]); best = max(best, current); return best.",
+    "For the nonempty input, seed best and current with nums[0], then use range(1, len(nums)) to scan without creating a slice. An all-negative array returns its largest element.",
   ],
   "lesson:kadane:kad-choose-1": [
     "Goal: match three subarray problems to their patterns and identify which is Kadane.",
@@ -1861,11 +1861,11 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "In the keep branch do `nums[insert] = nums[i]` then `insert = insert + 1`, and `return insert`.",
   ],
   "lesson:matrix-traversal:mat-complete-1": [
-    "Goal: sum every value in a 2D grid and print the total (here 21).",
+    "Goal: sum every value in a 2D grid and return the total (21 for the example).",
     "You need a single accumulator across nested loops rather than partial sums.",
     "Key insight: a cell is addressed by row and column as grid[r][c].",
     "Approach: nest a column loop inside a row loop and fold each cell into the total.",
-    "Pseudocode: total = 0; for r in rows: for c in columns of that row: add grid[r][c]; print total.",
+    "Pseudocode: total = 0; for r in rows: for c in columns of that row: add grid[r][c]; return total after the loops.",
     "Inside the inner loop write `total = total + grid[r][c]`.",
   ],
   "lesson:intervals:int-fix-1": [
@@ -1873,15 +1873,15 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "The missing expense is ordering: the single sweep assumes overlapping intervals are adjacent.",
     "Key insight: only after sorting by start do overlaps become neighbours the sweep can merge.",
     "Approach: sort first, then do the one-pass merge extending the last interval's end.",
-    "Pseudocode: sort intervals; start merged with the first; for each next: if it overlaps the last, extend its end, else append it.",
-    "Add `intervals.sort()` before building `merged` so the left-to-right merge is valid.",
+    "Pseudocode: sort intervals; start with an empty merged list; for each interval: if merged is nonempty and it overlaps the last, extend its end, else append it; return merged.",
+    "Sort with intervals.sort(); start merged = []; scan all intervals and test `merged and start <= merged[-1][1]`. This handles an empty input too.",
   ],
   "lesson:string-frequency:sf-complete-1": [
     "Goal: build a dict counting how often each character appears in s.",
     "The subtlety is reading a count that may not exist yet without raising KeyError.",
     "Key insight: dict.get(key, 0) returns 0 for unseen characters, letting you always add one.",
     "Approach: loop the characters and increment their counts via get-with-default.",
-    "Pseudocode: freq = {}; for ch in s: freq[ch] = current count (default 0) + 1; print freq.",
+    "Pseudocode: freq = {}; for ch in s: freq[ch] = current count (default 0) + 1; return freq after the loop.",
     "Use `freq[ch] = freq.get(ch, 0) + 1` inside the loop.",
   ],
   "lesson:string-two-pointers:stp-complete-1": [
@@ -1893,12 +1893,12 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "After the mismatch check, advance the pointers with `lo += 1` and `hi -= 1`.",
   ],
   "lesson:string-parsing:sp-complete-1": [
-    "Goal: parse a space-separated line into integers and print the maximum (here 9).",
+    "Goal: parse a nonempty whitespace-separated line of valid integers and return the maximum.",
     "Doing this by manual index slicing is the tedious cost; splitting handles tokenisation for you.",
     "Key insight: str.split() with no argument breaks on any whitespace into a list of tokens.",
     "Approach: split the line, convert each token to int in a comprehension, then take max.",
-    "Pseudocode: nums = [int(p) for p in line.split()]; print(max(nums)).",
-    "Write `nums = [int(p) for p in line.split()]` then `print(max(nums))`.",
+    "Pseudocode: nums = [int(p) for p in line.split()]; return max(nums).",
+    "Write `nums = [int(p) for p in line.split()]` then `return max(nums)`.",
   ],
   "lesson:palindromes:pal-complete-1": [
     "Goal: write is_palindrome(s) that returns whether s reads the same reversed.",
@@ -4374,17 +4374,17 @@ Object.assign(EXERCISE_RECOGNITION, {
     scenario:
       "You must detect duplicates but cannot use extra memory, and you ARE allowed to reorder the data.",
     approaches: [
-      { id: "sort-scan", label: "Sort in place, then scan for equal adjacent elements", requiredReasonIds: ["sort-brings-equal-adjacent"] },
+      { id: "sort-scan", label: "Iterative heapsort, then scan for equal adjacent elements", requiredReasonIds: ["sort-brings-equal-adjacent"] },
       { id: "hash-set", label: "Track seen values in a hash set", requiredReasonIds: [], rejectionFeedback: "A set is O(n) time but needs O(n) extra memory, which the no-extra-memory constraint forbids." },
     ],
     reasons: [
-      { id: "sort-brings-equal-adjacent", text: "Sorting puts equal values next to each other, so a single adjacent scan finds any duplicate; in-place sorting adds no extra memory, trading the set's O(n) space for O(n log n) time." },
+      { id: "sort-brings-equal-adjacent", text: "Sorting puts equal values next to each other, so a single adjacent scan finds any duplicate; iterative heapsort uses O(1) auxiliary memory, trading the set's O(n) space for O(n log n) time." },
       { id: "sort-needs-extra-space", text: "Sorting always requires O(n) extra memory, so it violates the constraint too.", contradictory: true },
       { id: "set-is-constant-space", text: "A hash set uses only O(1) extra memory.", contradictory: true },
     ],
     acceptableApproachIds: ["sort-scan"],
     modelExplanation:
-      "Sort the array (O(n log n), O(1) extra if in-place) and scan for equal adjacent elements. This trades the set's O(n) space for O(n log n) time.",
+      "Use iterative heapsort (O(n log n), O(1) auxiliary space) and scan for equal adjacent elements. This trades the set's O(n) space for O(n log n) time.",
   },
   "lesson:value-to-index:vti-choose-1": {
     scenario:
@@ -5474,9 +5474,9 @@ Object.assign(EXERCISE_HINTS, {
     "Goal: detect duplicates when extra memory is forbidden but reordering the data IS allowed.",
     "The usual O(n)-space set is ruled out here because no extra memory is permitted.",
     "Key property: reordering is allowed, and once equal values are adjacent, a duplicate is just a neighbor comparison.",
-    "Approach: sort the array in place, then scan for equal adjacent elements.",
-    "Reasoning: an in-place sort uses O(1) extra space and makes duplicates adjacent, trading the set's O(n) space for O(n log n) time; a set would be the pick when time matters more than memory and reordering is disallowed.",
-    "Answer: sort the array (O(n log n), O(1) extra in-place) and scan for equal adjacent elements — trading the set's O(n) space for time.",
+    "Approach: use iterative heapsort, then scan for equal adjacent elements.",
+    "Reasoning: an iterative heapsort uses O(1) auxiliary space and makes duplicates adjacent, trading the set's O(n) space for O(n log n) time; a set would be the pick when time matters more than memory and reordering is disallowed.",
+    "Answer: use iterative heapsort (O(n log n), O(1) auxiliary space) and scan for equal adjacent elements — trading the set's O(n) space for time.",
   ],
   "lesson:value-to-index:vti-choose-1": [
     "Goal: for Two Sum, decide when to switch from the hash-map approach to sorting plus two pointers, and what changes.",

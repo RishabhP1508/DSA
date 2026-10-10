@@ -283,3 +283,51 @@ times — interval-sorting only gives sorting + earliest-end greedy).
   set, then only start counting a run from `x` when `x−1` is absent, walking
   `x+1, x+2, …`. Key condition: the start-of-run guard is what keeps it O(n)
   overall (each number is visited at most twice).
+
+## Codex delegated review — 2026-10-10
+
+### arrays/traversal
+- Read [Python 3.14, Defining Functions](https://docs.python.org/3.14/tutorial/controlflow.html#defining-functions).
+  The `sum_all` exercise contract returns the total; printing it is not a
+  replacement. Corrected the effective registry's first and pseudocode hints.
+
+### arrays/two-pointers
+- Read [Python assignment statements](https://docs.python.org/3.14/reference/simple_stmts.html#assignment-statements)
+  and [USACO two pointers](https://usaco.guide/silver/two-pointers?lang=py).
+  The RHS is evaluated before assignments. With this reversal, `lo <= hi` makes
+  one harmless middle-element self-swap for odd lengths, rather than reversing
+  the middle back. Verified empty, single, odd, and even lists on bundled Python.
+
+### arrays/sliding-window
+- Read [USACO prefix sums](https://usaco.guide/silver/prefix-sums?lang=py)
+  and [USACO sliding windows](https://usaco.guide/silver/two-pointers?lang=py).
+  Both techniques correctly compute fixed-width range sums. The difference is
+  auxiliary storage/reuse, not whether prefix sums can express the query.
+  Reconciled the prompt, answer, effective hints, and conditional alternative.
+
+### arrays/kadane
+- Read [CP-Algorithms maximum subsegment sum](https://cp-algorithms.com/others/maximum_average_segment.html)
+  and [Python list slicing](https://docs.python.org/3.14/tutorial/introduction.html#lists).
+  The constant-space exercise now scans indices instead of allocating `nums[1:]`.
+  Its nonempty-input precondition is stated in the prompt. The displayed lesson
+  program and expected output are unchanged.
+
+### arrays/in-place
+- Read [Python assignment statements](https://docs.python.org/3.14/reference/simple_stmts.html#assignment-statements).
+  Under `insert <= i`, the write cannot overwrite a value ahead of the read
+  pointer. The RHS is read before the target is updated, including `insert == i`.
+  Corrected the prediction question's false premise; no execution is invented.
+
+### Codex B2-A follow-up sources (2026-10-10)
+
+- **string-two-pointers**: [USACO Two Pointers](https://usaco.guide/silver/two-pointers) (Two Pointers): Converging pointers can scan a sequence without allocating a reversed copy.; [Python strings](https://docs.python.org/3.14/tutorial/introduction.html#strings) (Strings): Strings support indexing and slicing.
+- **string-sliding-window**: [Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/description/) (Examples and constraints): The answer is a contiguous substring, not a subsequence.; [USACO Two Pointers](https://usaco.guide/silver/two-pointers) (Sliding Window): Monotone pointers bound total movement linearly.
+- **string-parsing**: [Python int](https://docs.python.org/3.14/library/functions.html#int) (int constructor): int accepts surrounding whitespace; malformed numeric tokens can raise ValueError.; [Python defining functions](https://docs.python.org/3.14/tutorial/controlflow.html#defining-functions) (Return statements): Return supplies the function result; printing is a separate output operation.
+- **palindromes**: [CP-Algorithms palindromes](https://cp-algorithms.com/string/manacher.html) (Trivial algorithm; Working with parities): Naive expansion around centers costs O(n^2); odd and even centers differ.
+- **anagrams**: [Python Sorting Techniques](https://docs.python.org/3.14/howto/sorting.html) (Sorting basics; Timsort): sorted creates a new list; adaptive sorting exploits ordered runs.; [Python Counter](https://docs.python.org/3.14/library/collections.html#collections.Counter) (Counter objects): Counter tallies hashable objects and supports equality of counts.
+- **substrings**: [Python strings](https://docs.python.org/3.14/tutorial/introduction.html#strings) (Strings and slicing): A string slice selects characters with an exclusive end.; [CP-Algorithms palindromes](https://cp-algorithms.com/string/manacher.html) (Trivial algorithm): Palindrome substring search can require center expansion rather than a monotone sliding window.
+- **maps-sets**: [Python glossary](https://docs.python.org/3.14/glossary.html#term-hashable) (Hashable): Tuples are hashable only if their elements are hashable; user-defined objects can be hashable by identity.; [Runestone hashing](https://runestone.academy/ns/books/published/pythonds3/SortSearch/Hashing.html) (Collision resolution and analysis): Hash collisions require resolution and affect operation costs.
+- **hashing-frequency**: [Python Counter](https://docs.python.org/3.14/library/collections.html#collections.Counter) (Counter objects and most_common): Counter preserves insertion order and resolves equal-frequency ties by first encounter.; [Python Sorting Techniques](https://docs.python.org/3.14/howto/sorting.html) (Sorting basics): Sorting keys for display is separate work from frequency counting.
+- **duplicate-detection**: [Open Data Structures sorting](https://opendatastructures.org/ods-python/11_1_Comparison_Based_Sorti.html) (11.1.3 Heap-sort): Heap-sort reuses the input array and runs in O(n log n) time.; [Python Sorting Techniques](https://docs.python.org/3.14/howto/sorting.html) (Sorting basics; Timsort): list.sort mutates its input; mutation alone does not specify auxiliary memory.; [Runestone hashing](https://runestone.academy/ns/books/published/pythonds3/SortSearch/Hashing.html) (Collision resolution): Collision resolution can require multiple candidate checks.
+
+Return-value corrections in loops, matrix traversal and character counting use the Python defining-functions page. Interval merging was checked against the original LeetCode examples and Python sorting documentation. Complexity bounds for materialized substrings are derived from the sum of lengths n(n+1)(n+2)/6, not attributed to a source that only defines slicing.

@@ -14,7 +14,7 @@ freq = Counter(nums)          # one pass, expected O(1) per item
 # Print in a fixed order so the output is deterministic.
 print({k: freq[k] for k in sorted(freq)})
 # most_common gives the highest-frequency item.
-print(freq.most_common(1)[0][0])`;
+print(freq.most_common(1)[0][0] if freq else None)`;
 
 export const hashingFrequency: LessonDefinition = {
   id: "hashing-frequency",
@@ -40,13 +40,13 @@ Frequency maps are the engine behind anagrams, "majority element", "top-K freque
     purpose: "Count occurrences of any hashable items in one pass to answer 'how many of each' questions.",
     operations: "Counter(iterable) to tally; freq[item] to read; most_common(k) for top-k.",
     uses: "Anagrams, majority element, top-K frequent, first unique, grouping by count.",
-    tradeoffs: "O(n) time and O(k) space; unordered by default (most_common sorts by count).",
+    tradeoffs: "Expected O(n) counting time and O(k) space. Counter remembers first-insertion order; most_common returns count-ranked results.",
     commonMistakes: "Assuming Counter is ordered by count (insertion order until most_common); iterating a dict and expecting a fixed order across versions; using it on unhashable items.",
     edgeCases: "Empty input gives an empty Counter. Missing key via Counter returns 0 (not KeyError). Ties in most_common resolve by first-seen order.",
   },
 
   complexity: [
-    { operation: "Counter build", best: "O(n)", average: "O(n)", worst: "O(n)", space: "O(k)", note: "One pass; k distinct items." },
+    { operation: "Counter build", best: "O(n)", average: "O(n)", worst: "O(n*k)", space: "O(k)", note: "Expected O(n), with bounded-size keys; collision-heavy map updates can take O(k)." },
     { operation: "most_common(1)", best: "O(k)", average: "O(k)", worst: "O(k)", note: "Scans the k distinct items (heap for general k)." },
   ],
 
@@ -58,9 +58,9 @@ Frequency maps are the engine behind anagrams, "majority element", "top-K freque
     ],
     costModel: "Each tally is an expected-O(1) dict update. most_common(1) scans the k distinct entries.",
     time: {
-      bound: "O(n)",
+      bound: "O(n + k log k)",
       case: "expected",
-      explanation: "Building the Counter processes each of the n items once, each an expected-O(1) hash-map update — so counting is expected O(n). most_common(1) then scans the k distinct items to find the maximum, which is O(k) and at most O(n). The dominant cost is the O(n) counting pass.",
+      explanation: "Building the Counter processes each of the n items once, each an expected-O(1) hash-map update — so counting is expected O(n). most_common(1) then scans the k distinct items to find the maximum, which is O(k) and at most O(n). The deterministic display on line 7 additionally sorts k keys, costing O(k log k), so the whole shown program is expected O(n + k log k); counting alone is expected O(n).",
     },
     space: {
       bound: "O(k)",
@@ -70,10 +70,11 @@ Frequency maps are the engine behind anagrams, "majority element", "top-K freque
     },
     derivation: [
       { lines: [5], description: "Counter(nums) tallies all n items, each expected O(1).", cost: "O(n)", dimension: "time" },
+      { lines: [7], description: "Sort k keys for deterministic display (not needed for counting).", cost: "O(k log k)", dimension: "time" },
       { lines: [9], description: "most_common(1) scans the k distinct items.", cost: "O(k)", dimension: "time" },
       { lines: [5], description: "The Counter holds k distinct entries.", cost: "O(k)", dimension: "space" },
     ],
-    assumptions: ["Items are hashable and dict ops are expected O(1).", "most_common(1) is O(k); general most_common(m) uses a heap (O(k log m))."],
+    assumptions: ["Items are bounded-size hashable keys and dict operations are expected O(1). The display sorts integer keys in this example; arbitrary mixed hashable types may not be mutually orderable.", "most_common(1) is O(k); general most_common(m) uses a bounded heap when 1 < m < k (O(k log(m+1))); requesting all k results sorts them (O(k log k))."],
     tradeoffs: "A manual dict loop does the same in O(n); Counter adds convenient helpers (most_common, arithmetic) at no asymptotic cost.",
     counters: [],
     fixedDataNote: "This run counts 8 items into 3 distinct keys (2 and 3 both appear 3 times); most_common(1) returns 2 as the first-seen among the tie. The O(n)/O(k) bounds generalise to any input.",
@@ -90,7 +91,7 @@ Frequency maps are the engine behind anagrams, "majority element", "top-K freque
     { line: 6, executable: false, explanation: "Comment: print in sorted key order for determinism." },
     { line: 7, executable: true, explanation: "Build a dict of counts in sorted key order → {1: 2, 2: 3, 3: 3}." },
     { line: 8, executable: false, explanation: "Comment: most_common returns the top item(s)." },
-    { line: 9, executable: true, explanation: "most_common(1)[0][0] → 2. Both 2 and 3 have count 3; most_common keeps the first-seen (2) among ties." },
+    { line: 9, executable: true, explanation: "If freq is empty, print None; otherwise most_common(1)[0][0] → 2. Both 2 and 3 have count 3; most_common keeps the first-seen (2) among ties." },
   ],
 
   bindings: [
@@ -140,13 +141,15 @@ Frequency maps are the engine behind anagrams, "majority element", "top-K freque
       verifiedClaims: ["Counter(iterable) tallies element counts", "most_common(k) returns the k most frequent (element, count) pairs", "missing keys return a count of 0"],
       accessDate: "2026-09-20",
     },
+    {"url":"https://docs.python.org/3.14/library/collections.html#collections.Counter","title":"Python Counter","section":"Counter objects and most_common","topic":"hashing-frequency","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Counter preserves insertion order and resolves equal-frequency ties by first encounter."],"accessDate":"2026-10-10"},
+    {"url":"https://docs.python.org/3.14/howto/sorting.html","title":"Python Sorting Techniques","section":"Sorting basics","topic":"hashing-frequency","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Sorting keys for display is separate work from frequency counting."],"accessDate":"2026-10-10"},
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "e3bdd5497442d097",
-    verifiedAt: "2026-09-21",
+    contentHash: "d30d59dea192c2ea",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

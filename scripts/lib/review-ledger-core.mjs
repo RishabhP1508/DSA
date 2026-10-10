@@ -1,8 +1,8 @@
 /**
- * Pure core of the human-review ledger generator (R5.3 / R6 amendment).
+ * Pure core of the authorized-review ledger generator (R5.3 / R6 amendment).
  *
  * Separated from gen_review_ledger.mjs so the "a new item must stay pending
- * unless a human explicitly signs it off" rule is unit-testable without writing
+ * unless an authorized reviewer explicitly signs it off" rule is unit-testable without writing
  * files. The evidence codemod (codemod_add_evidence.mjs) grants
  * `semanticReview: true` ONLY when an item's live content hash equals its ledger
  * `reviewedHash`. Therefore:
@@ -39,15 +39,11 @@ export function assertIsoDate(date) {
 }
 
 /**
- * Guard: a human sign-off cannot predate the content it reviews.
- *
- * The ledger records that a person READ an item at a specific content hash. That
- * reading necessarily happens no earlier than the content was last verified
- * (`evidence.verifiedAt`), because the hash being signed off is the hash produced
- * by that verification. A `reviewedAt` strictly before `verifiedAt` is therefore
- * incoherent — it is the signature of a stale/wrong clock (the bug that stamped
- * 2026-09-21 onto a lesson verified 2026-10-03). Reject it loudly rather than
- * recording an impossible timeline.
+ * Guard for the project's verify-before-sign-off workflow.
+ * A sign-off records review after the current content's machine verification;
+ * an earlier date violates that workflow and can indicate a stale clock.
+ * This is a procedural ordering requirement, not a claim that reading content
+ * before running tests is logically impossible.
  *
  * Only enforced for items being signed off NOW and only when the item exposes a
  * verification date; patterns/items without `evidence.verifiedAt` are unaffected.
@@ -77,23 +73,34 @@ export function assertSignoffNotBeforeVerified(key, item, signoffDate) {
  * @param {Set<string>} reviewedNow  keys ("<kind>:<id>") a human is signing off now
  * @param {string} signoffDate  validated ISO date to stamp on signed items
  */
-export function ledgerEntryFor(kind, item, batch, liveHash, prior, reviewedNow, signoffDate) {
+export function ledgerEntryFor(kind, item, batch, liveHash, prior, reviewedNow, signoffDate, reviewer) {
   const key = kind + ":" + item.id;
 
-  // Explicit human sign-off NOW: stamp the live hash + the validated date.
+  // Explicit authorized sign-off NOW: stamp the live hash + the validated date.
   if (reviewedNow.has(key)) {
     // Guard: the sign-off date must not predate the content's verification date.
     assertSignoffNotBeforeVerified(key, item, signoffDate);
-    return { id: item.id, kind, reviewedHash: liveHash, reviewedAt: signoffDate, batch };
+    const entry = { id: item.id, kind, reviewedHash: liveHash, reviewedAt: signoffDate, batch };
+    if (reviewer) {
+      if (!reviewer.name?.trim() || !["human", "delegated-agent"].includes(reviewer.kind)) {
+        throw new Error("reviewer requires a name and human|delegated-agent kind");
+      }
+      entry.reviewer = reviewer.name;
+      entry.reviewerKind = reviewer.kind;
+    }
+    return entry;
   }
 
   // Prior entry exists: preserve it verbatim. If content changed, the preserved
   // (old) hash won't match the live hash → pending. If unchanged → still reviewed.
   if (prior) {
-    return { id: item.id, kind, reviewedHash: prior.reviewedHash, reviewedAt: prior.reviewedAt, batch };
+    const entry = { id: item.id, kind, reviewedHash: prior.reviewedHash, reviewedAt: prior.reviewedAt, batch };
+    if (prior.reviewer !== undefined) entry.reviewer = prior.reviewer;
+    if (prior.reviewerKind !== undefined) entry.reviewerKind = prior.reviewerKind;
+    return entry;
   }
 
   // New item, NOT signed off: record a sentinel hash that can never match a real
-  // content hash, so semanticReview stays pending until a human signs it off.
+  // content hash, so semanticReview stays pending until an authorized reviewer signs it off.
   return { id: item.id, kind, reviewedHash: UNREVIEWED_SENTINEL, reviewedAt: UNREVIEWED_SENTINEL, batch };
 }

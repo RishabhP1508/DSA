@@ -26,14 +26,14 @@ export const mapsSets: LessonDefinition = {
 
 That O(1) is what makes hashing the single most useful problem-solving tool in this course. "Have I seen this before?", "what's the value for this key?", "how many of each?" — all become constant-time questions. The catch is that it's **expected** O(1), not guaranteed: hash **collisions** (two keys landing in the same slot) are resolved (by chaining or probing) and, in a pathological worst case, operations can degrade to O(n). For normal data, treat dict/set operations as O(1).
 
-Two practical rules: keys (and set elements) must be **hashable** (immutable — ints, strings, tuples work; lists don't), and a \`set\` automatically discards duplicates. Sets also support fast union/intersection/difference. Recognising "I need fast lookups or dedup" is the cue to reach for a dict or set.`,
+Two practical rules: keys (and set elements) must be **hashable**: their hash must remain stable and equal objects must have equal hashes. Ints and strings work; a tuple works only if all its elements are hashable (a tuple containing a list does not). Lists themselves are unhashable. Hashability is not the same as immutability; ordinary user-created objects can be mutable yet hashable by identity, and a \`set\` automatically discards duplicates. Sets also support fast union/intersection/difference. Recognising "I need fast lookups or dedup" is the cue to reach for a dict or set.`,
 
   vocabulary: [
     { term: "Hash map (dict)", definition: "A key→value store with expected O(1) insert/lookup." },
     { term: "Hash set (set)", definition: "A collection of unique elements with expected O(1) membership." },
     { term: "Hash function", definition: "Maps a key to a slot index, enabling direct access." },
     { term: "Collision", definition: "Two keys hashing to the same slot; resolved by chaining/probing." },
-    { term: "Hashable", definition: "Usable as a key: immutable with a stable hash (int, str, tuple)." },
+    { term: "Hashable", definition: "Usable as a key: a stable hash, with equal objects having equal hashes. Tuple elements must also be hashable." },
     { term: "Load factor / resize", definition: "As it fills, the table grows to keep operations fast (amortized)." },
   ],
 
@@ -41,7 +41,7 @@ Two practical rules: keys (and set elements) must be **hashable** (immutable —
     purpose: "Provide expected O(1) lookup, insertion, and membership — the backbone of most efficient algorithms.",
     operations: "dict: d[k], d[k]=v, k in d, d.get(k, default). set: add, in, union/intersection/difference.",
     uses: "Lookups, deduplication, counting, grouping, caching, adjacency lists for graphs.",
-    tradeoffs: "Expected O(1) time but O(n) space and unordered semantics; worst case O(n) under bad collisions.",
+    tradeoffs: "Expected O(1) time but O(n) space; dict preserves insertion order while set has no promised iteration order; worst case O(n) under bad collisions.",
     commonMistakes: "Using an unhashable key (list) → TypeError; assuming worst-case O(1) (it's expected); indexing a missing key (KeyError) instead of get; relying on set ordering.",
     edgeCases: "Duplicate set inserts are no-ops. Missing dict key raises KeyError (use get). Since Python 3.7 dicts preserve insertion order, but sets do not.",
   },
@@ -51,7 +51,7 @@ Two practical rules: keys (and set elements) must be **hashable** (immutable —
   ],
 
   complexityExplanation: {
-    scope: "program",
+    scope: "operation",
     variables: [{ symbol: "n", meaning: "the number of key/value pairs or set elements" }],
     costModel: "Hashing a key and jumping to its slot is O(1) on average; collisions add a small constant. Resizing is amortized O(1) per insert.",
     time: {
@@ -66,7 +66,7 @@ Two practical rules: keys (and set elements) must be **hashable** (immutable —
       bound: "O(n)",
       case: "worst",
       explanation: "The table stores all n entries plus some slack slots to keep the load factor low, so space is O(n).",
-      inputOutputNote: "The dict/set IS the data structure you build; its O(n) size is inherent.",
+      inputOutputNote: "The structure holds n existing entries. Per-operation time excludes constructing those n entries, hashing an arbitrarily long key, and rendering the structure.",
     },
     derivation: [
       { lines: [3, 4, 5], description: "Insert, lookup, and membership on the dict — each expected O(1).", cost: "O(1)", dimension: "time" },
@@ -74,7 +74,7 @@ Two practical rules: keys (and set elements) must be **hashable** (immutable —
       { lines: [2, 7], description: "The dict and set hold up to n entries.", cost: "O(n)", dimension: "space" },
     ],
     assumptions: ["Keys are hashable and well-distributed (expected O(1)).", "Amortized resizing keeps inserts O(1)."],
-    tradeoffs: "A sorted structure (or list) gives ordered/range queries but O(log n) or O(n) lookups; a hash map gives expected O(1) point lookups but no ordering and O(n) space.",
+    tradeoffs: "A sorted structure (or list) gives ordered/range queries but O(log n) or O(n) lookups; a hash map gives expected O(1) point lookups but no sorted/range ordering and O(n) space (dict still preserves insertion order).",
     counters: [],
     fixedDataNote: "This run does a handful of dict/set operations — constant work. The O(1)/O(n) bounds describe scaling to n entries.",
   },
@@ -127,7 +127,7 @@ Two practical rules: keys (and set elements) must be **hashable** (immutable —
     },
   ],
 
-  review: `**Hash maps (dict)** and **hash sets (set)** use hashing to give **expected O(1)** insert, lookup, and membership — the foundation of efficient counting, dedup, and lookups — at **O(n)** space. It's *expected* O(1): collisions can degrade to O(n) in the worst case. Keys/elements must be **hashable** (immutable), and sets drop duplicates automatically.`,
+  review: `**Hash maps (dict)** and **hash sets (set)** use hashing to give **expected O(1)** insert, lookup, and membership — the foundation of efficient counting, dedup, and lookups — at **O(n)** space. It's *expected* O(1): collisions can degrade to O(n) in the worst case. Keys/elements must be **hashable** (stable hash and equality), and sets drop duplicates automatically.`,
 
   expectedOutput: "2\nTrue\n2\nTrue\n",
 
@@ -150,13 +150,15 @@ Two practical rules: keys (and set elements) must be **hashable** (immutable —
       verifiedClaims: ["dict/set get, set item, and membership are average O(1), worst O(n)"],
       accessDate: "2026-09-20",
     },
+    {"url":"https://docs.python.org/3.14/glossary.html#term-hashable","title":"Python glossary","section":"Hashable","topic":"maps-sets","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Tuples are hashable only if their elements are hashable; user-defined objects can be hashable by identity."],"accessDate":"2026-10-10"},
+    {"url":"https://runestone.academy/ns/books/published/pythonds3/SortSearch/Hashing.html","title":"Runestone hashing","section":"Collision resolution and analysis","topic":"maps-sets","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Hash collisions require resolution and affect operation costs."],"accessDate":"2026-10-10"},
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "9580e6e78d5f464f",
-    verifiedAt: "2026-09-21",
+    contentHash: "b144574b388e816f",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

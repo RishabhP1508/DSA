@@ -25,7 +25,7 @@ export const duplicateDetection: LessonDefinition = {
 
   explanation: `"Are there any duplicates?" is one of the most common sub-questions in interviews and real code, and hashing answers it in a single **O(n)** pass. The idea: keep a **\`seen\` set** of values encountered so far; for each new value, if it's already in \`seen\` you've found a duplicate, otherwise add it and continue.
 
-Compare the alternatives. Brute force checks every pair — **O(n²)**. Sorting first makes duplicates adjacent so you can scan neighbours — **O(n log n)** time and O(1) extra space if you may reorder. The **set** approach is **O(n)** time but **O(n)** space: it trades memory for speed, and it works even when you can't sort or reorder the data.
+Compare the alternatives. Brute force checks every pair — **O(n²)**. Sorting first makes duplicates adjacent so you can scan neighbours — **O(n log n)** time and O(1) auxiliary space with iterative heapsort if you may reorder. Python list.sort may use O(n) temporary space, so sorting in place does not promise constant auxiliary space. The **set** approach is **O(n)** time but **O(n)** space: it trades memory for speed, and it works even when you can't sort or reorder the data.
 
 This is the archetype of the broader **"caching seen values"** pattern (next lessons): a set/dict remembering what you've processed converts "have I encountered X?" into an expected-O(1) check. Recognising that a problem needs fast "seen before?" tests is the trigger for a set.`,
 
@@ -40,13 +40,13 @@ This is the archetype of the broader **"caching seen values"** pattern (next les
     purpose: "Decide whether any value repeats, in one linear pass.",
     operations: "Scan; if x in seen return True; else add x; end False.",
     uses: "Uniqueness checks, detecting revisits, deduping streams, prerequisite for many hashing problems.",
-    tradeoffs: "O(n) time vs O(n) space; sorting is O(n log n) time but can be O(1) space; brute force is O(n²).",
-    commonMistakes: "Adding to the set before checking (never detects the first repeat correctly); using a list for `seen` (membership becomes O(n)); mutating the input when sorting isn't allowed.",
+    tradeoffs: "O(n) time vs O(n) space; iterative heapsort is O(n log n) time with O(1) auxiliary space; Python list.sort may use O(n) temporary space; brute force is O(n²).",
+    commonMistakes: "Adding to the set before checking (reports a false duplicate even for the first item); using a list for `seen` (membership becomes O(n)); mutating the input when sorting isn't allowed.",
     edgeCases: "Empty or single-element input has no duplicates. All-identical values return True on the second element. Unhashable elements can't go in a set.",
   },
 
   complexity: [
-    { operation: "has_dup (set)", best: "O(1)", average: "O(n)", worst: "O(n)", space: "O(n)", note: "Best: early duplicate. Worst/space: all distinct." },
+    { operation: "has_dup (set)", best: "O(1)", average: "O(n)", worst: "O(n^2)", space: "O(n)", note: "Expected O(n) for bounded-size keys; collision-heavy set work can reach O(n^2). Best: early duplicate." },
   ],
 
   complexityExplanation: {
@@ -55,7 +55,7 @@ This is the archetype of the broader **"caching seen values"** pattern (next les
     costModel: "Each set membership test and add is expected O(1).",
     time: {
       bound: "O(n)",
-      case: "worst",
+      case: "expected",
       explanation: "We scan the elements once, doing an expected-O(1) membership check and possibly an add per element. In the worst case (all distinct, or the duplicate is last) we process all n elements — O(n). The early return gives an O(1) best case when a duplicate appears near the front.",
       otherCases: [
         { case: "best", bound: "O(1)", note: "The first two elements are equal: detected immediately." },
@@ -73,7 +73,7 @@ This is the archetype of the broader **"caching seen values"** pattern (next les
       { lines: [3, 7], description: "The seen set can hold up to n distinct values.", cost: "O(n)", dimension: "space" },
     ],
     assumptions: ["Elements are hashable and set ops are expected O(1)."],
-    tradeoffs: "Sorting then scanning neighbours is O(n log n) time but O(1) extra space (if reordering is allowed); the set is O(n) time but O(n) space and preserves order.",
+    tradeoffs: "Iterative heapsort followed by a neighbour scan is O(n log n) time and O(1) auxiliary space; Python list.sort may need O(n) temporary space; the set is O(n) time but O(n) space and preserves order.",
     counters: [{ label: "elements checked", definition: "iterations of the scan (line 4)", countLines: [4] }],
     fixedDataNote: "The first call finds a duplicate at the 4th element; the second scans all 3 and returns False. The bounds generalise to n.",
   },
@@ -98,7 +98,7 @@ This is the archetype of the broader **"caching seen values"** pattern (next les
     {
       variable: "nums",
       model: "array",
-      overlays: [{ role: "pointer", label: "x", source: "x" }],
+      overlays: [],
     },
     { variable: "seen", model: "set" },
   ],
@@ -117,7 +117,7 @@ This is the archetype of the broader **"caching seen values"** pattern (next les
     {
       id: "dup-fix-1",
       kind: "fix-mistake",
-      prompt: "This always returns True. Fix the order of operations.",
+      prompt: "This reports True for every nonempty input, even when all values differ. Fix the order of operations.",
       starterCode: "def has_dup(nums):\n    seen = set()\n    for x in nums:\n        seen.add(x)\n        if x in seen:\n            return True\n    return False",
       expected: "def has_dup(nums):\n    seen = set()\n    for x in nums:\n        if x in seen:\n            return True\n        seen.add(x)\n    return False",
       hints: ["What happens right after you add x?", "x is now in seen, so the check always passes.", "Check membership BEFORE adding."],
@@ -126,7 +126,7 @@ This is the archetype of the broader **"caching seen values"** pattern (next les
       id: "dup-choose-1",
       kind: "choose-approach",
       prompt: "You must detect duplicates but cannot use extra memory and may reorder the data. What's the approach and its complexity?",
-      expected: "Sort the array (O(n log n), O(1) extra if in-place is allowed) and scan for equal adjacent elements. This trades the set's O(n) space for O(n log n) time.",
+      expected: "Use an iterative heapsort (O(n log n), O(1) auxiliary space) and scan for equal adjacent elements. This trades the set's O(n) space for O(n log n) time.",
       hints: ["No extra memory rules out the set.", "Sorting groups equal values together.", "O(n log n) time, O(1) extra space."],
     },
   ],
@@ -145,13 +145,16 @@ This is the archetype of the broader **"caching seen values"** pattern (next les
       verifiedClaims: ["A hash set detects duplicates in O(n) time and O(n) space"],
       accessDate: "2026-09-20",
     },
+    {"url":"https://opendatastructures.org/ods-python/11_1_Comparison_Based_Sorti.html","title":"Open Data Structures sorting","section":"11.1.3 Heap-sort","topic":"duplicate-detection","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Heap-sort reuses the input array and runs in O(n log n) time."],"accessDate":"2026-10-10"},
+    {"url":"https://docs.python.org/3.14/howto/sorting.html","title":"Python Sorting Techniques","section":"Sorting basics; Timsort","topic":"duplicate-detection","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["list.sort mutates its input; mutation alone does not specify auxiliary memory."],"accessDate":"2026-10-10"},
+    {"url":"https://runestone.academy/ns/books/published/pythonds3/SortSearch/Hashing.html","title":"Runestone hashing","section":"Collision resolution","topic":"duplicate-detection","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Collision resolution can require multiple candidate checks."],"accessDate":"2026-10-10"},
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "f3b2c8d3834d89d1",
-    verifiedAt: "2026-09-21",
+    contentHash: "d7b5e75d70d57aed",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

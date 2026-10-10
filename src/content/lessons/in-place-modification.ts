@@ -53,7 +53,7 @@ The subtlety is correctness: because \`insert <= i\` always, we never overwrite 
   ],
 
   complexityExplanation: {
-    scope: "program",
+    scope: "operation",
     variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
     costModel: "Each element read, comparison, and write is O(1).",
     time: {
@@ -65,7 +65,7 @@ The subtlety is correctness: because \`insert <= i\` always, we never overwrite 
       bound: "O(1)",
       case: "worst",
       explanation: "Only the `insert` write pointer (and the loop index) is used. The rearrangement happens inside the original array, so no storage grows with n.",
-      inputOutputNote: "The array is mutated in place; it is the input, not extra space.",
+      inputOutputNote: "This bound covers the in-place algorithm, excluding creating the input and printing it. Python print may build a temporary text representation proportional to the array. The array is mutated in place; it is the input, not extra space.",
     },
     derivation: [
       { lines: [6, 7, 8, 9], description: "Pass 1 scans all n elements, copying kept ones forward.", cost: "O(n)", dimension: "time" },
@@ -112,7 +112,7 @@ The subtlety is correctness: because \`insert <= i\` always, we never overwrite 
   ],
 
   prediction: [
-    { atEventIndex: 0, prompt: "Why is it safe that the write pointer `insert` writes into positions we may not have read yet?", answer: "Because insert is always <= i, so we only overwrite positions at or before the one we've already read.", explanation: "The write pointer trails the read pointer (insert <= i), so any slot being written has already been read into nums[i], and its value is preserved by the forward copy." },
+    { atEventIndex: 0, prompt: "During pass 1, why can the write pointer `insert` not overwrite a value ahead of the read pointer `i`?", answer: "Because insert is always <= i, so we only overwrite positions at or before the one we've already read.", explanation: "The write pointer trails the read pointer (insert <= i). Python reads the right-hand-side value nums[i] before assigning it to nums[insert], so even insert == i is safe." },
   ],
 
   experiments: [
@@ -162,13 +162,15 @@ The subtlety is correctness: because \`insert <= i\` always, we never overwrite 
       verifiedClaims: ["In-place two-pointer compaction removes/moves elements without extra arrays"],
       accessDate: "2026-09-20",
     },
+
+    {"url":"https://docs.python.org/3.14/reference/simple_stmts.html#assignment-statements","title":"Python 3.14 — Assignment statements","section":"Assignment statements","verifiedClaims":["The right-hand side is evaluated before the assignment target is updated."],"topic":"in-place-modification","purpose":"Delegated Codex review: reconcile learner-facing explanations with the demonstrated implementation.","accessDate":"2026-10-10"},
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "2f98880a2969924e",
-    verifiedAt: "2026-09-21",
+    contentHash: "ffc709f8e3ce96fb",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

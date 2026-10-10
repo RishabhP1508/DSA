@@ -24,7 +24,7 @@ export const stringParsing: LessonDefinition = {
 
 Here we take \`"12,7,5,20"\`, \`split\` it on the comma to get the string pieces \`['12','7','5','20']\`, then convert each to an integer with a list comprehension and sum them. This "split then convert" pattern is how you read CSV-like input, tokenize commands, and prepare data for an algorithm.
 
-The cost is linear in the total number of characters: \`split\` scans the whole string once (**O(L)** for length L), and converting/summing touches each token. Remember the lesson from Input/Output — text is not numbers until you convert it, and malformed tokens (e.g. \`int("x")\`) raise \`ValueError\`.`,
+For valid, bounded-size numeric tokens, the cost is linear in the total number of characters: \`split\` scans the whole string once (**O(L)** for length L), and converting/summing touches each token. Remember the lesson from Input/Output — text is not numbers until you convert it, and malformed tokens (e.g. \`int("x")\`) raise \`ValueError\`.`,
 
   vocabulary: [
     { term: "Parsing", definition: "Converting raw text into structured values." },
@@ -39,8 +39,8 @@ The cost is linear in the total number of characters: \`split\` scans the whole 
     operations: "split on a delimiter, strip whitespace, convert tokens with int/float.",
     uses: "Reading structured input, tokenizing expressions, cleaning data before an algorithm.",
     tradeoffs: "split is simple but naive for quoted/escaped fields; conversions can raise on bad data.",
-    commonMistakes: "Forgetting to convert tokens (summing strings); not stripping whitespace; assuming a fixed number of fields; unhandled ValueError on malformed input.",
-    edgeCases: "Empty string splits to ['']; trailing delimiter yields an empty token; extra spaces need strip.",
+    commonMistakes: "Forgetting to convert tokens (summing strings); confusing delimiter-sensitive split with whitespace split; assuming a fixed number of fields; unhandled ValueError on malformed input.",
+    edgeCases: "Empty string splits to ['']; trailing delimiter yields an empty token; int() accepts surrounding whitespace, so stripping is optional for these numeric tokens. Empty or whitespace-only input has no maximum and is outside parse_max's nonempty-input contract.",
   },
 
   complexity: [
@@ -79,7 +79,7 @@ The cost is linear in the total number of characters: \`split\` scans the whole 
   code,
 
   codeExplanations: [
-    { line: 1, executable: false, explanation: "Comment: parse a CSV line into numbers." },
+    { line: 1, executable: false, explanation: "Comment: parse a simple comma-separated numeric line; this does not implement quoted CSV fields." },
     { line: 2, executable: true, explanation: "The raw input line." },
     { line: 3, executable: false, explanation: "Comment: split breaks on the delimiter." },
     { line: 4, executable: true, explanation: "split(',') → ['12', '7', '5', '20'] (still strings)." },
@@ -100,7 +100,7 @@ The cost is linear in the total number of characters: \`split\` scans the whole 
 
   experiments: [
     "Change the delimiter to a space and split on ' '.",
-    "Add a stray space in a token and use int(p.strip()) to handle it.",
+    "Add surrounding spaces in a numeric token: int(p) already accepts them. Then try an internal space, such as '1 2', which is not one integer.",
     "Feed a malformed token like '5x' and observe the ValueError.",
   ],
 
@@ -108,7 +108,7 @@ The cost is linear in the total number of characters: \`split\` scans the whole 
     {
       id: "sp-complete-1",
       kind: "complete-code",
-      prompt: "Complete `parse_max(line)` so it parses a space-separated line of integers and returns their maximum.",
+      prompt: "Complete `parse_max(line)` so it parses a nonempty, space-separated line of valid bounded-size integers and returns their maximum.",
       starterCode: "def parse_max(line):\n    # TODO: split, convert to ints, return the max\n    pass",
       expected: "def parse_max(line):\n    nums = [int(p) for p in line.split()]\n    return max(nums)",
       hints: ["split() with no argument splits on whitespace.", "Convert each token with int in a comprehension.", "return max(nums)"],
@@ -145,13 +145,15 @@ The cost is linear in the total number of characters: \`split\` scans the whole 
       verifiedClaims: ["[expr for item in iterable] builds a list"],
       accessDate: "2026-09-20",
     },
+    {"url":"https://docs.python.org/3.14/library/functions.html#int","title":"Python int","section":"int constructor","topic":"string-parsing","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["int accepts surrounding whitespace; malformed numeric tokens can raise ValueError."],"accessDate":"2026-10-10"},
+    {"url":"https://docs.python.org/3.14/tutorial/controlflow.html#defining-functions","title":"Python defining functions","section":"Return statements","topic":"string-parsing","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Return supplies the function result; printing is a separate output operation."],"accessDate":"2026-10-10"},
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "71f840907ba25166",
-    verifiedAt: "2026-09-21",
+    contentHash: "5363bf6fc5194bf7",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };
