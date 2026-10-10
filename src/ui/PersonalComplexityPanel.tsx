@@ -36,7 +36,7 @@ export function PersonalComplexityPanel({
     () => (result && !stale ? computeObservedStats(result, []) : null),
     [result, stale],
   );
-  const analysis = result?.analysis;
+  const analysis = stale ? undefined : result?.analysis;
 
   return (
     <div className="panel complexity-panel personal-cx">

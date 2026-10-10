@@ -22,7 +22,7 @@ export function GlossaryView({ onOpenLesson }: { onOpenLesson?: (id: string) => 
 
   return (
     <div className="app-body">
-      <main className="content">
+      <main className="content" id="main-content">
         <div className="lesson-content">
           <h2>Glossary</h2>
           <p className="dim">

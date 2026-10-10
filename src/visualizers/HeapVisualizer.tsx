@@ -12,8 +12,8 @@
  */
 
 import type { TraceEvent, VisualBinding } from "../core/types";
-import { displayValue } from "../engine/replay";
 import { resolveBindingObject, resolveOverlays, indexOverlays, overlayColor } from "./helpers";
+import { sequencePreview, sequenceCount, sequenceNotice, recordedIndex, hiddenPointers, boundedSvgStyle, DiagramNotice, HEAP_LIMIT, cellDisplay, valueNotice } from './limits';
 
 const CELL = 42;
 const GAP = 4;
@@ -24,9 +24,12 @@ export function HeapVisualizer({ event, binding }: { event: TraceEvent; binding:
   const { object: obj } = resolveBindingObject(event, binding);
   if (!obj || !obj.entries) return <p className="viz-empty">No heap “{binding.variable}” yet.</p>;
 
-  const items = obj.entries;
+  const items = sequencePreview(obj, HEAP_LIMIT);
+  const displayed = items.map(item => cellDisplay(item.value, event.objects));
   const n = items.length;
-  const marks = indexOverlays(resolveOverlays(event, binding), n);
+  const overlays = resolveOverlays(event, binding);
+  const visible = new Set(items.map(recordedIndex));
+  const marks = indexOverlays(overlays, obj.entries.length).filter(mark => visible.has(mark.index));
 
   // Array row layout.
   const arrTop = 44;
@@ -55,18 +58,18 @@ export function HeapVisualizer({ event, binding }: { event: TraceEvent; binding:
   }
 
   return (
-    <svg className="array-viz" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Binary heap ${binding.variable} with ${n} elements, zero-based array and tree views`}>
-      <text x={PAD} y={22} className="viz-title">{binding.variable} (heap, {n}, 0-based)</text>
+    <><svg className="array-viz" style={boundedSvgStyle(width, height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Binary heap ${binding.variable} with ${sequenceCount(obj)}, zero-based array and tree views`}>
+      <text x={PAD} y={22} className="viz-title">{binding.variable} (heap, {sequenceCount(obj)}, 0-based)</text>
       {n === 0 && <text x={PAD} y={arrTop + CELL / 2} className="viz-empty-svg">(empty heap)</text>}
 
       {/* array view */}
       {items.map((e, i) => {
-        const mark = marks.find((m) => m.index === i);
+        const mark = marks.find((m) => m.index === recordedIndex(e));
         return (
-          <g key={`a-${i}`}>
+          <g key={`a-${e.key}`} data-index={e.key}>
             <rect x={arrX(i)} y={arrTop} width={CELL} height={CELL} rx={5} className={mark ? "cell cell-active" : "cell"} />
-            <text x={arrX(i) + CELL / 2} y={arrTop + CELL / 2 + 5} className="cell-value-sm">{displayValue(e.value, event.objects)}</text>
-            <text x={arrX(i) + CELL / 2} y={arrTop + CELL + 16} className="cell-index">{i}</text>
+            <text x={arrX(i) + CELL / 2} y={arrTop + CELL / 2 + 5} className="cell-value-sm">{displayed[i].text}</text>
+            <text x={arrX(i) + CELL / 2} y={arrTop + CELL + 16} className="cell-index">{e.key}</text>
           </g>
         );
       })}
@@ -83,21 +86,21 @@ export function HeapVisualizer({ event, binding }: { event: TraceEvent; binding:
       {/* tree nodes */}
       {items.map((e, i) => {
         const { cx, cy } = treePos(i);
-        const mark = marks.find((m) => m.index === i);
+        const mark = marks.find((m) => m.index === recordedIndex(e));
         return (
-          <g key={`t-${i}`}>
+          <g key={`t-${e.key}`} data-index={e.key}>
             <circle cx={cx} cy={cy} r={R} className={mark ? "cell cell-active node-circle" : "cell node-circle"} />
-            <text x={cx} y={cy + 4} className="cell-value-sm">{displayValue(e.value, event.objects)}</text>
-            <text x={cx} y={cy + R + 12} className="cell-index">{i}</text>
+            <text x={cx} y={cy + 4} className="cell-value-sm">{displayed[i].text}</text>
+            <text x={cx} y={cy + R + 12} className="cell-index">{e.key}</text>
           </g>
         );
       })}
 
       {marks.map((m, k) => (
-        <text key={`m-${k}`} x={arrX(m.index!) + CELL / 2} y={arrTop - 8 - (k % 2) * 14} className="pointer-label" fill={overlayColor(k)}>
+        <text key={`m-${k}`} x={arrX(items.findIndex(item => recordedIndex(item) === m.index)) + CELL / 2} y={arrTop - 8 - (k % 2) * 14} className="pointer-label" fill={overlayColor(k)}>
           {m.label}↓
         </text>
       ))}
-    </svg>
+    </svg><DiagramNotice text={[sequenceNotice(obj, items), hiddenPointers(overlays, items), valueNotice(displayed)].filter(Boolean).join(' ')}/></>
   );
 }

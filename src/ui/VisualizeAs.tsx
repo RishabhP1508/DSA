@@ -90,7 +90,7 @@ export function VisualizeAs({
           </select>
         </label>
         {model === "graph" && (
-          <label>
+          <><label>
             Direction
             <select
               aria-label="Graph direction"
@@ -101,6 +101,9 @@ export function VisualizeAs({
               <option value="directed">Directed</option>
             </select>
           </label>
+          <label>Adjacency format<select aria-label="Graph adjacency format" value={binding?.adjacencyFormat ?? 'neighbors'} onChange={e => update({adjacencyFormat: e.target.value as VisualBinding['adjacencyFormat']})}>
+            <option value="neighbors">Neighbor values</option><option value="weighted-pairs">(neighbor, weight) pairs</option><option value="weighted-map">Neighbor → weight map</option>
+          </select></label></>
         )}
         <label>
           Path
@@ -113,6 +116,7 @@ export function VisualizeAs({
           />
         </label>
       </div>
+      {(['linked-list','tree','trie'].includes(model)) && <details className="field-mapping"><summary>Map your object fields</summary><p className="dim tiny">Use your instance attribute names. These mappings read recorded data and never call Python properties.</p><div className="va-row">{(model==='linked-list'?[['value','Value','val / value'],['next','Next node','next'],['previous','Previous node','prev']]:model==='tree'?[['value','Node value','val / value'],['left','Left child','left'],['right','Right child','right']]:[['children','Children map','children'],['terminal','End-of-word flag','is_end / is_word']]).map(([key,label,placeholder])=><label key={key}>{label}<input aria-label={label+' field'} value={binding?.fields?.[key as keyof NonNullable<VisualBinding['fields']>]??''} placeholder={placeholder} onChange={e=>{const fields={...binding?.fields};if(e.target.value)fields[key as keyof typeof fields]=e.target.value;else delete fields[key as keyof typeof fields];update({fields});}}/></label>)}</div></details>}
       {variable && !names.includes(variable) && (
         <p className="dim tiny">
           “{variable}” is not in the current step — run or step to where it exists, or pick another

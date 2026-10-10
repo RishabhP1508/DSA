@@ -65,7 +65,8 @@ export class Replay {
       if (ev.output?.stream === "stdout") out += ev.output.text;
     }
     // Fall back to full stdout if no per-event output was recorded.
-    return out || (this.index >= this.length - 1 ? this.result.stdout : out);
+    const hasRecordedOutput = this.result.events.some(event => event.output?.stream === 'stdout');
+    return out || (!hasRecordedOutput && !this.result.incomplete && this.index >= this.length - 1 ? this.result.stdout : out);
   }
 }
 

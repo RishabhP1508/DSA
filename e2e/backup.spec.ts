@@ -9,11 +9,11 @@ import { test, expect } from "@playwright/test";
  */
 test("Backup view renders progress summary and controls", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Backup" }).click();
-  await expect(page.getByRole("heading", { name: /Backup/ })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Your progress" })).toBeVisible();
+  await page.getByRole("button", { name: "Backup", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Backup & progress", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Your progress", exact: true })).toBeVisible();
   // Export + restore controls are present.
-  await expect(page.getByRole("button", { name: /Download backup/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: "⬇ Download backup", exact: true })).toBeVisible();
   // The summary table renders its known rows.
   await expect(page.getByText("Exercises solved")).toBeVisible();
 });

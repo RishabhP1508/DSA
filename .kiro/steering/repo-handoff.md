@@ -1,5 +1,12 @@
 # DSA Visual Lab — repo handoff notes
 
+> This is the historical Kiro handoff. Current status and acceptance evidence
+> are in `docs/completion.md`. Codex was explicitly authorized to complete the
+> remaining reviews, new UI and offline Windows package. All 162 current
+> lessons/patterns now have recorded hash-bound semantic reviews. The old
+> pending counts and stop-before-UI instructions below describe that earlier
+> milestone, not the current authorized scope.
+
 Durable facts for anyone (human or AI) continuing work on this repo. Keep this
 current as things change.
 

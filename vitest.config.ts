@@ -1,5 +1,6 @@
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
+import { fileURLToPath } from 'node:url';
 
 // Vitest config for TypeScript logic + React component tests (R0.4).
 // - jsdom environment so React Testing Library can render components.
@@ -8,8 +9,8 @@ import react from "@vitejs/plugin-react";
 //   `// @vitest-environment node` comment.
 export default defineConfig({
   plugins: [react()],
+  resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
   // Use the automatic JSX runtime so component tests don't need `import React`.
-  esbuild: { jsx: "automatic" },
   test: {
     environment: "jsdom",
     globals: true,

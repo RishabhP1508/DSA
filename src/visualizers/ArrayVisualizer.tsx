@@ -7,8 +7,8 @@
  */
 
 import type { TraceEvent, VisualBinding } from "../core/types";
-import { displayValue } from "../engine/replay";
 import { recordedRange, SequenceState } from './SequenceState';
+import { sequencePreview, sequenceCount, sequenceNotice, recordedIndex, hiddenPointers, boundedSvgStyle, DiagramNotice, cellDisplay, valueNotice } from './limits';
 import {
   resolveBindingObject,
   resolveOverlays,
@@ -35,7 +35,8 @@ export function ArrayVisualizer({
     return <p className="viz-empty">No array “{binding.variable}” in scope yet.</p>;
   }
 
-  const cells = obj.entries;
+  const cells = sequencePreview(obj);
+  const displayed = cells.map(cell => cellDisplay(cell.value, event.objects));
   const width = PAD * 2 + Math.max(1, cells.length) * CELL + Math.max(0, cells.length - 1) * GAP;
 
   // Aliasing (snapshot-only): other in-scope names that refer to THIS SAME list
@@ -45,7 +46,8 @@ export function ArrayVisualizer({
   const height = TOP + CELL + 64 + (aliases.length > 0 ? ALIAS_H : 0);
 
   const overlays = resolveOverlays(event, binding);
-  const marks = indexOverlays(overlays, cells.length);
+  const visible = new Set(cells.map(recordedIndex));
+  const marks = indexOverlays(overlays, obj.entries.length).filter(mark => visible.has(mark.index));
 
   // Push the cells down to make room for the alias note when it is shown.
   const top = TOP + (aliases.length > 0 ? ALIAS_H : 0);
@@ -58,10 +60,11 @@ export function ArrayVisualizer({
       className="array-viz"
       viewBox={`0 0 ${width} ${height}`}
       role="img"
-      aria-label={`Array ${binding.variable} with ${cells.length} elements`}
+      style={boundedSvgStyle(width, height)}
+      aria-label={`Array ${binding.variable} with ${sequenceCount(obj)}`}
     >
       <text x={PAD} y={22} className="viz-title">
-        {binding.variable} ({obj.type}, len {cells.length})
+        {binding.variable} ({obj.type}, {sequenceCount(obj)})
       </text>
 
       {aliases.length > 0 && (
@@ -77,22 +80,23 @@ export function ArrayVisualizer({
       )}
 
       {cells.map((cell, i) => {
-        const mark = marks.find((m) => m.index === i);
+        const index = recordedIndex(cell);
+        const mark = marks.find((m) => m.index === index);
         return (
-          <g key={i}>
+          <g key={cell.key} data-index={cell.key}>
             <rect
               x={cellX(i)}
               y={top}
               width={CELL}
               height={CELL}
               rx={6}
-              className={`cell${mark ? ' cell-active' : ''}${range && i>=range.start && i<=range.last ? ' cell-in-range' : ''}`}
+              className={`cell${mark ? ' cell-active' : ''}${range && index !== undefined && index>=range.start && index<=range.last ? ' cell-in-range' : ''}`}
             />
             <text x={cellX(i) + CELL / 2} y={top + CELL / 2 + 5} className="cell-value">
-              {displayValue(cell.value, event.objects)}
+              {displayed[i].text}
             </text>
             <text x={cellX(i) + CELL / 2} y={top + CELL + 18} className="cell-index">
-              {i}
+              {cell.key}
             </text>
           </g>
         );
@@ -101,7 +105,7 @@ export function ArrayVisualizer({
       {marks.map((m, k) => (
         <text
           key={`ptr-${k}`}
-          x={cellX(m.index!) + CELL / 2}
+          x={cellX(cells.findIndex(cell => recordedIndex(cell) === m.index)) + CELL / 2}
           y={top - 14 - (k % 2) * 16}
           className="pointer-label"
           fill={overlayColor(k)}
@@ -109,6 +113,6 @@ export function ArrayVisualizer({
           {m.label}↓
         </text>
       ))}
-    </svg><SequenceState event={event} binding={binding} length={cells.length}/></>
+    </svg><DiagramNotice text={[sequenceNotice(obj, cells), hiddenPointers(overlays, cells), valueNotice(displayed)].filter(Boolean).join(' ')}/><SequenceState event={event} binding={binding} length={obj.entries.length} truncated={obj.truncated}/></>
   );
 }

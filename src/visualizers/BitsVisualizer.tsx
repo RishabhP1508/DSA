@@ -44,7 +44,7 @@ const PREVIEW_DIGITS = 12;
 function asBigInt(v: TraceValue | undefined): bigint | null {
   if (!v || v.kind !== "int") return null;
   try {
-    return typeof v.value === "number" ? BigInt(Math.trunc(v.value)) : BigInt(v.value);
+    return typeof v.value === "number" ? BigInt(Math.trunc(v.value)) : v.value.startsWith('-0x') ? -BigInt(v.value.slice(1)) : BigInt(v.value);
   } catch {
     return null;
   }
@@ -93,6 +93,9 @@ export function BitsVisualizer({ event, binding }: { event: TraceEvent; binding:
   // to read the string length — not proportional to the bit count.
   const raw = value && value.kind === "int" ? value.value : undefined;
   if (typeof raw === "string") {
+    if (/^-?0x/.test(raw) && raw.replace(/^-?0x/, '').length > TOO_LARGE_BITS / 4) {
+      return <p className="viz-empty">{label} = {raw.slice(0, PREVIEW_DIGITS)}… (large hexadecimal integer). Too large for a bit row; the exact value is available in the inspector.</p>;
+    }
     const magDigits = raw.startsWith("-") ? raw.length - 1 : raw.length;
     if (magDigits > TOO_LARGE_DIGITS) {
       const { preview, digits } = digitPreview(raw);

@@ -43,12 +43,14 @@ export function LinkedListVisualizer({
   let cur: TraceObject | undefined = head;
   let curId = valueId(event, binding);
   let cycleToIndex: number | null = null;
-  const hasPrev = head.entries?.some((e) => e.key === "prev") ?? false;
+  const nextField = binding.fields?.next ?? 'next';
+  const prevField = binding.fields?.previous ?? 'prev';
+  const hasPrev = head.entries?.some((e) => e.key === prevField) ?? false;
 
   while (cur && curId && !seen.has(curId)) {
     seen.add(curId);
     nodes.push({ obj: cur, id: curId });
-    const nextVal = fieldValue(cur, "next");
+    const nextVal = fieldValue(cur, nextField);
     if (!nextVal || nextVal.kind !== "ref") break;
     const nextId = nextVal.id;
     if (seen.has(nextId)) {
@@ -94,21 +96,24 @@ export function LinkedListVisualizer({
 
       {nodes.map((n, i) => {
         const mark = pointerMarks.filter((m) => m.idx === i);
+        const previous = fieldValue(n.obj, prevField);
+        const previousIndex = previous?.kind === 'ref' ? nodes.findIndex(node => node.id === previous.id) : -1;
         return (
           <g key={n.id}>
             <rect x={x(i)} y={TOP} width={NODE_W} height={NODE_H} rx={6} className={mark.length ? "cell cell-active" : "cell"} />
             <line x1={x(i) + NODE_W * 0.7} y1={TOP} x2={x(i) + NODE_W * 0.7} y2={TOP + NODE_H} className="node-divider" />
             <text x={x(i) + NODE_W * 0.35} y={midY + 5} className="cell-value">
-              {displayValue(fieldValue(n.obj, "val") ?? fieldValue(n.obj, "value") ?? { kind: "unknown", repr: "?" }, event.objects)}
+              {displayValue(binding.fields?.value ? fieldValue(n.obj,binding.fields.value) ?? {kind:'unknown',repr:'?'} : fieldValue(n.obj, "val") ?? fieldValue(n.obj, "value") ?? { kind: "unknown", repr: "?" }, event.objects)}
             </text>
             {/* forward arrow */}
             {i < nodes.length - 1 && (
               <line x1={x(i) + NODE_W} y1={midY} x2={x(i + 1)} y2={midY} className="ll-edge" markerEnd="url(#ll-arrow)" />
             )}
             {/* back arrow for doubly linked */}
-            {hasPrev && i > 0 && (
-              <line x1={x(i)} y1={midY + 10} x2={x(i - 1) + NODE_W} y2={midY + 10} className="ll-edge-back" markerEnd="url(#ll-arrow)" />
-            )}
+            {previousIndex >= 0 && (previousIndex < i
+              ? <line x1={x(i)} y1={midY + 10} x2={x(previousIndex) + NODE_W} y2={midY + 10} className="ll-edge-back" markerEnd="url(#ll-arrow)" />
+              : <path d={cyclePath(x(i) + 12, TOP + NODE_H, x(previousIndex) + NODE_W - 12, TOP + NODE_H)} className="ll-edge-back" fill="none" markerEnd="url(#ll-arrow)" />)}
+            {hasPrev && previous?.kind === 'none' && <text x={x(i)} y={TOP + NODE_H + 17} className="cell-index">prev: None</text>}
             {mark.map((m, k) => (
               <text key={k} x={x(i) + NODE_W * 0.35} y={TOP - 8 - k * 15} className="pointer-label" fill={overlayColor(k)}>
                 {m.label}↓
@@ -121,7 +126,7 @@ export function LinkedListVisualizer({
       {/* terminal or cycle indicator */}
       {cycleToIndex === null ? (
         <text x={x(nodes.length)} y={midY + 5} className="cell-index">
-          None
+          {(() => { const next = fieldValue(nodes.at(-1)!.obj, nextField); return next?.kind === 'none' ? 'None' : next?.kind === 'ref' ? '… more nodes not shown' : 'next not recorded'; })()}
         </text>
       ) : (
         <path

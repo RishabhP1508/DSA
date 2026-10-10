@@ -8,16 +8,16 @@ import { test, expect } from "@playwright/test";
 
 async function runStarter(page: import("@playwright/test").Page) {
   await page.goto("/");
-  await page.getByRole("button", { name: "Playground" }).click();
-  await expect(page.getByRole("button", { name: "▶ Run" })).toBeEnabled({ timeout: 60_000 });
-  await page.getByRole("button", { name: "▶ Run" }).click();
-  await expect(page.getByText(/completed/)).toBeVisible({ timeout: 60_000 });
+  await page.getByRole("button", { name: "Playground", exact: true }).click();
+  await expect(page.getByRole("button", { name: "▶ Run", exact: true })).toBeEnabled({ timeout: 60_000 });
+  await page.getByRole("button", { name: "▶ Run", exact: true }).click();
+  await expect(page.getByText(/· completed/)).toBeVisible({ timeout: 60_000 });
 }
 
 test("Visualize as… renders a chosen variable as a diagram", async ({ page }) => {
   await runStarter(page);
   // Step to the end so the top-level `nums`/`result` variables are in scope.
-  const timeline = page.getByRole("slider", { name: "Timeline" });
+  const timeline = page.getByRole("slider", { name: "Timeline", exact: true });
   await timeline.focus();
   await page.keyboard.press("End");
   // Visualize `nums` as an array.
@@ -38,8 +38,8 @@ test("editing the source shows a stale banner until re-run", async ({ page }) =>
   await page.keyboard.type("\n# edit\n");
   await expect(page.getByText(/outdated/i)).toBeVisible({ timeout: 10_000 });
   // Re-running clears the stale banner.
-  await page.getByRole("button", { name: "▶ Run" }).click();
-  await expect(page.getByText(/completed/)).toBeVisible({ timeout: 60_000 });
+  await page.getByRole("button", { name: "▶ Run", exact: true }).click();
+  await expect(page.getByText(/· completed/)).toBeVisible({ timeout: 60_000 });
   await expect(page.getByText(/outdated/i)).toHaveCount(0);
 });
 
@@ -53,14 +53,14 @@ test("Play advances the timeline and the object inspector expands", async ({ pag
   };
 
   // Restart to step 1, capture the starting position and total.
-  await page.getByRole("button", { name: "⏮ Restart" }).click();
+  await page.getByRole("button", { name: "⏮ Restart", exact: true }).click();
   const start = await stepOf();
   expect(start).not.toBeNull();
   expect(start!.pos).toBe(1);
   expect(start!.total).toBeGreaterThan(1); // the starter produces multiple steps
 
   // Play; the timeline must ADVANCE beyond the starting step.
-  await page.getByRole("button", { name: "▶ Play" }).click();
+  await page.getByRole("button", { name: "▶ Play", exact: true }).click();
   await expect
     .poll(async () => (await stepOf())?.pos ?? 0, { timeout: 20_000 })
     .toBeGreaterThan(start!.pos);

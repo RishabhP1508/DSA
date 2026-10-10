@@ -11,6 +11,9 @@ import { useEffect, useMemo, useState } from "react";
 import type { LessonDefinition } from "../core/types";
 import { useEngine, PLAYBACK_SPEEDS } from "./useEngine";
 import { labelForLine } from "./line-label";
+import { RuntimeProgress } from "./RuntimeProgress";
+import { PredictionCheckpoint } from './PredictionCheckpoint';
+import { ObservedStep } from "./ObservedStep";
 import { CodeEditor } from "./CodeEditor";
 import { VariablesPanel } from "./VariablesPanel";
 import { ComplexityPanel } from "./ComplexityPanel";
@@ -115,7 +118,8 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
           </div>
         )}
 
-        <CodeEditor value={source} onChange={setSource} highlightLine={currentLine} />
+        <RuntimeProgress running={engine.running} progress={engine.progress} result={engine.result} />
+        <CodeEditor value={source} onChange={setSource} highlightLine={currentLine} breakpoints={engine.breakpoints} onToggleBreakpoint={engine.toggleBreakpoint} />
 
         {traceMatchesEditor && engine.result && (
           <div className="timeline">
@@ -162,6 +166,7 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
       </div>
 
       <div className="workspace-right">
+        {edited && traceMatchesEditor && <ObservedStep source={source} event={engine.event} previous={engine.result?.events[engine.position-1]}/>}
         <div className="diagram">
           <h4>Visualization</h4>
           {(() => {
@@ -192,7 +197,10 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
           })()}
         </div>
         <VariablesPanel event={liveEvent} output={traceMatchesEditor ? engine.outputSoFar : ""} />
+        <PredictionCheckpoint steps={lesson.prediction} result={engine.result} valid={authoredMatchesTrace} position={engine.position} playing={engine.playing} onPause={engine.pause} onSeek={engine.seek} />
         {lesson.complexityExplanation && authoredMatchesTrace && (
+          <details className="analysis-disclosure">
+          <summary>Time &amp; space analysis <span className="dim">{lesson.complexityExplanation.time.bound} time · {lesson.complexityExplanation.space.bound} space</span></summary>
           <ComplexityPanel
             explanation={lesson.complexityExplanation}
             result={engine.result}
@@ -203,6 +211,7 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
             // (fixedDataNote), not unconditionally.
             fixedData={Boolean(lesson.complexityExplanation.fixedDataNote)}
           />
+          </details>
         )}
       </div>
     </div>

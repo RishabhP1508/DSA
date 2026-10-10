@@ -18,7 +18,7 @@ It BLOCKS a whole-program claim (returns source="not-determined" with a specific
   * `while` loops (data-dependent termination),
   * recursion (a function that calls itself, directly),
   * calls to functions whose cost it does not model (any call that is not a
-    known-constant builtin) inside a loop,
+    known-constant builtin),
   * comprehensions/generators over an unrecognized iterable,
   * loops over an expression it does not recognize,
   * `break`/dynamic control it cannot account for in a bound.
@@ -44,7 +44,7 @@ import ast
 import json
 
 # Builtins/methods we treat as O(1) per call for the conservative model. Calls
-# to anything NOT here (inside a loop) block a whole-program bound.
+# to anything NOT here block a bound for the analyzed unit.
 _CONST_CALLS = {
     "len", "range", "print", "int", "float", "str", "bool", "abs",
     "ord", "chr", "round", "isinstance", "enumerate",
@@ -91,14 +91,14 @@ class _Analyzer:
                 f = sub.func
                 if isinstance(f, ast.Name):
                     if f.id in self.func_names:
-                        raise _Blocked("a loop body calls user-defined function '" + f.id + "' whose cost is not modelled")
+                        raise _Blocked("the code calls user-defined function '" + f.id + "' whose cost is not modelled")
                     if f.id not in _CONST_CALLS:
-                        raise _Blocked("a loop body calls '" + f.id + "()', which the analyzer does not model as constant-time")
+                        raise _Blocked("the code calls '" + f.id + "()', which the analyzer does not model as constant-time")
                 elif isinstance(f, ast.Attribute):
                     if f.attr not in _CONST_METHODS:
-                        raise _Blocked("a loop body calls method '." + f.attr + "()', which the analyzer does not model as constant-time")
+                        raise _Blocked("the code calls method '." + f.attr + "()', which the analyzer does not model as constant-time")
                 else:
-                    raise _Blocked("a loop body contains a call the analyzer cannot identify")
+                    raise _Blocked("the code contains a call the analyzer cannot identify")
 
     def loop_degree(self, body):
         """Max nesting degree of recognized for-loops in a statement list.

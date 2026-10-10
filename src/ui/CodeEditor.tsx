@@ -4,12 +4,18 @@
 
 import { useEffect, useRef } from "react";
 import { EditorState, StateEffect, StateField } from "@codemirror/state";
-import { EditorView, lineNumbers, Decoration, type DecorationSet } from "@codemirror/view";
+import { EditorView, lineNumbers, Decoration, gutter, GutterMarker, type DecorationSet } from "@codemirror/view";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { keymap } from "@codemirror/view";
 import { python } from "@codemirror/lang-python";
+import { syntaxHighlighting, defaultHighlightStyle } from '@codemirror/language';
 
 const setHighlight = StateEffect.define<number | null>();
+const setBreakpoints = StateEffect.define<ReadonlySet<number>>();
+const breakpointField = StateField.define<ReadonlySet<number>>({
+  create: () => new Set(),
+  update: (value, transaction) => transaction.effects.find(effect => effect.is(setBreakpoints))?.value ?? value,
+});
 
 const highlightField = StateField.define<DecorationSet>({
   create() {
@@ -38,14 +44,20 @@ export function CodeEditor({
   onChange,
   highlightLine,
   readOnly,
+  breakpoints,
+  onToggleBreakpoint,
 }: {
   value: string;
   onChange?: (v: string) => void;
   highlightLine?: number | null;
   readOnly?: boolean;
+  breakpoints?: ReadonlySet<number>;
+  onToggleBreakpoint?: (line: number) => void;
 }) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const viewRef = useRef<EditorView | null>(null);
+  const toggleRef = useRef(onToggleBreakpoint);
+  toggleRef.current = onToggleBreakpoint;
 
   useEffect(() => {
     if (!hostRef.current) return;
@@ -53,9 +65,31 @@ export function CodeEditor({
       doc: value,
       extensions: [
         lineNumbers(),
+        breakpointField,
+        ...(onToggleBreakpoint ? [gutter({
+          class: 'cm-breakpoint-gutter',
+          lineMarker(view, block) {
+            const line = view.state.doc.lineAt(block.from).number;
+            const active = view.state.field(breakpointField).has(line);
+            return new class extends GutterMarker {
+              toDOM() {
+                const button = document.createElement('button');
+                button.textContent = active ? '●' : '○';
+                button.className = active ? 'breakpoint-dot is-set' : 'breakpoint-dot';
+                button.setAttribute('aria-label', `Playback breakpoint on line ${line}`);
+                button.setAttribute('aria-pressed', String(active));
+                button.title = 'Pause playback before this line';
+                button.onclick = event => { event.preventDefault(); toggleRef.current?.(line); };
+                return button;
+              }
+            }();
+          },
+          lineMarkerChange: update => update.docChanged || update.transactions.some(tr => tr.effects.some(effect => effect.is(setBreakpoints))),
+        })] : []),
         history(),
         keymap.of([...defaultKeymap, ...historyKeymap]),
         python(),
+        syntaxHighlighting(defaultHighlightStyle),
         highlightField,
         EditorView.editable.of(!readOnly),
         EditorView.updateListener.of((u) => {
@@ -81,6 +115,9 @@ export function CodeEditor({
   useEffect(() => {
     viewRef.current?.dispatch({ effects: setHighlight.of(highlightLine ?? null) });
   }, [highlightLine]);
+  useEffect(() => {
+    viewRef.current?.dispatch({ effects: setBreakpoints.of(breakpoints ?? new Set()) });
+  }, [breakpoints]);
 
   return <div className="code-editor" ref={hostRef} />;
 }
