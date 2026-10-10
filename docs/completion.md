@@ -75,4 +75,5 @@ tie them to the tested distribution, including the portable executable.
 
 The package includes curriculum, bundled Python, a checksum-verified portable
 Node runtime, local servers, Start/Stop launchers, source and dependency notices.
-See [packaging procedure](windows-package.md).
+See [packaging procedure](windows-package.md) and the
+[verified 1.0.0 delivery record](releases/1.0.0.md).
