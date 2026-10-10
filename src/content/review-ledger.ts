@@ -95,23 +95,29 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "bit-check-set-clear",
     "kind": "lesson",
-    "reviewedHash": "26f65c64c99c9b43",
-    "reviewedAt": "2026-09-20",
-    "batch": 2
+    "reviewedHash": "db9506e3e4e13134",
+    "reviewedAt": "2026-10-10",
+    "batch": 2,
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent"
   },
   {
     "id": "bit-logical-ops",
     "kind": "lesson",
-    "reviewedHash": "45ff320caba8429c",
-    "reviewedAt": "2026-09-20",
-    "batch": 2
+    "reviewedHash": "f0a77f6b1719bed3",
+    "reviewedAt": "2026-10-10",
+    "batch": 2,
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent"
   },
   {
     "id": "bit-shifts",
     "kind": "lesson",
-    "reviewedHash": "790ea4afc87d7ed1",
-    "reviewedAt": "2026-09-20",
-    "batch": 2
+    "reviewedHash": "8fc6d30d5a5e907d",
+    "reviewedAt": "2026-10-10",
+    "batch": 2,
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent"
   },
   {
     "id": "bounds",
@@ -144,9 +150,11 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "caching-seen",
     "kind": "lesson",
-    "reviewedHash": "e6176608e19165d1",
-    "reviewedAt": "2026-09-20",
-    "batch": 2
+    "reviewedHash": "e204707d577bcd02",
+    "reviewedAt": "2026-10-10",
+    "batch": 2,
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent"
   },
   {
     "id": "cases",
@@ -200,9 +208,11 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "count-set-bits",
     "kind": "lesson",
-    "reviewedHash": "1eb24d36b17f395d",
-    "reviewedAt": "2026-09-20",
-    "batch": 2
+    "reviewedHash": "e46e11de4715767e",
+    "reviewedAt": "2026-10-10",
+    "batch": 2,
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent"
   },
   {
     "id": "counting-sort",
@@ -440,9 +450,11 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "grouping",
     "kind": "lesson",
-    "reviewedHash": "ffb83aa3cdf61059",
-    "reviewedAt": "2026-09-20",
-    "batch": 2
+    "reviewedHash": "2ecb0bfaec932a6b",
+    "reviewedAt": "2026-10-10",
+    "batch": 2,
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent"
   },
   {
     "id": "hashing-frequency",
@@ -518,9 +530,11 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "kmp",
     "kind": "lesson",
-    "reviewedHash": "446d68e0a7001797",
-    "reviewedAt": "2026-09-20",
-    "batch": 2
+    "reviewedHash": "b6677b9b59c10ad5",
+    "reviewedAt": "2026-10-10",
+    "batch": 2,
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent"
   },
   {
     "id": "kruskal",
@@ -731,9 +745,11 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "prefix-sums-map",
     "kind": "lesson",
-    "reviewedHash": "f8d7f87c48b5cee9",
-    "reviewedAt": "2026-09-20",
-    "batch": 2
+    "reviewedHash": "6c624c007c15dc40",
+    "reviewedAt": "2026-10-10",
+    "batch": 2,
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent"
   },
   {
     "id": "prim",
@@ -815,7 +831,7 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "sliding-window",
     "kind": "lesson",
-    "reviewedHash": "73ebd14aa95560ce",
+    "reviewedHash": "617190ca5146555d",
     "reviewedAt": "2026-10-10",
     "batch": 2,
     "reviewer": "Codex",
@@ -849,7 +865,7 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "string-sliding-window",
     "kind": "lesson",
-    "reviewedHash": "7171e5e78b2bfe19",
+    "reviewedHash": "d901d2ce508ce111",
     "reviewedAt": "2026-10-10",
     "batch": 2,
     "reviewer": "Codex",
@@ -955,9 +971,11 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "value-to-index",
     "kind": "lesson",
-    "reviewedHash": "542d8d931571f5bc",
-    "reviewedAt": "2026-09-20",
-    "batch": 2
+    "reviewedHash": "03058a26153bdd0d",
+    "reviewedAt": "2026-10-10",
+    "batch": 2,
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent"
   },
   {
     "id": "variables-and-types",
@@ -976,9 +994,11 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "xor-cancellation",
     "kind": "lesson",
-    "reviewedHash": "a9b1f265718677d1",
-    "reviewedAt": "2026-09-20",
-    "batch": 2
+    "reviewedHash": "41a8061f4973f924",
+    "reviewedAt": "2026-10-10",
+    "batch": 2,
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent"
   },
   {
     "id": "backtracking",
@@ -1004,16 +1024,20 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "bitwise-xor",
     "kind": "pattern",
-    "reviewedHash": "f6df2c04e6e7ce62",
-    "reviewedAt": "2026-09-20",
-    "batch": 2
+    "reviewedHash": "4251c634f6142710",
+    "reviewedAt": "2026-10-10",
+    "batch": 2,
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent"
   },
   {
     "id": "cyclic-sort",
     "kind": "pattern",
-    "reviewedHash": "ed13dda9854c0181",
-    "reviewedAt": "2026-09-20",
-    "batch": 2
+    "reviewedHash": "76a032cae0856e32",
+    "reviewedAt": "2026-10-10",
+    "batch": 2,
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent"
   },
   {
     "id": "dijkstra",
@@ -1074,9 +1098,11 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "kadane",
     "kind": "pattern",
-    "reviewedHash": "efd782e62a56c770",
-    "reviewedAt": "2026-09-20",
-    "batch": 2
+    "reviewedHash": "00f44dbdc6a1c10a",
+    "reviewedAt": "2026-10-10",
+    "batch": 2,
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent"
   },
   {
     "id": "knapsack",
@@ -1088,9 +1114,11 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "matrix-traversal",
     "kind": "pattern",
-    "reviewedHash": "ecea1e62a727d0d0",
-    "reviewedAt": "2026-09-20",
-    "batch": 2
+    "reviewedHash": "a3c74ba54ea38f82",
+    "reviewedAt": "2026-10-10",
+    "batch": 2,
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent"
   },
   {
     "id": "merge-intervals",
@@ -1116,16 +1144,20 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "prefix-sums-hashmap",
     "kind": "pattern",
-    "reviewedHash": "178e7f330fe6c912",
-    "reviewedAt": "2026-09-20",
-    "batch": 2
+    "reviewedHash": "aec635695aa06bcf",
+    "reviewedAt": "2026-10-10",
+    "batch": 2,
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent"
   },
   {
     "id": "sliding-window",
     "kind": "pattern",
-    "reviewedHash": "39e48720198beaab",
-    "reviewedAt": "2026-09-20",
-    "batch": 2
+    "reviewedHash": "dc095fe23ec0561f",
+    "reviewedAt": "2026-10-10",
+    "batch": 2,
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent"
   },
   {
     "id": "top-k-heap",
@@ -1172,9 +1204,11 @@ export const REVIEW_LEDGER: ReviewLedgerEntry[] = [
   {
     "id": "two-pointers",
     "kind": "pattern",
-    "reviewedHash": "c81867b731e0b97f",
-    "reviewedAt": "2026-09-20",
-    "batch": 2
+    "reviewedHash": "85dd9c69c2621a85",
+    "reviewedAt": "2026-10-10",
+    "batch": 2,
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent"
   },
   {
     "id": "union-find",

@@ -316,22 +316,70 @@ export const EXERCISE_TESTS: Record<string, string> = {
 export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
   // ── Pattern-Library recognition drills (ownerKind === "pattern") ───────────
   "pattern:sliding-window:pat-sw-recognize-1": {
-    scenario:
-      "Given an array of integers and a number k, you must find the largest sum of exactly k consecutive elements.",
-    approaches: [
-      { id: "fixed-window", label: "Fixed-size sliding window", requiredReasonIds: ["contiguous-fixed-k"] },
-      { id: "kadane", label: "Kadane's algorithm", requiredReasonIds: [], rejectionFeedback: "Kadane finds the best subarray of ANY length; here the width is pinned at exactly k, so Kadane solves a different problem." },
-      { id: "prefix-map", label: "Prefix sums + hash map", requiredReasonIds: [], rejectionFeedback: "A prefix-sum map is for counting arbitrary-range target sums; for a single fixed width it is overkill." },
-    ],
-    reasons: [
-      { id: "contiguous-fixed-k", text: "The block is contiguous and of fixed width k, so the sum updates in O(1) as the window slides (add the entering element, drop the leaving one)." },
-      { id: "any-length-best", text: "We want the best subarray of any length, so we must decide extend-or-restart at each index.", contradictory: true },
-      { id: "count-targets", text: "We must count how many subarrays hit a target sum.", contradictory: true },
-    ],
-    acceptableApproachIds: ["fixed-window"],
-    modelExplanation:
-      "Fixed-size sliding window: the width is fixed at k, so slide the window and update the running sum incrementally for an O(n) solution.",
-  },
+  "scenario": "Given an array of integers and a number k, you must find the largest sum of exactly k consecutive elements.",
+  "approaches": [
+    {
+      "id": "fixed-window",
+      "label": "Fixed-size sliding window",
+      "requiredReasonIds": [
+        "contiguous-fixed-k"
+      ]
+    },
+    {
+      "id": "kadane",
+      "label": "Kadane's algorithm",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Kadane finds the best subarray of ANY length; here the width is pinned at exactly k, so Kadane solves a different problem."
+    },
+    {
+      "id": "prefix-map",
+      "label": "Prefix sums + hash map",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A prefix-sum map is for counting arbitrary-range target sums; for a single fixed width it is overkill."
+    },
+    {
+      "id": "prefix-array",
+      "label": "Build prefix sums, then compare length-k range sums",
+      "requiredReasonIds": [
+        "prefix-difference"
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "id": "contiguous-fixed-k",
+      "text": "The block is contiguous and of fixed width k, so the sum updates in O(1) as the window slides (add the entering element, drop the leaving one)."
+    },
+    {
+      "id": "any-length-best",
+      "text": "We want the best subarray of any length, so we must decide extend-or-restart at each index.",
+      "contradictory": true
+    },
+    {
+      "id": "count-targets",
+      "text": "We must count how many subarrays hit a target sum.",
+      "contradictory": true
+    },
+    {
+      "id": "prefix-difference",
+      "text": "Adjacent prefix totals recover each length-k sum; this also works with negative values."
+    }
+  ],
+  "acceptableApproachIds": [
+    "fixed-window"
+  ],
+  "modelExplanation": "Fixed-size sliding window: the width is fixed at k, so slide the window and update the running sum incrementally for an O(n) solution. A prefix array is also correct with O(n) storage; this question does not forbid that alternative.",
+  "alternatives": [
+    {
+      "approachId": "prefix-array",
+      "conditions": "Valid under this problem’s stated contract.",
+      "tradeoff": "O(n) time and O(n) auxiliary storage rather than the window’s O(1) slots.",
+      "requiredReasonIds": [
+        "prefix-difference"
+      ]
+    }
+  ]
+},
   "pattern:sliding-window:pat-sw-recognize-2": {
     scenario:
       "Find the length of the longest substring that contains at most 2 distinct characters. No pattern name is given.",
@@ -421,22 +469,64 @@ export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
       "Two pointers from both ends exploit the existing sort for an O(n) time, O(1) space solution. A hash map also runs in O(n) time but costs O(n) space.",
   },
   "pattern:two-pointers:pat-tp-recognize-2": {
-    scenario:
-      "Check whether a string reads the same forwards and backwards, ignoring case.",
-    approaches: [
-      { id: "two-pointers", label: "Two pointers from both ends", requiredReasonIds: ["compare-inward"] },
-      { id: "reverse-copy", label: "Build a reversed copy and compare", requiredReasonIds: [], rejectionFeedback: "Correct but uses O(n) extra space; converging pointers do it in O(1) space with early exit." },
-      { id: "sort", label: "Sort the characters", requiredReasonIds: [], rejectionFeedback: "Sorting destroys order, which is the very thing a palindrome check depends on." },
-    ],
-    reasons: [
-      { id: "compare-inward", text: "Compare characters at the two ends and move inward until the pointers cross; a mismatch means not a palindrome — O(n) time, O(1) space." },
-      { id: "order-irrelevant", text: "Character order does not matter, so a frequency comparison suffices.", contradictory: true },
-      { id: "needs-hashmap", text: "A hash map of counts is required to decide this.", contradictory: true },
-    ],
-    acceptableApproachIds: ["two-pointers"],
-    modelExplanation:
-      "Two pointers from both ends: compare s[lo] and s[hi] moving inward, exiting early on the first mismatch — O(n) time, O(1) space.",
-  },
+  "scenario": "Check whether an ASCII string is a palindrome, ignoring letter case. Which approaches fit? Extra storage is allowed.",
+  "approaches": [
+    {
+      "id": "two-pointers",
+      "label": "Two pointers from both ends",
+      "requiredReasonIds": [
+        "compare-inward"
+      ]
+    },
+    {
+      "id": "reverse-copy",
+      "label": "Build a reversed copy and compare",
+      "requiredReasonIds": [
+        "reverse-preserves-order"
+      ]
+    },
+    {
+      "id": "sort",
+      "label": "Sort the characters",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Sorting destroys order, which is the very thing a palindrome check depends on."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "compare-inward",
+      "text": "Compare characters at the two ends and move inward until the pointers cross; a mismatch means not a palindrome — O(n) time, O(1) space."
+    },
+    {
+      "id": "order-irrelevant",
+      "text": "Character order does not matter, so a frequency comparison suffices.",
+      "contradictory": true
+    },
+    {
+      "id": "needs-hashmap",
+      "text": "A hash map of counts is required to decide this.",
+      "contradictory": true
+    },
+    {
+      "id": "reverse-preserves-order",
+      "text": "A reversed copy preserves the order information needed to compare both directions. ASCII lowercasing preserves the number of characters."
+    }
+  ],
+  "acceptableApproachIds": [
+    "two-pointers"
+  ],
+  "modelExplanation": "Two pointers from both ends: compare s[lo] and s[hi] moving inward, exiting early on the first mismatch — O(n) time, O(1) space. A reversed lowercase copy is also valid when extra space is allowed. Full Unicode case folding may expand characters, so per-character inward comparison is not a general normalized-Unicode solution.",
+  "alternatives": [
+    {
+      "approachId": "reverse-copy",
+      "conditions": "Valid under this problem’s stated contract.",
+      "tradeoff": "O(n) extra storage; inward pointers can use O(1) slots on ASCII characters.",
+      "requiredReasonIds": [
+        "reverse-preserves-order"
+      ]
+    }
+  ]
+},
   "pattern:fast-slow-pointers:pat-fs-recognize-1": {
     scenario:
       "Detect whether a linked list has a cycle, using O(1) extra memory.",
@@ -1154,21 +1244,59 @@ export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
       "Bitwise XOR: fold all numbers together; paired values cancel and the unique one remains — O(n) time, O(1) space.",
   },
   "pattern:bitwise-xor:pat-xor-choose-1": {
-    scenario:
-      "Every number appears three times except one; find the unique number. Does plain XOR work?",
-    approaches: [
-      { id: "bit-count-mod3", label: "Count bits modulo 3 (or a hash map)", requiredReasonIds: ["triples-need-mod3"] },
-      { id: "xor-fold", label: "Plain single XOR fold", requiredReasonIds: [], rejectionFeedback: "Single XOR cancels PAIRS, not triples, so with triple duplicates it does not isolate the unique value." },
-    ],
-    reasons: [
-      { id: "triples-need-mod3", text: "For triples, sum each bit position across all numbers modulo 3; bits from the triple-appearing values vanish, leaving the unique number's bits." },
-      { id: "pairs-only", text: "Every other value appears exactly twice, so pairwise XOR cancels them.", contradictory: true },
-      { id: "sorted-scan", text: "A single sorted scan directly reveals the answer with no counting.", contradictory: true },
-    ],
-    acceptableApproachIds: ["bit-count-mod3"],
-    modelExplanation:
-      "No — plain XOR cancels pairs, not triples. Count set bits modulo 3 across all numbers (or use a hash map) to isolate the unique value.",
-  },
+  "scenario": "Every number appears three times except one; find the unique number. Does plain XOR work?",
+  "approaches": [
+    {
+      "id": "bit-count-mod3",
+      "label": "Count bits modulo 3 (or a hash map)",
+      "requiredReasonIds": [
+        "triples-need-mod3"
+      ]
+    },
+    {
+      "id": "xor-fold",
+      "label": "Plain single XOR fold",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Single XOR cancels PAIRS, not triples, so with triple duplicates it does not isolate the unique value."
+    },
+    {
+      "id": "sorted-runs",
+      "label": "Sort and inspect consecutive equal-value runs",
+      "requiredReasonIds": [
+        "triples-runs"
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "id": "triples-need-mod3",
+      "text": "For triples, sum each bit position across all numbers modulo 3; bits from the triple-appearing values vanish, leaving the unique number's bits."
+    },
+    {
+      "id": "pairs-only",
+      "text": "Every other value appears exactly twice, so pairwise XOR cancels them.",
+      "contradictory": true
+    },
+    {
+      "id": "triples-runs",
+      "text": "After sorting, equal values are consecutive; the one-element run identifies the singleton, whereas other runs have length three."
+    }
+  ],
+  "acceptableApproachIds": [
+    "bit-count-mod3"
+  ],
+  "modelExplanation": "No — plain XOR cancels pairs, not triples. Count set bits modulo 3 across all numbers (or use a hash map) to isolate the unique value. Sorting and scanning equal-value runs is also valid, at O(n log n) time.",
+  "alternatives": [
+    {
+      "approachId": "sorted-runs",
+      "conditions": "Valid under this problem’s stated contract.",
+      "tradeoff": "O(n log n) sorting plus O(n) scanning; Python sorted() uses O(n) storage. Per-bit mod-3 also needs a finite-width signed convention for negative integers.",
+      "requiredReasonIds": [
+        "triples-runs"
+      ]
+    }
+  ]
+},
   "pattern:dynamic-programming:pat-dp-recognize-1": {
     scenario:
       "Count the number of distinct ways to climb n stairs taking 1 or 2 steps.",
@@ -2133,7 +2261,7 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "When `need in seen` do `return [seen[need], i]`, otherwise `seen[x] = i`.",
   ],
   "lesson:grouping:grp-complete-1": [
-    "Goal: group words by their first letter into a dict of lists.",
+    "Goal: group nonempty words by first letter; the list may be empty.",
     "Manually checking whether a bucket exists each time is repetitive.",
     "Key insight: the group key is the first character w[0], and buckets must be created on first use.",
     "Approach: use dict.setdefault to create-then-append in one step.",
@@ -2805,13 +2933,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "In the loop write `self.tree[i] = self.tree[2*i] + self.tree[2*i+1]` then `i //= 2` to climb to the parent.",
   ],
   "pattern:sliding-window:pat-sw-recognize-1": [
-    "Goal: find the largest sum of exactly k consecutive elements in an array.",
-    "Recomputing each window's sum from scratch is O(n·k) — the overlapping elements are recomputed every slide.",
-    "Key insight: adjacent windows share k-1 elements, so a new sum differs by only the entering and leaving values.",
-    "Approach: use a fixed-size sliding window, updating the running sum in O(1) per slide.",
-    "Pseudocode: sum the first k; then slide: add the entering element, subtract the leaving one, track the max.",
-    "This is a fixed-size sliding window: add the entering element and subtract the leaving one each step for O(n).",
-  ],
+  "Goal: find the largest sum of exactly k consecutive elements in an array.",
+  "Recomputing each window's sum from scratch is O(n·k) — the overlapping elements are recomputed every slide.",
+  "Key insight: adjacent windows share k-1 elements, so a new sum differs by only the entering and leaving values.",
+  "Approach: use a fixed-size sliding window, updating the running sum in O(1) per slide.",
+  "Pseudocode: sum the first k; then slide: add the entering element, subtract the leaving one, track the max.",
+  "This is a fixed-size sliding window: add the entering element and subtract the leaving one each step for O(n). Prefix sums are a valid O(n)-storage alternative."
+],
   "pattern:sliding-window:pat-sw-recognize-2": [
     "Goal: find the longest substring containing at most 2 distinct characters.",
     "Rechecking every substring is O(n^2); the window's overlap makes most of that recomputation avoidable.",
@@ -2849,7 +2977,7 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "The bug initializes best to 0, so an all-negative array wrongly reports 0 (an empty selection).",
     "Key insight: a non-empty subarray must include at least one element, so the seed must be an actual value.",
     "Approach: seed both best and cur from nums[0] and start the scan at index 1.",
-    "Pseudocode: best=cur=nums[0]; for x in nums[1:]: cur=max(x,cur+x); best=max(best,cur); return best.",
+    "Pseudocode: best=cur=nums[0]; for i in range(1,len(nums)): x=nums[i]; cur=max(x,cur+x); best=max(best,cur); return best.",
     "Initialize `best = cur = nums[0]` and loop from index 1 so all-negative inputs return their largest element.",
   ],
   "pattern:two-pointers:pat-tp-recognize-1": [
@@ -2861,13 +2989,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Use two pointers: move left up when the sum is too small and right down when too big — O(n) time, O(1) space vs the hashmap's O(n).",
   ],
   "pattern:two-pointers:pat-tp-recognize-2": [
-    "Goal: check whether a string reads the same forwards and backwards, ignoring case.",
-    "Building and comparing a reversed copy costs O(n) extra space; comparing in place avoids that.",
-    "Key insight: a palindrome's outermost characters must match, then the next inner pair, and so on.",
-    "Approach: use two pointers starting at both ends and move them inward.",
-    "Pseudocode: lo=0, hi=n-1; while lo<hi: compare (case-folded) s[lo] and s[hi]; if unequal return False; move inward.",
-    "Use a from-both-ends two-pointer scan comparing s[lo] and s[hi] until they meet — O(n) time, O(1) space.",
-  ],
+  "Goal: check an ASCII string for a case-insensitive palindrome; extra storage is allowed.",
+  "Building and comparing a reversed copy costs O(n) extra space; comparing in place avoids that.",
+  "Key insight: a palindrome's outermost characters must match, then the next inner pair, and so on.",
+  "Approach: use two pointers starting at both ends and move them inward.",
+  "Pseudocode: compare the lowercase ASCII characters at both ends, then move inward.",
+  "Use a from-both-ends two-pointer scan comparing s[lo] and s[hi] until they meet — O(n) time, O(1) space."
+],
   "pattern:fast-slow-pointers:pat-fs-recognize-1": [
     "Goal: detect whether a linked list has a cycle using O(1) extra memory.",
     "A visited hash set detects cycles but costs O(n) space, which the O(1) constraint forbids.",
@@ -3333,13 +3461,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Use bitwise XOR of all numbers: paired values cancel and the unique one remains — O(n) time, O(1) space.",
   ],
   "pattern:bitwise-xor:pat-xor-choose-1": [
-    "Goal: find the unique number when every other appears three times.",
-    "A single XOR cancels pairs, but triples don't vanish under XOR, so it won't isolate the answer.",
-    "Key insight: XOR removes even multiplicities only; triples leave a residue.",
-    "Approach: count each bit's set occurrences modulo 3 across all numbers (or use a hashmap).",
-    "Pseudocode: for each bit position, sum that bit over all numbers mod 3; the bits with remainder 1 form the answer.",
-    "No — plain XOR cancels PAIRS, not triples; use per-bit counts modulo 3 (or a hash map) instead.",
-  ],
+  "Goal: find the unique number when every other appears three times.",
+  "A single XOR cancels pairs, but triples don't vanish under XOR, so it won't isolate the answer.",
+  "Key insight: XOR removes even multiplicities only; triples leave a residue.",
+  "Approach: count each bit's set occurrences modulo 3 across all numbers (or use a hashmap).",
+  "Pseudocode: for each bit position, sum that bit over all numbers mod 3; the bits with remainder 1 form the answer. For signed inputs, choose a finite width, count those masked bits, then convert the sign bit back; alternatively sort and examine runs.",
+  "No — plain XOR cancels PAIRS, not triples; use per-bit counts modulo 3 (or a hash map) instead."
+],
   "pattern:dynamic-programming:pat-dp-recognize-1": [
     "Goal: count distinct ways to climb n stairs taking 1 or 2 steps at a time.",
     "Naive recursion recomputes the same step counts exponentially across branches.",
@@ -3448,7 +3576,7 @@ Object.assign(EXERCISE_TESTS, {
   "pattern:prefix-sums-hashmap:pat-ps-fix-1":
     "assert count_subarrays([1,1,1], 2) == 2\nassert count_subarrays([1,2,3], 3) == 2, '[1,2] and [3]'\n# subarray starting at index 0 must count (needs seen[0]=1):\nassert count_subarrays([3,1,2], 3) == 2, '[3] and [1,2]'\nassert count_subarrays([1,-1,0], 0) == 3\nassert count_subarrays([], 0) == 0\nprint('OK')",
   "pattern:two-pointers:pat-tp-fix-1":
-    "assert two_sum_sorted([1,2,3,4,6], 6) == (1,3), '2+4'\nassert two_sum_sorted([2,3,4], 6) == (0,2)\nassert two_sum_sorted([1,2,3], 7) is None\n# a too-small sum must move lo UP (would loop forever the wrong way):\nassert two_sum_sorted([1,2,3,9], 11) == (1,3), '2+9'\nassert two_sum_sorted([5], 5) is None\nprint('OK')",
+    "assert two_sum_sorted([1,2,3,4,6], 6) == (1,3), '2+4'\nassert two_sum_sorted([2,3,4], 6) == (0,2)\nassert two_sum_sorted([1,2,3], 7) is None\n# a too-small sum must move lo UP (would miss the valid pair with the wrong move):\nassert two_sum_sorted([1,2,3,9], 11) == (1,3), '2+9'\nassert two_sum_sorted([5], 5) is None\nprint('OK')",
   "pattern:fast-slow-pointers:pat-fs-fix-1":
     "class Node:\n    def __init__(self, val, nxt=None):\n        self.val = val; self.next = nxt\ndef build(vals):\n    head = None\n    for v in reversed(vals):\n        head = Node(v, head)\n    return head\nassert has_cycle(build([1,2,3,4])) is False, 'even-length acyclic must not crash'\nassert has_cycle(build([1,2,3])) is False\nassert has_cycle(None) is False\nassert has_cycle(build([1])) is False\na=Node(1); b=Node(2); c=Node(3); a.next=b; b.next=c; c.next=b\nassert has_cycle(a) is True\nprint('OK')",
   "pattern:binary-search-on-answer:pat-bsa-fix-1":
@@ -3630,7 +3758,7 @@ Object.assign(EXERCISE_HINTS, {
   ],
   "pattern:two-pointers:pat-tp-fix-1": [
     "Goal: two_sum_sorted(nums, target) = indices of a pair summing to target in a SORTED array.",
-    "The two pointers start at both ends; moving the wrong one wastes work or loops.",
+    "The two pointers start at both ends; moving the wrong one can discard a valid pair, although both pointers still move inward and the loop terminates.",
     "Key property: if the sum is too small you need a LARGER value (raise lo); too big → lower hi.",
     "Approach: compare the sum to target and move the correct pointer inward.",
     "Pseudocode: if s<target: lo+=1 elif s>target: hi-=1 else return (lo,hi).",
@@ -4395,7 +4523,7 @@ Object.assign(EXERCISE_RECOGNITION, {
     ],
     reasons: [
       { id: "need-original-indices", text: "A hash map runs in O(n) time and reports the values' original positions, which is required when the answer must be the original indices." },
-      { id: "dont-need-indices-save-space", text: "When you don't need original indices and want O(1) extra space, sorting then two pointers works in O(n log n) time with constant extra space." },
+      { id: "dont-need-indices-save-space", text: "When you don't need original indices and want O(1) extra space, iterative in-place heapsort then two pointers works in O(n log n) time with constant auxiliary space (Python list.sort can allocate linear temporary space)." },
       { id: "sorting-keeps-indices", text: "Sorting preserves each element's original index, so you can still report original positions.", contradictory: true },
       { id: "hashmap-constant-space", text: "The hash-map approach uses O(1) extra space.", contradictory: true },
     ],
@@ -4404,7 +4532,7 @@ Object.assign(EXERCISE_RECOGNITION, {
       { approachId: "sort-two-pointers", conditions: "When you don't need the original indices and want O(1) extra space.", tradeoff: "O(n log n) time (vs O(n)) and sorting scrambles indices, so it's worse when original positions are required.", requiredReasonIds: ["dont-need-indices-save-space"] },
     ],
     modelExplanation:
-      "With a hash map Two Sum is O(n)/O(n) and keeps original indices. Sort + two pointers is O(n log n) with O(1) space but scrambles indices, so it's worse when the answer must be original positions.",
+      "With a hash map Two Sum is O(n)/O(n) and keeps original indices. Iterative heapsort + two pointers is O(n log n) with O(1) auxiliary space but scrambles indices, so it's worse when the answer must be original positions.",
   },
   "lesson:grouping:grp-choose-1": {
     scenario:
@@ -4430,13 +4558,13 @@ Object.assign(EXERCISE_RECOGNITION, {
       { id: "memoize-always", label: "Memoize every recursion regardless of structure", requiredReasonIds: [], rejectionFeedback: "If subproblems never repeat (e.g. plain divide-and-conquer on disjoint halves), a cache only adds overhead and memory — memoization helps only when the same inputs recur." },
     ],
     reasons: [
-      { id: "distinct-subproblems-once", text: "Overlapping subproblems mean the same inputs recur; caching each one makes total time proportional to the number of DISTINCT subproblems (each solved once) plus O(1) reuse, replacing exponential recomputation." },
+      { id: "distinct-subproblems-once", text: "Overlapping subproblems mean the same inputs recur; caching each one makes total time proportional to the sum of work per subproblem and its transitions, plus cache-reuse costs, replacing exponential recomputation." },
       { id: "always-helps", text: "Memoization speeds up every recursive algorithm, even when subproblems never repeat.", contradictory: true },
       { id: "no-repeats-needed", text: "Memoization helps precisely when subproblems are all distinct and never recur.", contradictory: true },
     ],
     acceptableApproachIds: ["overlapping-subproblems"],
     modelExplanation:
-      "Overlapping subproblems are the signal: the same inputs recur. Memoization then makes total time proportional to the number of DISTINCT subproblems (each solved once) plus O(1) per reuse, replacing exponential recomputation.",
+      "Overlapping subproblems are the signal: the same inputs recur. Memoization then makes total work equal to the sum of work per subproblem (including transitions) plus cache-reuse costs, replacing exponential recomputation.",
   },
   "lesson:bit-logical-ops:bit-log-choose-1": {
     scenario:
@@ -5483,8 +5611,8 @@ Object.assign(EXERCISE_HINTS, {
     "The cost of sorting is that it scrambles the original positions, so you lose the ability to report input indices.",
     "Key property: the deciding factor is whether the answer must be the ORIGINAL indices or just the values, and how tight memory is.",
     "Approach: keep the hash map when indices matter; switch to sort + converging two pointers when only values matter and space is tight.",
-    "Reasoning: the hash map is O(n)/O(n) and preserves indices; sort + two pointers is O(n log n) with O(1) extra space but destroys original positions.",
-    "Answer: use sort + two pointers when you don't need original indices and want O(1) space (O(n log n)); keep the hash map (O(n)/O(n)) when the answer must be original positions.",
+    "Reasoning: the hash map is O(n)/O(n) and preserves indices; iterative heapsort + two pointers is O(n log n) with O(1) auxiliary space but destroys original positions.",
+    "Answer: use iterative heapsort + two pointers when you don't need original indices and want O(1) space (O(n log n)); keep the hash map (O(n)/O(n)) when the answer must be original positions.",
   ],
   "lesson:grouping:grp-choose-1": [
     "Goal: group anagrams over a fixed lowercase alphabet with a key cheaper than the sorted-string key's O(n·L log L).",
@@ -5498,9 +5626,9 @@ Object.assign(EXERCISE_HINTS, {
     "Goal: decide when memoization will speed up a recursive algorithm and describe the resulting complexity relationship.",
     "The costly symptom without memoization is exponential recomputation of the same subproblems.",
     "Key property: the signal is overlapping subproblems — the same inputs recur across the recursion tree.",
-    "Approach: cache each subproblem's result (memoize) so each is computed only once.",
-    "Reasoning: with caching, total time becomes proportional to the number of DISTINCT subproblems plus O(1) per reuse; without overlap (all subproblems distinct) memoization adds overhead without saving work.",
-    "Answer: overlapping subproblems are the signal — memoization makes total time proportional to the distinct subproblems (each solved once) plus O(1) per reuse, replacing exponential recomputation.",
+    "Approach: cache non-base results; repeated base cases can remain cheap. Sum the work per distinct state plus transitions.",
+    "Reasoning: with caching, total work sums each state’s computation and transitions once, plus cache-reuse costs; without overlap (all subproblems distinct) memoization adds overhead without saving work.",
+    "Answer: overlapping subproblems are the signal — memoization makes total work sums work per subproblem and transitions once, plus cache-reuse costs, replacing exponential recomputation.",
   ],
   "lesson:bit-logical-ops:bit-log-choose-1": [
     "Goal: packing on/off feature flags into one integer, choose the bitwise operators to SET a flag and to TEST a flag.",

@@ -6,6 +6,7 @@
 
 import type { TraceEvent, VisualBinding } from "../core/types";
 import { resolveBindingValue, asString, resolveOverlays, indexOverlays, overlayColor } from "./helpers";
+import { recordedRange, SequenceState } from './SequenceState';
 
 const CELL = 40;
 const GAP = 4;
@@ -31,9 +32,10 @@ export function StringVisualizer({
   const height = TOP + CELL + 64;
   const marks = indexOverlays(resolveOverlays(event, binding), chars.length);
   const cellX = (i: number) => PAD + i * (CELL + GAP);
+  const range = recordedRange(event, binding);
 
   return (
-    <svg
+    <><svg
       className="array-viz"
       viewBox={`0 0 ${width} ${height}`}
       role="img"
@@ -49,7 +51,7 @@ export function StringVisualizer({
         const mark = marks.find((m) => m.index === i);
         return (
           <g key={i}>
-            <rect x={cellX(i)} y={TOP} width={CELL} height={CELL} rx={6} className={mark ? "cell cell-active" : "cell"} />
+            <rect x={cellX(i)} y={TOP} width={CELL} height={CELL} rx={6} className={`cell${mark ? ' cell-active' : ''}${range && i>=range.start && i<=range.last ? ' cell-in-range' : ''}`} />
             <text x={cellX(i) + CELL / 2} y={TOP + CELL / 2 + 5} className="cell-value">
               {ch === " " ? "␠" : ch}
             </text>
@@ -62,6 +64,6 @@ export function StringVisualizer({
           {m.label}↓
         </text>
       ))}
-    </svg>
+    </svg><SequenceState event={event} binding={binding} length={chars.length}/></>
   );
 }

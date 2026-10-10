@@ -111,12 +111,28 @@ This is the **fixed-size** window (the width k never changes). A later variant i
   ],
 
   bindings: [
-    {
-      variable: "nums",
-      model: "array",
-      overlays: [{ role: "pointer", label: "enters i", source: "i" }],
-    },
-  ],
+  {
+    "variable": "nums",
+    "model": "array",
+    "overlays": [
+      {
+        "role": "pointer",
+        "label": "enters i",
+        "source": "i"
+      },
+      {
+        "role": "total",
+        "label": "running sum",
+        "source": "window"
+      },
+      {
+        "role": "total",
+        "label": "best sum",
+        "source": "best"
+      }
+    ]
+  }
+],
 
   prediction: [
     { atEventIndex: 0, prompt: "When the window slides from [2,1,5] to [1,5,1], which element enters and which leaves, and what is the new sum?", answer: "1 enters (nums[3]), 2 leaves (nums[0]); new sum 8 - 2 + 1 = 7.", explanation: "Sliding one step drops the leftmost old element (2) and adds the new right element (1): 8 - 2 + 1 = 7." },
@@ -176,7 +192,7 @@ This is the **fixed-size** window (the width k never changes). A later variant i
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "73ebd14aa95560ce",
+    contentHash: "617190ca5146555d",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

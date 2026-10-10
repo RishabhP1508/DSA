@@ -37,46 +37,97 @@ This "look up the complement" idea is the general **value-to-index** pattern: wh
   ],
 
   concepts: {
-    purpose: "Find a matching/partner element and its position via a value→index map, avoiding O(n²) pair scans.",
-    operations: "For each element, compute the needed complement; if it's in the map, return the pair; else record this value's index.",
-    uses: "Two Sum, pair-with-difference, 'have I seen a partner?' problems, index recall.",
-    tradeoffs: "O(n) time vs O(n) space; unlike sorting+two-pointers it preserves original indices.",
-    commonMistakes: "Storing before checking (can pair an element with itself); overwriting an index when duplicates matter; returning values instead of indices.",
-    edgeCases: "No valid pair returns []. Duplicate values (e.g. target = 2*x) work because the earlier index is stored first. A single element can't form a pair.",
-  },
+  "purpose": "Find a matching/partner element and its position via a value→index map, avoiding O(n²) pair scans.",
+  "operations": "For each element, compute the needed complement; if it's in the map, return the pair; else record this value's index.",
+  "uses": "Two Sum, pair-with-difference, 'have I seen a partner?' problems, index recall.",
+  "tradeoffs": "Iterative in-place heapsort then two pointers gives O(n log n) time/O(1) auxiliary space if only values matter and reordering is allowed. Python list.sort can need O(n) temporary storage. To retain original positions while sorting, decorate values with indices using O(n) storage. Hashing preserves original indices directly with expected O(n) time/O(n) space.",
+  "commonMistakes": "Storing before checking (can pair an element with itself); overwriting an index when duplicates matter; returning values instead of indices.",
+  "edgeCases": "No valid pair returns []. Duplicate values (e.g. target = 2*x) work because the earlier index is stored first. A single element can't form a pair."
+},
 
   complexity: [
-    { operation: "Two Sum (hash map)", best: "O(1)", average: "O(n)", worst: "O(n)", space: "O(n)", note: "One pass; map holds up to n value→index entries." },
-  ],
+  {
+    "operation": "Two Sum (hash map)",
+    "best": "O(1)",
+    "average": "O(n)",
+    "worst": "O(n²)",
+    "space": "O(n)",
+    "note": "Expected O(n) with bounded-size keys; hash collisions can cause O(n²) work."
+  }
+],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
-    costModel: "enumerate is O(1) per step; each map membership check and insert is expected O(1).",
-    time: {
-      bound: "O(n)",
-      case: "worst",
-      explanation: "We scan each element once, doing an expected-O(1) complement lookup and an expected-O(1) insert. In the worst case (the pair is at the end, or none exists) we process all n elements — O(n). The best case is O(1) if the pair is found among the first two elements. This replaces the O(n²) brute-force pair search.",
-      otherCases: [
-        { case: "best", bound: "O(1)", note: "The first two elements already form the pair." },
-      ],
-    },
-    space: {
-      bound: "O(n)",
-      case: "worst",
-      explanation: "If no pair is found early, the map ends up storing up to n value→index entries — O(n) auxiliary space.",
-      inputOutputNote: "The array of n elements is the input; the value→index map (up to n) is auxiliary.",
-    },
-    derivation: [
-      { lines: [4], description: "Scan each of the n elements once with enumerate.", cost: "O(n)", dimension: "time" },
-      { lines: [5, 6, 8], description: "Per element: compute complement, expected-O(1) lookup and insert.", cost: "O(n)", dimension: "time" },
-      { lines: [3, 8], description: "The map holds up to n value→index entries.", cost: "O(n)", dimension: "space" },
-    ],
-    assumptions: ["Values are hashable and map ops are expected O(1).", "Checking before inserting avoids pairing an element with itself."],
-    tradeoffs: "Sorting then two pointers is O(n log n) time and O(1) extra space but loses original indices (you'd need to track them); the hash map is O(n) time and keeps indices directly.",
-    counters: [{ label: "elements scanned", definition: "iterations of the loop (line 4)", countLines: [4] }],
-    fixedDataNote: "This run finds indices [0, 1] (2 + 7 = 9) on the second element. The O(n) bound generalises to n elements.",
+  "scope": "program",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of elements in nums"
+    }
+  ],
+  "costModel": "enumerate is O(1) per step; each map membership check and insert is expected O(1).",
+  "time": {
+    "bound": "O(n)",
+    "case": "expected",
+    "explanation": "We scan each element once, doing an expected-O(1) complement lookup and an expected-O(1) insert. In the worst case (the pair is at the end, or none exists) we process all n elements — O(n). The best case is O(1) if the pair is found among the first two elements. This replaces the O(n²) brute-force pair search.",
+    "otherCases": [
+      {
+        "case": "best",
+        "bound": "O(1)",
+        "note": "The first two elements already form the pair."
+      }
+    ]
   },
+  "space": {
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "If no pair is found early, the map ends up storing up to n value→index entries — O(n) auxiliary space.",
+    "inputOutputNote": "The array of n elements is the input; the value→index map (up to n) is auxiliary."
+  },
+  "derivation": [
+    {
+      "lines": [
+        4
+      ],
+      "description": "Scan each of the n elements once with enumerate.",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        5,
+        6,
+        8
+      ],
+      "description": "Per element: compute complement, expected-O(1) lookup and insert.",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        3,
+        8
+      ],
+      "description": "The map holds up to n value→index entries.",
+      "cost": "O(n)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Values are hashable and map ops are expected O(1).",
+    "Checking before inserting avoids pairing an element with itself."
+  ],
+  "tradeoffs": "Iterative in-place heapsort then two pointers gives O(n log n) time/O(1) auxiliary space if only values matter and reordering is allowed. Python list.sort can need O(n) temporary storage. To retain original positions while sorting, decorate values with indices using O(n) storage. Hashing preserves original indices directly with expected O(n) time/O(n) space.",
+  "counters": [
+    {
+      "label": "elements scanned",
+      "definition": "iterations of the loop (line 4)",
+      "countLines": [
+        4
+      ]
+    }
+  ],
+  "fixedDataNote": "This run finds indices [0, 1] (2 + 7 = 9) on the second element. The O(n) bound generalises to n elements."
+},
 
   code,
 
@@ -136,31 +187,46 @@ This "look up the complement" idea is the general **value-to-index** pattern: wh
   expectedOutput: "[0, 1]\n",
 
   references: [
-    {
-      url: "https://neetcode.io/roadmap",
-      title: "NeetCode roadmap",
-      section: "Arrays & Hashing — Two Sum",
-      topic: "hashing/value-to-index",
-      purpose: "Confirm the value→index hash-map approach to Two Sum and its O(n) complexity.",
-      verifiedClaims: ["Two Sum is solved in O(n) with a value→index hash map checking the complement"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://docs.python.org/3/library/functions.html#enumerate",
-      title: "Built-in Functions — enumerate — Python documentation",
-      section: "enumerate",
-      topic: "hashing/value-to-index",
-      purpose: "Confirm enumerate yields (index, value) pairs used to record positions.",
-      verifiedClaims: ["enumerate yields (index, item) pairs"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://neetcode.io/roadmap",
+    "title": "NeetCode roadmap",
+    "section": "Arrays & Hashing — Two Sum",
+    "topic": "hashing/value-to-index",
+    "purpose": "Confirm the value→index hash-map approach to Two Sum and its O(n) complexity.",
+    "verifiedClaims": [
+      "Two Sum is solved in O(n) with a value→index hash map checking the complement"
+    ],
+    "accessDate": "2026-09-20"
+  },
+  {
+    "url": "https://docs.python.org/3/library/functions.html#enumerate",
+    "title": "Built-in Functions — enumerate — Python documentation",
+    "section": "enumerate",
+    "topic": "hashing/value-to-index",
+    "purpose": "Confirm enumerate yields (index, value) pairs used to record positions.",
+    "verifiedClaims": [
+      "enumerate yields (index, item) pairs"
+    ],
+    "accessDate": "2026-09-20"
+  },
+  {
+    "url": "https://usaco.guide/silver/two-pointers",
+    "title": "USACO Guide: two pointers",
+    "section": "Sum of Two Values; Sliding Window",
+    "topic": "codex/b2-b",
+    "purpose": "Verify the specific semantics and conditions used in this lesson.",
+    "verifiedClaims": [
+      "Sorted opposite-end pointers move according to the current sum; suitable monotone windows advance each boundary at most n times."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "cfe213d9940185b7",
-    verifiedAt: "2026-09-21",
+    contentHash: "03058a26153bdd0d",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

@@ -133,6 +133,9 @@ details summary { cursor: pointer; }
 .viz-title { fill: var(--dim); font-size: 12px; }
 .cell { fill: var(--cell); stroke: var(--border); }
 .cell-active { fill: var(--cell-active); stroke: var(--accent); }
+.cell-in-range { stroke: var(--accent); stroke-width: 3; stroke-dasharray: 5 2; }
+.sequence-state { display: flex; flex-wrap: wrap; gap: .5rem 1rem; font-size: .85rem; padding: .5rem; }
+.sequence-state span { border: 1px solid var(--accent); border-radius: .3rem; padding: .25rem .5rem; }
 .cell-value { fill: var(--ink); font-size: 15px; text-anchor: middle; font-family: ui-monospace, monospace; }
 .cell-index { fill: var(--dim); font-size: 11px; text-anchor: middle; }
 .pointer-label { fill: var(--accent-2); font-size: 12px; text-anchor: middle; }

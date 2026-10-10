@@ -7,7 +7,7 @@
 
 import type { LessonDefinition } from "../../core/types";
 
-const code = `# KMP: find all occurrences of pattern in text in O(n + m), never re-scanning text.
+const code = `# KMP: find all occurrences of pattern in text in O(n + m), never moving the text index backward.
 # Step 1: the LPS array — lps[i] = length of the longest proper prefix of
 # pattern[:i+1] that is also a suffix. It tells us how far to fall back on a mismatch.
 def build_lps(pattern):
@@ -28,7 +28,7 @@ def build_lps(pattern):
 
 def kmp_search(text, pattern):
     if not pattern:
-        return []
+        return list(range(len(text) + 1))
     lps = build_lps(pattern)
     res = []
     i = j = 0                         # i scans text, j scans pattern
@@ -55,35 +55,43 @@ export const kmp: LessonDefinition = {
   area: "Strings",
   prerequisites: ["substrings", "string-two-pointers"],
 
-  explanation: `**KMP** (Knuth–Morris–Pratt) finds every occurrence of a pattern of length \`m\` in a text of length \`n\` in **O(n + m)** time — without ever moving the text pointer **backward**. The naive approach, on a mismatch, slides the pattern one step and rescans from where it started; on adversarial inputs like text \`"aaa…a"\` with pattern \`"aa…ab"\` that costs **O(n·m)**. KMP removes the wasted rescans by **precomputing how the pattern matches itself**.
-
-That precomputation is the **LPS array** ("longest proper prefix which is also a suffix"): \`lps[i]\` is the length of the longest **proper** prefix of \`pattern[:i+1]\` that is also a **suffix** of it. Intuitively, when a mismatch happens after matching \`j\` characters, we already know those \`j\` matched characters *are* the pattern's own prefix — so the longest prefix-that-is-also-a-suffix tells us the **most we can keep** without rechecking. We set \`j = lps[j-1]\` and try again, never touching \`i\`. Building the LPS is itself a clever self-match in **O(m)**; for \`"ababaca"\` it is \`[0, 0, 1, 2, 3, 0, 1]\` (e.g. at index 4 the prefix \`"aba"\` of length 3 is also a suffix of \`"ababa"\`).
-
-The search then walks the text once with two pointers \`i\` (text) and \`j\` (pattern): advance both on a match, and on a full match (\`j == m\`) record the start \`i − j\` and fall back via \`lps\`; on a mismatch fall back \`j\` (or advance \`i\` if \`j\` is already 0). Because \`i\` only ever moves **forward**, the total work is **O(n + m)** with **O(m)** extra space for the LPS. In the examples, \`"ababd"\` occurs once starting at index **10**, and \`"aa"\` occurs at **[0, 1, 2, 3]** in \`"aaaaa"\` — note the **overlapping** matches, which KMP finds naturally because it resumes from \`lps\` rather than skipping past a whole match. KMP is the classic linear-time exact matcher and the gateway to more advanced string algorithms.`,
+  explanation: "**KMP** (Knuth–Morris–Pratt) finds every occurrence of a pattern of length `m` in a text of length `n` in **O(n + m)** time — without ever moving the text pointer **backward**. The naive approach, on a mismatch, slides the pattern one step and rescans from where it started; on adversarial inputs like text `\"aaa…a\"` with pattern `\"aa…ab\"` that costs **O(n·m)**. KMP removes the wasted rescans by **precomputing how the pattern matches itself**.\n\nThat precomputation is the **LPS array** (\"longest proper prefix which is also a suffix\"): `lps[i]` is the length of the longest **proper** prefix of `pattern[:i+1]` that is also a **suffix** of it. Intuitively, when a mismatch happens after matching `j` characters, we already know those `j` matched characters *are* the pattern's own prefix — so the longest prefix-that-is-also-a-suffix tells us the **most we can keep** without rechecking. We set `j = lps[j-1]` and try again, never touching `i`. Building the LPS is itself a clever self-match in **O(m)**; for `\"ababaca\"` it is `[0, 0, 1, 2, 3, 0, 1]` (e.g. at index 4 the prefix `\"aba\"` of length 3 is also a suffix of `\"ababa\"`).\n\nThe search then walks the text once with two pointers `i` (text) and `j` (pattern): advance both on a match, and on a full match (`j == m`) record the start `i − j` and fall back via `lps`; on a mismatch fall back `j` (or advance `i` if `j` is already 0). The text index i never decreases, and every j fallback reduces a quantity that only increases once per matching advance. This amortized bound, not forward movement alone, makes the total work **O(n + m)** with **O(m)** extra space for the LPS. In the examples, `\"ababd\"` occurs once starting at index **10**, and `\"aa\"` occurs at **[0, 1, 2, 3]** in `\"aaaaa\"` — note the **overlapping** matches, which KMP finds naturally because it resumes from `lps` rather than skipping past a whole match. KMP is the classic linear-time exact matcher and the gateway to more advanced string algorithms.\n\nThe current text character may be compared with another pattern position after a fallback; “no text backtracking” does not mean every character is compared exactly once. The stated O(m) auxiliary space excludes the r returned match positions. Total allocated storage is O(m+r); for the empty-pattern convention, r=n+1 and no LPS is needed.",
 
   vocabulary: [
-    { term: "KMP", definition: "Knuth–Morris–Pratt: exact substring search in O(n + m) with no text backtracking." },
-    { term: "LPS array", definition: "lps[i] = length of the longest proper prefix of pattern[:i+1] that is also its suffix." },
-    { term: "Proper prefix", definition: "A prefix that is not the whole string (so it excludes the full string itself)." },
-    { term: "Fallback", definition: "On a mismatch, setting j = lps[j-1] to reuse the already-matched prefix instead of restarting." },
-    { term: "No text backtracking", definition: "The text index i never decreases, which is what guarantees linear time." },
-    { term: "Overlapping matches", definition: "Occurrences that share characters; KMP finds them by resuming from lps after a match." },
-  ],
+  {
+    "term": "KMP",
+    "definition": "Knuth–Morris–Pratt: exact substring search in O(n + m) with no text backtracking."
+  },
+  {
+    "term": "LPS array",
+    "definition": "lps[i] = length of the longest proper prefix of pattern[:i+1] that is also its suffix."
+  },
+  {
+    "term": "Proper prefix",
+    "definition": "A prefix that is not the whole string (so it excludes the full string itself)."
+  },
+  {
+    "term": "Fallback",
+    "definition": "On a mismatch, setting j = lps[j-1] to reuse the already-matched prefix instead of restarting."
+  },
+  {
+    "term": "No text backtracking",
+    "definition": "i never decreases; linear time also requires bounding j’s fallback steps against its prior increments."
+  },
+  {
+    "term": "Overlapping matches",
+    "definition": "Occurrences that share characters; KMP finds them by resuming from lps after a match."
+  }
+],
 
   concepts: {
-    purpose:
-      "Search for all occurrences of a pattern in linear time by precomputing the pattern's self-overlap (LPS).",
-    operations:
-      "build_lps precomputes fallbacks in O(m); kmp_search scans the text once, advancing on matches and falling back via lps on mismatches.",
-    uses:
-      "Substring search, finding all (including overlapping) occurrences, plagiarism/log scanning, streaming matching, building blocks for other string algorithms.",
-    tradeoffs:
-      "Guaranteed O(n + m) vs naive O(n·m); costs O(m) preprocessing and space, and is more subtle to implement than a naive scan.",
-    commonMistakes:
-      "Moving the text pointer backward (defeats the purpose); off-by-one in lps (it is longest PROPER prefix-suffix); restarting j at 0 on mismatch instead of lps[j-1]; not handling the empty pattern.",
-    edgeCases:
-      "Empty pattern → no occurrences (returns []). Pattern longer than text → no matches. Overlapping occurrences are reported (e.g. 'aa' in 'aaaaa').",
-  },
+  "purpose": "Search for all occurrences of a pattern in linear time by precomputing the pattern's self-overlap (LPS).",
+  "operations": "build_lps precomputes fallbacks in O(m); kmp_search scans the text once, advancing on matches and falling back via lps on mismatches.",
+  "uses": "Substring search, finding all (including overlapping) occurrences, plagiarism/log scanning, streaming matching, building blocks for other string algorithms.",
+  "tradeoffs": "Guaranteed O(n + m) vs naive O(n·m); costs O(m) preprocessing and space, and is more subtle to implement than a naive scan.",
+  "commonMistakes": "Moving the text pointer backward (defeats the purpose); off-by-one in lps (it is longest PROPER prefix-suffix); restarting j at 0 on mismatch instead of lps[j-1]; not handling the empty pattern.",
+  "edgeCases": "Empty pattern → all boundaries 0..len(text), by the convention used in both this example and its exercise. A longer pattern has no matches. Overlapping occurrences are reported."
+},
 
   complexity: [
     { operation: "build LPS", best: "O(m)", average: "O(m)", worst: "O(m)", space: "O(m)", note: "Amortized single pass over the pattern." },
@@ -92,102 +100,328 @@ The search then walks the text once with two pointers \`i\` (text) and \`j\` (pa
   ],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [
-      { symbol: "n", meaning: "the length of the text" },
-      { symbol: "m", meaning: "the length of the pattern" },
-    ],
-    costModel:
-      "Character comparisons are O(1). Each fallback strictly decreases j, and each match increases j by 1, so total fallbacks are bounded by total matches — an amortization argument.",
-    time: {
-      bound: "O(n + m)",
-      case: "worst",
-      explanation:
-        "Building the LPS is O(m): although the fall-back line can run multiple times, each fallback lowers `length`, and `length` only rises one step per matched character, so the total work is linear in m (amortized). The search is O(n): the text index i never moves backward and increases at least once per outer step that isn't a pure fallback; j's fallbacks are likewise amortized against the increments. Summing gives O(n + m), versus the naive O(n·m).",
+  "scope": "operation",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the length of the text"
     },
-    space: {
-      bound: "O(m)",
-      case: "worst",
-      explanation:
-        "The only extra structure is the LPS array of length m. The pointers and the result list (occurrences) are the output, not counted as working space.",
-      inputOutputNote: "The text and pattern are inputs; the list of match positions is the output. Auxiliary space is the O(m) LPS array.",
-    },
-    derivation: [
-      { lines: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17], description: "build_lps: amortized single pass over the pattern.", cost: "O(m)", dimension: "time" },
-      { lines: [26, 27, 28, 29, 33, 34], description: "Search scans the text with i never decreasing; fallbacks amortized.", cost: "O(n)", dimension: "time" },
-      { lines: [5], description: "The LPS array of length m.", cost: "O(m)", dimension: "space" },
-    ],
-    assumptions: [
-      "The text pointer i never moves backward (the core KMP invariant).",
-      "lps holds longest PROPER prefix-suffix lengths so fallbacks are correct.",
-      "Character comparison is O(1).",
-    ],
-    tradeoffs:
-      "KMP guarantees O(n + m) even on adversarial inputs where naive search degrades to O(n·m); the price is O(m) preprocessing/space and trickier code. For a one-off search on small inputs, Python's built-in `in` is simpler; KMP shines when worst-case guarantees or all/overlapping matches matter.",
-    counters: [
-      { label: "lps build steps", definition: "executions of the match branch in build_lps (line 10)", countLines: [10] },
-      { label: "text comparisons", definition: "executions of the search match check (line 27)", countLines: [27] },
-    ],
-    fixedDataNote:
-      "The examples build lps for 'ababaca' and search short texts, giving [0,0,1,2,3,0,1], [10], and [0,1,2,3]. The O(n + m) bound describes how the work scales with text and pattern length.",
+    {
+      "symbol": "m",
+      "meaning": "the length of the pattern"
+    }
+  ],
+  "costModel": "Character comparisons are O(1). Each fallback strictly decreases j, and each match increases j by 1, so total fallbacks are bounded by total matches — an amortization argument.",
+  "time": {
+    "bound": "O(n + m)",
+    "case": "worst",
+    "explanation": "Building the LPS is O(m): although the fall-back line can run multiple times, each fallback lowers `length`, and `length` only rises one step per matched character, so the total work is linear in m (amortized). The search is O(n): the text index i never moves backward and increases at least once per outer step that isn't a pure fallback; j's fallbacks are likewise amortized against the increments. Summing gives O(n + m), versus the naive O(n·m)."
   },
+  "space": {
+    "bound": "O(m)",
+    "case": "worst",
+    "explanation": "The LPS array has m entries and the pointers use constant slots. O(m) auxiliary space excludes the r result positions, so total allocated storage is O(m+r). For an empty pattern, the output alone has n+1 entries.",
+    "inputOutputNote": "The text and pattern are inputs; the list of match positions is the output. Auxiliary space is the O(m) LPS array."
+  },
+  "derivation": [
+    {
+      "lines": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "description": "build_lps: amortized single pass over the pattern.",
+      "cost": "O(m)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        26,
+        27,
+        28,
+        29,
+        33,
+        34
+      ],
+      "description": "Search scans the text with i never decreasing; fallbacks amortized.",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        6
+      ],
+      "description": "The LPS array of length m.",
+      "cost": "O(m)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "The text pointer i never moves backward (the core KMP invariant).",
+    "lps holds longest PROPER prefix-suffix lengths so fallbacks are correct.",
+    "Character comparison is O(1)."
+  ],
+  "tradeoffs": "KMP guarantees O(n + m) even on adversarial inputs where naive search degrades to O(n·m); the price is O(m) preprocessing/space and trickier code. For a one-off search on small inputs, Python's built-in `in` is simpler; KMP shines when worst-case guarantees or all/overlapping matches matter.",
+  "counters": [
+    {
+      "label": "lps build steps",
+      "definition": "executions of the match branch in build_lps (line 10)",
+      "countLines": [
+        10
+      ]
+    },
+    {
+      "label": "text comparisons",
+      "definition": "executions of the search match check (line 28)",
+      "countLines": [
+        28
+      ]
+    }
+  ],
+  "fixedDataNote": "The examples build lps for 'ababaca' and search short texts, giving [0,0,1,2,3,0,1], [10], and [0,1,2,3]. The O(n + m) bound describes how the work scales with text and pattern length."
+},
 
   code,
 
   codeExplanations: [
-    { line: 1, executable: false, explanation: "Comment: KMP finds all occurrences in O(n+m)." },
-    { line: 2, executable: false, explanation: "Comment: the LPS array definition." },
-    { line: 3, executable: false, explanation: "Comment continued: LPS guides the fallback." },
-    { line: 4, executable: true, explanation: "Define build_lps(pattern)." },
-    { line: 5, executable: true, explanation: "Allocate the LPS array (all zeros)." },
-    { line: 6, executable: true, explanation: "length tracks the current matched prefix length." },
-    { line: 7, executable: true, explanation: "Start comparing from index 1 (lps[0] is always 0)." },
-    { line: 8, executable: true, explanation: "Scan the whole pattern." },
-    { line: 9, executable: true, explanation: "If the character extends the current prefix..." },
-    { line: 10, executable: true, explanation: "...grow the matched length..." },
-    { line: 11, executable: true, explanation: "...record it in lps..." },
-    { line: 12, executable: true, explanation: "...and advance i." },
-    { line: 13, executable: true, explanation: "On a mismatch with a non-zero prefix..." },
-    { line: 14, executable: true, explanation: "...fall back within the pattern using the previous lps (no restart)." },
-    { line: 15, executable: false, explanation: "Otherwise there is no prefix to fall back to." },
-    { line: 16, executable: true, explanation: "lps here is 0." },
-    { line: 17, executable: true, explanation: "Advance i." },
-    { line: 18, executable: true, explanation: "Return the completed LPS array." },
-    { line: 19, executable: false, explanation: "Blank line." },
-    { line: 20, executable: true, explanation: "Define kmp_search(text, pattern)." },
-    { line: 21, executable: true, explanation: "An empty pattern has no occurrences." },
-    { line: 22, executable: true, explanation: "Return an empty list for the empty pattern." },
-    { line: 23, executable: true, explanation: "Precompute the pattern's LPS array." },
-    { line: 24, executable: true, explanation: "Collect match start positions." },
-    { line: 25, executable: true, explanation: "i scans the text; j scans the pattern." },
-    { line: 26, executable: true, explanation: "Walk the text once." },
-    { line: 27, executable: true, explanation: "If the current characters match..." },
-    { line: 28, executable: true, explanation: "...advance the text pointer..." },
-    { line: 29, executable: true, explanation: "...and the pattern pointer." },
-    { line: 30, executable: true, explanation: "If the whole pattern matched..." },
-    { line: 31, executable: true, explanation: "...record the start index (i - j)..." },
-    { line: 32, executable: true, explanation: "...and fall back to keep finding (possibly overlapping) matches." },
-    { line: 33, executable: true, explanation: "On a mismatch after some matches, fall back j using lps (i stays put)." },
-    { line: 34, executable: true, explanation: "Apply the fallback." },
-    { line: 35, executable: false, explanation: "Otherwise j is already 0." },
-    { line: 36, executable: true, explanation: "Advance i to keep scanning." },
-    { line: 37, executable: true, explanation: "Return all match positions." },
-    { line: 38, executable: false, explanation: "Blank line." },
-    { line: 39, executable: true, explanation: "LPS of 'ababaca' is [0, 0, 1, 2, 3, 0, 1]." },
-    { line: 40, executable: true, explanation: "'ababd' occurs once, starting at index 10." },
-    { line: 41, executable: true, explanation: "'aa' occurs at [0, 1, 2, 3] in 'aaaaa' (overlapping)." },
-  ],
+  {
+    "line": 1,
+    "executable": false,
+    "explanation": "Comment: KMP keeps the text index moving forward; fallback can compare the current text character again."
+  },
+  {
+    "line": 2,
+    "executable": false,
+    "explanation": "Comment: the LPS array definition."
+  },
+  {
+    "line": 3,
+    "executable": false,
+    "explanation": "Comment continued: LPS guides the fallback."
+  },
+  {
+    "line": 4,
+    "executable": true,
+    "explanation": "Define build_lps(pattern)."
+  },
+  {
+    "line": 5,
+    "executable": true,
+    "explanation": "Allocate the LPS array (all zeros)."
+  },
+  {
+    "line": 6,
+    "executable": true,
+    "explanation": "length tracks the current matched prefix length."
+  },
+  {
+    "line": 7,
+    "executable": true,
+    "explanation": "Start comparing from index 1 (lps[0] is always 0)."
+  },
+  {
+    "line": 8,
+    "executable": true,
+    "explanation": "Scan the whole pattern."
+  },
+  {
+    "line": 9,
+    "executable": true,
+    "explanation": "If the character extends the current prefix..."
+  },
+  {
+    "line": 10,
+    "executable": true,
+    "explanation": "...grow the matched length..."
+  },
+  {
+    "line": 11,
+    "executable": true,
+    "explanation": "...record it in lps..."
+  },
+  {
+    "line": 12,
+    "executable": true,
+    "explanation": "...and advance i."
+  },
+  {
+    "line": 13,
+    "executable": true,
+    "explanation": "On a mismatch with a non-zero prefix..."
+  },
+  {
+    "line": 14,
+    "executable": true,
+    "explanation": "...fall back within the pattern using the previous lps (no restart)."
+  },
+  {
+    "line": 15,
+    "executable": false,
+    "explanation": "Otherwise there is no prefix to fall back to."
+  },
+  {
+    "line": 16,
+    "executable": true,
+    "explanation": "lps here is 0."
+  },
+  {
+    "line": 17,
+    "executable": true,
+    "explanation": "Advance i."
+  },
+  {
+    "line": 18,
+    "executable": true,
+    "explanation": "Return the completed LPS array."
+  },
+  {
+    "line": 19,
+    "executable": false,
+    "explanation": "Blank line."
+  },
+  {
+    "line": 20,
+    "executable": true,
+    "explanation": "Define kmp_search(text, pattern)."
+  },
+  {
+    "line": 21,
+    "executable": true,
+    "explanation": "Handle the empty pattern under the explicit boundary-match convention."
+  },
+  {
+    "line": 22,
+    "executable": true,
+    "explanation": "Return every boundary position from 0 through len(text)."
+  },
+  {
+    "line": 23,
+    "executable": true,
+    "explanation": "Precompute the pattern's LPS array."
+  },
+  {
+    "line": 24,
+    "executable": true,
+    "explanation": "Collect match start positions."
+  },
+  {
+    "line": 25,
+    "executable": true,
+    "explanation": "i scans the text; j scans the pattern."
+  },
+  {
+    "line": 26,
+    "executable": true,
+    "explanation": "Walk the text once."
+  },
+  {
+    "line": 27,
+    "executable": true,
+    "explanation": "If the current characters match..."
+  },
+  {
+    "line": 28,
+    "executable": true,
+    "explanation": "...advance the text pointer..."
+  },
+  {
+    "line": 29,
+    "executable": true,
+    "explanation": "...and the pattern pointer."
+  },
+  {
+    "line": 30,
+    "executable": true,
+    "explanation": "If the whole pattern matched..."
+  },
+  {
+    "line": 31,
+    "executable": true,
+    "explanation": "...record the start index (i - j)..."
+  },
+  {
+    "line": 32,
+    "executable": true,
+    "explanation": "...and fall back to keep finding (possibly overlapping) matches."
+  },
+  {
+    "line": 33,
+    "executable": true,
+    "explanation": "On a mismatch after some matches, fall back j using lps (i stays put)."
+  },
+  {
+    "line": 34,
+    "executable": true,
+    "explanation": "Apply the fallback."
+  },
+  {
+    "line": 35,
+    "executable": false,
+    "explanation": "Otherwise j is already 0."
+  },
+  {
+    "line": 36,
+    "executable": true,
+    "explanation": "Advance i to keep scanning."
+  },
+  {
+    "line": 37,
+    "executable": true,
+    "explanation": "Return all match positions."
+  },
+  {
+    "line": 38,
+    "executable": false,
+    "explanation": "Blank line."
+  },
+  {
+    "line": 39,
+    "executable": true,
+    "explanation": "LPS of 'ababaca' is [0, 0, 1, 2, 3, 0, 1]."
+  },
+  {
+    "line": 40,
+    "executable": true,
+    "explanation": "'ababd' occurs once, starting at index 10."
+  },
+  {
+    "line": 41,
+    "executable": true,
+    "explanation": "'aa' occurs at [0, 1, 2, 3] in 'aaaaa' (overlapping)."
+  }
+],
 
   bindings: [
-    {
-      variable: "text",
-      model: "string",
-      overlays: [
-        { role: "pointer", label: "i (text)", source: "i" },
-        { role: "pointer", label: "j (pattern)", source: "j" },
-      ],
-    },
-  ],
+  {
+    "variable": "text",
+    "model": "string",
+    "overlays": [
+      {
+        "role": "pointer",
+        "label": "i (text)",
+        "source": "i"
+      }
+    ]
+  },
+  {
+    "variable": "pattern",
+    "model": "string",
+    "overlays": [
+      {
+        "role": "pointer",
+        "label": "j (pattern)",
+        "source": "j"
+      }
+    ]
+  }
+],
 
   prediction: [
     {
@@ -248,37 +482,36 @@ The search then walks the text once with two pointers \`i\` (text) and \`j\` (pa
   expectedOutput: "[0, 0, 1, 2, 3, 0, 1]\n[10]\n[0, 1, 2, 3]\n",
 
   references: [
-    {
-      url: "https://cp-algorithms.com/string/prefix-function.html",
-      title: "Prefix function — Knuth–Morris–Pratt (CP-Algorithms)",
-      section: "Prefix function (LPS) and KMP search; linear complexity",
-      topic: "strings/kmp",
-      purpose: "Confirm the LPS/prefix-function definition, the fallback rule j = lps[j-1], and the O(n + m) linear-time guarantee.",
-      verifiedClaims: [
-        "The prefix function (LPS) gives the longest proper prefix that is also a suffix and is computed in O(m).",
-        "KMP search runs in O(n + m) without moving the text pointer backward.",
-      ],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm",
-      title: "Knuth–Morris–Pratt algorithm — Wikipedia",
-      section: "Algorithm, partial match (failure) table, complexity",
-      topic: "strings/kmp",
-      purpose: "Cross-check the failure-table construction, the no-backtracking property, and the O(n + m) time / O(m) space bounds.",
-      verifiedClaims: [
-        "KMP avoids re-examining text characters using a partial-match (failure) table.",
-        "Its time complexity is O(n + m) with O(m) space for the table.",
-      ],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://cp-algorithms.com/string/prefix-function.html",
+    "title": "Prefix function — Knuth–Morris–Pratt (CP-Algorithms)",
+    "section": "Prefix function (LPS) and KMP search; linear complexity",
+    "topic": "strings/kmp",
+    "purpose": "Confirm the LPS/prefix-function definition, the fallback rule j = lps[j-1], and the O(n + m) linear-time guarantee.",
+    "verifiedClaims": [
+      "The prefix function (LPS) gives the longest proper prefix that is also a suffix and is computed in O(m).",
+      "KMP search runs in O(n + m) without moving the text pointer backward."
+    ],
+    "accessDate": "2026-09-20"
+  },
+  {
+    "url": "https://www.cs.cornell.edu/courses/cs312/2002fa/lectures/lec26.htm",
+    "title": "Cornell CS312: string matching",
+    "section": "Knuth-Morris-Pratt and prefix computation",
+    "topic": "strings/kmp",
+    "purpose": "Check the specific claims and conventions used here.",
+    "verifiedClaims": [
+      "Fallback decreases a quantity that increases at most n times, giving linear search work; prefix preprocessing is linear."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "fb12ab32e65830f9",
-    verifiedAt: "2026-09-21",
+    contentHash: "b6677b9b59c10ad5",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

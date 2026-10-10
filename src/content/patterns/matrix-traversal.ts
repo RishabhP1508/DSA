@@ -10,6 +10,8 @@ import type { PatternDefinition } from "../../core/types";
 const walkthroughCode = `# Matrix traversal: walk a 2D grid in a controlled order using shrinking bounds.
 # Here: spiral order (right, down, left, up), tightening the boundary each lap.
 def spiral(matrix):
+    if not matrix:
+        return []
     res = []
     top, bottom = 0, len(matrix) - 1
     left, right = 0, len(matrix[0]) - 1
@@ -50,10 +52,11 @@ export const matrixTraversalPattern: PatternDefinition = {
   whyItHelps: `Maintain explicit **boundaries** (top, bottom, left, right) or a clear index mapping, and move in fixed **directions**, tightening the region after each pass. For a spiral: traverse the top row, then the right column, then the bottom row, then the left column, shrinking inward — the boundary checks (\`if top <= bottom\`, \`if left <= right\`) prevent re-walking a row/column in non-square or thin matrices. Every cell is visited exactly once — **O(m·n)** time — and boundary-driven traversal (or index math for rotate/transpose) needs only **O(1)** extra space.`,
 
   conditions: [
-    "Track boundaries or a precise index formula so each cell is visited exactly once.",
-    "Add the mid-loop boundary guards for non-square/thin matrices (single row or column).",
-    "For in-place rotate/transpose, swap symmetric cells (e.g. transpose then reverse rows) to keep O(1) space.",
-  ],
+  "Track boundaries or a precise index formula so each cell is visited exactly once.",
+  "Add the mid-loop boundary guards for non-square/thin matrices (single row or column).",
+  "For in-place rotate/transpose, swap symmetric cells (e.g. transpose then reverse rows) to keep O(1) space.",
+  "The spiral input is rectangular; in-place transpose-plus-reverse 90-degree rotation requires a square matrix. Rectangular rotations change shape."
+],
 
   alternatives: [
     "Graph BFS/DFS on the grid — when moves depend on cell CONTENT (islands, shortest path in a maze), not a fixed geometric order.",
@@ -73,60 +76,214 @@ export const matrixTraversalPattern: PatternDefinition = {
     "O(m·n) time — each of the m·n cells is visited exactly once. O(1) auxiliary space (just the four boundaries), excluding the output list.",
 
   complexityExplanation: {
-    scope: "program",
-    variables: [
-      { symbol: "m", meaning: "the number of rows" },
-      { symbol: "n", meaning: "the number of columns" },
-    ],
-    costModel: "Four shrinking boundaries (top/bottom/left/right) walk the perimeter each lap; every cell is appended to the result exactly once.",
-    time: {
-      bound: "O(m·n)",
-      case: "worst",
-      explanation: "Each cell is appended exactly once across the four directional loops (lines 8-9, 11-12, 15-16, 19-20). There are m·n cells, so the total number of appends is m·n. The while loop just tightens the boundary each lap. So O(m·n).",
+  "scope": "operation",
+  "variables": [
+    {
+      "symbol": "m",
+      "meaning": "the number of rows"
     },
-    space: {
-      bound: "O(1)",
-      case: "worst",
-      explanation: "Only the four integer boundaries and loop indices are kept — O(1) auxiliary, independent of the grid size.",
-      inputOutputNote: "The m×n matrix is the input; the O(m·n) result list is the output (not counted as auxiliary).",
-    },
-    derivation: [
-      { lines: [8, 9], description: "Walk the top row left→right.", cost: "O(n) per lap", dimension: "time" },
-      { lines: [11, 12, 15, 16, 19, 20], description: "Walk the right column, bottom row, left column; every cell appended once.", cost: "O(m·n) total", dimension: "time" },
-      { lines: [5, 6], description: "Four boundary scalars.", cost: "O(1)", dimension: "space" },
-    ],
-    assumptions: ["The matrix is rectangular (all rows length n).", "Appending to a list is amortised O(1)."],
-    tradeoffs: "Spiral order needs the boundary bookkeeping but visits each cell once at O(1) extra space; a visited-matrix approach would add O(m·n) space.",
-    counters: [{ label: "cells visited", definition: "executions of the top-row append (line 9)", countLines: [9] }],
-    fixedDataNote: "For the 3×3 grid all 9 cells are emitted in spiral order. The O(m·n) bound generalises.",
+    {
+      "symbol": "n",
+      "meaning": "the number of columns"
+    }
+  ],
+  "costModel": "Four shrinking boundaries (top/bottom/left/right) walk the perimeter each lap; every cell is appended to the result exactly once.",
+  "time": {
+    "bound": "O(m·n)",
+    "case": "worst",
+    "explanation": "For a rectangular nonempty m-by-n matrix, each cell is appended once across the four side loops: O(m*n). Empty outer lists and zero-width rectangular matrices return empty output in O(1). Ragged rows are outside this contract."
   },
+  "space": {
+    "bound": "O(1)",
+    "case": "worst",
+    "explanation": "Only the four integer boundaries and loop indices are kept — O(1) auxiliary, independent of the grid size.",
+    "inputOutputNote": "The m×n matrix is the input; the O(m·n) result list is the output (not counted as auxiliary)."
+  },
+  "derivation": [
+    {
+      "lines": [
+        10,
+        11
+      ],
+      "description": "Walk the top row left→right.",
+      "cost": "O(n) per lap",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        13,
+        14,
+        17,
+        18,
+        21,
+        22
+      ],
+      "description": "Walk the right column, bottom row, left column; every cell appended once.",
+      "cost": "O(m·n) total",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        7,
+        8
+      ],
+      "description": "Four boundary scalars.",
+      "cost": "O(1)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "The matrix is rectangular (all rows length n).",
+    "Appending to a list is amortised O(1)."
+  ],
+  "tradeoffs": "Spiral order needs the boundary bookkeeping but visits each cell once at O(1) extra space; a visited-matrix approach would add O(m·n) space.",
+  "counters": [
+    {
+      "label": "cells visited",
+      "definition": "appends across all four sides",
+      "countLines": [
+        11,
+        14,
+        18,
+        22
+      ]
+    }
+  ],
+  "fixedDataNote": "For the 3×3 grid all 9 cells are emitted in spiral order. The O(m·n) bound generalises."
+},
 
   codeExplanations: [
-    { line: 1, executable: false, explanation: "Comment: traverse a grid in a controlled order." },
-    { line: 2, executable: false, explanation: "Comment: spiral order with shrinking bounds." },
-    { line: 3, executable: true, explanation: "Define spiral(matrix)." },
-    { line: 4, executable: true, explanation: "Output order accumulator." },
-    { line: 5, executable: true, explanation: "Top and bottom row boundaries." },
-    { line: 6, executable: true, explanation: "Left and right column boundaries." },
-    { line: 7, executable: true, explanation: "Continue while the region is non-empty." },
-    { line: 8, executable: true, explanation: "Walk the top row left to right." },
-    { line: 9, executable: true, explanation: "Collect each cell." },
-    { line: 10, executable: true, explanation: "That row is done; move the top boundary down." },
-    { line: 11, executable: true, explanation: "Walk the right column top to bottom." },
-    { line: 12, executable: true, explanation: "Collect each cell." },
-    { line: 13, executable: true, explanation: "Move the right boundary in." },
-    { line: 14, executable: true, explanation: "Guard: only walk the bottom row if rows remain." },
-    { line: 15, executable: true, explanation: "Walk the bottom row right to left." },
-    { line: 16, executable: true, explanation: "Collect each cell." },
-    { line: 17, executable: true, explanation: "Move the bottom boundary up." },
-    { line: 18, executable: true, explanation: "Guard: only walk the left column if columns remain." },
-    { line: 19, executable: true, explanation: "Walk the left column bottom to top." },
-    { line: 20, executable: true, explanation: "Collect each cell." },
-    { line: 21, executable: true, explanation: "Move the left boundary in." },
-    { line: 22, executable: true, explanation: "Return the spiral order." },
-    { line: 23, executable: false, explanation: "Blank line." },
-    { line: 24, executable: true, explanation: "Spiral of the 3x3 grid is [1,2,3,6,9,8,7,4,5]." },
-  ],
+  {
+    "line": 1,
+    "executable": false,
+    "explanation": "Comment: traverse a grid in a controlled order."
+  },
+  {
+    "line": 2,
+    "executable": false,
+    "explanation": "Comment: spiral order with shrinking bounds."
+  },
+  {
+    "line": 3,
+    "executable": true,
+    "explanation": "Define spiral(matrix)."
+  },
+  {
+    "line": 4,
+    "executable": true,
+    "explanation": "Handle the empty outer list before reading its first row."
+  },
+  {
+    "line": 5,
+    "executable": true,
+    "explanation": "Return empty output for the empty matrix."
+  },
+  {
+    "line": 6,
+    "executable": true,
+    "explanation": "Output order accumulator."
+  },
+  {
+    "line": 7,
+    "executable": true,
+    "explanation": "Top and bottom row boundaries."
+  },
+  {
+    "line": 8,
+    "executable": true,
+    "explanation": "Left and right column boundaries."
+  },
+  {
+    "line": 9,
+    "executable": true,
+    "explanation": "Continue while the region is non-empty."
+  },
+  {
+    "line": 10,
+    "executable": true,
+    "explanation": "Walk the top row left to right."
+  },
+  {
+    "line": 11,
+    "executable": true,
+    "explanation": "Collect each cell."
+  },
+  {
+    "line": 12,
+    "executable": true,
+    "explanation": "That row is done; move the top boundary down."
+  },
+  {
+    "line": 13,
+    "executable": true,
+    "explanation": "Walk the right column top to bottom."
+  },
+  {
+    "line": 14,
+    "executable": true,
+    "explanation": "Collect each cell."
+  },
+  {
+    "line": 15,
+    "executable": true,
+    "explanation": "Move the right boundary in."
+  },
+  {
+    "line": 16,
+    "executable": true,
+    "explanation": "Guard: only walk the bottom row if rows remain."
+  },
+  {
+    "line": 17,
+    "executable": true,
+    "explanation": "Walk the bottom row right to left."
+  },
+  {
+    "line": 18,
+    "executable": true,
+    "explanation": "Collect each cell."
+  },
+  {
+    "line": 19,
+    "executable": true,
+    "explanation": "Move the bottom boundary up."
+  },
+  {
+    "line": 20,
+    "executable": true,
+    "explanation": "Guard: only walk the left column if columns remain."
+  },
+  {
+    "line": 21,
+    "executable": true,
+    "explanation": "Walk the left column bottom to top."
+  },
+  {
+    "line": 22,
+    "executable": true,
+    "explanation": "Collect each cell."
+  },
+  {
+    "line": 23,
+    "executable": true,
+    "explanation": "Move the left boundary in."
+  },
+  {
+    "line": 24,
+    "executable": true,
+    "explanation": "Return the spiral order."
+  },
+  {
+    "line": 25,
+    "executable": false,
+    "explanation": "Blank line."
+  },
+  {
+    "line": 26,
+    "executable": true,
+    "explanation": "Spiral of the 3x3 grid is [1,2,3,6,9,8,7,4,5]."
+  }
+],
 
   bindings: [{ variable: "matrix", model: "matrix" }],
 
@@ -179,34 +336,24 @@ export const matrixTraversalPattern: PatternDefinition = {
   ],
 
   references: [
-    {
-      url: "https://leetcode.com/problems/spiral-matrix/editorial/",
-      title: "Spiral Matrix — LeetCode editorial",
-      section: "Boundary-tracking traversal; guards for thin matrices",
-      topic: "patterns/matrix-traversal",
-      purpose: "Confirm the four-boundary spiral traversal, the mid-loop guards, and O(m·n)/O(1).",
-      verifiedClaims: [
-        "Spiral order is produced by traversing sides while shrinking four boundaries, visiting each cell once.",
-        "Boundary guards prevent double-visiting rows/columns in non-square matrices.",
-      ],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://leetcode.com/problems/rotate-image/editorial/",
-      title: "Rotate Image — LeetCode editorial",
-      section: "In-place transpose + reverse for O(1)-space rotation",
-      topic: "patterns/matrix-traversal",
-      purpose: "Cross-check in-place matrix transforms via index arithmetic (transpose then reverse rows).",
-      verifiedClaims: ["A 90° rotation can be done in place by transposing then reversing each row, in O(1) extra space."],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://leetcode.com/problems/spiral-matrix/",
+    "title": "Spiral Matrix: original contract",
+    "section": "Problem and examples",
+    "topic": "patterns/matrix-traversal",
+    "purpose": "Check the specific claims and conventions used here.",
+    "verifiedClaims": [
+      "The input is a rectangular matrix; required traversal follows the perimeter inward. Empty-input handling here is an authored extension."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "b73165f4430d3e97",
-    verifiedAt: "2026-09-21",
+    contentHash: "a3c74ba54ea38f82",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

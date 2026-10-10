@@ -331,3 +331,118 @@ times — interval-sorting only gives sorting + earliest-end greedy).
 - **duplicate-detection**: [Open Data Structures sorting](https://opendatastructures.org/ods-python/11_1_Comparison_Based_Sorti.html) (11.1.3 Heap-sort): Heap-sort reuses the input array and runs in O(n log n) time.; [Python Sorting Techniques](https://docs.python.org/3.14/howto/sorting.html) (Sorting basics; Timsort): list.sort mutates its input; mutation alone does not specify auxiliary memory.; [Runestone hashing](https://runestone.academy/ns/books/published/pythonds3/SortSearch/Hashing.html) (Collision resolution): Collision resolution can require multiple candidate checks.
 
 Return-value corrections in loops, matrix traversal and character counting use the Python defining-functions page. Interval merging was checked against the original LeetCode examples and Python sorting documentation. Complexity bounds for materialized substrings are derived from the sum of lengths n(n+1)(n+2)/6, not attributed to a source that only defines slicing.
+
+## Codex B2-B topic checks (2026-10-10)
+
+### lesson/value-to-index
+
+Two-sum complement ordering and original-index contract checked; expected hashing distinguished from collision worst case. Constant-space sorting alternative names iterative heapsort and its index tradeoff.
+
+- [USACO Guide: two pointers](https://usaco.guide/silver/two-pointers) — Sum of Two Values; Sliding Window. Checked: Sorted opposite-end pointers move according to the current sum; suitable monotone windows advance each boundary at most n times. Accessed 2026-10-10.
+
+### lesson/grouping
+
+Canonical sorted-letter keys checked, including empty strings. Costs include key construction/hashing; buckets hold original-word references. First-letter exercise explicitly requires nonempty words.
+
+- [Python dictionary setdefault](https://docs.python.org/3.14/library/stdtypes.html#dict.setdefault) — Mapping types: setdefault. Checked: setdefault returns the existing value, or inserts and returns the supplied default. Accessed 2026-10-10.
+- [Group Anagrams: original problem](https://leetcode.com/problems/group-anagrams/) — Problem, examples, and constraints. Checked: Anagrams share the same multiset of letters; the original problem permits empty strings and restricts characters to lowercase English letters. Accessed 2026-10-10.
+
+### lesson/prefix-sums-map
+
+Empty-prefix count and lookup-before-increment checked. Fixed-size windows support negatives; the invalid monotonicity argument applies to sum-threshold variable windows. n+1 possible stored prefix keys.
+
+- [USACO Guide: prefix sums](https://usaco.guide/silver/prefix-sums) — Exclusive prefix sums, adapted to 0-based endpoints. Checked: Range sums can be recovered from two prefix totals. Accessed 2026-10-10.
+
+### lesson/caching-seen
+
+Base Fibonacci calls are not cached; non-base states are. General memoization cost includes state work/transitions and reuse. Bounded arithmetic, hash behavior, recursion limits and large-integer costs are explicit.
+
+- [Runestone: dynamic programming](https://runestone.academy/ns/books/published/pythonds3/Recursion/DynamicProgramming.html) — Repeated coin-change calls and result caching. Checked: Caching prior subproblem results avoids repeating their computation. Accessed 2026-10-10.
+- [Python functools caching](https://docs.python.org/3.14/library/functools.html#functools.lru_cache) — lru_cache; hashable arguments and eviction. Checked: lru_cache caches results keyed by hashable arguments, with a configurable size limit. Accessed 2026-10-10.
+
+### lesson/bit-logical-ops
+
+Corrected precedence (& binds tighter than ==), simultaneous old-operand carry calculation, specific -1+1 unbounded-carry counterexample, and finite-width signed wrap semantics.
+
+- [Python integer bit operations](https://docs.python.org/3.14/library/stdtypes.html#bitwise-operations-on-integer-types) — Bit operations; int.bit_count. Checked: Python integer bit operations use infinite-sign-extension semantics; bit_count counts ones in the absolute value. Accessed 2026-10-10.
+- [Python expression precedence](https://docs.python.org/3.14/reference/expressions.html#operator-precedence) — 6.10 and 6.17. Checked: Bitwise operations bind more tightly than comparisons. Accessed 2026-10-10.
+
+### lesson/bit-shifts
+
+Python arbitrary-precision left-shift work/storage includes the shift distance, not just input width. Negative distances invalid; no unsupported claim that shifts and arithmetic have equal speed.
+
+- [Python integer bit operations](https://docs.python.org/3.14/library/stdtypes.html#bitwise-operations-on-integer-types) — Bit operations; int.bit_count. Checked: Python integer bit operations use infinite-sign-extension semantics; bit_count counts ones in the absolute value. Accessed 2026-10-10.
+
+### lesson/bit-check-set-clear
+
+Masks return new integer values and require nonnegative bit positions. Constant-time claims are bounded-width/position models, not universal big-integer guarantees.
+
+- [Python integer bit operations](https://docs.python.org/3.14/library/stdtypes.html#bitwise-operations-on-integer-types) — Bit operations; int.bit_count. Checked: Python integer bit operations use infinite-sign-extension semantics; bit_count counts ones in the absolute value. Accessed 2026-10-10.
+
+### lesson/xor-cancellation
+
+A fold combines odd-count values; 1^2^3=0 disproves recovery of all of them. Exactly one odd-count value is required. Width-dependent work/storage and distinct missing-range contract stated.
+
+- [CP-Algorithms: bit manipulation](https://cp-algorithms.com/algebra/bit-manipulation.html) — Bit operators and XOR. Checked: XOR combines differing bits; pairing equal values cancels their contribution. The examples use fixed-width C++ integers. Accessed 2026-10-10.
+- [Python integer operations](https://docs.python.org/3.14/library/stdtypes.html#bitwise-operations-on-integer-types) — Bitwise operations on integer types. Checked: Python integers have arbitrary precision and bitwise operations use infinite sign extension. Accessed 2026-10-10.
+- [CPython 3.14.2 integer implementation](https://raw.githubusercontent.com/python/cpython/v3.14.2/Objects/longobject.c) — long_lshift1; long_bitwise; int_bit_count_impl. Checked: These implementations allocate and iterate over integer digits; bit-operation costs depend on operand and result width. Accessed 2026-10-10.
+- [Single Number: original problem](https://leetcode.com/problems/single-number/) — Problem and constraints. Checked: Exactly one integer appears once and every other integer appears twice. Accessed 2026-10-10.
+
+### lesson/count-set-bits
+
+Kernighan explicitly rejects negative input; runtime tested against bit_count on zero and wide integers. Power-of-two experiment excludes zero. Builtin counting still processes integer digits.
+
+- [Python integer bit operations](https://docs.python.org/3.14/library/stdtypes.html#bitwise-operations-on-integer-types) — Bit operations; int.bit_count. Checked: Python integer bit operations use infinite-sign-extension semantics; bit_count counts ones in the absolute value. Accessed 2026-10-10.
+
+### lesson/kmp
+
+LPS proper-prefix convention, fallback amortization, overlaps, and all-boundaries empty-pattern convention checked against exhaustive oracle. Pattern index drawn on pattern; text character can be compared again without backtracking. Output storage separated.
+
+- [Cornell CS312: string matching](https://www.cs.cornell.edu/courses/cs312/2002fa/lectures/lec26.htm) — Knuth-Morris-Pratt and prefix computation. Checked: Fallback decreases a quantity that increases at most n times, giving linear search work; prefix preprocessing is linear. Accessed 2026-10-10.
+
+### pattern/sliding-window
+
+Explicit no-slice initialization and invalid-width guard preserve constant auxiliary space. Boundaries/totals authored; prefix arrays are accepted as a valid storage tradeoff. Diagram total/window rendering is tracked as a remaining application repair.
+
+- [USACO Guide: two pointers](https://usaco.guide/silver/two-pointers) — Sum of Two Values; Sliding Window. Checked: Sorted opposite-end pointers move according to the current sum; suitable monotone windows advance each boundary at most n times. Accessed 2026-10-10.
+- [USACO Guide: prefix sums](https://usaco.guide/silver/prefix-sums) — Exclusive prefix sums, adapted to 0-based endpoints. Checked: Range sums can be recovered from two prefix totals. Accessed 2026-10-10.
+
+### pattern/prefix-sums-hashmap
+
+Exclusive [i,j) endpoints, non-inserting get, zero-prefix seed and lookup order verified. Contrast distinguishes fixed negative windows, exact-target counts, and unrestricted maximum sums.
+
+- [USACO Guide: prefix sums](https://usaco.guide/silver/prefix-sums) — Exclusive prefix sums, adapted to 0-based endpoints. Checked: Range sums can be recovered from two prefix totals. Accessed 2026-10-10.
+- [Python dict.get](https://docs.python.org/3.14/library/stdtypes.html#dict.get) — Dictionary methods. Checked: get returns its default without inserting a missing key. Accessed 2026-10-10.
+
+### pattern/kadane
+
+Indexed traversal avoids hidden input slice; best sum is a total rather than an index overlay. Nonempty recurrence and model behavior checked against signed-array boundaries.
+
+- [CP-Algorithms: maximum subarray](https://cp-algorithms.com/others/maximum_average_segment.html) — Algorithm 2: Kadane. Checked: The best running sum can restart after a negative prefix; a one-pass algorithm uses constant working state. Accessed 2026-10-10.
+
+### pattern/two-pointers
+
+Sorted movement logic, empty/singleton contracts, and terminating wrong-move bug checked. ASCII case-insensitive palindrome scoped honestly; reversed-copy alternative accepted when storage is allowed.
+
+- [USACO Guide: two pointers](https://usaco.guide/silver/two-pointers) — Sum of Two Values; Sliding Window. Checked: Sorted opposite-end pointers move according to the current sum; suitable monotone windows advance each boundary at most n times. Accessed 2026-10-10.
+
+### pattern/cyclic-sort
+
+0<=home<n guard and distinct range contract checked exhaustively through n=5. Linear proof counts permanently fixed slots, not an incorrect one-swap-per-moving-value claim. Input mutation explicitly allowed.
+
+- [Missing Number: original contract](https://leetcode.com/problems/missing-number/) — Problem and constraints. Checked: n distinct values come from 0..n with exactly one missing. Accessed 2026-10-10.
+
+### pattern/bitwise-xor
+
+Single-odd-count isolation and two-group extension distinguished. Bounded-width costs explicit. Triple-frequency drill accepts sorting equal-value runs and documents finite-width handling for bit-count modulo 3.
+
+- [CP-Algorithms: bit manipulation](https://cp-algorithms.com/algebra/bit-manipulation.html) — Bit operators and XOR. Checked: XOR combines differing bits; pairing equal values cancels their contribution. The examples use fixed-width C++ integers. Accessed 2026-10-10.
+- [Python integer operations](https://docs.python.org/3.14/library/stdtypes.html#bitwise-operations-on-integer-types) — Bitwise operations on integer types. Checked: Python integers have arbitrary precision and bitwise operations use infinite sign extension. Accessed 2026-10-10.
+- [CPython 3.14.2 integer implementation](https://raw.githubusercontent.com/python/cpython/v3.14.2/Objects/longobject.c) — long_lshift1; long_bitwise; int_bit_count_impl. Checked: These implementations allocate and iterate over integer digits; bit-operation costs depend on operand and result width. Accessed 2026-10-10.
+- [Single Number: original problem](https://leetcode.com/problems/single-number/) — Problem and constraints. Checked: Exactly one integer appears once and every other integer appears twice. Accessed 2026-10-10.
+
+### pattern/matrix-traversal
+
+Boundary guards checked against an independent peel-and-rotate oracle for empty, single-row/column and rectangular grids. Output excluded from constant working slots; square-only in-place rotation stated.
+
+- [Spiral Matrix: original contract](https://leetcode.com/problems/spiral-matrix/) — Problem and examples. Checked: The input is a rectangular matrix; required traversal follows the perimeter inward. Empty-input handling here is an authored extension. Accessed 2026-10-10.

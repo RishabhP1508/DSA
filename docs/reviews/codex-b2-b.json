@@ -1,0 +1,156 @@
+[
+  {
+    "kind": "lesson",
+    "id": "value-to-index",
+    "hash": "03058a26153bdd0d",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Two-sum complement ordering and original-index contract checked; expected hashing distinguished from collision worst case. Constant-space sorting alternative names iterative heapsort and its index tradeoff."
+  },
+  {
+    "kind": "lesson",
+    "id": "grouping",
+    "hash": "2ecb0bfaec932a6b",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Canonical sorted-letter keys checked, including empty strings. Costs include key construction/hashing; buckets hold original-word references. First-letter exercise explicitly requires nonempty words."
+  },
+  {
+    "kind": "lesson",
+    "id": "prefix-sums-map",
+    "hash": "6c624c007c15dc40",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Empty-prefix count and lookup-before-increment checked. Fixed-size windows support negatives; the invalid monotonicity argument applies to sum-threshold variable windows. n+1 possible stored prefix keys."
+  },
+  {
+    "kind": "lesson",
+    "id": "caching-seen",
+    "hash": "e204707d577bcd02",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Base Fibonacci calls are not cached; non-base states are. General memoization cost includes state work/transitions and reuse. Bounded arithmetic, hash behavior, recursion limits and large-integer costs are explicit."
+  },
+  {
+    "kind": "lesson",
+    "id": "bit-logical-ops",
+    "hash": "f0a77f6b1719bed3",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Corrected precedence (& binds tighter than ==), simultaneous old-operand carry calculation, specific -1+1 unbounded-carry counterexample, and finite-width signed wrap semantics."
+  },
+  {
+    "kind": "lesson",
+    "id": "bit-shifts",
+    "hash": "8fc6d30d5a5e907d",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Python arbitrary-precision left-shift work/storage includes the shift distance, not just input width. Negative distances invalid; no unsupported claim that shifts and arithmetic have equal speed."
+  },
+  {
+    "kind": "lesson",
+    "id": "bit-check-set-clear",
+    "hash": "db9506e3e4e13134",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Masks return new integer values and require nonnegative bit positions. Constant-time claims are bounded-width/position models, not universal big-integer guarantees."
+  },
+  {
+    "kind": "lesson",
+    "id": "xor-cancellation",
+    "hash": "41a8061f4973f924",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "A fold combines odd-count values; 1^2^3=0 disproves recovery of all of them. Exactly one odd-count value is required. Width-dependent work/storage and distinct missing-range contract stated."
+  },
+  {
+    "kind": "lesson",
+    "id": "count-set-bits",
+    "hash": "e46e11de4715767e",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Kernighan explicitly rejects negative input; runtime tested against bit_count on zero and wide integers. Power-of-two experiment excludes zero. Builtin counting still processes integer digits."
+  },
+  {
+    "kind": "lesson",
+    "id": "kmp",
+    "hash": "b6677b9b59c10ad5",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "LPS proper-prefix convention, fallback amortization, overlaps, and all-boundaries empty-pattern convention checked against exhaustive oracle. Pattern index drawn on pattern; text character can be compared again without backtracking. Output storage separated."
+  },
+  {
+    "kind": "pattern",
+    "id": "sliding-window",
+    "hash": "dc095fe23ec0561f",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Explicit no-slice initialization and invalid-width guard preserve constant auxiliary space. Boundaries/totals authored; prefix arrays are accepted as a valid storage tradeoff. Diagram range and total rendering is fixed and verified against real recorded states. Follow-up: explicitly authored range endpoints and observed totals now render from immutable snapshots; seven rendered tests include two real fixed-window states and a real string state.",
+    "previousReviewedHash": "5f4a94940ec56c05"
+  },
+  {
+    "kind": "pattern",
+    "id": "prefix-sums-hashmap",
+    "hash": "aec635695aa06bcf",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Exclusive [i,j) endpoints, non-inserting get, zero-prefix seed and lookup order verified. Contrast distinguishes fixed negative windows, exact-target counts, and unrestricted maximum sums."
+  },
+  {
+    "kind": "pattern",
+    "id": "kadane",
+    "hash": "00f44dbdc6a1c10a",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Indexed traversal avoids hidden input slice; best sum is a total rather than an index overlay. Nonempty recurrence and model behavior checked against signed-array boundaries."
+  },
+  {
+    "kind": "pattern",
+    "id": "two-pointers",
+    "hash": "85dd9c69c2621a85",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Sorted movement logic, empty/singleton contracts, and terminating wrong-move bug checked. ASCII case-insensitive palindrome scoped honestly; reversed-copy alternative accepted when storage is allowed."
+  },
+  {
+    "kind": "pattern",
+    "id": "cyclic-sort",
+    "hash": "76a032cae0856e32",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "0<=home<n guard and distinct range contract checked exhaustively through n=5. Linear proof counts permanently fixed slots, not an incorrect one-swap-per-moving-value claim. Input mutation explicitly allowed."
+  },
+  {
+    "kind": "pattern",
+    "id": "bitwise-xor",
+    "hash": "4251c634f6142710",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Single-odd-count isolation and two-group extension distinguished. Bounded-width costs explicit. Triple-frequency drill accepts sorting equal-value runs and documents finite-width handling for bit-count modulo 3."
+  },
+  {
+    "kind": "pattern",
+    "id": "matrix-traversal",
+    "hash": "a3c74ba54ea38f82",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Boundary guards checked against an independent peel-and-rotate oracle for empty, single-row/column and rectangular grids. Output excluded from constant working slots; square-only in-place rotation stated."
+  }
+]

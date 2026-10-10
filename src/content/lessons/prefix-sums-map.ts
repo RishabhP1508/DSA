@@ -25,11 +25,7 @@ export const prefixSumsMap: LessonDefinition = {
   area: "Hashing",
   prerequisites: ["prefix-sums", "maps-sets"],
 
-  explanation: `The **prefix sums** lesson answered range sums on a fixed array. Combined with a **hash map**, prefix sums solve a harder problem: **count contiguous subarrays whose sum equals k — even with negative numbers**, which is exactly where the fixed-size sliding window fails.
-
-The idea: let \`prefix\` be the running sum up to the current position. A subarray ending here sums to \`k\` precisely when some **earlier** prefix equalled \`prefix - k\` (because \`prefix - earlier = k\`). So we keep a map \`seen\` counting **how many times each prefix sum has occurred**, and at each step we add \`seen[prefix - k]\` to the answer. We seed \`seen\` with \`{0: 1}\` to count subarrays that start at index 0. It's a single **O(n)** pass with **O(n)** space.
-
-This is a crucial pattern-recognition contrast from the Arrays topic: **fixed-size window** = "exactly k consecutive elements"; **Kadane** = "max-sum any-length subarray"; **prefix sums + map** = "count subarrays with a target sum, negatives allowed." Same word "subarray", three different tools — and the map is what makes negatives tractable, since a sliding window's monotonic assumption breaks with negative numbers.`,
+  explanation: "The **prefix sums** lesson answered range sums on a fixed array. Combined with a **hash map**, prefix sums solve a harder problem: **count contiguous subarrays whose sum equals k — even with negative numbers**, with no fixed width. A fixed-size window also works with negative values, but it solves a different question: a specified width, not this arbitrary-length count.\n\nThe idea: let `prefix` be the running sum up to the current position. A subarray ending here sums to `k` precisely when some **earlier** prefix equalled `prefix - k` (because `prefix - earlier = k`). So we keep a map `seen` counting **how many times each prefix sum has occurred**, and at each step we add `seen[prefix - k]` to the answer. We seed `seen` with `{0: 1}` to count subarrays that start at index 0. It's a single **O(n)** pass with **O(n)** space.\n\nThis is a crucial pattern-recognition contrast from the Arrays topic: **fixed-size window** = \"exactly k consecutive elements\"; **Kadane** = \"max-sum any-length subarray\"; **prefix sums + map** = \"count subarrays with a target sum, negatives allowed.\" Same word \"subarray\", three different tools — and the map is what makes negatives tractable, since a sum-threshold VARIABLE-size window's monotonic assumption can break with negative numbers.",
 
   vocabulary: [
     { term: "Prefix sum", definition: "The running total of elements up to the current index." },
@@ -39,43 +35,90 @@ This is a crucial pattern-recognition contrast from the Arrays topic: **fixed-si
   ],
 
   concepts: {
-    purpose: "Count (or find) subarrays with a target sum in O(n), including with negative numbers.",
-    operations: "Maintain a running prefix; add seen[prefix - k] to the count; record the current prefix's count.",
-    uses: "Subarray sum equals k, subarrays divisible by k, count/exists target-sum ranges with negatives.",
-    tradeoffs: "O(n) time and O(n) space; handles negatives (unlike sliding windows) at the cost of the map.",
-    commonMistakes: "Forgetting to seed {0:1} (misses subarrays from index 0); updating the map before counting (counts the empty subarray incorrectly); confusing this with fixed-size windows or Kadane.",
-    edgeCases: "Negative numbers and zeros are handled. Multiple subarrays with sum k are all counted. Empty array yields 0.",
-  },
+  "purpose": "Count (or find) subarrays with a target sum in O(n), including with negative numbers.",
+  "operations": "Maintain a running prefix; add seen[prefix - k] to the count; record the current prefix's count.",
+  "uses": "Subarray sum equals k, subarrays divisible by k, count/exists target-sum ranges with negatives.",
+  "tradeoffs": "Expected O(n) time and O(n) space for arbitrary-length target-sum counting. Fixed-width windows handle negative numbers too; a sum-threshold variable window needs a suitable monotone condition.",
+  "commonMistakes": "Forgetting to seed {0:1} (misses subarrays from index 0); updating the map before counting (counts the empty subarray incorrectly); confusing this with fixed-size windows or Kadane.",
+  "edgeCases": "Negative numbers and zeros are handled. Multiple subarrays with sum k are all counted. Empty array yields 0."
+},
 
   complexity: [
-    { operation: "subarray_sum", best: "O(n)", average: "O(n)", worst: "O(n)", space: "O(n)", note: "One pass; map holds distinct prefix sums." },
-  ],
+  {
+    "operation": "subarray_sum",
+    "best": "O(n)",
+    "average": "O(n)",
+    "worst": "O(n²)",
+    "space": "O(n)",
+    "note": "Expected linear hashing; pathological collisions can yield quadratic work."
+  }
+],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
-    costModel: "Each running-sum update, map get, and map set is expected O(1).",
-    time: {
-      bound: "O(n)",
-      case: "expected",
-      explanation: "We scan each of the n elements once. Per element we update the prefix (O(1)), do one expected-O(1) map lookup for the complement, and one expected-O(1) map update. So the whole thing is expected O(n) — a single pass, no nested loop, and it works even with negative numbers.",
-    },
-    space: {
-      bound: "O(n)",
-      case: "worst",
-      explanation: "The map can hold up to n distinct prefix sums (all prefixes different), giving O(n) auxiliary space.",
-      inputOutputNote: "The array of n elements is the input; the prefix-count map (up to n) is auxiliary.",
-    },
-    derivation: [
-      { lines: [6], description: "Scan each of the n elements once.", cost: "O(n)", dimension: "time" },
-      { lines: [7, 8, 9], description: "Per element: O(1) prefix update, expected-O(1) map lookup and update.", cost: "O(n)", dimension: "time" },
-      { lines: [5, 9], description: "The map holds up to n distinct prefix sums.", cost: "O(n)", dimension: "space" },
-    ],
-    assumptions: ["Map operations are expected O(1).", "Seeding {0: 1} counts subarrays beginning at index 0."],
-    tradeoffs: "A fixed-size window is O(n)/O(1) but only handles a fixed length and non-negative incremental sums; the prefix-map handles arbitrary lengths and negatives at O(n) space.",
-    counters: [{ label: "elements scanned", definition: "iterations of the loop (line 6)", countLines: [6] }],
-    fixedDataNote: "First call: [1,1,1], k=2 → 2 subarrays ([1,1] twice). Second: [1,-1,0], k=0 → 3 (negatives handled). The O(n) bound generalises.",
+  "scope": "program",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of elements in nums"
+    }
+  ],
+  "costModel": "Each running-sum update, map get, and map set is expected O(1).",
+  "time": {
+    "bound": "O(n)",
+    "case": "expected",
+    "explanation": "We scan each of the n elements once. Per element we update the prefix (O(1)), do one expected-O(1) map lookup for the complement, and one expected-O(1) map update. So the whole thing is expected O(n) — a single pass, no nested loop, and it works even with negative numbers."
   },
+  "space": {
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "The map can hold up to n+1 distinct prefix sums (all prefixes different), giving O(n) auxiliary space.",
+    "inputOutputNote": "The array of n elements is the input; the prefix-count map (up to n+1) is auxiliary."
+  },
+  "derivation": [
+    {
+      "lines": [
+        6
+      ],
+      "description": "Scan each of the n elements once.",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        7,
+        8,
+        9
+      ],
+      "description": "Per element: O(1) prefix update, expected-O(1) map lookup and update.",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        5,
+        9
+      ],
+      "description": "The map holds at most n+1 prefix sums, including the empty prefix.",
+      "cost": "O(n)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Map operations are expected O(1).",
+    "Seeding {0: 1} counts subarrays beginning at index 0."
+  ],
+  "tradeoffs": "A fixed-size window is O(n)/O(1) for its fixed-width objective, including negative values. Prefix counting handles arbitrary lengths and exact targets at O(n) storage; sum-threshold variable windows need monotonicity.",
+  "counters": [
+    {
+      "label": "elements scanned",
+      "definition": "iterations of the loop (line 6)",
+      "countLines": [
+        6
+      ]
+    }
+  ],
+  "fixedDataNote": "First call: [1,1,1], k=2 → 2 subarrays ([1,1] twice). Second: [1,-1,0], k=0 → 3 (negatives handled). The O(n) bound generalises."
+},
 
   code,
 
@@ -105,8 +148,13 @@ This is a crucial pattern-recognition contrast from the Arrays topic: **fixed-si
   ],
 
   prediction: [
-    { atEventIndex: 0, prompt: "Why does this work with negative numbers when a fixed-size sliding window does not?", answer: "Because it relies only on the algebraic identity prefix - earlier = k, not on sums being monotonic. A sliding window assumes extending/shrinking changes the sum predictably, which negatives break.", explanation: "Prefix-sum counting never assumes the running sum increases; it just looks up earlier prefixes. Sliding windows implicitly assume adding elements grows the sum, so negative numbers invalidate their shrink/grow logic." },
-  ],
+  {
+    "atEventIndex": 0,
+    "prompt": "Why does prefix-counting handle negatives, and why is a fixed-width window a different problem?",
+    "answer": "Prefix differences work without monotonicity. Fixed-width windows work with negatives too, but examine only one length; this task counts all lengths. Sum-threshold variable windows can lose their shrink/grow guarantee with negatives.",
+    "explanation": "Separate the objective (fixed width versus all lengths) from the monotonicity condition used by variable-size sum windows."
+  }
+],
 
   experiments: [
     "Trace [1,1,1] with k=2 and watch count increase when prefix-k is found.",
@@ -132,36 +180,40 @@ This is a crucial pattern-recognition contrast from the Arrays topic: **fixed-si
     },
   ],
 
-  review: `**Prefix sums + a hash map** count subarrays summing to **k**, negatives included, in one **O(n)** pass: track a running \`prefix\`, add \`seen[prefix - k]\` to the count, and record each prefix's occurrence (seed \`{0:1}\`). It relies on \`prefix - earlier = k\`, not on monotonic sums — which is why it succeeds where fixed-size windows fail. Distinct from window (fixed length) and Kadane (max any-length).`,
+  review: "**Prefix sums + a hash map** count subarrays summing to **k**, negatives included, in one **O(n)** pass: track a running `prefix`, add `seen[prefix - k]` to the count, and record each prefix's occurrence (seed `{0:1}`). It relies on `prefix - earlier = k`, not on monotonic sums — which is why it succeeds sum-threshold variable windows can fail; fixed-size windows still work with negatives for their fixed-width objective. Distinct from window (fixed length) and Kadane (max any-length).",
 
   expectedOutput: "2\n3\n",
 
   references: [
-    {
-      url: "https://neetcode.io/roadmap",
-      title: "NeetCode roadmap",
-      section: "Prefix Sums / Hashing — Subarray Sum Equals K",
-      topic: "hashing/prefix-sums-maps",
-      purpose: "Confirm the prefix-sum + hash-map counting technique for target-sum subarrays with negatives.",
-      verifiedClaims: ["Counting subarrays with sum k uses a prefix-sum count map in O(n), handling negatives"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://cp-algorithms.com/data_structures/prefix_sum.html",
-      title: "Prefix sum array — CP-Algorithms",
-      section: "Applications with hashing",
-      topic: "hashing/prefix-sums-maps",
-      purpose: "Cross-check the identity prefix[j] - prefix[i] = k underlying target-sum counting.",
-      verifiedClaims: ["A subarray sums to k iff two prefix sums differ by k"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://neetcode.io/roadmap",
+    "title": "NeetCode roadmap",
+    "section": "Prefix Sums / Hashing — Subarray Sum Equals K",
+    "topic": "hashing/prefix-sums-maps",
+    "purpose": "Confirm the prefix-sum + hash-map counting technique for target-sum subarrays with negatives.",
+    "verifiedClaims": [
+      "Counting subarrays with sum k uses a prefix-sum count map in O(n), handling negatives"
+    ],
+    "accessDate": "2026-09-20"
+  },
+  {
+    "url": "https://usaco.guide/silver/prefix-sums",
+    "title": "USACO Guide: prefix sums",
+    "section": "Exclusive prefix sums, adapted to 0-based endpoints",
+    "topic": "codex/b2-b",
+    "purpose": "Verify the specific semantics and conditions used in this lesson.",
+    "verifiedClaims": [
+      "Range sums can be recovered from two prefix totals."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "815d590f97df4f4a",
-    verifiedAt: "2026-09-21",
+    contentHash: "6c624c007c15dc40",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

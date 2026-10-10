@@ -22,14 +22,7 @@ export const bitCheckSetClear: LessonDefinition = {
   area: "Bit manipulation",
   prerequisites: ["bit-shifts"],
 
-  explanation: `Once you can build a single-bit **mask** with \`1 << i\`, you can manipulate any individual bit of a number using the logical operators. These four idioms are worth memorizing because they appear constantly in bitmask problems:
-
-- **Check** bit i: \`(n >> i) & 1\` — shift the bit down to position 0 and mask it. Result is 1 if set, 0 if not.
-- **Set** bit i (force to 1): \`n | (1 << i)\` — OR turns the target bit on and leaves others unchanged.
-- **Clear** bit i (force to 0): \`n & ~(1 << i)\` — AND with the *inverted* mask turns the target bit off, keeping others.
-- **Toggle** bit i (flip): \`n ^ (1 << i)\` — XOR flips just that bit.
-
-The trick each time is that the mask \`1 << i\` isolates exactly bit \`i\`, and the operator's identity does the rest: OR-with-0 keeps a bit, OR-with-1 sets it; AND-with-1 keeps, AND-with-0 clears; XOR-with-0 keeps, XOR-with-1 flips. Every operation is **O(1)** and modifies only the targeted bit. This is how bitmasks represent **sets** (each bit = "is element i present?"), enabling subset enumeration and DP-over-subsets later.`,
+  explanation: "Once you can build a single-bit **mask** with `1 << i`, you can manipulate any individual bit of a number using the logical operators. These four idioms are worth memorizing because they appear constantly in bitmask problems:\n\n- **Check** bit i: `(n >> i) & 1` — shift the bit down to position 0 and mask it. Result is 1 if set, 0 if not.\n- **Set** bit i (force to 1): `n | (1 << i)` — OR turns the target bit on and leaves others unchanged.\n- **Clear** bit i (force to 0): `n & ~(1 << i)` — AND with the *inverted* mask turns the target bit off, keeping others.\n- **Toggle** bit i (flip): `n ^ (1 << i)` — XOR flips just that bit.\n\nThe trick each time is that the mask `1 << i` isolates exactly bit `i`, and the operator's identity does the rest: OR-with-0 keeps a bit, OR-with-1 sets it; AND-with-1 keeps, AND-with-0 clears; XOR-with-0 keeps, XOR-with-1 flips. For bounded-size integers and positions, each expression takes **O(1)** work and returns a new integer with only the targeted bit changed. It does not mutate the original n. For arbitrary Python widths, masks/results need O(w+i) work/storage upper bounds. This is how bitmasks represent **sets** (each bit = \"is element i present?\"), enabling subset enumeration and DP-over-subsets later.",
 
   vocabulary: [
     { term: "Mask", definition: "1 << i: a value with only bit i set, isolating that position." },
@@ -41,13 +34,13 @@ The trick each time is that the mask \`1 << i\` isolates exactly bit \`i\`, and 
   ],
 
   concepts: {
-    purpose: "Read and change one bit at a time using masks — the toolkit for bitmask problems.",
-    operations: "check (>> then & 1), set (| mask), clear (& ~mask), toggle (^ mask).",
-    uses: "Feature flags, representing sets as integers, subset enumeration, bit DP, permissions.",
-    tradeoffs: "O(1) and compact (a whole set in one integer), but harder to read than named fields.",
-    commonMistakes: "Forgetting to invert the mask when clearing (use ~ (1<<i)); off-by-one in bit position; using boolean and/or instead of &/|; precedence errors (parenthesize masks).",
-    edgeCases: "Setting an already-set bit is a no-op; clearing an already-clear bit too. Toggling twice returns the original. High bit positions grow big integers in Python.",
-  },
+  "purpose": "Read and change one bit at a time using masks — the toolkit for bitmask problems.",
+  "operations": "check (>> then & 1), set (| mask), clear (& ~mask), toggle (^ mask).",
+  "uses": "Feature flags, representing sets as integers, subset enumeration, bit DP, permissions.",
+  "tradeoffs": "Constant work for bounded-size integers and bit positions; Python big integers and high positions require larger masks/results. Named fields may be easier to read.",
+  "commonMistakes": "Forgetting to invert the mask when clearing (use ~ (1<<i)); off-by-one in bit position; using boolean and/or instead of &/|; precedence errors (parenthesize masks).",
+  "edgeCases": "Setting an already-set bit is a no-op; clearing an already-clear bit too. Toggling twice returns the original. High bit positions grow big integers in Python. Bit positions must be nonnegative integers. Negative values follow Python sign-extension semantics."
+},
 
   complexity: [
     { operation: "check/set/clear/toggle", best: "O(1)", average: "O(1)", worst: "O(1)", space: "O(1)", note: "One mask + one bitwise op each (machine word)." },
@@ -123,36 +116,51 @@ The trick each time is that the mask \`1 << i\` isolates exactly bit \`i\`, and 
     },
   ],
 
-  review: `Using the mask \`1 << i\`: **check** with \`(n >> i) & 1\`, **set** with \`n | (1 << i)\`, **clear** with \`n & ~(1 << i)\`, and **toggle** with \`n ^ (1 << i)\` — each **O(1)** and touching only bit i. The operator identities (OR sets, AND-with-inverse clears, XOR flips) are the key. These idioms turn an integer into a compact **set**, enabling subset enumeration and bit DP.`,
+  review: "Using the mask `1 << i`: **check** with `(n >> i) & 1`, **set** with `n | (1 << i)`, **clear** with `n & ~(1 << i)`, and **toggle** with `n ^ (1 << i)` — each **O(1)** for bounded-size operands/positions and touching only bit i in the returned value. The operator identities (OR sets, AND-with-inverse clears, XOR flips) are the key. These idioms turn an integer into a compact **set**, enabling subset enumeration and bit DP.",
 
   expectedOutput: "1\n11\n2\n8\n",
 
   references: [
-    {
-      url: "https://wiki.python.org/moin/BitManipulation",
-      title: "BitManipulation — Python Wiki",
-      section: "Testing, setting and clearing bits",
-      topic: "bits/check-set-clear",
-      purpose: "Confirm the standard check/set/clear/toggle idioms with 1 << i masks in Python.",
-      verifiedClaims: ["Set: n | (1<<i); Clear: n & ~(1<<i); Toggle: n ^ (1<<i); Check: (n>>i) & 1"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://cp-algorithms.com/algebra/bit-manipulation.html",
-      title: "Bit manipulation — CP-Algorithms",
-      section: "Basic bit operations",
-      topic: "bits/check-set-clear",
-      purpose: "Cross-check the mask-based bit operations and their O(1) cost.",
-      verifiedClaims: ["Single-bit check/set/clear/toggle use 1<<i masks and are O(1)"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://wiki.python.org/moin/BitManipulation",
+    "title": "BitManipulation — Python Wiki",
+    "section": "Testing, setting and clearing bits",
+    "topic": "bits/check-set-clear",
+    "purpose": "Confirm the standard check/set/clear/toggle idioms with 1 << i masks in Python.",
+    "verifiedClaims": [
+      "Set: n | (1<<i); Clear: n & ~(1<<i); Toggle: n ^ (1<<i); Check: (n>>i) & 1"
+    ],
+    "accessDate": "2026-09-20"
+  },
+  {
+    "url": "https://cp-algorithms.com/algebra/bit-manipulation.html",
+    "title": "Bit manipulation — CP-Algorithms",
+    "section": "Basic bit operations",
+    "topic": "bits/check-set-clear",
+    "purpose": "Cross-check the mask-based bit operations and their O(1) cost.",
+    "verifiedClaims": [
+      "Single-bit check/set/clear/toggle use 1<<i masks and are O(1)"
+    ],
+    "accessDate": "2026-09-20"
+  },
+  {
+    "url": "https://docs.python.org/3.14/library/stdtypes.html#bitwise-operations-on-integer-types",
+    "title": "Python integer bit operations",
+    "section": "Bit operations; int.bit_count",
+    "topic": "codex/b2-b",
+    "purpose": "Verify the specific semantics and conditions used in this lesson.",
+    "verifiedClaims": [
+      "Python integer bit operations use infinite-sign-extension semantics; bit_count counts ones in the absolute value."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "cc6337187221df19",
-    verifiedAt: "2026-09-21",
+    contentHash: "db9506e3e4e13134",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

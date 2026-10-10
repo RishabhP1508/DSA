@@ -29,11 +29,12 @@
   {
     "kind": "lesson",
     "id": "sliding-window",
-    "hash": "73ebd14aa95560ce",
+    "hash": "617190ca5146555d",
     "reviewer": "Codex",
     "reviewerKind": "delegated-agent",
     "reviewedAt": "2026-10-10",
-    "assessment": "Fixed width works with negative values. O(k) initialization, O(n-k) updates, and valid prefix-sum alternative taught; guards reject invalid widths."
+    "assessment": "Fixed width works with negative values. O(k) initialization, O(n-k) updates, and valid prefix-sum alternative taught; guards reject invalid widths. Follow-up: explicitly authored range endpoints and observed totals now render from immutable snapshots; seven rendered tests include two real fixed-window states and a real string state.",
+    "previousReviewedHash": "73ebd14aa95560ce"
   },
   {
     "kind": "lesson",
@@ -92,11 +93,12 @@
   {
     "kind": "lesson",
     "id": "string-sliding-window",
-    "hash": "7171e5e78b2bfe19",
+    "hash": "d901d2ce508ce111",
     "reviewer": "Codex",
     "reviewerKind": "delegated-agent",
     "reviewedAt": "2026-10-10",
-    "assessment": "Last-seen left boundary never moves backward. Exhaustive binary-string oracle checks repeats and empty input. Hash assumptions stated."
+    "assessment": "Last-seen left boundary never moves backward. Exhaustive binary-string oracle checks repeats and empty input. Hash assumptions stated. Follow-up: explicitly authored range endpoints and observed totals now render from immutable snapshots; seven rendered tests include two real fixed-window states and a real string state.",
+    "previousReviewedHash": "7171e5e78b2bfe19"
   },
   {
     "kind": "lesson",

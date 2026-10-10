@@ -106,15 +106,34 @@ Crucially, \`start\` only ever moves **forward**, and \`i\` moves forward once p
   ],
 
   bindings: [
-    {
-      variable: "s",
-      model: "string",
-      overlays: [
-        { role: "pointer", label: "start", source: "start" },
-        { role: "pointer", label: "i", source: "i" },
-      ],
-    },
-  ],
+  {
+    "variable": "s",
+    "model": "string",
+    "overlays": [
+      {
+        "role": "pointer",
+        "label": "start",
+        "source": "start"
+      },
+      {
+        "role": "pointer",
+        "label": "i",
+        "source": "i"
+      },
+      {
+        "role": "total",
+        "label": "best length",
+        "source": "best"
+      }
+    ],
+    "range": {
+      "label": "current boundaries",
+      "startSource": "start",
+      "endSource": "i",
+      "endInclusive": true
+    }
+  }
+],
 
   prediction: [
     { atEventIndex: 0, prompt: "Why is this O(n) and not O(n^2), even though the window resizes?", answer: "Because both edges only move forward: i advances n times and start advances at most n times total, so combined movement is O(n).", explanation: "Neither pointer ever moves backward. The right edge steps n times; the left edge's total forward movement across the whole run is also bounded by n. Total O(n), not O(n²)." },
@@ -172,7 +191,7 @@ Crucially, \`start\` only ever moves **forward**, and \`i\` moves forward once p
   ],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "7171e5e78b2bfe19",
+    contentHash: "d901d2ce508ce111",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
     semanticReview: true,

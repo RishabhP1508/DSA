@@ -331,6 +331,13 @@ export interface VisualBinding {
    * non-None (a zero-initialised table is not "computed").
    */
   computedSource?: string;
+  /** Explicit snapshot range; no range is inferred from unrelated pointers. */
+  range?: {
+    label: string;
+    startSource: string;
+    endSource: string;
+    endInclusive: boolean;
+  };
   /** Optional overlays keyed by role; value is the variable holding the index/state. */
   overlays?: {
     role: "pointer" | "window" | "total" | "visited" | "boundary" | "highlight";

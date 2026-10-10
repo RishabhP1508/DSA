@@ -8,6 +8,7 @@
 
 import type { TraceEvent, VisualBinding } from "../core/types";
 import { displayValue } from "../engine/replay";
+import { recordedRange, SequenceState } from './SequenceState';
 import {
   resolveBindingObject,
   resolveOverlays,
@@ -49,12 +50,11 @@ export function ArrayVisualizer({
   // Push the cells down to make room for the alias note when it is shown.
   const top = TOP + (aliases.length > 0 ? ALIAS_H : 0);
 
-  // Sliding-window overlays: a "window" overlay whose label encodes lo..hi could
-  // be added later; for now window ranges are shown via two boundary overlays.
+  const range = recordedRange(event, binding);
   const cellX = (i: number) => PAD + i * (CELL + GAP);
 
   return (
-    <svg
+    <><svg
       className="array-viz"
       viewBox={`0 0 ${width} ${height}`}
       role="img"
@@ -86,7 +86,7 @@ export function ArrayVisualizer({
               width={CELL}
               height={CELL}
               rx={6}
-              className={mark ? "cell cell-active" : "cell"}
+              className={`cell${mark ? ' cell-active' : ''}${range && i>=range.start && i<=range.last ? ' cell-in-range' : ''}`}
             />
             <text x={cellX(i) + CELL / 2} y={top + CELL / 2 + 5} className="cell-value">
               {displayValue(cell.value, event.objects)}
@@ -109,6 +109,6 @@ export function ArrayVisualizer({
           {m.label}↓
         </text>
       ))}
-    </svg>
+    </svg><SequenceState event={event} binding={binding} length={cells.length}/></>
   );
 }

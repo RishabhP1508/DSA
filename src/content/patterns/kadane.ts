@@ -10,7 +10,8 @@ const walkthroughCode = `# Kadane: largest sum of ANY non-empty contiguous subar
 def kadane(nums):
     best = nums[0]     # best sum found anywhere
     cur = nums[0]      # best sum of a subarray ENDING at the current index
-    for x in nums[1:]:
+    for i in range(1, len(nums)):
+        x = nums[i]
         cur = max(x, cur + x)   # extend the running subarray, or restart at x
         best = max(best, cur)   # remember the best ending-here seen so far
     return best
@@ -59,131 +60,265 @@ export const kadanePattern: PatternDefinition = {
     "O(n) time (single pass) and O(1) space (two rolling variables). The naive all-subarrays approaches are O(n²)–O(n³); divide-and-conquer is O(n log n).",
 
   complexityExplanation: {
-    scope: "program",
-    variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
-    costModel: "Two rolling scalars: `cur` (best subarray ending here) and `best` (best anywhere). Each element does a constant amount of work.",
-    time: {
-      bound: "O(n)",
-      case: "worst",
-      explanation: "A single pass over the remaining n-1 elements (lines 5-7), each doing two O(1) max operations. So O(n) for all inputs — no dependence on values.",
-    },
-    space: {
-      bound: "O(1)",
-      case: "worst",
-      explanation: "Only `cur` and `best` are kept; nothing grows with n.",
-      inputOutputNote: "nums (n) is the input; the answer is a single number. Note nums[1:] here allocates a transient O(n) slice — iterating with an index would make it strict O(1).",
-    },
-    derivation: [
-      { lines: [3, 4], description: "Initialise the two rolling variables.", cost: "O(1)", dimension: "time" },
-      { lines: [5, 6, 7], description: "One pass, constant work per element.", cost: "O(n)", dimension: "time" },
-      { lines: [3, 4], description: "Two scalar variables.", cost: "O(1)", dimension: "space" },
-    ],
-    assumptions: ["The array is non-empty (nums[0] seeds best/cur).", "Addition and comparison are O(1).", "Handles negatives — the max(x, cur+x) restart is what makes negatives work."],
-    tradeoffs: "Naive all-subarrays is O(n²)–O(n³); a divide-and-conquer max-subarray is O(n log n). Kadane is optimal at O(n) time and O(1) space.",
-    counters: [{ label: "elements scanned", definition: "iterations of the Kadane loop (line 6)", countLines: [6] }],
-    fixedDataNote: "For the 9-element sample the max subarray [4,-1,2,1] sums to 6. The O(n) bound generalises.",
+  "scope": "operation",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of elements in nums"
+    }
+  ],
+  "costModel": "Two rolling scalars: `cur` (best subarray ending here) and `best` (best anywhere). Each element does a constant amount of work.",
+  "time": {
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "The n-1 remaining indices each perform bounded-value addition/comparisons, so worst-case O(n) in this unit-cost model."
   },
+  "space": {
+    "bound": "O(1)",
+    "case": "worst",
+    "explanation": "Only `cur` and `best` are kept; nothing grows with n.",
+    "inputOutputNote": "The existing input list is not copied. The two rolling totals and index use constant auxiliary slots under bounded-value arithmetic."
+  },
+  "derivation": [
+    {
+      "lines": [
+        3,
+        4
+      ],
+      "description": "Initialise the two rolling variables.",
+      "cost": "O(1)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        5,
+        7,
+        8
+      ],
+      "description": "One pass, constant work per element.",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        3,
+        4
+      ],
+      "description": "Two scalar variables.",
+      "cost": "O(1)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "The array is non-empty (nums[0] seeds best/cur).",
+    "Addition and comparison are O(1).",
+    "Handles negatives — the max(x, cur+x) restart is what makes negatives work."
+  ],
+  "tradeoffs": "Naive all-subarrays is O(n²)–O(n³); a divide-and-conquer max-subarray is O(n log n). Kadane is optimal at O(n) time and O(1) space.",
+  "counters": [
+    {
+      "label": "elements scanned",
+      "definition": "current value reads",
+      "countLines": [
+        6
+      ]
+    }
+  ],
+  "fixedDataNote": "For the 9-element sample the max subarray [4,-1,2,1] sums to 6. The O(n) bound generalises."
+},
 
   codeExplanations: [
-    { line: 1, executable: false, explanation: "Comment: max sum of any contiguous subarray, negatives allowed." },
-    { line: 2, executable: true, explanation: "Define kadane(nums)." },
-    { line: 3, executable: true, explanation: "best = the largest subarray sum found anywhere (seed with the first element)." },
-    { line: 4, executable: true, explanation: "cur = the best subarray sum ending at the current index (also seeded with the first element)." },
-    { line: 5, executable: true, explanation: "Scan the remaining elements." },
-    { line: 6, executable: true, explanation: "Extend the current run (cur + x) or restart at x — whichever is larger. Restarting happens when the run had gone negative." },
-    { line: 7, executable: true, explanation: "Update the global best with the best ending here." },
-    { line: 8, executable: true, explanation: "Return the maximum subarray sum." },
-    { line: 9, executable: false, explanation: "Blank line." },
-    { line: 10, executable: true, explanation: "The best subarray of the sample is [4,-1,2,1] summing to 6." },
-  ],
+  {
+    "line": 1,
+    "executable": false,
+    "explanation": "Comment: max sum of any contiguous subarray, negatives allowed."
+  },
+  {
+    "line": 2,
+    "executable": true,
+    "explanation": "Define kadane(nums)."
+  },
+  {
+    "line": 3,
+    "executable": true,
+    "explanation": "best = the largest subarray sum found anywhere (seed with the first element)."
+  },
+  {
+    "line": 4,
+    "executable": true,
+    "explanation": "cur = the best subarray sum ending at the current index (also seeded with the first element)."
+  },
+  {
+    "line": 5,
+    "executable": true,
+    "explanation": "Visit indices 1..n-1 without copying a list slice."
+  },
+  {
+    "line": 6,
+    "executable": true,
+    "explanation": "Read the current value in constant time."
+  },
+  {
+    "line": 7,
+    "executable": true,
+    "explanation": "Extend the current run (cur + x) or restart at x — whichever is larger. Restarting happens when the run had gone negative."
+  },
+  {
+    "line": 8,
+    "executable": true,
+    "explanation": "Update the global best with the best ending here."
+  },
+  {
+    "line": 9,
+    "executable": true,
+    "explanation": "Return the maximum subarray sum."
+  },
+  {
+    "line": 10,
+    "executable": false,
+    "explanation": "Blank line."
+  },
+  {
+    "line": 11,
+    "executable": true,
+    "explanation": "The best subarray of the sample is [4,-1,2,1] summing to 6."
+  }
+],
 
   bindings: [
-    {
-      variable: "nums",
-      model: "array",
-      overlays: [
-        { role: "total", label: "cur", source: "cur" },
-        { role: "highlight", label: "best", source: "best" },
-      ],
-    },
-  ],
+  {
+    "variable": "nums",
+    "model": "array",
+    "overlays": [
+      {
+        "role": "pointer",
+        "label": "i",
+        "source": "i"
+      },
+      {
+        "role": "total",
+        "label": "cur",
+        "source": "cur"
+      },
+      {
+        "role": "total",
+        "label": "best",
+        "source": "best"
+      }
+    ]
+  }
+],
 
   linkedLessons: ["kadane", "dp-state-transitions", "dp-divide-and-conquer"],
 
   exercises: [
-    {
-      id: "pat-kadane-recognize-1",
-      kind: "choose-approach",
-      prompt:
-        "Recognize: 'Given an array with positives and negatives, find the largest sum of any non-empty contiguous subarray.' Which pattern?",
-      expected:
-        "Kadane's algorithm. No fixed size and negatives are present, so track the best subarray ending at each index (extend vs restart) in one O(n) pass with O(1) space.",
-      correctPatternId: "kadane",
-      hints: [
-        "The subarray length is not fixed.",
-        "The 'ending here' subproblem is either extend or restart.",
-        "cur = max(x, cur + x).",
+  {
+    "id": "pat-kadane-recognize-1",
+    "kind": "choose-approach",
+    "prompt": "Recognize: 'Given an array with positives and negatives, find the largest sum of any non-empty contiguous subarray.' Which pattern?",
+    "expected": "Kadane's algorithm. No fixed size and negatives are present, so track the best subarray ending at each index (extend vs restart) in one O(n) pass with O(1) space.",
+    "correctPatternId": "kadane",
+    "hints": [
+      "Goal: find the largest sum of any non-empty contiguous subarray with mixed signs.",
+      "Trying every subarray is O(n^2); the 'ending here' subproblem lets you reuse the previous step's best.",
+      "Key insight: the best subarray ending at i either extends the previous one or restarts at i.",
+      "Approach: use Kadane's algorithm in one O(n) pass with O(1) space.",
+      "Pseudocode: cur = max(x, cur + x); best = max(best, cur) for each element; return best.",
+      "This is Kadane's algorithm: `cur = max(x, cur + x)` decides extend-vs-restart at each index."
+    ],
+    "recognition": {
+      "scenario": "Given an array with positives and negatives, find the largest sum of any non-empty contiguous subarray.",
+      "approaches": [
+        {
+          "id": "kadane",
+          "label": "Kadane's algorithm",
+          "requiredReasonIds": [
+            "extend-or-restart"
+          ]
+        },
+        {
+          "id": "fixed-window",
+          "label": "Fixed-size sliding window",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "No fixed width is given — the winning subarray can be any length — so a constant window does not apply."
+        },
+        {
+          "id": "prefix-map",
+          "label": "Prefix sums + hash map",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "That counts target-sum subarrays; here we want the single maximum sum."
+        }
       ],
-    },
-    {
-      id: "pat-kadane-fix-1",
-      kind: "fix-mistake",
-      prompt:
-        "This returns 0 for all-negative arrays but the subarray must be non-empty. Fix the initialization.",
-      starterCode:
-        "def kadane(nums):\n    best = 0\n    cur = 0\n    for x in nums:\n        cur = max(x, cur + x)\n        best = max(best, cur)\n    return best",
-      expected:
-        "def kadane(nums):\n    best = nums[0]\n    cur = nums[0]\n    for x in nums[1:]:\n        cur = max(x, cur + x)\n        best = max(best, cur)\n    return best",
-      hints: [
-        "With best = 0, an all-negative array wrongly yields 0.",
-        "A non-empty subarray must include at least one element.",
-        "Seed best and cur from nums[0] and start the loop at index 1.",
+      "reasons": [
+        {
+          "id": "extend-or-restart",
+          "text": "At each index decide whether to extend the best subarray ending here or restart from this element — one O(n) pass, O(1) space."
+        },
+        {
+          "id": "fixed-window-len",
+          "text": "The subarray length is fixed in advance, so slide a constant window.",
+          "contradictory": true
+        },
+        {
+          "id": "need-count",
+          "text": "We only need to count qualifying subarrays, not find a maximum.",
+          "contradictory": true
+        }
       ],
-    },
-    {
-      id: "pat-kadane-predict-1",
-      kind: "predict-state",
-      prompt: "Trace cur across [-2, 1, -3, 4, -1, 2, 1, -5, 4]. Where does cur restart, and what is best?",
-      expected:
-        "cur restarts at 1 (after -2), at 4 (after the run went to -2), then extends 4→3→5→6, dips, and best = 6 for subarray [4,-1,2,1].",
-      hints: [
-        "Restart happens when cur + x < x, i.e. cur was negative.",
-        "The 4 begins the winning run.",
-        "best peaks at 6.",
+      "acceptableApproachIds": [
+        "kadane"
       ],
-    },
-  ],
+      "modelExplanation": "Kadane's algorithm: track the best subarray sum ending at each index (extend vs restart) and the running maximum, in O(n) time and O(1) space."
+    }
+  },
+  {
+    "id": "pat-kadane-fix-1",
+    "kind": "fix-mistake",
+    "prompt": "This returns 0 for all-negative arrays but the subarray must be non-empty. Fix the initialization.",
+    "starterCode": "def kadane(nums):\n    best = 0\n    cur = 0\n    for x in nums:\n        cur = max(x, cur + x)\n        best = max(best, cur)\n    return best",
+    "expected": "def kadane(nums):\n    best = nums[0]\n    cur = nums[0]\n    for i in range(1, len(nums)):\n        x = nums[i]\n        cur = max(x, cur + x)\n        best = max(best, cur)\n    return best",
+    "hints": [
+      "Goal: make Kadane return the true maximum for all-negative arrays where the subarray must be non-empty.",
+      "The bug initializes best to 0, so an all-negative array wrongly reports 0 (an empty selection).",
+      "Key insight: a non-empty subarray must include at least one element, so the seed must be an actual value.",
+      "Approach: seed both best and cur from nums[0] and start the scan at index 1.",
+      "Pseudocode: best=cur=nums[0]; for x in nums[1:]: cur=max(x,cur+x); best=max(best,cur); return best.",
+      "Initialize `best = cur = nums[0]` and loop from index 1 so all-negative inputs return their largest element."
+    ],
+    "tests": "assert kadane([-2, -3, -1, -4]) == -1, 'all-negative: best is the single largest element (-1), not 0'\nassert kadane([1, 2, 3]) == 6, 'all-positive: whole array'\nassert kadane([-2, 1, -3, 4, -1, 2, 1, -5, 4]) == 6, 'classic mixed case'\nassert kadane([5]) == 5, 'single element'\nassert kadane([-7]) == -7, 'single negative element'\nprint('OK')"
+  },
+  {
+    "id": "pat-kadane-predict-1",
+    "kind": "predict-state",
+    "prompt": "Trace cur across [-2, 1, -3, 4, -1, 2, 1, -5, 4]. Where does cur restart, and what is best?",
+    "expected": "cur restarts at 1 (after -2), at 4 (after the run went to -2), then extends 4→3→5→6, dips, and best = 6 for subarray [4,-1,2,1].",
+    "hints": [
+      "Restart happens when cur + x < x, i.e. cur was negative.",
+      "The 4 begins the winning run.",
+      "best peaks at 6."
+    ]
+  }
+],
 
   references: [
-    {
-      url: "https://en.wikipedia.org/wiki/Maximum_subarray_problem",
-      title: "Maximum subarray problem — Wikipedia",
-      section: "Kadane's algorithm",
-      topic: "patterns/kadane",
-      purpose:
-        "Confirm the extend-or-restart recurrence, O(n)/O(1) bounds, and the non-empty initialization requirement.",
-      verifiedClaims: [
-        "Kadane's algorithm computes the maximum subarray sum in O(n) time and O(1) space.",
-        "The best subarray ending at i is max(nums[i], best-ending-at-(i-1) + nums[i]).",
-      ],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://algs4.cs.princeton.edu/home/",
-      title: "Algorithms, 4th Edition (Princeton) — dynamic programming",
-      section: "Maximum subarray via a running best",
-      topic: "patterns/kadane",
-      purpose: "Cross-check the DP framing (best ending here) behind Kadane's single pass.",
-      verifiedClaims: ["Maximum subarray is a one-dimensional DP with a running 'best ending here' value."],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://cp-algorithms.com/others/maximum_average_segment.html",
+    "title": "CP-Algorithms: maximum subarray",
+    "section": "Algorithm 2: Kadane",
+    "topic": "codex/b2-b",
+    "purpose": "Verify the specific semantics and conditions used in this lesson.",
+    "verifiedClaims": [
+      "The best running sum can restart after a negative prefix; a one-pass algorithm uses constant working state."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
     inventoryVersion: 19,
-    contentHash: "8104a1713cf1788c",
-    verifiedAt: "2026-09-21",
+    contentHash: "00f44dbdc6a1c10a",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

@@ -27,6 +27,7 @@ import { runProgram } from "./lib/pyodide-harness.mjs";
 import { contentHashOf } from "./lib/content-hash.mjs";
 import { validateExample } from "./lib/example-model.mjs";
 import { resolveToday, verifiedAtFor } from "./lib/evidence-date.mjs";
+import { evidenceSelection } from './lib/evidence-selection.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -58,6 +59,9 @@ function readPriorEvidence(filePath) {
 }
 
 const { lessons, patterns } = await loadCurriculum();
+// Optional scoped regeneration supports independent review batches without
+// rewriting content another reviewer is actively authoring. Default stays all.
+const selected = evidenceSelection(process.env.EVIDENCE_ONLY, lessons, patterns);
 const { COVERAGE_VERSION } = await import(pathToFileURL(path.join(ROOT, "src/content/coverage.ts")).href);
 
 /**
@@ -179,6 +183,7 @@ function writeEvidence(filePath, evidenceBlock) {
 let done = 0;
 for (const [kind, items, files] of [["lesson", lessons, lessonFiles], ["pattern", patterns, patternFiles]]) {
   for (const item of items) {
+    if (selected && !selected.has(kind + ':' + item.id)) continue;
     const filePath = files.get(item.id);
     if (!filePath) { console.log(`  ! no file for ${kind} ${item.id}`); continue; }
     const { checks, unresolved } = await evidenceFor(kind, item);
