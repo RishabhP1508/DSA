@@ -33,9 +33,42 @@ This is implemented code, not a proposal that Kiro must integrate.
 
 ## Final verification
 
-Final suite results and package verification will be recorded here once the
-tested source and distribution are frozen. Earlier packet results retain their
-original commit/worktree attribution and do not substitute for final acceptance.
+Validated source tree: `d9692d6d58b5e2cbacbb865b13f596c8feec0c3a`, based on
+merged main `f0213e5`. Checks completed on native Windows on 2026-10-10:
+
+| Check | Result |
+|---|---|
+| `npm run check:all` | Exit 0 |
+| Unit/component/real-Python regressions | 999 passed, 93 files |
+| Standard example outputs | 133 lessons + 29 patterns pass |
+| Coverage and review integrity | 133 coverage entries; 162 current reviews |
+| Coding model solutions | 163/163 pass |
+| Authored mistake rejection | All 163 reject each of the five faulty categories |
+| Recognition grading | 166 exercises pass |
+| Hint progression | All 329 interactive exercises have five hints plus the explained solution |
+| Installed Windows Chrome | 38/38 browser tests pass, no skips |
+| Installed Windows Edge | 38/38 browser tests pass, no skips |
+| Package-builder fixture | Pass; freeze/hash/no-overwrite/space-path assertions |
+| Locked dependency audit | Zero known vulnerabilities at verification time |
+
+The aggregate ran against the byte-identical working tree that became the
+source commit above; both full browser suites ran with that commit checked out.
+Later release-record changes are documentation only. Lint reports 32 warnings
+(primarily development Fast Refresh and React effect guidance), zero errors.
+The semantic checker retains 25 advisory operation-versus-whole-program/cost
+model comparisons; these scopes were examined in the recorded subject reviews.
+Earlier packet results retain their original attribution.
+
+Browser acceptance covers actual keyboard flows, 320px layouts, reduced motion,
+real Python, replay, cancellation, isolation, import/export and backup recovery.
+The 200% check uses the equivalent reduced CSS viewport; it does not claim a
+native browser-toolbar zoom test. Offline browser checks block every external
+request; they do not claim the Windows network adapter was physically disabled.
+
+The release builder inventories exact files, refuses stale inputs and checks
+every copied and archived file. Native launcher and extracted-package browser
+receipts are distributed alongside the final archive. Their input/build hashes
+tie them to the tested distribution, including the portable executable.
 
 The package includes curriculum, bundled Python, a checksum-verified portable
 Node runtime, local servers, Start/Stop launchers, source and dependency notices.
