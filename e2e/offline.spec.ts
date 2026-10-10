@@ -25,13 +25,13 @@ test("app boots and runs Python with all non-loopback requests blocked", async (
   });
 
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "DSA Visual Lab" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "DSA Visual Lab", exact: true })).toBeVisible();
 
   // Run real Python in the Playground with the network cut off.
-  await page.getByRole("button", { name: "Playground" }).click();
-  await expect(page.getByRole("button", { name: "▶ Run" })).toBeEnabled({ timeout: 60_000 });
-  await page.getByRole("button", { name: "▶ Run" }).click();
-  await expect(page.getByText(/completed/)).toBeVisible({ timeout: 60_000 });
+  await page.getByRole("button", { name: "Playground", exact: true }).click();
+  await expect(page.getByRole("button", { name: "▶ Run", exact: true })).toBeEnabled({ timeout: 60_000 });
+  await page.getByRole("button", { name: "▶ Run", exact: true }).click();
+  await expect(page.getByText(/· completed/)).toBeVisible({ timeout: 60_000 });
 
   // No non-loopback request was needed to boot and execute (Pyodide + assets
   // are served locally). We assert the app still worked despite blocking them.

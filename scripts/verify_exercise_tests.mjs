@@ -209,8 +209,8 @@ console.log(
 // Every interactive exercise (runnable or recognition) MUST have at least a
 // staged 3-hint progression (understand -> property -> solution); the authored
 // target is the full 6-stage set. This section FAILS an interactive exercise
-// with fewer than 3 distinct, non-empty hints, and reports how many reach the
-// full >=5-stage progression.
+// with fewer than 5 distinct, non-empty hints. Those five hints plus the
+// separately revealed explained solution form the six-stage progression.
 const interactive = all.filter((r) => r.exercise.tests || r.exercise.recognition);
 let hintFailures = 0;
 let fullProgression = 0;
@@ -218,9 +218,9 @@ for (const { ownerKind, ownerId, exercise } of interactive) {
   const uid = `${ownerKind}:${ownerId}:${exercise.id}`;
   const hints = (exercise.hints ?? []).map((h) => (h ?? "").trim()).filter(Boolean);
   const distinct = new Set(hints);
-  if (hints.length < 3 || distinct.size < 3) {
+  if (hints.length < 5 || distinct.size < 5) {
     hintFailures++;
-    console.log(`  ✗ ${uid} — needs >=3 distinct staged hints, has ${distinct.size}`);
+    console.log(`  ✗ ${uid} — needs >=5 distinct staged hints, has ${distinct.size}`);
   } else if (hints.length >= 5) {
     fullProgression++;
   }
@@ -228,7 +228,7 @@ for (const { ownerKind, ownerId, exercise } of interactive) {
 console.log(
   `\nInteractive exercises: ${interactive.length}; full 6-stage progression: ${fullProgression}; ` +
     (hintFailures === 0
-      ? "all have >=3 staged hints — HINTS OK"
+      ? "all have >=5 staged hints plus the explained solution — HINTS OK"
       : `${hintFailures} HINT FAILURE(S)`),
 );
 

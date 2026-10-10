@@ -1,0 +1,11 @@
+import { get, save } from './lib/content-edit.mjs';
+const p=get('pattern','sliding-window');
+p.bindings[0].range={label:'current boundaries',startSource:'left',endSource:'right',endInclusive:true};
+save('pattern',p.id,p,['bindings']);
+const s=get('lesson','string-sliding-window');
+s.bindings[0].range={label:'current boundaries',startSource:'start',endSource:'i',endInclusive:true};
+s.bindings[0].overlays.push({role:'total',label:'best length',source:'best'});
+save('lesson',s.id,s,['bindings']);
+const a=get('lesson','sliding-window');
+a.bindings[0].overlays.push({role:'total',label:'running sum',source:'window'},{role:'total',label:'best sum',source:'best'});
+save('lesson',a.id,a,['bindings']);

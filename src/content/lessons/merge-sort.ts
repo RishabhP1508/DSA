@@ -31,11 +31,7 @@ export const mergeSort: LessonDefinition = {
   area: "Sorting",
   prerequisites: ["functions", "complexity"],
 
-  explanation: `**Merge sort** is the classic **divide and conquer** sort. It splits the array in half, **recursively sorts each half**, then **merges** the two sorted halves into one sorted array. The merge is the clever part: because both halves are already sorted, you can produce the combined sorted order by repeatedly taking the smaller of the two front elements — a single linear pass.
-
-Its running time is **O(n log n)** in *all* cases, which is the headline guarantee. There are about **log n** levels of splitting (halving down to size 1), and merging all the pieces at each level touches every element once — **O(n) per level** × **log n levels** = O(n log n). Unlike quicksort, it has no bad O(n²) case.
-
-The trade-off is **space**: the merges build new lists, so it uses **O(n)** auxiliary memory (this implementation also slices, which copies). Merge sort is **stable** (using \`<=\` in the merge), which is why stable sorts and external/merge-based sorting of huge datasets rely on it.`,
+  explanation: "**Merge sort** is the classic **divide and conquer** sort. It splits the array in half, **recursively sorts each half**, then **merges** the two sorted halves into one sorted array. The merge is the clever part: because both halves are already sorted, you can produce the combined sorted order by repeatedly taking the smaller of the two front elements — a single linear pass.\n\nIts running time is **O(n log n)** in *all* cases, which is the headline guarantee. There are about **log n** levels of splitting (halving down to size 1), and merging all the pieces at each level touches every element once — **O(n) per level** × **log n levels** = O(n log n). Unlike quicksort, it has no bad O(n²) case.\n\nThe trade-off is **space**: the merges build new lists, so it uses **O(n)** auxiliary memory (this implementation also slices, which copies). Merge sort is **stable** (using `<=` in the merge), which is why stable sorts and external/merge-based sorting of huge datasets rely on it.\n\nA recursive call is a new invocation with its own local variables. The base case stops at length 0 or 1; otherwise both calls receive strictly smaller slices. Slices cost linear time in their lengths, but total slicing per level is O(n), so the overall O(n log n) bound remains valid. Peak live memory is O(n), not the O(n log n) cumulative allocations across all levels.",
 
   vocabulary: [
     { term: "Divide and conquer", definition: "Split a problem into subproblems, solve them, and combine the results." },
@@ -59,33 +55,83 @@ The trade-off is **space**: the merges build new lists, so it uses **O(n)** auxi
   ],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [{ symbol: "n", meaning: "the number of elements to sort" }],
-    costModel: "Splitting is O(1) index math (slicing copies, noted in space); each merge does one linear pass over the elements it combines.",
-    time: {
-      bound: "O(n log n)",
-      case: "worst",
-      explanation: "The recursion halves the array until pieces of size 1, which is about log₂(n) levels deep. At every level, the total merging work across all the pieces touches each of the n elements once — O(n) per level. Multiplying levels by per-level work gives O(n log n), and this holds for best, average, AND worst inputs (no bad case).",
-    },
-    space: {
-      bound: "O(n)",
-      case: "worst",
-      explanation: "Each merge allocates a new list holding up to n elements, and the recursion stack is O(log n) deep. The dominant term is the O(n) merge buffers. (This implementation also slices a[:mid]/a[mid:], which copies — also O(n).)",
-      inputOutputNote: "The merged lists and slices are auxiliary; the input list of n elements is separate.",
-    },
-    derivation: [
-      { lines: [6, 7], description: "Recursion halves the input: about log n levels deep.", cost: "O(log n)", dimension: "time" },
-      { lines: [10, 11, 12, 14, 15, 16], description: "Merging at each level touches all n elements once: O(n) per level.", cost: "O(n log n)", dimension: "time" },
-      { lines: [8, 6, 7], description: "Merge buffers hold O(n) and slices copy O(n); recursion stack is O(log n).", cost: "O(n)", dimension: "space" },
-    ],
-    assumptions: ["Comparisons are O(1).", "Slicing/appending are proportional to the number of elements moved."],
-    tradeoffs: "Quicksort sorts in place (O(log n) space) and is often faster in practice, but has an O(n²) worst case; merge sort guarantees O(n log n) and stability at the cost of O(n) space.",
-    counters: [
-      { label: "merge comparisons", definition: "executions of the merge compare (line 11)", countLines: [11] },
-      { label: "recursive calls", definition: "calls to merge_sort (lines 6-7)", countLines: [6, 7] },
-    ],
-    fixedDataNote: "This run sorts 6 elements through ~log2(6) levels. The O(n log n) time and O(n) space bounds generalise to n.",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of elements to sort"
+    }
+  ],
+  "costModel": "Splitting midpoint arithmetic is O(1), but each pair of slices copies O(m) references for a subproblem of size m. Slicing, merging and concatenating leftovers together are O(m) per call, hence O(n) per level.",
+  "time": {
+    "bound": "O(n log n)",
+    "case": "worst",
+    "explanation": "The recursion halves the array until pieces of size 1, which is about log₂(n) levels deep. At every level, the total merging work across all the pieces touches each of the n elements once — O(n) per level. Multiplying levels by per-level work gives O(n log n), and this holds for best, average, AND worst inputs (no bad case)."
   },
+  "space": {
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "Each merge allocates a new list holding up to n elements, and the recursion stack is O(log n) deep. The dominant term is the O(n) merge buffers. (This implementation also slices a[:mid]/a[mid:], which copies — also O(n).)",
+    "inputOutputNote": "The merged lists and slices are auxiliary; the input list of n elements is separate."
+  },
+  "derivation": [
+    {
+      "lines": [
+        6,
+        7
+      ],
+      "description": "Recursion halves the input: about log n levels deep.",
+      "cost": "O(log n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        10,
+        11,
+        12,
+        14,
+        15,
+        16
+      ],
+      "description": "Merging at each level touches all n elements once: O(n) per level.",
+      "cost": "O(n log n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        8,
+        6,
+        7
+      ],
+      "description": "Merge buffers hold O(n) and slices copy O(n); recursion stack is O(log n).",
+      "cost": "O(n)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Comparisons are O(1).",
+    "Slicing/appending are proportional to the number of elements moved."
+  ],
+  "tradeoffs": "A classic in-place quicksort uses O(log n) stack on balanced inputs, O(n) on degenerate inputs; the list-building quicksort in the next lesson has different memory costs. Merge sort guarantees O(n log n) and stability with O(n) live auxiliary memory.",
+  "counters": [
+    {
+      "label": "merge comparisons",
+      "definition": "executions of the merge compare (line 11)",
+      "countLines": [
+        11
+      ]
+    },
+    {
+      "label": "recursive calls",
+      "definition": "calls to merge_sort (lines 6-7)",
+      "countLines": [
+        6,
+        7
+      ]
+    }
+  ],
+  "fixedDataNote": "This run sorts 6 elements through ~log2(6) levels. The O(n log n) time and O(n) space bounds generalise to n. Function/query analysis excludes demonstration input literal creation and printing."
+},
 
   code,
 
@@ -111,7 +157,28 @@ The trade-off is **space**: the merges build new lists, so it uses **O(n)** auxi
     { line: 19, executable: true, explanation: "Sort [5,1,4,2,8,3] → [1, 2, 3, 4, 5, 8]." },
   ],
 
-  bindings: [{ variable: "a", model: "recursion" }],
+  bindings: [
+  {
+    "variable": "a",
+    "model": "array"
+  },
+  {
+    "variable": "a",
+    "model": "recursion"
+  },
+  {
+    "variable": "left",
+    "model": "array"
+  },
+  {
+    "variable": "right",
+    "model": "array"
+  },
+  {
+    "variable": "merged",
+    "model": "array"
+  }
+],
 
   prediction: [
     { atEventIndex: 0, prompt: "Why is merge sort O(n log n) in the WORST case, unlike quicksort?", answer: "The split is always into equal halves, giving log n levels, and merging is O(n) per level regardless of input — so it is always O(n log n) with no O(n²) case.", explanation: "Merge sort's halving does not depend on the data (always the midpoint), so the recursion depth is always ~log n and total work always O(n log n). Quicksort's split depends on pivot choice, which can degrade to O(n²)." },
@@ -146,31 +213,49 @@ The trade-off is **space**: the merges build new lists, so it uses **O(n)** auxi
   expectedOutput: "[1, 2, 3, 4, 5, 8]\n",
 
   references: [
-    {
-      url: "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheMergeSort.html",
-      title: "The Merge Sort — Problem Solving with Algorithms and DS using Python (Runestone)",
-      section: "Merge sort analysis",
-      topic: "sorting/merge",
-      purpose: "Confirm merge sort's divide-and-conquer structure, O(n log n) time, and O(n) space.",
-      verifiedClaims: ["Merge sort is O(n log n) in all cases", "It uses O(n) extra space for merging and is stable"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://algs4.cs.princeton.edu/22mergesort/",
-      title: "Mergesort — Algorithms, 4th Edition (Princeton)",
-      section: "Analysis and stability",
-      topic: "sorting/merge",
-      purpose: "Cross-check the level-based O(n log n) analysis and stability.",
-      verifiedClaims: ["Mergesort uses ~n lg n compares and is stable"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://opendatastructures.org/ods-python/11_1_Comparison_Based_Sorti.html",
+    "title": "Open Data Structures: comparison-based sorting",
+    "section": "11.1.1 merge-sort; recursion-tree analysis and figure",
+    "topic": "sorting/merge",
+    "purpose": "Check the specific claims and conventions used here.",
+    "verifiedClaims": [
+      "Balanced split, linear merge/copy work per level, logarithmic levels."
+    ],
+    "accessDate": "2026-10-10",
+    "conventions": []
+  },
+  {
+    "url": "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheMergeSort.html",
+    "title": "TheMergeSort",
+    "section": "Algorithm, analysis and visual example",
+    "topic": "sorting/merge",
+    "purpose": "Check the specific claims and conventions used here.",
+    "verifiedClaims": [
+      "Taking left on <= preserves stability; base case is empty/singleton."
+    ],
+    "accessDate": "2026-10-10",
+    "conventions": []
+  },
+  {
+    "url": "https://visualgo.net/en/sorting",
+    "title": "visual reference",
+    "section": "Merge sort visualization pseudocode",
+    "topic": "sorting/merge",
+    "purpose": "Check the specific claims and conventions used here.",
+    "verifiedClaims": [
+      "Display split halves and the merged destination as separate state."
+    ],
+    "accessDate": "2026-10-10",
+    "conventions": []
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "1e86206022a439b2",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "8ced05a58bac439d",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 3,
   },
 };

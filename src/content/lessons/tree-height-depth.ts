@@ -28,61 +28,142 @@ export const treeHeightDepth: LessonDefinition = {
   area: "Trees and tries",
   prerequisites: ["tree-dfs"],
 
-  explanation: `**Height** and **depth** are the two ways we measure "how tall" a tree is. The **depth** of a node is its distance from the **root** (the root has depth 0). The **height** of a node is the distance to its **deepest descendant leaf**; the height of the *tree* is the height of its root. These aren't just trivia — a tree's height is precisely what determines the cost of DFS (O(h) stack) and of BST operations (O(h) per search).
-
-Computing height is a clean **postorder** recursion: a node's height is \`1 + max(height of left, height of right)\`, with an empty subtree contributing 0. You must know both children's heights *before* you can compute the parent's — children-before-parent, the postorder pattern. This example returns \`3\` (three levels: 5 → 3/8 → leaves).
-
-The computation is **O(n)** time (each node contributes to exactly one height calculation) and **O(h)** space (the recursion stack). This lesson also grounds the recurring phrase from earlier topics: "**O(h)**, which is O(log n) when balanced and O(n) when degenerate." Height is the number that phrase is about — a **balanced** tree keeps height near log n, a **skewed** tree lets it grow to n. A closely related quantity, **minimum depth** (nearest leaf), uses BFS for early termination.`,
+  explanation: "**Depth** counts edges from the root: the root has depth 0 and each child has one more. **Height** has two common conventions. This function counts nodes on the longest downward path, so an empty tree has height 0 and a leaf has height 1. An edge-count height would give a nonempty tree one less; do not mix them.\n\nCompute node-count height by postorder recursion: ask both children for their heights, take the larger and add one for the current node. Every node is examined, so time is O(n). At most h active calls lie on one root-to-leaf path, so auxiliary space is O(h), excluding the input tree. A balanced tree has h = O(log n); a chain has h = n. The empty base case also makes missing children work naturally.",
 
   vocabulary: [
-    { term: "Depth (of a node)", definition: "Distance from the root; the root has depth 0." },
-    { term: "Height (of a node)", definition: "Distance to the deepest descendant leaf." },
-    { term: "Height (of a tree)", definition: "The height of the root — the longest root-to-leaf path." },
-    { term: "Balanced", definition: "Height stays near log n (subtree heights differ little)." },
-    { term: "Skewed / degenerate", definition: "Height grows toward n (list-like)." },
-  ],
+  {
+    "term": "Depth (of a node)",
+    "definition": "Distance from the root; the root has depth 0."
+  },
+  {
+    "term": "Height (of a node)",
+    "definition": "Here: number of nodes on the longest downward path; a leaf has height 1 and an empty tree height 0."
+  },
+  {
+    "term": "Height (of a tree)",
+    "definition": "Here: number of nodes on the longest downward path; a leaf has height 1 and an empty tree height 0."
+  },
+  {
+    "term": "Balanced",
+    "definition": "Height stays near log n (subtree heights differ little)."
+  },
+  {
+    "term": "Skewed / degenerate",
+    "definition": "Height grows toward n (list-like)."
+  }
+],
 
   concepts: {
-    purpose: "Measure tree height/depth — the quantity that governs DFS and BST operation costs.",
-    operations: "Recursively: height(node) = 1 + max(height(left), height(right)); empty = 0.",
-    uses: "Analysing DFS/BST cost, checking balance, minimum depth, diameter, level counts.",
-    tradeoffs: "O(n) to compute; height is a property you often need before choosing algorithms.",
-    commonMistakes: "Confusing height (from a node down) with depth (from the root down); off-by-one between counting nodes vs edges; forgetting the empty-tree base case.",
-    edgeCases: "Empty tree has height 0 (this convention). A single node has height 1 (node count) or 0 (edge count). Skewed trees have height n.",
-  },
+  "purpose": "Measure tree height/depth — the quantity that governs DFS and BST operation costs.",
+  "operations": "Recursively: height(node) = 1 + max(height(left), height(right)); empty = 0.",
+  "uses": "Analysing DFS/BST cost, checking balance, minimum depth, diameter, level counts.",
+  "tradeoffs": "O(n) to compute; height is a property you often need before choosing algorithms.",
+  "commonMistakes": "Confusing height (from a node down) with depth (from the root down); off-by-one between counting nodes vs edges; forgetting the empty-tree base case.",
+  "edgeCases": "Empty tree height 0; leaf height 1; root depth 0. A chain of n nodes has height n and deepest depth n−1."
+},
 
   complexity: [
     { operation: "height(root)", best: "O(n)", average: "O(n)", worst: "O(n)", space: "O(h)", note: "Visits every node once; recursion stack = height h." },
   ],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [
-      { symbol: "n", meaning: "the number of nodes" },
-      { symbol: "h", meaning: "the tree height (recursion depth)" },
-    ],
-    costModel: "Each node's height is computed once from its children's heights with O(1) work (a max and an add).",
-    time: {
-      bound: "O(n)",
-      case: "worst",
-      explanation: "The recursion visits every node exactly once, combining its two children's heights in O(1) — so computing the tree's height is O(n). There is no way to do better: you must inspect every node to know the longest path could not go through an unvisited one.",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of nodes"
     },
-    space: {
-      bound: "O(h)",
-      case: "worst",
-      explanation: "The only extra memory is the recursion stack, whose depth equals the current path length — bounded by the height h (O(log n) balanced, O(n) skewed).",
-      inputOutputNote: "The tree of n nodes is the input; the O(h) recursion stack is the working space.",
-    },
-    derivation: [
-      { lines: [12, 13], description: "Base case at empty subtrees — O(1) each.", cost: "O(n)", dimension: "time" },
-      { lines: [14], description: "Each node combines child heights in O(1); n nodes → O(n).", cost: "O(n)", dimension: "time" },
-      { lines: [14], description: "Recursion depth reaches the height h.", cost: "O(h)", dimension: "space" },
-    ],
-    assumptions: ["max and addition are O(1).", "Recursion reaches depth h."],
-    tradeoffs: "An iterative BFS level-count also computes height in O(n) but uses O(w) queue space instead of O(h) stack space; for minimum depth, BFS can stop early at the first leaf.",
-    counters: [{ label: "height computations", definition: "executions of the combine step (line 14)", countLines: [14] }],
-    fixedDataNote: "This run returns height 3 for a 7-node balanced tree. The O(n) time / O(h) space bounds generalise to any tree.",
+    {
+      "symbol": "h",
+      "meaning": "the tree height (recursion depth)"
+    }
+  ],
+  "costModel": "Each node's height is computed once from its children's heights with O(1) work (a max and an add).",
+  "time": {
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "The recursion visits every node exactly once, combining its two children's heights in O(1) — so computing the tree's height is O(n). There is no way to do better: you must inspect every node to know the longest path could not go through an unvisited one."
   },
+  "space": {
+    "bound": "O(h)",
+    "case": "worst",
+    "explanation": "The only extra memory is the recursion stack, whose depth equals the current path length — bounded by the height h (O(log n) balanced, O(n) skewed).",
+    "inputOutputNote": "The tree of n nodes is the input; the O(h) recursion stack is the working space."
+  },
+  "derivation": [
+    {
+      "lines": [
+        12,
+        13
+      ],
+      "description": "Base case at empty subtrees — O(1) each.",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        14
+      ],
+      "description": "Each node combines child heights in O(1); n nodes → O(n).",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        14
+      ],
+      "description": "Recursion depth reaches the height h.",
+      "cost": "O(h)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "max and addition are O(1).",
+    "Recursion reaches depth h.",
+    "Height h uses the node-count convention; depth uses edges. A proper tree is assumed and recursion must fit the runtime limit."
+  ],
+  "tradeoffs": "An iterative BFS level-count also computes height in O(n) but uses O(w) queue space instead of O(h) stack space; for minimum depth, BFS can stop early at the first leaf.",
+  "counters": [
+    {
+      "label": "height computations",
+      "definition": "executions of the combine step (line 14)",
+      "countLines": [
+        14
+      ]
+    }
+  ],
+  "fixedDataNote": "This run returns height 3 for a 7-node balanced tree. The O(n) time / O(h) space bounds generalise to any tree.",
+  "references": [
+    {
+      "url": "https://opendatastructures.org/ods-python/6_Binary_Trees.html",
+      "title": "Open Data Structures: binary trees",
+      "section": "Chapter 6 definitions and Figures 6.1–6.2",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Unique parents in a rooted tree.",
+        "Depth and height count edges."
+      ],
+      "conventions": [
+        "This app states when its height function counts nodes instead."
+      ],
+      "accessDate": "2026-10-10"
+    },
+    {
+      "url": "https://runestone.academy/ns/books/published/pythonds3/Trees/TreeTraversals.html",
+      "title": "Runestone: tree traversals",
+      "section": "6.8: preorder, inorder, postorder; recursive code listings",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Traversal visit order.",
+        "None is the recursion base case."
+      ],
+      "conventions": [],
+      "accessDate": "2026-10-10"
+    }
+  ]
+},
 
   code,
 
@@ -137,36 +218,46 @@ The computation is **O(n)** time (each node contributes to exactly one height ca
     },
   ],
 
-  review: `**Depth** measures distance from the root (root = 0); **height** measures distance down to the deepest leaf; a tree's height is its root's height. Compute it with a **postorder** recursion \`1 + max(left, right)\` — **O(n)** time, **O(h)** space. Height is the **h** in the "O(h) = O(log n) balanced / O(n) degenerate" bounds that govern DFS and BST cost.`,
+  review: "Depth counts edges from the root, so root depth is zero. This height function counts nodes on the longest downward path: an empty tree has height zero and a leaf has height one. Its postorder formula is 1 + max(left, right), taking O(n) time and O(h) recursive frames. An edge-count height convention would assign a leaf zero; state the convention before comparing values.",
 
   expectedOutput: "3\n",
 
   references: [
-    {
-      url: "https://opendatastructures.org/",
-      title: "Open Data Structures",
-      section: "Binary trees — height and depth",
-      topic: "trees/height-depth",
-      purpose: "Confirm definitions of height/depth and that they govern tree operation costs.",
-      verifiedClaims: ["Node depth is distance from root; height is distance to deepest leaf; height drives O(h) costs"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://runestone.academy/ns/books/published/pythonds3/Trees/index.html",
-      title: "Trees and Tree Algorithms — Runestone",
-      section: "Tree height",
-      topic: "trees/height-depth",
-      purpose: "Cross-check the recursive height computation and its O(n) cost.",
-      verifiedClaims: ["Height = 1 + max(child heights); computed in O(n)"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://opendatastructures.org/ods-python/6_Binary_Trees.html",
+    "title": "Open Data Structures: binary trees",
+    "section": "Chapter 6 definitions and Figures 6.1–6.2",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Unique parents in a rooted tree.",
+      "Depth and height count edges."
+    ],
+    "conventions": [
+      "This app states when its height function counts nodes instead."
+    ],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://runestone.academy/ns/books/published/pythonds3/Trees/TreeTraversals.html",
+    "title": "Runestone: tree traversals",
+    "section": "6.8: preorder, inorder, postorder; recursive code listings",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Traversal visit order.",
+      "None is the recursion base case."
+    ],
+    "conventions": [],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "0c6bf14ec33ccfc7",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "de8d80b85bdfbdb2",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 5,
   },
 };

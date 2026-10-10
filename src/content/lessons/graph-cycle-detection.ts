@@ -53,46 +53,120 @@ For an **undirected** graph, the check is: during DFS, if you reach a neighbour 
   ],
 
   concepts: {
-    purpose: "Determine whether a graph contains a cycle — for validation, spanning trees, and scheduling.",
-    operations: "Undirected: DFS, cycle if a visited neighbour isn't the parent. Directed: cycle if a neighbour is on the recursion stack.",
-    uses: "Detecting dependency cycles, validating DAGs, deadlock detection, spanning-tree checks.",
-    tradeoffs: "O(V + E) either way; the correct rule depends on directed vs undirected.",
-    commonMistakes: "Forgetting the parent exclusion (undirected), which falsely reports the arrival edge as a cycle; using the undirected rule on a directed graph; not covering all components.",
-    edgeCases: "Disconnected graph: check every component. Self-loop is a cycle. A tree (n-1 edges, connected) is acyclic.",
-  },
+  "purpose": "Determine whether a graph contains a cycle — for validation, spanning trees, and scheduling.",
+  "operations": "Undirected: DFS, cycle if a visited neighbour isn't the parent. Directed: cycle if a neighbour is on the recursion stack.",
+  "uses": "Detecting dependency cycles, validating DAGs, deadlock detection, spanning-tree checks.",
+  "tradeoffs": "O(V + E) either way; the correct rule depends on directed vs undirected.",
+  "commonMistakes": "Forgetting the parent exclusion (undirected), which falsely reports the arrival edge as a cycle; using the undirected rule on a directed graph; not covering all components.",
+  "edgeCases": "Disconnected graph: check every component. Self-loop is a cycle. A tree (n-1 edges, connected) is acyclic. Treat the input as undirected for this parent-edge test. In a directed graph use the current recursion stack (gray vertices) or Kahn’s processed count; a visited neighbor alone is insufficient."
+},
 
   complexity: [
-    { operation: "Cycle detection (DFS)", best: "O(V + E)", average: "O(V + E)", worst: "O(V + E)", space: "O(V)", note: "One DFS sweep; recursion stack + visited set O(V)." },
-  ],
+  {
+    "operation": "Cycle detection (DFS)",
+    "best": "O(V + E)",
+    "average": "O(V + E)",
+    "worst": "O(V + E)",
+    "space": "O(V+E)",
+    "note": "Internally built adjacency is O(V+E); seen state and recursive frames add O(V)."
+  }
+],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [
-      { symbol: "V", meaning: "the number of vertices" },
-      { symbol: "E", meaning: "the number of edges" },
-    ],
-    costModel: "Each vertex is visited once and each edge examined once (as in DFS); set/lookup are O(1).",
-    time: {
-      bound: "O(V + E)",
-      case: "worst",
-      explanation: "Cycle detection is a single DFS sweep: each of the V vertices is entered once and each edge is scanned once to check the cycle condition — so O(V + E). The extra parent (undirected) or recursion-stack (directed) test at each edge is O(1) and doesn't change the bound. Covering all components (the outer loop) is included in the O(V) term.",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "V",
+      "meaning": "the number of vertices"
     },
-    space: {
-      bound: "O(V)",
-      case: "worst",
-      explanation: "The visited set holds up to V vertices, and the recursion stack can be O(V) deep on a long path. (Directed detection also keeps an in-progress set, still O(V).)",
-      inputOutputNote: "The graph (V + E) is the input; the visited set and recursion stack are the O(V) auxiliary space.",
-    },
-    derivation: [
-      { lines: [11, 12], description: "Each vertex is entered once during DFS.", cost: "O(V)", dimension: "time" },
-      { lines: [13, 14, 15, 16, 17], description: "Each edge is examined once with an O(1) cycle test.", cost: "O(V + E)", dimension: "time" },
-      { lines: [9, 10], description: "Visited set O(V) plus recursion stack up to O(V).", cost: "O(V)", dimension: "space" },
-    ],
-    assumptions: ["Adjacency-list graph; set ops O(1).", "Undirected: exclude the parent edge.", "The outer loop covers all components."],
-    tradeoffs: "For undirected cycle detection, union-find is an alternative: an edge whose endpoints are already in the same set closes a cycle — near-O(E·α). DFS is simplest and also works for directed graphs (with the recursion-stack rule).",
-    counters: [],
-    fixedDataNote: "This run finds a cycle in the triangle (True) and none in the path (False). The O(V+E) bound generalises to any graph.",
+    {
+      "symbol": "E",
+      "meaning": "the number of edges"
+    }
+  ],
+  "costModel": "Each vertex is visited once and each edge examined once (as in DFS); set/lookup are O(1).",
+  "time": {
+    "bound": "O(V + E)",
+    "case": "worst",
+    "explanation": "Cycle detection is a single DFS sweep: each of the V vertices is entered once and each edge is scanned once to check the cycle condition — so O(V + E). The extra parent (undirected) or recursion-stack (directed) test at each edge is O(1) and doesn't change the bound. Covering all components (the outer loop) is included in the O(V) term."
   },
+  "space": {
+    "bound": "O(V+E)",
+    "case": "worst",
+    "explanation": "The function creates adjacency lists from its edge input, then visited/parent state and recursive frames; total O(V+E) working storage.",
+    "inputOutputNote": "The O(E) edge list is input. Constructed adjacency, seen state and recursion are auxiliary storage; the result is a Boolean."
+  },
+  "derivation": [
+    {
+      "lines": [
+        11,
+        12
+      ],
+      "description": "Each vertex is entered once during DFS.",
+      "cost": "O(V)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "description": "Each edge is examined once with an O(1) cycle test.",
+      "cost": "O(V + E)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        9,
+        10
+      ],
+      "description": "Visited set O(V) plus recursion stack up to O(V).",
+      "cost": "O(V)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Adjacency-list graph; set ops O(1).",
+    "Undirected: exclude the parent edge.",
+    "The outer loop covers all components.",
+    "Undirected graph; n is nonnegative and edge endpoints lie in 0..n−1.",
+    "Adjacency lists are constructed inside the function and count toward auxiliary storage."
+  ],
+  "tradeoffs": "For undirected cycle detection, union-find is an alternative: an edge whose endpoints are already in the same set closes a cycle — near-O(E·α). DFS is simplest and also works for directed graphs (with the recursion-stack rule).",
+  "counters": [],
+  "fixedDataNote": "This run finds a cycle in the triangle (True) and none in the path (False). The O(V+E) bound generalises to any graph.",
+  "references": [
+    {
+      "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+      "title": "Open Data Structures: graph traversal",
+      "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "BFS discovers reachable vertices in distance order.",
+        "DFS records visited vertices before recursion."
+      ],
+      "conventions": [],
+      "accessDate": "2026-10-10"
+    },
+    {
+      "url": "https://visualgo.net/en/dfsbfs",
+      "title": "VisuAlgo: graph traversal",
+      "section": "Directed graph settings; cycle states; 7-6 topological sorting (DFS and Kahn BFS)",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Topological order requires a DAG.",
+        "Kahn starts with zero in-degree."
+      ],
+      "conventions": [],
+      "accessDate": "2026-10-10"
+    }
+  ]
+},
 
   code,
 
@@ -157,36 +231,44 @@ For an **undirected** graph, the check is: during DFS, if you reach a neighbour 
     },
   ],
 
-  review: `**Cycle detection** uses DFS. **Undirected**: a cycle exists if a visited neighbour is **not the parent** (the arrival edge doesn't count). **Directed**: a cycle exists if a neighbour is on the **recursion stack** (a back edge), tracked with an in-progress set. Both are **O(V + E)** time / **O(V)** space. Pick the rule by graph type; union-find is an alternative for the undirected case.`,
+  review: "The displayed undirected DFS excludes the arrival parent when a visited neighbor is encountered. Directed cycle detection instead needs an in-progress recursion set; a visited vertex alone is insufficient. The function covers every component and builds adjacency internally, using O(V+E) time and auxiliary storage. A traversal over an already supplied adjacency list needs O(V) additional seen/stack storage.",
 
   expectedOutput: "True\nFalse\n",
 
   references: [
-    {
-      url: "https://cp-algorithms.com/graph/finding-cycle.html",
-      title: "Finding a cycle — CP-Algorithms",
-      section: "Undirected and directed cycle detection",
-      topic: "graphs/cycle-detection",
-      purpose: "Confirm the undirected parent-exclusion rule and the directed recursion-stack (back-edge) rule, both O(V+E).",
-      verifiedClaims: ["Undirected cycle detection excludes the parent; directed uses a recursion-stack/color scheme; both are O(V+E)"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://neetcode.io/roadmap",
-      title: "NeetCode roadmap",
-      section: "Graphs — cycle detection",
-      topic: "graphs/cycle-detection",
-      purpose: "Cross-check DFS-based cycle detection for directed and undirected graphs.",
-      verifiedClaims: ["DFS detects cycles via back edges (directed) or visited-non-parent neighbours (undirected)"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+    "title": "Open Data Structures: graph traversal",
+    "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "BFS discovers reachable vertices in distance order.",
+      "DFS records visited vertices before recursion."
+    ],
+    "conventions": [],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://visualgo.net/en/dfsbfs",
+    "title": "VisuAlgo: graph traversal",
+    "section": "Directed graph settings; cycle states; 7-6 topological sorting (DFS and Kahn BFS)",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Topological order requires a DAG.",
+      "Kahn starts with zero in-degree."
+    ],
+    "conventions": [],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "a2a4d2b8bf6f89ed",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "f7ac50e7cb143b8f",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 5,
   },
 };

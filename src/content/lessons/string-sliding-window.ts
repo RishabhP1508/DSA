@@ -50,7 +50,7 @@ Crucially, \`start\` only ever moves **forward**, and \`i\` moves forward once p
   },
 
   complexity: [
-    { operation: "Longest unique substring", best: "O(n)", average: "O(n)", worst: "O(n)", space: "O(k)", note: "Each edge advances at most n times; map holds k distinct chars." },
+    { operation: "Longest unique substring", best: "O(n)", average: "O(n)", worst: "O(n*k)", space: "O(k)", note: "Expected O(n) with bounded-size keys; collision-heavy map work can reach O(n*k). Each edge only advances; k is the distinct-character count." },
   ],
 
   complexityExplanation: {
@@ -106,15 +106,34 @@ Crucially, \`start\` only ever moves **forward**, and \`i\` moves forward once p
   ],
 
   bindings: [
-    {
-      variable: "s",
-      model: "string",
-      overlays: [
-        { role: "pointer", label: "start", source: "start" },
-        { role: "pointer", label: "i", source: "i" },
-      ],
-    },
-  ],
+  {
+    "variable": "s",
+    "model": "string",
+    "overlays": [
+      {
+        "role": "pointer",
+        "label": "start",
+        "source": "start"
+      },
+      {
+        "role": "pointer",
+        "label": "i",
+        "source": "i"
+      },
+      {
+        "role": "total",
+        "label": "best length",
+        "source": "best"
+      }
+    ],
+    "range": {
+      "label": "current boundaries",
+      "startSource": "start",
+      "endSource": "i",
+      "endInclusive": true
+    }
+  }
+],
 
   prediction: [
     { atEventIndex: 0, prompt: "Why is this O(n) and not O(n^2), even though the window resizes?", answer: "Because both edges only move forward: i advances n times and start advances at most n times total, so combined movement is O(n).", explanation: "Neither pointer ever moves backward. The right edge steps n times; the left edge's total forward movement across the whole run is also bounded by n. Total O(n), not O(n²)." },
@@ -167,13 +186,15 @@ Crucially, \`start\` only ever moves **forward**, and \`i\` moves forward once p
       verifiedClaims: ["Variable windows expand on the right and contract on the left to maintain a constraint"],
       accessDate: "2026-09-20",
     },
+    {"url":"https://leetcode.com/problems/longest-substring-without-repeating-characters/description/","title":"Longest Substring Without Repeating Characters","section":"Examples and constraints","topic":"string-sliding-window","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["The answer is a contiguous substring, not a subsequence."],"accessDate":"2026-10-10"},
+    {"url":"https://usaco.guide/silver/two-pointers","title":"USACO Two Pointers","section":"Sliding Window","topic":"string-sliding-window","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Monotone pointers bound total movement linearly."],"accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "2bd6c27b57f2f7a1",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "d901d2ce508ce111",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

@@ -1,0 +1,46 @@
+[
+  {
+    "name": "range sum oracle: sizes 0..9, all valid ranges, all point changes",
+    "ok": true
+  },
+  {
+    "name": "64 undirected graphs: independent closure/components, cycle count, exhaustive forest minimum",
+    "ok": true
+  },
+  {
+    "name": "64 weighted DAGs: exhaustive simple-path oracle versus Dijkstra/Bellman/Floyd and dependency order",
+    "ok": true
+  },
+  {
+    "name": "BFS/DFS directions, disconnected vertices, duplicate multi-sources, endpoint hop counts",
+    "ok": true
+  },
+  {
+    "name": "496 word/grid cases: independent immutable visited-set oracle and board restoration",
+    "ok": true
+  },
+  {
+    "name": "tree traversal orders, height convention, strict sorted construction and BST duplicates",
+    "ok": true
+  },
+  {
+    "name": "trie empty-word/prefix and duplicate storage; Unicode paths",
+    "ok": true
+  },
+  {
+    "name": "prefix counts versus immutable word-set oracle",
+    "ok": true
+  },
+  {
+    "name": "LCA target/self conventions and absent-target precondition counterexample",
+    "ok": true
+  },
+  {
+    "name": "AVL rotation transfers the middle subtree and repairs cached heights bottom-up",
+    "ok": true
+  },
+  {
+    "name": "path halving and rank forest invariants",
+    "ok": true
+  }
+]

@@ -1,5 +1,11 @@
 # R9 — Tasks
 
+> Historical task table. T9 was subsequently completed through recorded
+> delegated Codex reviews under the user's express authorization. All 162
+> current lessons/patterns have hash-bound records. The UI and Windows delivery
+> were then authorized as well. See `docs/completion.md` for current acceptance;
+> the original milestone evidence below is retained as history.
+
 | # | Task | Req | Verification | Status |
 |---|------|-----|--------------|--------|
 | T1 | Run all verification layers on the integrated tree (R6+R7+R8 merged locally) | R9.1 | check:all exit 0; browser 17/5 | done |

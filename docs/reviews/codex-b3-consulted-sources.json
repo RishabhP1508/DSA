@@ -1,0 +1,428 @@
+[
+  {
+    "url": "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheSequentialSearch.html",
+    "title": "TheSequentialSearch",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Algorithm, analysis and visual example"
+    ],
+    "verifiedClaims": [
+      "Sequential search needs no ordering; present uniform-position average is linear."
+    ],
+    "conventions": [],
+    "items": [
+      "linear-search"
+    ]
+  },
+  {
+    "url": "https://cp-algorithms.com/num_methods/binary_search.html",
+    "title": "binary reference",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Search in sorted arrays",
+      "Search in sorted arrays; lower and upper bound",
+      "Search on arbitrary predicate; binary search on the answer",
+      "Search in sorted arrays; implementation",
+      "Lower bound and upper bound; implementation"
+    ],
+    "verifiedClaims": [
+      "Linear scan is O(n).",
+      "Monotone order supports logarithmic search.",
+      "A monotone predicate identifies a transition within correctly bracketed bounds.",
+      "Each range update needs a valid invariant and progress.",
+      "The two bounds delimit the equal-value range.",
+      "Halving requires a sorted search sequence."
+    ],
+    "conventions": [
+      "This app uses inclusive [lo, hi] and excludes mid with mid ± 1."
+    ],
+    "items": [
+      "linear-search",
+      "binary-search",
+      "binary-search-answer",
+      "rotated-array-search",
+      "bounds",
+      "matrix-search",
+      "binary-search-on-answer",
+      "modified-binary-search"
+    ]
+  },
+  {
+    "url": "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheBinarySearch.html",
+    "title": "TheBinarySearch",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Algorithm, analysis and visual example"
+    ],
+    "verifiedClaims": [
+      "Sorted order permits halving; slicing is not constant-time."
+    ],
+    "conventions": [],
+    "items": [
+      "binary-search"
+    ]
+  },
+  {
+    "url": "https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/description/",
+    "title": "shipping reference",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Problem statement, examples, constraints"
+    ],
+    "verifiedClaims": [
+      "Shipping keeps package order and positive weights; at least one day is permitted."
+    ],
+    "conventions": [
+      "This app permits days > n as harmless spare days."
+    ],
+    "items": [
+      "binary-search-answer",
+      "binary-search-on-answer"
+    ]
+  },
+  {
+    "url": "https://leetcode.com/problems/search-in-rotated-sorted-array/description/",
+    "title": "rotated reference",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Problem statement and distinct-value constraints"
+    ],
+    "verifiedClaims": [
+      "The original rotated-array logarithmic search problem guarantees unique values."
+    ],
+    "conventions": [
+      "The app also supports the empty input as -1."
+    ],
+    "items": [
+      "rotated-array-search",
+      "modified-binary-search"
+    ]
+  },
+  {
+    "url": "https://docs.python.org/3.14/library/bisect.html",
+    "title": "bisect reference",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "bisect_left, bisect_right; performance notes; Searching Sorted Lists"
+    ],
+    "verifiedClaims": [
+      "Left/right insertion points differ on equality; membership requires an equality check; insort is O(n)."
+    ],
+    "conventions": [
+      "The hand-written loops use half-open [lo,hi), matching the library insertion-point result."
+    ],
+    "items": [
+      "bounds"
+    ]
+  },
+  {
+    "url": "https://leetcode.com/problems/search-a-2d-matrix/description/",
+    "title": "matrix reference",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Problem statement; row-major ordering requirements"
+    ],
+    "verifiedClaims": [
+      "The flattening problem requires ordered rows with ordered row boundaries."
+    ],
+    "conventions": [
+      "The app permits equal row-boundary values: nondecreasing global order still suffices."
+    ],
+    "items": [
+      "matrix-search"
+    ]
+  },
+  {
+    "url": "https://leetcode.com/problems/search-a-2d-matrix-ii/description/",
+    "title": "staircase reference",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Problem statement; sorted row and column constraints"
+    ],
+    "verifiedClaims": [
+      "Row/column sorting is a weaker input guarantee than global row-major order."
+    ],
+    "conventions": [],
+    "items": [
+      "matrix-search"
+    ]
+  },
+  {
+    "url": "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheBubbleSort.html",
+    "title": "TheBubbleSort",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Algorithm, analysis and visual example"
+    ],
+    "verifiedClaims": [
+      "The basic sort has a triangular comparison count; early exit is a separate variant."
+    ],
+    "conventions": [],
+    "items": [
+      "bubble-sort"
+    ]
+  },
+  {
+    "url": "https://raw.githubusercontent.com/python/cpython/v3.14.2/Objects/listobject.c",
+    "title": "CPython 3.14.2 list implementation",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "list slicing; list_resize; binarysort",
+      "list slicing and allocation",
+      "list_repeat; list_extend",
+      "sort implementation, binarysort and merge routines",
+      "list_sort_impl; key allocation; merge routines",
+      "sort key allocation and merge routines",
+      "key-sort allocation; merge working storage"
+    ],
+    "verifiedClaims": [
+      "List copies allocate references; binary insertion sorting moves entries to make room.",
+      "Lists own allocated arrays of element references.",
+      "Repeated-value expressions allocate temporary lists before extend.",
+      "Python list sort combines ordered runs with temporary storage.",
+      "Keys and merge buffers can occupy linear auxiliary storage.",
+      "In-place list.sort can still allocate linear working memory.",
+      "Mutating a list through sort does not imply constant working space."
+    ],
+    "conventions": [
+      "This app returns a defensive copy and uses ascending minimum-selection rather than descending maximum-selection."
+    ],
+    "items": [
+      "bubble-sort",
+      "selection-sort",
+      "insertion-sort",
+      "quick-sort",
+      "counting-sort",
+      "bucket-sort",
+      "comparators",
+      "merge-intervals",
+      "greedy-interval-scheduling"
+    ]
+  },
+  {
+    "url": "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheSelectionSort.html",
+    "title": "TheSelectionSort",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Algorithm, analysis and visual example"
+    ],
+    "verifiedClaims": [
+      "Selection places one extremal value per pass with quadratic comparisons."
+    ],
+    "conventions": [],
+    "items": [
+      "selection-sort"
+    ]
+  },
+  {
+    "url": "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheInsertionSort.html",
+    "title": "TheInsertionSort",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Algorithm, analysis and visual example"
+    ],
+    "verifiedClaims": [
+      "Insertion shifts larger prefix items; ordered input takes linear work."
+    ],
+    "conventions": [],
+    "items": [
+      "insertion-sort"
+    ]
+  },
+  {
+    "url": "https://opendatastructures.org/ods-python/11_1_Comparison_Based_Sorti.html",
+    "title": "Open Data Structures: comparison-based sorting",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "11.1.1 merge-sort; recursion-tree analysis and figure",
+      "11.1.2 quicksort; randomized pivot and three-way partition",
+      "11.1.3 heap-sort",
+      "11.1.1 merge-sort; recurrence tree and Figure 11.2"
+    ],
+    "verifiedClaims": [
+      "Balanced split, linear merge/copy work per level, logarithmic levels.",
+      "Randomized pivots yield expected logarithmic-depth sorting; equal groups avoid further recursion.",
+      "Classic in-place heapsort reuses the input array.",
+      "Two half-sized calls plus linear copy/merge work give logarithmic levels and O(n log n) time."
+    ],
+    "conventions": [
+      "The app chooses a deterministic middle-position pivot and allocates three lists. Its retained-list memory bound is derived from this code, not from the in-place source."
+    ],
+    "items": [
+      "merge-sort",
+      "quick-sort",
+      "heap-sort",
+      "divide-and-conquer"
+    ]
+  },
+  {
+    "url": "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheMergeSort.html",
+    "title": "TheMergeSort",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Algorithm, analysis and visual example"
+    ],
+    "verifiedClaims": [
+      "Taking left on <= preserves stability; base case is empty/singleton.",
+      "The <= choice keeps equal items stable; base case stops at <=1."
+    ],
+    "conventions": [],
+    "items": [
+      "merge-sort",
+      "divide-and-conquer"
+    ]
+  },
+  {
+    "url": "https://visualgo.net/en/sorting",
+    "title": "visual reference",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Merge sort visualization pseudocode"
+    ],
+    "verifiedClaims": [
+      "Display split halves and the merged destination as separate state."
+    ],
+    "conventions": [],
+    "items": [
+      "merge-sort"
+    ]
+  },
+  {
+    "url": "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheQuickSort.html",
+    "title": "TheQuickSort",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Algorithm, analysis and visual example"
+    ],
+    "verifiedClaims": [
+      "Unbalanced partitions can produce a quadratic sum of subproblem sizes; median-of-three is a heuristic."
+    ],
+    "conventions": [],
+    "items": [
+      "quick-sort"
+    ]
+  },
+  {
+    "url": "https://opendatastructures.org/ods-python/11_2_Counting_Sort_Radix_So.html",
+    "title": "Open Data Structures: counting and radix sorting",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Counting sort; stable placement; radix sorting",
+      "Counting sort and radix sort"
+    ],
+    "verifiedClaims": [
+      "Counting arrays use the bounded key domain; stable per-digit passes enable radix sorting.",
+      "Stable lower-digit-first passes preserve prior order and avoid an array indexed by the whole key range."
+    ],
+    "conventions": [
+      "This app rebuilds integer values from frequencies; record stability is a separate variant.",
+      "This app uses base10 list buckets and nonnegative Python integers."
+    ],
+    "items": [
+      "counting-sort",
+      "radix-sort"
+    ]
+  },
+  {
+    "url": "https://www-cgrl.cs.mcgill.ca/~godfried/teaching/dm-reading-assignments/Bucket-Sorting-Expected-Complexity.pdf",
+    "title": "McGill: Bucket Sorting in Expected Linear Time",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Algorithm steps 2–5; uniform-input occupancy analysis"
+    ],
+    "verifiedClaims": [
+      "The expected-linear theorem uses a number of buckets proportional to n and independent uniform samples."
+    ],
+    "conventions": [
+      "The app maps nonnegative integers with max+1 and defaults to fixed k=5, so it does not inherit that expectation."
+    ],
+    "items": [
+      "bucket-sort"
+    ]
+  },
+  {
+    "url": "https://docs.python.org/3.14/howto/sorting.html",
+    "title": "sort reference",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Sorting basics; Timsort",
+      "Key Functions; Sort Stability; Ascending and Descending; comparison functions",
+      "Key Functions; Sort Stability",
+      "Key functions; stability",
+      "Key Functions"
+    ],
+    "verifiedClaims": [
+      "Python sort is adaptive and sorts each supplied bucket.",
+      "Keys are evaluated once; ties remain stable, including reverse; multiple stable passes express mixed directions.",
+      "Key functions order records and preserve ties.",
+      "Sort-by-start prepares ordered processing; sort consumes working storage.",
+      "Sort by end with one key computation per interval."
+    ],
+    "conventions": [],
+    "items": [
+      "bucket-sort",
+      "comparators",
+      "interval-sorting",
+      "merge-intervals",
+      "greedy-interval-scheduling"
+    ]
+  },
+  {
+    "url": "https://docs.python.org/3.14/library/heapq.html",
+    "title": "heap reference",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Heap invariant; heapify; heappop; max-heap functions"
+    ],
+    "verifiedClaims": [
+      "heapify is linear; min-heap heappop returns the smallest; Python 3.14 includes max-heap functions."
+    ],
+    "conventions": [
+      "This app uses a separate 0-based min-heap."
+    ],
+    "items": [
+      "heap-sort"
+    ]
+  },
+  {
+    "url": "https://leetcode.com/problems/merge-intervals/description/",
+    "title": "intervals reference",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Examples and endpoint constraints",
+      "Examples 1–3; valid endpoint pairs"
+    ],
+    "verifiedClaims": [
+      "Closed ranges that touch can be merged.",
+      "The output is a union of overlaps; touching endpoints merge."
+    ],
+    "conventions": [
+      "Closed ranges with start <= end; fresh output pairs; nonmutating input."
+    ],
+    "items": [
+      "interval-sorting",
+      "merge-intervals"
+    ]
+  },
+  {
+    "url": "https://www.cs.cornell.edu/courses/cs482/2006su/handouts/ahead.pdf",
+    "title": "Cornell: Greedy Stays Ahead",
+    "accessDate": "2026-10-10",
+    "sections": [
+      "Interval scheduling example and proof",
+      "Interval scheduling example; induction and optimality contradiction"
+    ],
+    "verifiedClaims": [
+      "Earliest finish leaves a maximum-cardinality compatible set.",
+      "Earliest finish stays ahead and maximizes the compatible interval count."
+    ],
+    "conventions": [
+      "This app distinguishes closed merging intervals from half-open start<end meeting intervals.",
+      "The app treats touching positive-duration meetings as compatible."
+    ],
+    "items": [
+      "interval-sorting",
+      "greedy-interval-scheduling"
+    ]
+  }
+]

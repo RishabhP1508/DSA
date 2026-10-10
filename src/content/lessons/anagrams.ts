@@ -22,7 +22,7 @@ The **sorting** method: \`sorted(a) == sorted(b)\`. If the multiset of character
 
 The **frequency-map** method: count characters in each string (from the frequency lesson) and compare the maps. Building two maps and comparing them is **O(n)** time and **O(k)** space — asymptotically faster than sorting. For a fixed alphabet the map even fits in O(1) space.
 
-So both are correct, but they sit at different complexities: **O(n log n)** (sorting, O(1)-ish extra space) versus **O(n)** (counting, O(k) space). The frequency approach also naturally handles "are these two the same multiset?" style questions and grouping anagrams together.`,
+So both are correct, but they sit at different complexities: **O(n log n)** (sorting, O(n) extra space for the copied lists) versus **O(n)** (counting, O(k) space). The frequency approach also naturally handles "are these two the same multiset?" style questions and grouping anagrams together.`,
 
   vocabulary: [
     { term: "Anagram", definition: "A string formed by rearranging the letters of another." },
@@ -41,8 +41,8 @@ So both are correct, but they sit at different complexities: **O(n log n)** (sor
   },
 
   complexity: [
-    { operation: "Sorting method", best: "O(n log n)", average: "O(n log n)", worst: "O(n log n)", space: "O(n)", note: "Two sorts of length-n strings." },
-    { operation: "Frequency method", best: "O(n)", average: "O(n)", worst: "O(n)", space: "O(k)", note: "Count both, compare maps; faster asymptotically." },
+    { operation: "Sorting method", best: "O(n)", average: "O(n log n)", worst: "O(n log n)", space: "O(n)", note: "Two sorts of length-n strings." },
+    { operation: "Frequency method", best: "O(n)", average: "O(n)", worst: "O(n*k)", space: "O(k)", note: "Expected O(n); collision-heavy dictionary operations can cost O(k). Bounded-size alphabet makes k constant." },
   ],
 
   complexityExplanation: {
@@ -68,7 +68,7 @@ So both are correct, but they sit at different complexities: **O(n log n)** (sor
       { lines: [5], description: "Comparing the two sorted lists is O(n).", cost: "O(n)", dimension: "time" },
       { lines: [5], description: "Two sorted lists of n characters.", cost: "O(n)", dimension: "space" },
     ],
-    assumptions: ["Character comparisons for sorting are O(1).", "No normalization applied in this simple version."],
+    assumptions: ["Character comparisons for sorting are O(1).", "No normalization applied in this simple version. The counting alternative assumes expected constant-time dict operations and bounded-size counts. Python sort can exploit already ordered runs, so O(n log n) is its worst-case bound."],
     tradeoffs: "Counting characters compares two maps in O(n) time and O(k) space — asymptotically faster than sorting's O(n log n); sorting wins only on brevity.",
     fixedDataNote: "This run compares 'listen'/'silent' (n=6, anagrams → True). The O(n log n) bound describes the sorting method for any n.",
   },
@@ -139,13 +139,15 @@ So both are correct, but they sit at different complexities: **O(n log n)** (sor
       verifiedClaims: ["Counter(s) tallies element counts and supports equality comparison"],
       accessDate: "2026-09-20",
     },
+    {"url":"https://docs.python.org/3.14/howto/sorting.html","title":"Python Sorting Techniques","section":"Sorting basics; Timsort","topic":"anagrams","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["sorted creates a new list; adaptive sorting exploits ordered runs."],"accessDate":"2026-10-10"},
+    {"url":"https://docs.python.org/3.14/library/collections.html#collections.Counter","title":"Python Counter","section":"Counter objects","topic":"anagrams","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Counter tallies hashable objects and supports equality of counts."],"accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "2a2a0feb9b820920",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "0eba2489bd20916a",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

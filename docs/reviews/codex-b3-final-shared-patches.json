@@ -1,0 +1,192 @@
+[
+  {
+    "uid": "lesson:linear-search:ls-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: decide if repeated linear search is right when you query the same array thousands of times for different values.",
+      "The costly pattern is rescanning the whole array per query — O(n) each, multiplied by many queries.",
+      "Key property: the array is fixed across queries, so you can preprocess it once and reuse the result.",
+      "Approach: build a set (hash index) once, then answer each membership query against it.",
+      "One expected O(n) build plus expected O(1) per query gives expected O(n+q), compared with O(n*q) worst-case repeated scans. For tiny data or few queries, constants and early matches may still favor scanning.",
+      "Answer: no — repeated linear search is O(n·q); build a set once (expected O(n)) and query in expected O(1), giving O(n + q)."
+    ]
+  },
+  {
+    "uid": "lesson:linear-search:ls-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You will search the SAME array thousands of times, each query asking whether a different value is present. Repeated linear scans vs building an index first. Values are hashable, and hashing costs are expected under ordinary hashes.",
+      "approaches": [
+        {
+          "id": "build-set",
+          "label": "Build a set once, then query membership",
+          "requiredReasonIds": [
+            "amortize-queries"
+          ]
+        },
+        {
+          "id": "repeated-linear",
+          "label": "Linear-search the array on every query",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Repeated scans have O(n*q) worst-case work, while a set gives expected O(n+q) under the stated hashing model. This drill asks for the preprocessing strategy that improves the general many-query bound."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "amortize-queries",
+          "text": "The array is fixed, so a one-time expected O(n) set build lets each of the q queries run in expected O(1), giving O(n + q) overall instead of O(n·q)."
+        },
+        {
+          "id": "linear-is-faster-repeated",
+          "text": "Repeated linear search is faster than a set because it avoids the build cost each time.",
+          "contradictory": true
+        },
+        {
+          "id": "set-query-linear",
+          "text": "Membership in a set costs O(n) per query, no better than scanning.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "build-set"
+      ],
+      "modelExplanation": "No — repeated linear search is O(n) per query = O(n·q). Build a set once (expected O(n)) then query in expected O(1), giving O(n + q)."
+    }
+  },
+  {
+    "uid": "lesson:binary-search:bs-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You will search a currently-unsorted collection 100,000 times for different values. Compare linear each time, sort-then-binary-search, or build a set. For pure membership, which is usually best? Assume hashable comparable values and ordinary hashing.",
+      "approaches": [
+        {
+          "id": "build-set",
+          "label": "Build a hash set once, then query",
+          "requiredReasonIds": [
+            "set-expected-o1"
+          ]
+        },
+        {
+          "id": "sort-then-bs",
+          "label": "Sort once, then binary-search each query",
+          "requiredReasonIds": [
+            "sorted-ordered-queries"
+          ]
+        },
+        {
+          "id": "linear-each",
+          "label": "Linear search each time",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Repeated scans have O(n*q) worst-case work; a set gives expected O(n+q) under the stated hashing model."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "set-expected-o1",
+          "text": "For pure membership over many queries, an expected O(n) set build then expected-O(1) lookups gives O(n + q) — the best of the three."
+        },
+        {
+          "id": "sorted-ordered-queries",
+          "text": "Sorting once (O(n log n)) then binary-searching (O(q log n)) also answers ORDERED queries like floor/ceil and ranges that a set cannot."
+        },
+        {
+          "id": "need-linear-scan",
+          "text": "You must scan linearly because the values cannot be hashed.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "build-set"
+      ],
+      "alternatives": [
+        {
+          "approachId": "sort-then-bs",
+          "conditions": "When you also need ORDERED queries such as floor/ceil or ranges, not just membership.",
+          "tradeoff": "O(n log n) worst-case sorting plus O(q log n) queries, a higher general bound than expected hash membership, with support for ordered queries.",
+          "requiredReasonIds": [
+            "sorted-ordered-queries"
+          ]
+        }
+      ],
+      "modelExplanation": "For pure membership across many queries, build a set once (expected O(n)) then query in expected O(1) → O(n + q). Sort-then-binary-search also works and additionally supports ordered queries like bounds."
+    }
+  },
+  {
+    "uid": "lesson:bubble-sort:bub-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You must sort n = 1,000,000 elements. You must decide whether bubble sort is acceptable, and if not, what to use.",
+      "approaches": [
+        {
+          "id": "nlogn-sort",
+          "label": "Use an O(n log n) sort (Python's sorted/Timsort)",
+          "requiredReasonIds": [
+            "quadratic-too-slow"
+          ]
+        },
+        {
+          "id": "bubble",
+          "label": "Use bubble sort",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "The shown basic bubble sort makes 499,999,500,000 adjacent comparisons at n=1,000,000. A worst-case O(n log n) comparison sort has a much smaller growth scale; this count does not predict elapsed seconds."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "quadratic-too-slow",
+          "text": "Bubble makes about 5×10^11 comparisons; n log2(n) is about 2×10^7 as a theoretical scale for a logarithmic-depth sort, not a measured operation count."
+        },
+        {
+          "id": "bubble-is-nlogn",
+          "text": "Bubble sort runs in O(n log n), so it scales fine to a million elements.",
+          "contradictory": true
+        },
+        {
+          "id": "quadratic-fine",
+          "text": "10^12 operations completes essentially instantly, so quadratic is acceptable.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "nlogn-sort"
+      ],
+      "modelExplanation": "Use a worst-case O(n log n) sort such as Python sorted. Basic bubble makes n(n-1)/2 comparisons: 499,999,500,000 at n=1,000,000. n log2(n) is about 20,000,000 as a growth-scale comparison, not an exact count or measured run time."
+    }
+  },
+  {
+    "uid": "lesson:counting-sort:cnt-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: choose between counting sort and an O(n log n) comparison sort for 1,000,000 exam scores each in 0–100, and give the complexity.",
+      "A general comparison sort has O(n log n) worst-case work. The fixed small integer range supports O(n+101) counting; adaptive sorting may also exploit ordered runs.",
+      "Key property: every value lies in a small fixed range (0–100), so the max value hi is tiny relative to n.",
+      "Approach: use counting sort over the 0–100 range.",
+      "A 101-entry key range gives O(n + 101) work. This improves the worst-case general comparison bound; it does not promise a measured speedup for every input.",
+      "Counting sort uses O(n + 101) time for keys in 0..100 and is a strong fit. This avoids the worst-case n log n comparison bound. Exact speed depends on the implementation and data; Python sorting can adapt to ordered runs."
+    ]
+  },
+  {
+    "uid": "lesson:bucket-sort:buck-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: judge why bucket sort might beat an O(n log n) comparison sort for a million floats uniformly distributed in [0, 1).",
+      "A general comparison sort has O(n log n) worst-case work; this explicit independent uniform input model and k proportional to n support a lower expected bucket-sort bound.",
+      "Uniform independent samples and k proportional to n give constant expected occupancy per bucket.",
+      "Use k=Θ(n) equal-width float buckets and an integer floor(x*k) index, then sort and concatenate.",
+      "With k=Θ(n) and independent uniform samples, expected bucket occupancy is constant and the total sort can be expected O(n). For floats use an integer index floor(x*k); the shown integer mapping must be adapted. Fixed k=5 does not justify this bound.",
+      "With k=Θ(n) and independent uniform samples, expected bucket occupancy is constant and the total sort can be expected O(n). For floats use an integer index floor(x*k); the shown integer mapping must be adapted. Fixed k=5 does not justify this bound."
+    ]
+  },
+  {
+    "uid": "lesson:comparators:cmp-choose-1",
+    "field": "hints",
+    "value": [
+      "Sort records by A ascending and numeric B descending. Give a key and explain why a computed key is useful; also describe an option when B is a string.",
+      "A cmp_to_key wrapper may invoke Python comparison code O(n log n) times in the worst case, while a key function is computed once per item. Actual speed depends on callback work and input.",
+      "Negation reverses an ordered numeric key; strings cannot be negated. Stability supports a general two-pass method.",
+      "Approach: pass a tuple key that negates the descending field, e.g. key=lambda x: (x.a, -x.b).",
+      "For numeric B, key=lambda x: (x.a, -x.b). Each key is computed once. For strings or arbitrary comparable B, stable-sort by B descending, then stable-sort by A ascending; the last pass preserves B order on A ties. cmp_to_key is also valid if its comparator defines a consistent order, but may call Python comparison code many times.",
+      "For numeric B, key=lambda x: (x.a, -x.b). Each key is computed once. For strings or arbitrary comparable B, stable-sort by B descending, then stable-sort by A ascending; the last pass preserves B order on A ties. cmp_to_key is also valid if its comparator defines a consistent order, but may call Python comparison code many times."
+    ]
+  }
+]

@@ -14,6 +14,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getSharedEngine } from "../engine/engine";
 import { Replay, nextPlayIndex, isBreakpointStop, isResultStale } from "../engine/replay";
 import type { RunResult, TraceEvent, EngineState } from "../core/types";
+import type { RunProgress } from '../engine/engine';
 
 /** Playback speeds in steps per second. */
 export const PLAYBACK_SPEEDS = [0.5, 1, 2, 4] as const;
@@ -26,6 +27,9 @@ export function useEngine(owner = "workspace") {
   const [state, setState] = useState<EngineState>(engine.state);
   const [result, setResult] = useState<RunResult | null>(null);
   const [position, setPosition] = useState(0);
+  const [progress, setProgress] = useState<RunProgress | null>(null);
+  const requestToken = useRef(0);
+  const requestedSource = useRef<{source: string; stdin: string} | null>(null);
 
   // Playback (R4.3)
   const [playing, setPlaying] = useState(false);
@@ -34,16 +38,24 @@ export function useEngine(owner = "workspace") {
 
   useEffect(() => {
     const unsubscribe = engine.subscribe(setState);
-    return unsubscribe;
-  }, [engine]);
+    const unsubscribeProgress = engine.subscribeProgress(update => {
+      if (update.owner === owner && update.source === requestedSource.current?.source && update.stdin === requestedSource.current?.stdin) setProgress(update);
+    });
+    return () => { unsubscribe(); unsubscribeProgress(); requestToken.current++; };
+  }, [engine, owner]);
 
   const run = useCallback(
     async (source: string, stdin?: string) => {
+      const token = ++requestToken.current;
+      requestedSource.current = {source, stdin: stdin ?? ''};
+      setProgress(null);
       setRunning(true);
       setPlaying(false);
       const res = await engine.run(source, { stdin, owner });
+      if (token !== requestToken.current) return;
       setRunning(false);
-      if (res.status === "stopped") return; // superseded by a newer run
+      setProgress(null);
+      if (res.status === "stopped" && res.stopReason !== 'user') return;
       replayRef.current = new Replay(res);
       setResult(res);
       setPosition(0);
@@ -153,6 +165,7 @@ export function useEngine(owner = "workspace") {
     running,
     state,
     result,
+    progress,
     event,
     position,
     length,

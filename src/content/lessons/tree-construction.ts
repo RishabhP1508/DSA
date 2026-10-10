@@ -29,11 +29,7 @@ export const treeConstruction: LessonDefinition = {
   area: "Trees and tries",
   prerequisites: ["bst-operations", "merge-sort"],
 
-  explanation: `Sometimes you build a tree *to guarantee a good shape*. **Constructing a balanced BST from a sorted array** is the classic example, and it's a neat divide-and-conquer: pick the **middle** element as the **root** (so equal numbers of smaller and larger values fall on each side), then recursively build the **left subtree from the left half** and the **right subtree from the right half**. Because the middle splits the array evenly at every level, the resulting tree has height ≈ log n — **balanced by construction**, which keeps later search/insert at O(log n).
-
-For \`[1..7]\` the middle \`4\` becomes the root, \`[1,2,3]\` builds the left subtree (rooted at \`2\`), and \`[5,6,7]\` the right (rooted at \`6\`) — hence \`4 2 6\`. This is why you'd deliberately build rather than insert: inserting a *sorted* sequence one-by-one produces a degenerate O(n)-height tree, but this construction produces a balanced one directly.
-
-The same "middle as root, recurse on halves" idea appears when **rebuilding a tree from traversals** (e.g. from preorder + inorder, where preorder gives the root and inorder splits left/right). This build is **O(n)** time when done carefully (though the slicing version here copies subarrays, adding overhead — noted in the complexity panel) and **O(h) = O(log n)** recursion space for the balanced result.`,
+  explanation: "To build a height-balanced BST from **strictly increasing keys**, choose the middle key as root, recursively build the keys before it as the left subtree and the keys after it as the right. The two parts differ in size by at most one, producing logarithmic height. This constructs a balanced shape once; it does not add an AVL balancing rule for later updates.\n\nThis Python version slices its list at every level. It creates n nodes, but copies O(n) key references across each of O(log n) levels: O(n log(n+1)) time. Live slices along a recursive path have geometrically decreasing total length, so their peak auxiliary storage is O(n); the recursion itself adds O(log(n+1)). The n output tree nodes are excluded from auxiliary storage. An index-bound variant avoids slicing and runs in O(n) time, but is a different implementation, not this algorithm's best case.\n\nReconstruction from inorder plus preorder/postorder is another construction task. Preorder's first key (or postorder's last key) determines the root; its position in inorder partitions the subtrees. It does not necessarily choose a middle key or produce a balanced tree, and distinct-key or duplicate-disambiguation rules are needed.",
 
   vocabulary: [
     { term: "Balanced construction", definition: "Building a tree whose height is ~log n by design." },
@@ -44,49 +40,126 @@ The same "middle as root, recurse on halves" idea appears when **rebuilding a tr
   ],
 
   concepts: {
-    purpose: "Build trees with a desired (usually balanced) shape, or reconstruct them from traversals.",
-    operations: "Pick the middle as root; recurse on the left and right halves.",
-    uses: "Balanced BST from sorted data, rebuilding from preorder+inorder, constructing complete trees.",
-    tradeoffs: "Guarantees balance (O(log n) height) vs inserting sorted data (O(n) height); slicing copies add overhead.",
-    commonMistakes: "Off-by-one around mid (excluding/duplicating the root); slicing when index bounds would be cheaper; forgetting the empty base case.",
-    edgeCases: "Empty array → None. One element → a single leaf. Even lengths pick one of the two middles.",
-  },
+  "purpose": "Build trees with a desired (usually balanced) shape, or reconstruct them from traversals.",
+  "operations": "Pick the middle as root; recurse on the left and right halves.",
+  "uses": "Balanced BST from sorted data, rebuilding from preorder+inorder, constructing complete trees.",
+  "tradeoffs": "Guarantees balance (O(log n) height) vs inserting sorted data (O(n) height); slicing copies add overhead.",
+  "commonMistakes": "Off-by-one around mid (excluding/duplicating the root); slicing when index bounds would be cheaper; forgetting the empty base case.",
+  "edgeCases": "Empty input returns None. Require strictly increasing keys; midpoint splitting duplicates could put an equal key on the left and conflict with the duplicate-right convention."
+},
 
   complexity: [
-    { operation: "build balanced BST", best: "O(n)", average: "O(n log n)", worst: "O(n log n)", space: "O(n)", note: "Index-based build is O(n); this slicing version copies subarrays (O(n log n) total copies)." },
-  ],
+  {
+    "operation": "build balanced BST",
+    "best": "O(n log(n+1))",
+    "worst": "O(n log(n+1))",
+    "space": "O(n)",
+    "note": "Displayed slicing implementation; an index-bound O(n) builder is a separate variant."
+  }
+],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [
-      { symbol: "n", meaning: "the number of elements / nodes" },
-      { symbol: "h", meaning: "the resulting height (~log n, balanced by construction)" },
-    ],
-    costModel: "Creating each node is O(1). This version also slices arr[:mid] and arr[mid+1:], each copying its length.",
-    time: {
-      bound: "O(n log n)",
-      case: "worst",
-      explanation: "There are n nodes to create, which alone is O(n). However, this implementation SLICES the array at each call (arr[:mid], arr[mid+1:]), and slicing copies elements. Across the ~log n levels of recursion, the total copying is O(n) per level × log n levels = O(n log n). An index-based version (passing lo/hi bounds instead of slices) avoids the copies and builds the tree in O(n) — a good optimization to note.",
-      otherCases: [
-        { case: "best", bound: "O(n)", note: "Index-based construction (no slicing) creates n nodes in O(n)." },
-      ],
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of elements / nodes"
     },
-    space: {
-      bound: "O(n)",
-      case: "worst",
-      explanation: "The output tree has n nodes (O(n)). The recursion stack is O(h) = O(log n) for the balanced result, and the slices create O(n log n) transient copies in total (though not all alive at once). The dominant persistent structure is the O(n) tree.",
-      inputOutputNote: "The n-node tree is the required output; the recursion stack is O(log n); slice copies are transient overhead.",
-    },
-    derivation: [
-      { lines: [11], description: "Choosing the middle splits the array evenly, giving a balanced tree (height ~log n).", cost: "O(1)", dimension: "time" },
-      { lines: [12, 13, 14], description: "Create each of the n nodes and recurse on halves.", cost: "O(n log n)", dimension: "time" },
-      { lines: [12], description: "The tree holds n nodes; recursion stack is O(log n).", cost: "O(n)", dimension: "space" },
-    ],
-    assumptions: ["The input array is sorted.", "Node creation is O(1).", "Slicing copies subarrays (the source of the extra log n factor here)."],
-    tradeoffs: "Pass lo/hi indices instead of slices to build in O(n) time and O(log n) space. Building balanced beats inserting sorted values one-by-one (which yields an O(n)-height degenerate tree).",
-    counters: [{ label: "nodes built", definition: "TreeNode constructions (line 12)", countLines: [12] }],
-    fixedDataNote: "This run builds a balanced BST from [1..7]: root 4, left-root 2, right-root 6 → '4 2 6'. The O(n)/O(n log n) bounds depend on index-based vs slicing construction.",
+    {
+      "symbol": "h",
+      "meaning": "the resulting height (~log n, balanced by construction)"
+    }
+  ],
+  "costModel": "Creating each node is O(1). This version also slices arr[:mid] and arr[mid+1:], each copying its length.",
+  "time": {
+    "bound": "O(n log(n+1))",
+    "case": "worst",
+    "explanation": "There are n nodes to create, which alone is O(n). However, this implementation SLICES the array at each call (arr[:mid], arr[mid+1:]), and slicing copies elements. Across the ~log n levels of recursion, the total copying is O(n) per level × log n levels = O(n log n). An index-based version (passing lo/hi bounds instead of slices) avoids the copies and builds the tree in O(n) — a good optimization to note.",
+    "otherCases": []
   },
+  "space": {
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "Recursion has O(log(n+1)) depth, but ancestor frames retain copied list slices. The simultaneously live slice references total O(n) along a shrinking path. The n-node result is output storage and is excluded.",
+    "inputOutputNote": "Exclude the supplied sorted array and the returned n-node tree. Live copied slices use O(n) auxiliary storage; total copied references over the run are O(n log(n+1))."
+  },
+  "derivation": [
+    {
+      "lines": [
+        11
+      ],
+      "description": "Choosing the middle splits the array evenly, giving a balanced tree (height ~log n).",
+      "cost": "O(1)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        12,
+        13,
+        14
+      ],
+      "description": "Create each of the n nodes and recurse on halves.",
+      "cost": "O(n log n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        12
+      ],
+      "description": "The tree holds n nodes; recursion stack is O(log n).",
+      "cost": "O(n)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Input keys are strictly increasing and comparisons/indexing use constant-cost operations.",
+    "Python list slicing copies key references.",
+    "The panel describes the displayed slicing builder; the output tree is excluded from working storage."
+  ],
+  "tradeoffs": "Pass lo/hi indices instead of slices to build in O(n) time and O(log n) space. Building balanced beats inserting sorted values one-by-one (which yields an O(n)-height degenerate tree).",
+  "counters": [
+    {
+      "label": "nodes built",
+      "definition": "TreeNode constructions (line 12)",
+      "countLines": [
+        12
+      ]
+    }
+  ],
+  "fixedDataNote": "This run builds a balanced BST from [1..7]: root 4, left-root 2, right-root 6 → '4 2 6'. The O(n)/O(n log n) bounds depend on index-based vs slicing construction.",
+  "references": [
+    {
+      "url": "https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/",
+      "title": "LeetCode: sorted array to BST",
+      "section": "Description, examples, constraints",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Input keys are strictly increasing.",
+        "Output should be height balanced."
+      ],
+      "conventions": [
+        "App accepts an empty array and uses the upper middle on even lengths."
+      ],
+      "accessDate": "2026-10-10"
+    },
+    {
+      "url": "https://opendatastructures.org/ods-python/6_2_BinarySearchTree_Unbala.html",
+      "title": "Open Data Structures: unbalanced BST",
+      "section": "6.2.1 searching; 6.2.2 addition; 6.2.4 summary; Figures 6.5–6.7",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "A search follows one root-to-leaf path.",
+        "Unbalanced height can be linear."
+      ],
+      "conventions": [
+        "Source rejects duplicate keys; this insertion example sends equal keys right."
+      ],
+      "accessDate": "2026-10-10"
+    }
+  ]
+},
 
   code,
 
@@ -142,36 +215,48 @@ The same "middle as root, recurse on halves" idea appears when **rebuilding a tr
     },
   ],
 
-  review: `**Tree construction** builds a tree with a chosen shape. From a **sorted array**, picking the **middle as the root** and recursing on the halves yields a **balanced BST** (height ~log n) — far better than the degenerate tree that sequential sorted insertion produces. Node creation is **O(n)**; this slicing version adds an O(log n) factor (index-based avoids it), with **O(log n)** recursion space. The same idea rebuilds trees from traversals.`,
+  review: "Strictly increasing keys can be made into a balanced BST by choosing the middle key and recursively splitting the two sides. This displayed Python builder uses slices: O(n log(n+1)) time and O(n) peak auxiliary slice storage, excluding the output tree. Passing index bounds is a separate O(n)-time builder with O(log(n+1)) frames. Reconstruction from preorder/inorder instead follows the supplied traversal roots and need not produce a balanced tree.",
 
   expectedOutput: "4 2 6\n",
 
   references: [
-    {
-      url: "https://neetcode.io/roadmap",
-      title: "NeetCode roadmap",
-      section: "Trees — Convert Sorted Array to BST / rebuild from traversals",
-      topic: "trees/construction",
-      purpose: "Confirm the middle-as-root balanced construction and reconstruction from traversals.",
-      verifiedClaims: ["Choosing the middle of a sorted array as the root builds a height-balanced BST"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://runestone.academy/ns/books/published/pythonds3/Trees/index.html",
-      title: "Trees and Tree Algorithms — Runestone",
-      section: "Building trees / divide and conquer",
-      topic: "trees/construction",
-      purpose: "Cross-check the divide-and-conquer construction and its recursion structure.",
-      verifiedClaims: ["Divide-and-conquer construction builds subtrees from array halves"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/",
+    "title": "LeetCode: sorted array to BST",
+    "section": "Description, examples, constraints",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Input keys are strictly increasing.",
+      "Output should be height balanced."
+    ],
+    "conventions": [
+      "App accepts an empty array and uses the upper middle on even lengths."
+    ],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://opendatastructures.org/ods-python/6_2_BinarySearchTree_Unbala.html",
+    "title": "Open Data Structures: unbalanced BST",
+    "section": "6.2.1 searching; 6.2.2 addition; 6.2.4 summary; Figures 6.5–6.7",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "A search follows one root-to-leaf path.",
+      "Unbalanced height can be linear."
+    ],
+    "conventions": [
+      "Source rejects duplicate keys; this insertion example sends equal keys right."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "fb994923f2e8b8b5",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "a54955dd8b1c3402",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 5,
   },
 };

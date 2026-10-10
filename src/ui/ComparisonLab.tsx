@@ -9,36 +9,19 @@
  * as a benchmark.
  */
 
-import { useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { getSharedEngine } from "../engine/engine";
 import { COMPARISONS } from "../content/comparisons";
-import type { ComparisonExperiment } from "../core/types";
+import { parseComparisonResult } from "./comparison-result";
+import { comparisonProgram } from "./comparison-program";
 
 type Row = { size: number; baseOps: number; impOps: number; equal: boolean };
 
-// Wrap an authored implementation into a runnable program that generates the
-// input, counts `__op()` calls, runs solve, and prints "result|ops".
-function program(exp: ComparisonExperiment, code: string, size: number): string {
-  return (
-    `_ops = [0]\n` +
-    `def __op():\n    _ops[0] += 1\n` +
-    exp.inputGenerator +
-    `\n` +
-    code +
-    `\n_args = gen(${size})\n_res = solve(*_args)\n` +
-    `print(repr(_res) + "|" + str(_ops[0]))\n`
-  );
-}
-
-async function runOne(exp: ComparisonExperiment, code: string, size: number) {
-  const engine = getSharedEngine();
-  const res = await engine.run(program(exp, code, size), { owner: "comparison" });
-  const line = (res.stdout || "").trim().split("\n").pop() ?? "";
-  const [result, ops] = line.split("|");
-  return { result, ops: Number(ops) };
-}
-
 export function ComparisonLab() {
+  const engine = getSharedEngine();
+  const componentId = useId();
+  const requestNumber = useRef(0);
+  const active = useRef<{owner: string} | null>(null);
   const [selected, setSelected] = useState(COMPARISONS[0].id);
   const [rows, setRows] = useState<Row[]>([]);
   const [running, setRunning] = useState(false);
@@ -46,15 +29,41 @@ export function ComparisonLab() {
 
   const exp = COMPARISONS.find((c) => c.id === selected) ?? COMPARISONS[0];
 
+  useEffect(() => () => {
+    const request = active.current;
+    active.current = null;
+    if (request) engine.stop(request.owner);
+  }, [engine]);
+
+  const stop = () => {
+    const request = active.current;
+    if (!request) return;
+    // Invalidate before settling the engine promise, so its continuation cannot
+    // publish results or launch the next implementation/size.
+    active.current = null;
+    engine.stop(request.owner);
+    setRows([]);
+    setError("Comparison stopped. No incomplete samples are shown.");
+    setRunning(false);
+  };
+
   const run = async () => {
+    if (active.current) return;
+    const request = {owner: `comparison:${componentId}:${++requestNumber.current}`};
+    active.current = request;
+    const isCurrent = () => active.current === request;
     setRunning(true);
     setError(null);
     setRows([]);
     const out: Row[] = [];
     try {
       for (const size of exp.sizes) {
-        const b = await runOne(exp, exp.baseline.code, size);
-        const i = await runOne(exp, exp.improved.code, size);
+        const baseline = await engine.run(comparisonProgram(exp, exp.baseline.code, size), {owner: request.owner});
+        if (!isCurrent()) return;
+        const b = parseComparisonResult(baseline);
+        const improved = await engine.run(comparisonProgram(exp, exp.improved.code, size), {owner: request.owner});
+        if (!isCurrent()) return;
+        const i = parseComparisonResult(improved);
         const equal = b.result === i.result;
         if (!equal) {
           setError(`At size ${size} the two implementations disagreed — comparison aborted.`);
@@ -64,9 +73,12 @@ export function ComparisonLab() {
         setRows([...out]);
       }
     } catch (e) {
-      setError(String(e));
+      if (isCurrent()) setError(e instanceof Error ? e.message : String(e));
     } finally {
-      setRunning(false);
+      if (isCurrent()) {
+        active.current = null;
+        setRunning(false);
+      }
     }
   };
 
@@ -75,7 +87,10 @@ export function ComparisonLab() {
       <h4>Compare algorithms</h4>
       <label className="speed-control">
         Experiment
-        <select value={selected} onChange={(e) => { setSelected(e.target.value); setRows([]); }}>
+        <select value={selected} disabled={running} onChange={(e) => {
+          if (active.current) return;
+          setSelected(e.target.value); setRows([]); setError(null);
+        }}>
           {COMPARISONS.map((c) => (
             <option key={c.id} value={c.id}>{c.title}</option>
           ))}
@@ -89,7 +104,8 @@ export function ComparisonLab() {
       <button onClick={run} disabled={running}>
         {running ? "Comparing…" : "Compare implementations"}
       </button>
-      {error && <p className="error">{error}</p>}
+      {running && <button onClick={stop}>Stop comparison</button>}
+      {error && <p className="error" role="status">{error}</p>}
       {rows.length > 0 && (
         <>
           <table className="vars">

@@ -41,11 +41,7 @@ export const unionFind: LessonDefinition = {
   area: "Graphs",
   prerequisites: ["connected-components"],
 
-  explanation: `**Union-Find** (a.k.a. Disjoint Set Union, DSU) tracks a collection of **disjoint sets** and supports two operations blazingly fast: **find(x)** returns a representative "root" for x's set, and **union(a, b)** merges the two sets containing a and b. Two elements are in the same set exactly when they share a root. It's the go-to structure for **dynamic connectivity** — answering "are these connected?" as edges are added incrementally.
-
-Each set is a tree of parent pointers; the root points to itself. Two optimizations make it nearly constant time. **Path compression** (in \`find\`) flattens the tree by pointing nodes closer to the root as you climb. **Union by rank** attaches the shorter tree under the taller one, keeping trees shallow. Together they give an amortized cost of **O(α(n))** per operation — where α is the inverse Ackermann function, effectively ≤ 4 for any realistic n, so **practically constant**.
-
-Here, unioning {0,1,2} and {3,4} leaves \`count = 2\` sets; \`find(0) == find(2)\` is True (connected), \`find(0) == find(3)\` is False (separate). Union-Find shines where traversal-based component counting struggles: **incrementally arriving edges** (add an edge → one union, no re-traversal), and it's the backbone of **Kruskal's MST** (a later lesson) for detecting cycles. The cue: dynamic "connect / are-connected" queries → Union-Find.`,
+  explanation: "**Union-Find (DSU)** maintains disjoint groups. find(x) returns a representative; union(a,b) merges groups when their representatives differ. It supports incremental undirected connectivity and cycle checks, but it does not provide paths, shortest distances, or efficient arbitrary edge deletion.\n\nTwo optimizations work together. Union by rank attaches a smaller-rank root to a larger-rank root, increasing rank only when equal ranks merge. Rank is an upper bound on height after compression, not the current measured height. The displayed find uses **path halving**: point a visited node at its grandparent and advance there.\n\nInitializing n elements costs O(n) time and stored space. After initialization, m finds/unions cost O(m*α(n)) amortized with both optimizations, while an individual operation can take O(log(n+1)) worst-case. Its iterative working space is O(1). Rank alone guarantees logarithmic height; omitting both balancing and compression can create a linear chain.",
 
   vocabulary: [
     { term: "Disjoint sets", definition: "A partition of elements into non-overlapping groups." },
@@ -57,95 +53,302 @@ Here, unioning {0,1,2} and {3,4} leaves \`count = 2\` sets; \`find(0) == find(2)
   ],
 
   concepts: {
-    purpose: "Maintain disjoint sets with near-constant-time merge and connectivity queries as edges arrive.",
-    operations: "find (with path compression), union (by rank/size); track set count.",
-    uses: "Dynamic connectivity, Kruskal's MST cycle check, grouping/equivalence, percolation, account merging.",
-    tradeoffs: "Amortized O(α(n)) ≈ O(1) per op; excellent for incremental edges but doesn't give paths or handle deletions.",
-    commonMistakes: "Omitting path compression / union by rank (degrades toward O(n) per op); comparing elements instead of roots; forgetting union returns whether a merge happened (cycle check).",
-    edgeCases: "union of already-connected elements is a no-op (returns False, useful for cycle detection). Each element starts in its own set. No efficient split/delete.",
-  },
+  "purpose": "Maintain disjoint sets with near-constant-time merge and connectivity queries as edges arrive.",
+  "operations": "find (with path compression), union (by rank/size); track set count.",
+  "uses": "Dynamic connectivity, Kruskal's MST cycle check, grouping/equivalence, percolation, account merging.",
+  "tradeoffs": "Excellent for incremental undirected connectivity; it cannot reconstruct paths or efficiently undo arbitrary deletions. Rank alone is logarithmic, while rank plus compression is inverse-Ackermann amortized.",
+  "commonMistakes": "Omitting path compression / union by rank (degrades toward O(n) per op); comparing elements instead of roots; forgetting union returns whether a merge happened (cycle check).",
+  "edgeCases": "union of already-connected elements is a no-op (returns False, useful for cycle detection). Each element starts in its own set. No efficient split/delete."
+},
 
   complexity: [
-    { operation: "find / union", best: "O(1)", average: "O(α(n))", worst: "O(α(n))", space: "O(n)", note: "Amortized inverse-Ackermann with both optimizations — effectively constant." },
-  ],
+  {
+    "operation": "find / union",
+    "best": "O(1)",
+    "worst": "O(log(n+1))",
+    "space": "O(1) working; O(n) retained DSU",
+    "note": "O(α(n)) amortized over a sequence with both rank and path halving; initialization O(n)."
+  }
+],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [{ symbol: "n", meaning: "the number of elements" }],
-    costModel: "find climbs parent pointers (shortened by path compression); union does two finds plus O(1) pointer updates.",
-    time: {
-      bound: "O(α(n))",
-      case: "amortized",
-      explanation: "With BOTH path compression (in find) and union by rank, each find/union is amortized O(α(n)), where α is the inverse Ackermann function — a quantity that is ≤ 4 for any n you could ever store, so it's effectively constant. Without these optimizations, trees can grow to height O(n) and operations degrade to O(n); the two tricks are what keep it near-constant. A sequence of m operations on n elements is O(m·α(n)).",
-      otherCases: [
-        { case: "worst", bound: "O(log n)", note: "With only one of the two optimizations, a single operation can be up to O(log n)." },
-      ],
-    },
-    space: {
-      bound: "O(n)",
-      case: "worst",
-      explanation: "Two arrays of size n (parent and rank), plus the count — O(n) total.",
-      inputOutputNote: "The parent/rank arrays are the data structure; O(n) is inherent to tracking n elements.",
-    },
-    derivation: [
-      { lines: [6, 7, 8, 9, 10], description: "find climbs to the root, flattening the path (compression) — amortized O(α(n)).", cost: "O(α(n))", dimension: "time" },
-      { lines: [11, 12, 15, 16, 17, 18], description: "union does two finds and O(1) rank-based linking.", cost: "O(α(n))", dimension: "time" },
-      { lines: [3, 4], description: "parent and rank arrays of size n.", cost: "O(n)", dimension: "space" },
-    ],
-    assumptions: ["Both path compression and union by rank are applied.", "Array indexing is O(1)."],
-    tradeoffs: "Vs BFS/DFS component counting (O(V+E) per query), Union-Find handles incremental edges in amortized O(α) per union — far better for a stream of connections — but can't reconstruct paths or efficiently delete edges.",
-    counters: [],
-    fixedDataNote: "This run does 3 unions on 5 elements, leaving 2 sets; connectivity queries confirm {0,1,2} vs {3,4}. Each op is amortized O(α(n)) ≈ O(1).",
+  "scope": "operation",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of elements"
+    }
+  ],
+  "costModel": "find climbs parent pointers (shortened by path compression); union does two finds plus O(1) pointer updates.",
+  "time": {
+    "bound": "O(α(n))",
+    "case": "amortized",
+    "explanation": "Rank and path halving jointly give inverse-Ackermann amortized cost after initialization. A single call may traverse a logarithmic path.",
+    "otherCases": [
+      {
+        "case": "worst",
+        "bound": "O(log(n+1))",
+        "note": "Individual operation with union by rank."
+      }
+    ]
   },
+  "space": {
+    "bound": "O(1)",
+    "case": "worst",
+    "explanation": "Iterative find and union use a constant number of indices; parent/rank arrays are the stored data structure.",
+    "inputOutputNote": "The DSU stores O(n) parent/rank entries. Initializing them costs O(n), so initialization plus m operations costs O(n+m*α(n))."
+  },
+  "derivation": [
+    {
+      "lines": [
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "description": "find climbs to the root, flattening the path (compression) — amortized O(α(n)).",
+      "cost": "O(α(n))",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        11,
+        12,
+        15,
+        16,
+        17,
+        18
+      ],
+      "description": "union does two finds and O(1) rank-based linking.",
+      "cost": "O(α(n))",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        3,
+        4
+      ],
+      "description": "Per-operation indices and representatives use constant working space; parent/rank storage is reported separately.",
+      "cost": "O(1)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Valid element indices 0..n−1; n>=0.",
+    "The amortized theorem requires both rank balancing and path halving/compression.",
+    "Bounds describe one operation after initialization; the DSU’s retained arrays are stored state."
+  ],
+  "tradeoffs": "Vs BFS/DFS component counting (O(V+E) per query), Union-Find handles incremental edges in amortized O(α) per union — far better for a stream of connections — but can't reconstruct paths or efficiently delete edges.",
+  "counters": [],
+  "fixedDataNote": "This run does 3 unions on 5 elements, leaving 2 sets; connectivity queries confirm {0,1,2} vs {3,4}. Each op is amortized O(α(n)) ≈ O(1).",
+  "references": [
+    {
+      "url": "https://cp-algorithms.com/data_structures/disjoint_set_union.html",
+      "title": "CP Algorithms: disjoint-set union",
+      "section": "Path compression; union by rank; time complexity",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Rank plus compression gives amortized inverse-Ackermann cost.",
+        "Rank alone bounds an individual operation logarithmically."
+      ],
+      "conventions": [
+        "App uses iterative path halving, a compression variant."
+      ],
+      "accessDate": "2026-10-10"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/kevin-wayne/algs4/master/src/main/java/edu/princeton/cs/algs4/UF.java",
+      "title": "Princeton algs4: rank and path-halving union-find",
+      "section": "Class documentation lines 57–68; find lines 109–115; union lines 149–159",
+      "topic": "trees-graphs-range",
+      "purpose": "Cross-check the exact implementation variant and boundary contract.",
+      "verifiedClaims": [
+        "Rank plus path halving gives an inverse-Ackermann amortized operation bound.",
+        "Initialization is linear; an individual worst-case operation may be logarithmic.",
+        "Only equal-rank unions increase the surviving rank."
+      ],
+      "conventions": [
+        "Source Java implementation; app uses the same rank and halving strategy in Python.",
+        "App reports retained parent/rank arrays separately from constant working space per operation."
+      ],
+      "accessDate": "2026-10-10"
+    }
+  ]
+},
 
   code,
 
   codeExplanations: [
-    { line: 1, executable: true, explanation: "Define the UnionFind class." },
-    { line: 2, executable: true, explanation: "Constructor for n elements." },
-    { line: 3, executable: true, explanation: "parent[i] = i: each element is initially its own root." },
-    { line: 4, executable: true, explanation: "rank hints at tree height for balancing." },
-    { line: 5, executable: true, explanation: "count = number of disjoint sets." },
-    { line: 6, executable: true, explanation: "find(x): climb to the root of x's set." },
-    { line: 7, executable: true, explanation: "While x is not its own parent..." },
-    { line: 8, executable: true, explanation: "...point x to its grandparent (path compression flattens the tree)..." },
-    { line: 9, executable: true, explanation: "...and move up." },
-    { line: 10, executable: true, explanation: "Return the root." },
-    { line: 11, executable: true, explanation: "union(a, b): merge their sets." },
-    { line: 12, executable: true, explanation: "Find both roots." },
-    { line: 13, executable: true, explanation: "If already the same root, they're connected..." },
-    { line: 14, executable: true, explanation: "...so no merge happens (returns False — useful for cycle detection)." },
-    { line: 15, executable: true, explanation: "Union by rank: ensure ra is the taller tree..." },
-    { line: 16, executable: true, explanation: "...swapping if needed." },
-    { line: 17, executable: true, explanation: "Attach the shorter tree's root under the taller." },
-    { line: 18, executable: true, explanation: "If ranks were equal, the merged tree grew by one." },
-    { line: 19, executable: true, explanation: "Bump the rank." },
-    { line: 20, executable: true, explanation: "One fewer disjoint set." },
-    { line: 21, executable: true, explanation: "Return True (a merge occurred)." },
-    { line: 22, executable: false, explanation: "Blank line." },
-    { line: 23, executable: true, explanation: "Create a Union-Find over 5 elements." },
-    { line: 24, executable: true, explanation: "Merge 0 and 1." },
-    { line: 25, executable: true, explanation: "Merge 1 and 2 (now {0,1,2})." },
-    { line: 26, executable: true, explanation: "Merge 3 and 4 (now {3,4})." },
-    { line: 27, executable: true, explanation: "count → 2 disjoint sets." },
-    { line: 28, executable: true, explanation: "0 and 2 share a root → True." },
-    { line: 29, executable: true, explanation: "0 and 3 are in different sets → False." },
-  ],
+  {
+    "line": 1,
+    "executable": true,
+    "explanation": "Define the UnionFind class."
+  },
+  {
+    "line": 2,
+    "executable": true,
+    "explanation": "Constructor for n elements."
+  },
+  {
+    "line": 3,
+    "executable": true,
+    "explanation": "parent[i] = i: each element is initially its own root."
+  },
+  {
+    "line": 4,
+    "executable": true,
+    "explanation": "Initialize rank zero; rank is a height upper bound after compression, not an exact current height."
+  },
+  {
+    "line": 5,
+    "executable": true,
+    "explanation": "count = number of disjoint sets."
+  },
+  {
+    "line": 6,
+    "executable": true,
+    "explanation": "find(x): climb to the root of x's set."
+  },
+  {
+    "line": 7,
+    "executable": true,
+    "explanation": "While x is not its own parent..."
+  },
+  {
+    "line": 8,
+    "executable": true,
+    "explanation": "Path halving rewires the current node to its grandparent, shortening later finds."
+  },
+  {
+    "line": 9,
+    "executable": true,
+    "explanation": "...and move up."
+  },
+  {
+    "line": 10,
+    "executable": true,
+    "explanation": "Return the root."
+  },
+  {
+    "line": 11,
+    "executable": true,
+    "explanation": "union(a, b): merge their sets."
+  },
+  {
+    "line": 12,
+    "executable": true,
+    "explanation": "Find both roots."
+  },
+  {
+    "line": 13,
+    "executable": true,
+    "explanation": "If already the same root, they're connected..."
+  },
+  {
+    "line": 14,
+    "executable": true,
+    "explanation": "...so no merge happens (returns False — useful for cycle detection)."
+  },
+  {
+    "line": 15,
+    "executable": true,
+    "explanation": "Union by rank: ensure ra is the taller tree..."
+  },
+  {
+    "line": 16,
+    "executable": true,
+    "explanation": "...swapping if needed."
+  },
+  {
+    "line": 17,
+    "executable": true,
+    "explanation": "Attach the shorter tree's root under the taller."
+  },
+  {
+    "line": 18,
+    "executable": true,
+    "explanation": "If ranks were equal, the merged tree grew by one."
+  },
+  {
+    "line": 19,
+    "executable": true,
+    "explanation": "Bump the rank."
+  },
+  {
+    "line": 20,
+    "executable": true,
+    "explanation": "One fewer disjoint set."
+  },
+  {
+    "line": 21,
+    "executable": true,
+    "explanation": "Return True (a merge occurred)."
+  },
+  {
+    "line": 22,
+    "executable": false,
+    "explanation": "Blank line."
+  },
+  {
+    "line": 23,
+    "executable": true,
+    "explanation": "Create a Union-Find over 5 elements."
+  },
+  {
+    "line": 24,
+    "executable": true,
+    "explanation": "Merge 0 and 1."
+  },
+  {
+    "line": 25,
+    "executable": true,
+    "explanation": "Merge 1 and 2 (now {0,1,2})."
+  },
+  {
+    "line": 26,
+    "executable": true,
+    "explanation": "Merge 3 and 4 (now {3,4})."
+  },
+  {
+    "line": 27,
+    "executable": true,
+    "explanation": "count → 2 disjoint sets."
+  },
+  {
+    "line": 28,
+    "executable": true,
+    "explanation": "0 and 2 share a root → True."
+  },
+  {
+    "line": 29,
+    "executable": true,
+    "explanation": "0 and 3 are in different sets → False."
+  }
+],
 
   bindings: [
-    { variable: "uf", model: "object" },
-    { variable: "parent", model: "array" },
-  ],
+  {
+    "variable": "uf",
+    "model": "object"
+  },
+  {
+    "variable": "uf",
+    "model": "array",
+    "path": "parent"
+  }
+],
 
   prediction: [
     { atEventIndex: 0, prompt: "What do path compression and union by rank together achieve, and why not omit them?", answer: "Together they keep the trees nearly flat, giving amortized O(α(n)) ≈ O(1) per operation. Omitting them lets trees grow to O(n) height, degrading find/union toward O(n).", explanation: "Path compression shortens paths during find; union by rank avoids tall trees on merge. Without them, chains of unions can build linear-height trees, so each find becomes slow — the optimizations are what make DSU near-constant." },
   ],
 
   experiments: [
-    "Remove path compression and reason about how tall the trees could get.",
-    "Use union's return value to detect a cycle while adding edges.",
-    "Track count after each union to watch components merge.",
-  ],
+  "Compare rank-only, halving-only and neither optimization. Rank-only keeps logarithmic height; removing both can form a linear chain.",
+  "Use union's return value to detect a cycle while adding edges.",
+  "Track count after each union to watch components merge."
+],
 
   exercises: [
     {
@@ -170,31 +373,45 @@ Here, unioning {0,1,2} and {3,4} leaves \`count = 2\` sets; \`find(0) == find(2)
   expectedOutput: "2\nTrue\nFalse\n",
 
   references: [
-    {
-      url: "https://cp-algorithms.com/data_structures/disjoint_set_union.html",
-      title: "Disjoint Set Union — CP-Algorithms",
-      section: "Path compression and union by rank/size",
-      topic: "graphs/union-find",
-      purpose: "Confirm the DSU operations and the amortized O(α(n)) complexity with both optimizations.",
-      verifiedClaims: ["With path compression and union by rank, DSU operations are amortized O(α(n))"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://algs4.cs.princeton.edu/15uf/",
-      title: "Union-Find — Algorithms, 4th Edition (Princeton)",
-      section: "Weighted quick-union with path compression",
-      topic: "graphs/union-find",
-      purpose: "Cross-check dynamic connectivity semantics and near-constant amortized cost.",
-      verifiedClaims: ["Weighted quick-union with path compression makes operations nearly constant amortized"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://cp-algorithms.com/data_structures/disjoint_set_union.html",
+    "title": "CP Algorithms: disjoint-set union",
+    "section": "Path compression; union by rank; time complexity",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Rank plus compression gives amortized inverse-Ackermann cost.",
+      "Rank alone bounds an individual operation logarithmically."
+    ],
+    "conventions": [
+      "App uses iterative path halving, a compression variant."
+    ],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/kevin-wayne/algs4/master/src/main/java/edu/princeton/cs/algs4/UF.java",
+    "title": "Princeton algs4: rank and path-halving union-find",
+    "section": "Class documentation lines 57–68; find lines 109–115; union lines 149–159",
+    "topic": "trees-graphs-range",
+    "purpose": "Cross-check the exact implementation variant and boundary contract.",
+    "verifiedClaims": [
+      "Rank plus path halving gives an inverse-Ackermann amortized operation bound.",
+      "Initialization is linear; an individual worst-case operation may be logarithmic.",
+      "Only equal-rank unions increase the surviving rank."
+    ],
+    "conventions": [
+      "Source Java implementation; app uses the same rank and halving strategy in Python.",
+      "App reports retained parent/rank arrays separately from constant working space per operation."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "b6073730db3beb7e",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "f685346da91b8a96",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 5,
   },
 };

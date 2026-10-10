@@ -18,8 +18,6 @@
 import {
   PROTOCOL_VERSION,
   validateInbound,
-  MAX_BATCH_EVENTS,
-  MAX_BATCH_BYTES,
   type OutboundMessage,
   type OutboundKind,
   type EnvelopeMeta,
@@ -29,6 +27,7 @@ import type { RunStatus, TraceEvent, ComplexityAnalysisResult } from "../core/ty
 import tracerSource from "./tracer.py?raw";
 // R7.3/7.5 — conservative AST complexity analyzer, run in the same worker.
 import analyzerSource from "./complexity_analyzer.py?raw";
+import { TraceStream } from './trace-stream';
 
 type PyodideInterface = {
   runPython: (code: string) => unknown;
@@ -104,6 +103,9 @@ sys.modules["dsa_cx"] = _a
     pyodide.globals.set("__run_stdin__", payload.stdin);
     pyodide.globals.set("__limit_events__", payload.limits.maxEvents);
     pyodide.globals.set("__limit_bytes__", payload.limits.maxTraceBytes);
+    const stream=new TraceStream(events=>post('trace-batch',{events}));
+    pyodide.globals.set('__event_sink__',(json:string)=>stream.push(JSON.parse(json) as TraceEvent));
+    pyodide.globals.set('__output_sink__',(stream:string,text:string)=>post('output',{stream,text}));
 
     // Learner code begins now: tell the coordinator to arm the exec timer.
     post("exec-start", {});
@@ -112,7 +114,8 @@ sys.modules["dsa_cx"] = _a
 import json, sys
 _tracer = sys.modules["dsa_tracer"]
 _res = _tracer.run_program(
-    __run_source__, "<lesson>", __limit_events__, __limit_bytes__, __run_stdin__
+    __run_source__, "<lesson>", __limit_events__, __limit_bytes__, __run_stdin__,
+    event_sink=__event_sink__, output_sink=__output_sink__
 )
 # R7.5 — attach a conservative static complexity analysis of the SAME source.
 # Pure AST work; never executes the program and never raises out of here.
@@ -124,7 +127,7 @@ json.dumps(_res)
 `) as string;
 
     const raw = JSON.parse(resultJson) as RawResult;
-    streamAndFinish(raw);
+    finish(raw,stream.finish());
   } catch (e) {
     post("error", { message: String(e), recoverable: true });
   }
@@ -135,31 +138,7 @@ json.dumps(_res)
  * whose `tail` contains ONLY the events not already streamed (the final message
  * must not resend the whole trace).
  */
-function streamAndFinish(raw: RawResult): void {
-  const events = raw.events ?? [];
-
-  // Partition events into bounded batches (≤MAX_BATCH_EVENTS / ~MAX_BATCH_BYTES).
-  const batches: TraceEvent[][] = [];
-  let cur: TraceEvent[] = [];
-  let curBytes = 0;
-  for (const ev of events) {
-    if (cur.length >= MAX_BATCH_EVENTS || curBytes >= MAX_BATCH_BYTES) {
-      batches.push(cur);
-      cur = [];
-      curBytes = 0;
-    }
-    cur.push(ev);
-    curBytes += approxEventBytes(ev);
-  }
-  if (cur.length) batches.push(cur);
-
-  // Stream every batch EXCEPT the last, which becomes the final message's tail
-  // so the terminal `result` never resends already-streamed events.
-  const tail = batches.length ? batches[batches.length - 1] : [];
-  for (let b = 0; b < batches.length - 1; b++) {
-    post("trace-batch", { events: batches[b] });
-  }
-
+function finish(raw: RawResult,tail:TraceEvent[]): void {
   post("result", {
     status: raw.status,
     tail,
@@ -173,18 +152,11 @@ function streamAndFinish(raw: RawResult): void {
   });
 }
 
-function approxEventBytes(ev: TraceEvent): number {
-  try {
-    return JSON.stringify(ev).length;
-  } catch {
-    return 1024;
-  }
-}
-
 self.onmessage = (ev: MessageEvent) => {
   const v = validateInbound(ev.data);
   if (!v.ok) return; // drop malformed/oversized/mismatched inbound messages
   const msg = v.value;
+  if (msg.kind !== 'run' || meta !== null) return;
   // Capture the envelope identity so our outbound messages echo it.
   meta = {
     v: PROTOCOL_VERSION,

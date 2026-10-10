@@ -111,12 +111,28 @@ This is the **fixed-size** window (the width k never changes). A later variant i
   ],
 
   bindings: [
-    {
-      variable: "nums",
-      model: "array",
-      overlays: [{ role: "pointer", label: "enters i", source: "i" }],
-    },
-  ],
+  {
+    "variable": "nums",
+    "model": "array",
+    "overlays": [
+      {
+        "role": "pointer",
+        "label": "enters i",
+        "source": "i"
+      },
+      {
+        "role": "total",
+        "label": "running sum",
+        "source": "window"
+      },
+      {
+        "role": "total",
+        "label": "best sum",
+        "source": "best"
+      }
+    ]
+  }
+],
 
   prediction: [
     { atEventIndex: 0, prompt: "When the window slides from [2,1,5] to [1,5,1], which element enters and which leaves, and what is the new sum?", answer: "1 enters (nums[3]), 2 leaves (nums[0]); new sum 8 - 2 + 1 = 7.", explanation: "Sliding one step drops the leftmost old element (2) and adds the new right element (1): 8 - 2 + 1 = 7." },
@@ -141,9 +157,9 @@ This is the **fixed-size** window (the width k never changes). A later variant i
     {
       id: "sw-choose-1",
       kind: "choose-approach",
-      prompt: "Problem: 'largest sum of exactly k consecutive elements.' Which pattern applies, and why not prefix sums or Kadane?",
-      expected: "Fixed-size sliding window: the block is contiguous and of fixed width k, and the sum updates incrementally. Kadane is for any-length max subarray; prefix sums answer arbitrary ranges but are overkill for a single fixed width.",
-      hints: ["Is the block length fixed or variable?", "Fixed width k → fixed-size window.", "Kadane = any length; prefix sums = arbitrary ranges — neither matches 'exactly k'."],
+      prompt: "Problem: 'largest sum of exactly k consecutive elements.' Why is a fixed-size window a good fit? Explain the space tradeoff with the also-correct prefix-sum approach, and why ordinary Kadane solves a different problem.",
+      expected: "Fixed-size sliding window scans the contiguous blocks of width k in O(n) time and O(1) auxiliary space. Prefix sums are also correct: each width-k sum is prefix[right] - prefix[left], with O(n) preprocessing and O(n) auxiliary space. Ordinary Kadane does not enforce exactly k elements.",
+      hints: ["Is the block length fixed or variable?", "Fixed width k → fixed-size window.", "Prefix sums are valid too, with extra storage; ordinary Kadane does not enforce width k."],
     },
   ],
 
@@ -170,13 +186,16 @@ This is the **fixed-size** window (the width k never changes). A later variant i
       verifiedClaims: ["Sliding window is a distinct fixed/variable-size pattern for contiguous blocks"],
       accessDate: "2026-09-20",
     },
+
+    {"url":"https://usaco.guide/silver/prefix-sums?lang=py","title":"USACO Guide — Introduction to Prefix Sums","section":"Prefix sums and range-sum queries","verifiedClaims":["A precomputed prefix-sum array answers a range sum by a difference, including a range of fixed width k."],"topic":"sliding-window","purpose":"Delegated Codex review: reconcile learner-facing explanations with the demonstrated implementation.","accessDate":"2026-10-10"},
+    {"url":"https://usaco.guide/silver/two-pointers?lang=py","title":"USACO Guide — Two Pointers","section":"Sliding Window","verifiedClaims":["Updating the maintained range as its boundaries move avoids repeated summation."],"topic":"sliding-window","purpose":"Delegated Codex review: reconcile learner-facing explanations with the demonstrated implementation.","accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "b929cc47a4db28a0",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "617190ca5146555d",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

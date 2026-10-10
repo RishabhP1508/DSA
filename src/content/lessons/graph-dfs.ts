@@ -23,11 +23,7 @@ export const graphDfs: LessonDefinition = {
   area: "Graphs",
   prerequisites: ["tree-dfs", "adjacency-lists"],
 
-  explanation: `**Graph DFS** extends tree DFS to graphs: dive **deep** along one path, backtrack when stuck, and continue — but with a **visited set** to prevent revisiting vertices in the presence of **cycles**. You can write it recursively (using the call stack) or iteratively with an explicit stack; the recursive form is shown here.
-
-The rule that makes it correct is **mark visited *before* recursing into neighbours**. If you marked after, a cycle could send you back into a vertex already on the current path. From vertex 0 this DFS goes 0 → 1 → 3 (deep), backtracks (3's other neighbour 2 is unvisited from 1? no — it reaches 3, whose neighbours 1 and 2; 1 is seen, so it visits... actually the order is \`0, 1, 3, 2\`): down the first branch to 1 then 3, then 2 via 3.
-
-DFS visits every reachable vertex once and scans every edge once, so it is **O(V + E)** time and **O(V)** space (the visited set plus the recursion stack, which can be O(V) deep). DFS is the workhorse for **connectivity, cycle detection, topological sort, and path finding** — the next several lessons all build directly on this template. The difference from BFS: DFS goes deep (uses a stack), BFS goes by level (uses a queue); both are O(V + E), but only BFS gives distance order.`,
+  explanation: "**Graph DFS** explores an unseen neighbor completely before trying the next. Mark a vertex before recursing, so cycles cannot repeat it. This is a graph traversal with a visited set; it follows outgoing edges in directed graphs and both stored directions in an undirected graph.\n\nThe example starts at 0 and follows neighbor order: 0, 1, 3, 2. It returns only vertices reachable from that start. Every reached vertex needs an adjacency entry, including sinks. With expected constant-cost hash-set operations, DFS visits reachable vertices and scans their adjacency entries in O(Vr+Er), bounded by O(V+E). Recursive frames and visited membership use O(V) auxiliary space; output order is separate.\n\nAn iterative stack can replace recursion. If visited is checked only when popping, multiple pending entries can exist for the same vertex, so that variant may use O(E) pending-stack space. Marking upon push prevents duplicate entries, or stack frames with neighbor iterators can reproduce recursive discovery order. Python recursion depth limits can matter on a long chain.",
 
   vocabulary: [
     { term: "Graph DFS", definition: "Depth-first exploration of a graph: go deep, backtrack, using a visited set." },
@@ -47,37 +43,118 @@ DFS visits every reachable vertex once and scans every edge once, so it is **O(V
   },
 
   complexity: [
-    { operation: "Graph DFS", best: "O(V + E)", average: "O(V + E)", worst: "O(V + E)", space: "O(V)", note: "Each vertex visited once; each edge scanned once; stack up to O(V)." },
-  ],
+  {
+    "operation": "Graph DFS",
+    "best": "O(1)",
+    "average": "O(V + E)",
+    "worst": "O(V + E)",
+    "space": "O(V)",
+    "note": "Each reached vertex is visited once; each adjacency entry is scanned once. An undirected edge appears twice."
+  }
+],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [
-      { symbol: "V", meaning: "the number of vertices" },
-      { symbol: "E", meaning: "the number of edges" },
-    ],
-    costModel: "Set add/lookup are O(1). Each vertex is visited once; each edge is examined once from its endpoint.",
-    time: {
-      bound: "O(V + E)",
-      case: "worst",
-      explanation: "The visited set ensures each of the V vertices is entered once — O(V). At each vertex we scan its adjacency list, and across all vertices those scans total the edges — O(E). So DFS is O(V + E), identical to BFS in cost; only the traversal ORDER differs (deep vs level).",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "V",
+      "meaning": "the number of vertices"
     },
-    space: {
-      bound: "O(V)",
-      case: "worst",
-      explanation: "The visited set holds up to V vertices, and the recursion stack can reach depth O(V) for a long path (e.g. a line graph). So auxiliary space is O(V).",
-      inputOutputNote: "The graph (V + E) is the input; the visited set and recursion stack are the O(V) auxiliary space.",
-    },
-    derivation: [
-      { lines: [3, 4], description: "Each vertex is entered once (marked, recorded) — O(V) total.", cost: "O(V)", dimension: "time" },
-      { lines: [5, 6, 7], description: "Scanning all adjacency lists examines each edge once — O(E) total.", cost: "O(V + E)", dimension: "time" },
-      { lines: [3, 7], description: "Visited set O(V) plus recursion stack up to O(V).", cost: "O(V)", dimension: "space" },
-    ],
-    assumptions: ["Adjacency-list graph; set ops O(1).", "Marking before recursing prevents infinite recursion on cycles."],
-    tradeoffs: "BFS uses a queue (O(V) too) and gives distance order; DFS uses a stack and goes deep. Iterative DFS avoids Python's recursion limit at the same O(V) space.",
-    counters: [{ label: "vertices visited", definition: "executions of the visit (line 4)", countLines: [4] }],
-    fixedDataNote: "This run visits 4 vertices depth-first from 0 → [0,1,3,2]. The O(V+E) bound generalises to any graph.",
+    {
+      "symbol": "E",
+      "meaning": "the number of edges"
+    }
+  ],
+  "costModel": "Set add/lookup are O(1). Each vertex is visited once; each edge is examined once from its endpoint.",
+  "time": {
+    "bound": "O(V + E)",
+    "case": "expected",
+    "explanation": "The visited set ensures each of the V vertices is entered once — O(V). At each vertex we scan its adjacency list, and across all vertices those scans total the edges — O(E). So DFS is O(V + E), identical to BFS in cost; only the traversal ORDER differs (deep vs level)."
   },
+  "space": {
+    "bound": "O(V)",
+    "case": "worst",
+    "explanation": "The visited set holds up to V vertices, and the recursion stack can reach depth O(V) for a long path (e.g. a line graph). So auxiliary space is O(V).",
+    "inputOutputNote": "Exclude the input adjacency mapping and returned order list. Seen state and recursive frames use O(V) auxiliary storage."
+  },
+  "derivation": [
+    {
+      "lines": [
+        3,
+        4
+      ],
+      "description": "Each vertex is entered once (marked, recorded) — O(V) total.",
+      "cost": "O(V)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        5,
+        6,
+        7
+      ],
+      "description": "Scanning all adjacency lists examines each edge once — O(E) total.",
+      "cost": "O(V + E)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        3,
+        7
+      ],
+      "description": "Visited set O(V) plus recursion stack up to O(V).",
+      "cost": "O(V)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Adjacency-list graph; set ops O(1).",
+    "Marking before recursing prevents infinite recursion on cycles.",
+    "Valid start, closed adjacency mapping, expected constant-time visited-set operations.",
+    "The main example marks before recursive descent. The pop-guard iterative exercise can keep O(E) duplicate pending entries."
+  ],
+  "tradeoffs": "BFS gives distance order; DFS follows deep paths. Iterative DFS avoids Python recursion limits. Marking when pushing keeps at most O(V) pending vertices; the exercise’s mark-on-pop version may hold O(E) duplicate pending entries.",
+  "counters": [
+    {
+      "label": "vertices visited",
+      "definition": "executions of the visit (line 4)",
+      "countLines": [
+        4
+      ]
+    }
+  ],
+  "fixedDataNote": "This run visits 4 vertices depth-first from 0 → [0,1,3,2]. The O(V+E) bound generalises to any graph.",
+  "references": [
+    {
+      "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+      "title": "Open Data Structures: graph traversal",
+      "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "BFS discovers reachable vertices in distance order.",
+        "DFS records visited vertices before recursion."
+      ],
+      "conventions": [],
+      "accessDate": "2026-10-10"
+    },
+    {
+      "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+      "title": "MIT 6.006 Lecture 9: BFS",
+      "section": "Pages 1–4: representations, shortest paths, BFS",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Undirected adjacency stores both directions.",
+        "A path length counts edges."
+      ],
+      "conventions": [
+        "App may use -1 for unreachable distances instead of infinity."
+      ],
+      "accessDate": "2026-10-10"
+    }
+  ]
+},
 
   code,
 
@@ -134,31 +211,41 @@ DFS visits every reachable vertex once and scans every edge once, so it is **O(V
   expectedOutput: "[0, 1, 3, 2]\n",
 
   references: [
-    {
-      url: "https://cp-algorithms.com/graph/depth-first-search.html",
-      title: "Depth First Search — CP-Algorithms",
-      section: "Algorithm and complexity",
-      topic: "graphs/dfs",
-      purpose: "Confirm graph DFS is O(V+E), needs a visited set, and underlies components/cycles/topo sort.",
-      verifiedClaims: ["Graph DFS is O(V + E); it requires a visited set; it is the basis of components, cycle detection, and topological sort"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://algs4.cs.princeton.edu/41graph/",
-      title: "Undirected Graphs — Algorithms, 4th Edition (Princeton)",
-      section: "Depth-first search",
-      topic: "graphs/dfs",
-      purpose: "Cross-check the DFS template and its O(V+E) analysis.",
-      verifiedClaims: ["DFS marks vertices as visited and recurses into unmarked neighbours in O(V+E)"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+    "title": "Open Data Structures: graph traversal",
+    "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "BFS discovers reachable vertices in distance order.",
+      "DFS records visited vertices before recursion."
+    ],
+    "conventions": [],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+    "title": "MIT 6.006 Lecture 9: BFS",
+    "section": "Pages 1–4: representations, shortest paths, BFS",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Undirected adjacency stores both directions.",
+      "A path length counts edges."
+    ],
+    "conventions": [
+      "App may use -1 for unreachable distances instead of infinity."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "be4d1cb4f44ab05d",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "7e65de190951f31f",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 5,
   },
 };

@@ -139,7 +139,7 @@ Tests use **comparison operators** (\`==\`, \`!=\`, \`<\`, \`<=\`, \`>\`, \`>=\`
     },
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "be2f2011ca4c5afe",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

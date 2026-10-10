@@ -41,60 +41,93 @@ This is **O(n²)** time (each \`i\` scans all earlier \`j\`) and **O(n)** space.
   ],
 
   concepts: {
-    purpose:
-      "Find the longest strictly increasing subsequence and practice choosing an anchored state that composes.",
-    operations:
-      "For each i, take dp[i] = 1 + max(dp[j]) over j < i with nums[j] < nums[i]; answer is max(dp).",
-    uses:
-      "Longest chains/box-stacking, activity ordering, versioning, and any 'longest ordered pick' problem.",
-    tradeoffs:
-      "O(n²) DP is clear and easy to justify; an O(n log n) binary-search method is faster but less transparent.",
-    commonMistakes:
-      "Returning dp[-1] instead of max(dp); using <= (allows equal, not strictly increasing); a vague state that doesn't anchor at an endpoint.",
-    edgeCases:
-      "Empty input → 0. Strictly decreasing → 1 (each element alone). All equal → 1 (strict increase forbids equals).",
-  },
+  "purpose": "Find the longest strictly increasing subsequence and practice choosing an anchored state that composes.",
+  "operations": "For each i, take dp[i] = 1 + max(dp[j]) over j < i with nums[j] < nums[i]; answer is max(dp).",
+  "uses": "Longest chains/box-stacking, activity ordering, versioning, and any 'longest ordered pick' problem.",
+  "tradeoffs": "O(n²) DP is clear and easy to justify; an O(n log n) binary-search method is faster but less transparent.",
+  "commonMistakes": "Returning dp[-1] instead of max(dp); using <= (allows equal, not strictly increasing); a vague state that doesn't anchor at an endpoint.",
+  "edgeCases": "Empty input → 0. Strictly decreasing → 1 (each element alone). All equal → 1 (strict increase forbids equals). Values must support a consistent finite total order; this integer example excludes NaN. Equal values are not a strictly increasing step."
+},
 
   complexity: [
     { operation: "LIS (O(n²) DP)", best: "O(n²)", average: "O(n²)", worst: "O(n²)", space: "O(n)", note: "Each i scans all earlier j; an O(n log n) method also exists." },
   ],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
-    costModel: "Each (i, j) pair does O(1) work (a comparison and a possible update).",
-    time: {
-      bound: "O(n²)",
-      case: "worst",
-      explanation:
-        "For each index i (n of them), the inner loop scans all earlier indices j (up to i), so the total number of pairs is about n²/2 = O(n²). Each pair is constant work. A binary-search / patience-sorting method improves this to O(n log n), but the pairwise DP is the clearest correctness argument.",
-    },
-    space: {
-      bound: "O(n)",
-      case: "worst",
-      explanation:
-        "The dp array stores one length per index: O(n). No other structure grows with the input.",
-      inputOutputNote: "The single integer length is O(1); the O(n) space is the dp table.",
-    },
-    derivation: [
-      { lines: [5], description: "Allocate dp (each element alone is length 1).", cost: "O(n)", dimension: "space" },
-      { lines: [6, 7, 8, 9], description: "Nested loops over all pairs i, j < i with O(1) work.", cost: "O(n²)", dimension: "time" },
-      { lines: [10], description: "Take the maximum over all endpoints — O(n).", cost: "O(n)", dimension: "time" },
-    ],
-    assumptions: [
-      "Strictly increasing (uses <, not <=).",
-      "dp[i] correctly anchors the subsequence's endpoint at i so subproblems compose.",
-      "Comparisons are O(1).",
-    ],
-    tradeoffs:
-      "The O(n²) DP is the transparent version; the O(n log n) patience-sorting method is faster for large n but harder to justify. If you only need the length for moderate n, the DP is fine and easy to reason about.",
-    counters: [
-      { label: "pair comparisons", definition: "executions of the inner-loop check (line 8)", countLines: [8] },
-      { label: "dp improvements", definition: "executions of the update line (line 9)", countLines: [9] },
-    ],
-    fixedDataNote:
-      "For the 8-element sample the LIS length is 4. The O(n²) bound describes how the pairwise work scales with n.",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of elements in nums"
+    }
+  ],
+  "costModel": "Each (i, j) pair does O(1) work (a comparison and a possible update). The double loop performs n(n−1)/2 predecessor comparisons regardless of input order; list allocation is O(n).",
+  "time": {
+    "bound": "O(n²)",
+    "case": "worst",
+    "explanation": "For each index i (n of them), the inner loop scans all earlier indices j (up to i), so the total number of pairs is about n²/2 = O(n²). Each pair is constant work. A binary-search / patience-sorting method improves this to O(n log n), but the pairwise DP is the clearest correctness argument."
   },
+  "space": {
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "The dp array stores one length per index: O(n). No other structure grows with the input.",
+    "inputOutputNote": "The single integer length is O(1); the O(n) space is the dp table."
+  },
+  "derivation": [
+    {
+      "lines": [
+        5
+      ],
+      "description": "Allocate dp (each element alone is length 1).",
+      "cost": "O(n)",
+      "dimension": "space"
+    },
+    {
+      "lines": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "description": "Nested loops over all pairs i, j < i with O(1) work.",
+      "cost": "O(n²)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        10
+      ],
+      "description": "Take the maximum over all endpoints — O(n).",
+      "cost": "O(n)",
+      "dimension": "time"
+    }
+  ],
+  "assumptions": [
+    "Strictly increasing (uses <, not <=).",
+    "dp[i] correctly anchors the subsequence's endpoint at i so subproblems compose.",
+    "Comparisons are O(1).",
+    "Inputs meet the stated type/domain contract. Scalar arithmetic, comparisons and array indexing use a unit-cost model; Python arbitrary-precision bit costs are not included.",
+    "Best/average/worst table entries are asymptotic upper bounds for the specified variant; no input probability distribution or tight average-time claim is assumed unless stated."
+  ],
+  "tradeoffs": "The O(n²) DP is the transparent version; the O(n log n) patience-sorting method is faster for large n but harder to justify. If you only need the length for moderate n, the DP is fine and easy to reason about.",
+  "counters": [
+    {
+      "label": "pair comparisons",
+      "definition": "executions of the inner-loop check Recorded line entries at 8 occur before the operation completes.",
+      "countLines": [
+        8
+      ]
+    },
+    {
+      "label": "dp improvements",
+      "definition": "executions of the update line Recorded line entries at 9 occur before the operation completes.",
+      "countLines": [
+        9
+      ]
+    }
+  ],
+  "fixedDataNote": "For the 8-element sample the LIS length is 4. The O(n²) bound describes how the pairwise work scales with n. Function analysis excludes demonstration input literals, imports, printing and tracer storage. A line event shows the next operation before it completes."
+},
 
   code,
 
@@ -184,36 +217,53 @@ This is **O(n²)** time (each \`i\` scans all earlier \`j\`) and **O(n)** space.
   expectedOutput: "4\n",
 
   references: [
-    {
-      url: "https://leetcode.com/problems/longest-increasing-subsequence/editorial/",
-      title: "Longest Increasing Subsequence — LeetCode editorial",
-      section: "O(n²) DP (dp[i] ends at i) and O(n log n) binary search",
-      topic: "dp/lis",
-      purpose: "Confirm the dp[i]-ends-at-i recurrence, the max(dp) answer, O(n²) time, and the existence of an O(n log n) method.",
-      verifiedClaims: [
-        "dp[i] = 1 + max(dp[j]) for j < i with nums[j] < nums[i]; the answer is max(dp).",
-        "The DP is O(n²); an O(n log n) approach also exists.",
-      ],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://en.wikipedia.org/wiki/Longest_increasing_subsequence",
-      title: "Longest increasing subsequence — Wikipedia",
-      section: "Definition and dynamic-programming solution",
-      topic: "dp/lis",
-      purpose: "Cross-check the definition and the standard DP formulation.",
-      verifiedClaims: [
-        "The LIS is the longest subsequence with strictly increasing values, computable by an O(n²) DP.",
-      ],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://docs.python.org/3.14/library/stdtypes.html#numeric-types-int-float-complex",
+    "title": "Python 3.14 numeric types",
+    "section": "Numeric Types — int, float, complex",
+    "topic": "dp-recursion",
+    "purpose": "Verify the named claim and the convention used by this example.",
+    "verifiedClaims": [
+      "Python integers have unlimited precision; a fixed number of integer variables is not fixed byte storage."
+    ],
+    "conventions": [
+      "Complexity below counts scalar/cell operations; large-integer bit costs and output formatting are separate."
+    ],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/28461a74f81101874a13d9679a40584d_MIT6_006S20_lec16.pdf",
+    "title": "MIT 6.006 lecture 16",
+    "section": "Longest increasing subsequence state and recurrence",
+    "topic": "dp-recursion",
+    "purpose": "Verify the named claim and the convention used by this example.",
+    "verifiedClaims": [
+      "LIS fixes an endpoint/anchor so recurrence choices compose; taking the best over all anchors yields O(n²) DP."
+    ],
+    "conventions": [
+      "Source anchors the start in a suffix, app anchors the end of a prefix. Both require strict increase."
+    ],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://leetcode.com/problems/longest-increasing-subsequence/description/",
+    "title": "LeetCode: Longest Increasing Subsequence",
+    "section": "Problem definition, examples and constraints",
+    "topic": "dp-recursion",
+    "purpose": "Verify the named claim and the convention used by this example.",
+    "verifiedClaims": [
+      "The sequence is strictly increasing; equal values cannot extend it; O(n log n) alternatives exist."
+    ],
+    "conventions": [],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "c44fcc91448991f8",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "44cd16b63e5d0caa",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 6,
   },
 };

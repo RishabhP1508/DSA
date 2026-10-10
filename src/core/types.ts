@@ -221,6 +221,8 @@ export type RunStatus =
 export interface RunResult {
   runId: number;
   status: RunStatus;
+  /** Distinguishes a retained user-stop trace from an obsolete superseded run. */
+  stopReason?: "user" | "supersede" | "dispose";
   events: TraceEvent[];
   /** Concatenated stdout produced by the run. */
   stdout: string;
@@ -323,6 +325,10 @@ export interface VisualBinding {
    * undirected when omitted.
    */
   directed?: boolean;
+  /** Pair tuples are weighted edges only when explicitly selected. */
+  adjacencyFormat?: "neighbors" | "weighted-pairs" | "weighted-map";
+  /** Custom instance attribute names; read only from recorded snapshots. */
+  fields?: { value?: string; next?: string; previous?: string; left?: string; right?: string; children?: string; terminal?: string };
   /**
    * For `model: "dp-table"` — the name of a variable holding the indices that
    * have actually been COMPUTED (a set/list of ints for 1D, or of `[i, j]`
@@ -331,6 +337,13 @@ export interface VisualBinding {
    * non-None (a zero-initialised table is not "computed").
    */
   computedSource?: string;
+  /** Explicit snapshot range; no range is inferred from unrelated pointers. */
+  range?: {
+    label: string;
+    startSource: string;
+    endSource: string;
+    endInclusive: boolean;
+  };
   /** Optional overlays keyed by role; value is the variable holding the index/state. */
   overlays?: {
     role: "pointer" | "window" | "total" | "visited" | "boundary" | "highlight";

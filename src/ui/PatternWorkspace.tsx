@@ -10,13 +10,17 @@ import { useEffect, useMemo, useState } from "react";
 import type { PatternDefinition } from "../core/types";
 import { useEngine, PLAYBACK_SPEEDS } from "./useEngine";
 import { labelForLine } from "./line-label";
+import { RuntimeProgress } from "./RuntimeProgress";
+import { ObservedStep } from "./ObservedStep";
 import { CodeEditor } from "./CodeEditor";
 import { VariablesPanel } from "./VariablesPanel";
+import { ComplexityPanel } from './ComplexityPanel';
 import { Visualizer } from "../visualizers";
 
 export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
   const engine = useEngine("pattern:" + pattern.id);
   const [source, setSource] = useState(pattern.walkthroughCode);
+  const [cxHighlight, setCxHighlight] = useState<number[] | null>(null);
 
   // Two independent questions (R4 amendment): `edited` = editor differs from the
   // ORIGINAL authored walkthrough; `stale` = the recorded trace differs from the
@@ -87,7 +91,8 @@ export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
           </div>
         )}
 
-        <CodeEditor value={source} onChange={setSource} highlightLine={currentLine} />
+        <RuntimeProgress running={engine.running} progress={engine.progress} result={engine.result} />
+        <CodeEditor value={source} onChange={setSource} highlightLine={authoredMatchesTrace && cxHighlight?.length ? cxHighlight[0] : currentLine} breakpoints={engine.breakpoints} onToggleBreakpoint={engine.toggleBreakpoint} />
 
         {traceMatchesEditor && engine.result && (
           <div className="timeline">
@@ -141,6 +146,7 @@ export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
       </div>
 
       <div className="workspace-right">
+        {edited && traceMatchesEditor && <ObservedStep source={source} event={engine.event} previous={engine.result?.events[engine.position-1]}/>}
         <div className="diagram">
           <h4>Visualization</h4>
           {(() => {
@@ -169,6 +175,10 @@ export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
           })()}
         </div>
         <VariablesPanel event={liveEvent} output={traceMatchesEditor ? engine.outputSoFar : ""} />
+        {pattern.complexityExplanation && authoredMatchesTrace && <details className="analysis-disclosure">
+          <summary>Time &amp; space analysis <span className="dim">{pattern.complexityExplanation.time.bound} time · {pattern.complexityExplanation.space.bound} space</span></summary>
+          <ComplexityPanel explanation={pattern.complexityExplanation} result={engine.result} currentIndex={engine.position} onHighlightLines={setCxHighlight} fixedData={Boolean(pattern.complexityExplanation.fixedDataNote)}/>
+        </details>}
       </div>
     </div>
   );

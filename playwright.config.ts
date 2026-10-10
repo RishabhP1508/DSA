@@ -1,13 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
-// Playwright config for real-browser integration (R0.4 scaffolding; suites grow
-// in R9). It builds and serves the production app, then drives it in Chromium
-// (closest available engine to the Windows Chrome/Edge release targets).
-//
-// NOTE: running this requires Playwright browser binaries
-// (`npx playwright install chromium`). In CI/sandbox environments where that
-// download is blocked, `npm run test:browser` will report the missing browser
-// rather than silently passing — see R9 for the manual procedure.
+// Real production app and isolated runner. PLAYWRIGHT_CHANNEL=chrome/msedge
+// uses the installed Windows browser; otherwise install Playwright Chromium.
+// Missing browsers or inaccessible loopback ports are failures, never skips.
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
@@ -19,13 +14,15 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    {
+      name: process.env.PLAYWRIGHT_CHANNEL ?? "chromium",
+      use: { ...devices["Desktop Chrome"], channel: process.env.PLAYWRIGHT_CHANNEL },
+    },
   ],
   webServer: {
-    // Serve the built app on the app origin. The runner-origin work (R2.5) will
-    // extend this to a second loopback origin.
-    command: "npm run build && npm run preview -- --port 4173 --host 127.0.0.1",
-    url: "http://127.0.0.1:4173",
+    // Serve both origins with their production CSP and validated bridge.
+    command: "npm run build && node desktop/server.mjs --app-port 4173 --runner-port 4174",
+    url: "http://127.0.0.1:4173/health",
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
   },

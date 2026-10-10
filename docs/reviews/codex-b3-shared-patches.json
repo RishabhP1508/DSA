@@ -1,0 +1,1076 @@
+[
+  {
+    "uid": "lesson:linear-search:ls-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: decide if repeated linear search is right when you query the same array thousands of times for different values.",
+      "The costly pattern is rescanning the whole array per query — O(n) each, multiplied by many queries.",
+      "Key property: the array is fixed across queries, so you can preprocess it once and reuse the result.",
+      "Approach: build a set (hash index) once, then answer each membership query against it.",
+      "One expected O(n) build plus expected O(1) per query gives expected O(n+q), compared with O(n*q) worst-case repeated scans. For tiny data or few queries, constants and early matches may still favor scanning.",
+      "Answer: no — repeated linear search is O(n·q); build a set once (expected O(n)) and query in expected O(1), giving O(n + q)."
+    ]
+  },
+  {
+    "uid": "lesson:linear-search:ls-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You will search the SAME array thousands of times, each query asking whether a different value is present. Repeated linear scans vs building an index first. Values are hashable, and hashing costs are expected under ordinary hashes.",
+      "approaches": [
+        {
+          "id": "build-set",
+          "label": "Build a set once, then query membership",
+          "requiredReasonIds": [
+            "amortize-queries"
+          ]
+        },
+        {
+          "id": "repeated-linear",
+          "label": "Linear-search the array on every query",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Repeated scans have O(n*q) worst-case work, while a set gives expected O(n+q) under the stated hashing model. This drill asks for the preprocessing strategy that improves the general many-query bound."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "amortize-queries",
+          "text": "The array is fixed, so a one-time expected O(n) set build lets each of the q queries run in expected O(1), giving O(n + q) overall instead of O(n·q)."
+        },
+        {
+          "id": "linear-is-faster-repeated",
+          "text": "Repeated linear search is faster than a set because it avoids the build cost each time.",
+          "contradictory": true
+        },
+        {
+          "id": "set-query-linear",
+          "text": "Membership in a set costs O(n) per query, no better than scanning.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "build-set"
+      ],
+      "modelExplanation": "No — repeated linear search is O(n) per query = O(n·q). Build a set once (expected O(n)) then query in expected O(1), giving O(n + q)."
+    }
+  },
+  {
+    "uid": "lesson:binary-search:bs-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: pick the best structure for 100,000 membership searches over a currently unsorted collection.",
+      "Linear search repeats an O(n) scan per query; the cost adds up to O(n·q).",
+      "Key insight: preprocessing once — sorting or hashing — makes each later query cheap.",
+      "Approach: weigh a set (expected O(1) membership) against sort-then-binary-search (ordered queries).",
+      "Pseudocode: build set once → expected O(n + q); or sort once → O(n log n) + O(q log n) queries.",
+      "For plain membership choose the set (expected O(n) build + expected O(1) per query); use sorted + binary search when you also need order-based queries like bounds."
+    ]
+  },
+  {
+    "uid": "lesson:binary-search:bs-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You will search a currently-unsorted collection 100,000 times for different values. Compare linear each time, sort-then-binary-search, or build a set. For pure membership, which is usually best? Assume hashable comparable values and ordinary hashing.",
+      "approaches": [
+        {
+          "id": "build-set",
+          "label": "Build a hash set once, then query",
+          "requiredReasonIds": [
+            "set-expected-o1"
+          ]
+        },
+        {
+          "id": "sort-then-bs",
+          "label": "Sort once, then binary-search each query",
+          "requiredReasonIds": [
+            "sorted-ordered-queries"
+          ]
+        },
+        {
+          "id": "linear-each",
+          "label": "Linear search each time",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Repeated scans have O(n*q) worst-case work; a set gives expected O(n+q) under the stated hashing model."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "set-expected-o1",
+          "text": "For pure membership over many queries, an expected O(n) set build then expected-O(1) lookups gives O(n + q) — the best of the three."
+        },
+        {
+          "id": "sorted-ordered-queries",
+          "text": "Sorting once (O(n log n)) then binary-searching (O(q log n)) also answers ORDERED queries like floor/ceil and ranges that a set cannot."
+        },
+        {
+          "id": "need-linear-scan",
+          "text": "You must scan linearly because the values cannot be hashed.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "build-set"
+      ],
+      "alternatives": [
+        {
+          "approachId": "sort-then-bs",
+          "conditions": "When you also need ORDERED queries such as floor/ceil or ranges, not just membership.",
+          "tradeoff": "O(n log n) worst-case sorting plus O(q log n) queries, a higher general bound than expected hash membership, with support for ordered queries.",
+          "requiredReasonIds": [
+            "sorted-ordered-queries"
+          ]
+        }
+      ],
+      "modelExplanation": "For pure membership across many queries, build a set once (expected O(n)) then query in expected O(1) → O(n + q). Sort-then-binary-search also works and additionally supports ordered queries like bounds."
+    }
+  },
+  {
+    "uid": "lesson:binary-search-answer:bsa-fix-1",
+    "field": "hints",
+    "value": [
+      "Goal: binary-search the smallest feasible capacity and converge instead of looping forever. hi is assumed feasible.",
+      "The infinite loop comes from an update that fails to advance when lo and mid coincide.",
+      "Key insight: when mid is infeasible it cannot be the answer, so the lower bound must move strictly past it.",
+      "Approach: shrink toward the smallest feasible value with lo/hi that always make progress.",
+      "Pseudocode: while lo<hi: mid=(lo+hi)//2; if feasible hi=mid; else lo=mid+1.",
+      "Use `lo = mid + 1` in the infeasible branch so the interval always shrinks."
+    ]
+  },
+  {
+    "uid": "lesson:binary-search-answer:bsa-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: identify which problem fits 'binary search on the answer.'",
+      "The naive cost is testing every candidate value; a monotone feasibility test lets you halve the search space.",
+      "Positive values let a greedy capacity test count the fewest required parts. If at most m parts fit, they can be split to exactly m when m <= n.",
+      "Approach: binary-search the answer value, using the feasibility test to move the bounds.",
+      "Pseudocode: search over possible max-sums; if a candidate is feasible, try smaller, else larger.",
+      "(b): greedily test whether a candidate cap permits at most m parts. With positive values and m <= n, further splits can produce exactly m parts without increasing the largest sum. Feasibility stays true when the cap increases. (a) admits a fixed-width sliding window; (c) uses ordinary array binary search."
+    ]
+  },
+  {
+    "uid": "lesson:binary-search-answer:bsa-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Which scenario admits a monotone capacity search? (a) the maximum sum of a contiguous window of exactly k elements, (b) split a nonempty array of positive integers into exactly m contiguous nonempty parts, 1 <= m <= n, minimizing the largest part sum, (c) locate a target in a sorted array.",
+      "approaches": [
+        {
+          "id": "bs-answer",
+          "label": "Binary search on the answer",
+          "requiredReasonIds": [
+            "monotone-feasibility"
+          ]
+        },
+        {
+          "id": "fixed-window",
+          "label": "Fixed-size sliding window",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "That is the tool for (a): a fixed width k, not a search over candidate answers."
+        },
+        {
+          "id": "array-bs",
+          "label": "Ordinary array binary search",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "That is the tool for (c): locating an element in a sorted array by position."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "monotone-feasibility",
+          "text": "For positive integers and 1 <= m <= n, greedy packing tests at-most-m feasibility; extra splits reach exactly m without raising a part sum, and increasing the cap preserves feasibility."
+        },
+        {
+          "id": "fixed-k-window",
+          "text": "The problem pins a fixed count k of elements to sum.",
+          "contradictory": true
+        },
+        {
+          "id": "locate-in-sorted",
+          "text": "We are locating a known element in an already-sorted array.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "bs-answer"
+      ],
+      "modelExplanation": "(b): greedily test whether a candidate cap permits at most m parts. With positive values and m <= n, further splits can produce exactly m parts without increasing the largest sum. Feasibility stays true when the cap increases. (a) admits a fixed-width sliding window; (c) uses ordinary array binary search."
+    }
+  },
+  {
+    "uid": "pattern:binary-search-on-answer:pat-bsa-recognize-1",
+    "field": "hints",
+    "value": [
+      "Split a nonempty array of positive integers into exactly m contiguous nonempty parts (1 <= m <= n) to minimize the largest part sum. Choose an approach and explain its test.",
+      "Trying every split is exponential; the answer's monotonicity lets you search the value directly.",
+      "For positive values, greedy packing finds the minimum required number of parts. At most m can be split to exactly m because m <= n.",
+      "Approach: binary search on the answer, testing each candidate largest-sum with a greedy pass.",
+      "Pseudocode: lo=max element, hi=total; while lo<hi: mid=(lo+hi)//2; if feasible(mid) hi=mid else lo=mid+1; return lo.",
+      "Binary search candidate part-sum caps. A greedy pass tests whether at most m parts suffice; positive values let us split further to exactly m without increasing any sum. This test is monotone. O(n log(R + 2)) including max/sum setup, R=sum−max."
+    ]
+  },
+  {
+    "uid": "pattern:binary-search-on-answer:pat-bsa-recognize-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Split a nonempty array of positive integers into exactly m contiguous nonempty parts (1 <= m <= n) to minimize the largest part sum. Choose an approach and explain its test.",
+      "approaches": [
+        {
+          "id": "bs-answer",
+          "label": "Binary search on the answer",
+          "requiredReasonIds": [
+            "monotone-feasible"
+          ]
+        },
+        {
+          "id": "array-bs",
+          "label": "Ordinary binary search on the array",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "There is no target element to locate in the array; we search a range of candidate answers, not positions."
+        },
+        {
+          "id": "dp",
+          "label": "Full DP over splits",
+          "requiredReasonIds": [
+            "split-recurrence"
+          ],
+          "rejectionFeedback": "A DP can solve this problem too; the reason choices here compare the efficient monotone capacity approach to positional array search. DP trades more state/work for a general split recurrence."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "monotone-feasible",
+          "text": "Binary search candidate part-sum caps. A greedy pass tests whether at most m parts suffice; positive values let us split further to exactly m without increasing any sum. This test is monotone. O(n log(R + 2)) including max/sum setup, R=sum−max."
+        },
+        {
+          "id": "sorted-array",
+          "text": "The array is sorted, so we can locate the answer by comparing to the midpoint element.",
+          "contradictory": true
+        },
+        {
+          "id": "no-monotonicity",
+          "text": "There is no monotone property to exploit, so we must try every split.",
+          "contradictory": true
+        },
+        {
+          "id": "split-recurrence",
+          "text": "A split DP tries each possible previous cut and minimizes max(previous best, final segment sum); it uses more work but is a correct alternative."
+        }
+      ],
+      "acceptableApproachIds": [
+        "bs-answer"
+      ],
+      "modelExplanation": "Binary search candidate part-sum caps. A greedy pass tests whether at most m parts suffice; positive values let us split further to exactly m without increasing any sum. This test is monotone. O(n log(R + 2)) including max/sum setup, R=sum−max.",
+      "alternatives": [
+        {
+          "approachId": "dp",
+          "conditions": "Use a correct recurrence over all previous split points; accept the higher work and memory cost.",
+          "tradeoff": "Usually O(m n²) time and O(m n) space instead of a greedy predicate search.",
+          "requiredReasonIds": [
+            "split-recurrence"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "uid": "pattern:binary-search-on-answer:pat-bsa-fix-1",
+    "field": "hints",
+    "value": [
+      "Goal: least_capacity(weights, days) = smallest capacity to ship all weights within days. Input weights are positive and days >= 1.",
+      "Binary-search the ANSWER; a feasibility test can_ship(cap) checks a candidate.",
+      "Key property: mid itself may be the smallest feasible capacity, so it must stay in range.",
+      "Approach: on feasible, shrink the UPPER bound to mid (not mid-1); on infeasible, lo=mid+1.",
+      "Pseudocode: if can_ship(mid): hi=mid else lo=mid+1; return lo.",
+      "Fix: set hi = mid (not hi = mid - 1) in the feasible branch."
+    ]
+  },
+  {
+    "uid": "lesson:rotated-array-search:rot-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Why can't plain binary search be used directly on [4,5,6,7,0,1,2], and what single extra step fixes it?",
+      "approaches": [
+        {
+          "id": "which-half-sorted",
+          "label": "Detect which half of mid is sorted, then decide",
+          "requiredReasonIds": [
+            "identify-sorted-half"
+          ]
+        },
+        {
+          "id": "plain-bs",
+          "label": "Plain binary search comparing nums[mid] to target",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "The array is not fully sorted, so nums[mid] vs target alone cannot tell which half to discard."
+        },
+        {
+          "id": "linear",
+          "label": "Linear scan",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A linear scan correctly finds the target but costs O(n). This drill asks for the change that keeps binary search logarithmic on distinct values; the sorted-half range test supplies that change."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "identify-sorted-half",
+          "text": "First determine which half of mid is sorted (e.g. nums[lo] ≤ nums[mid]); then check whether the target lies in that half's range to decide which side to keep — still O(log n)."
+        },
+        {
+          "id": "fully-sorted",
+          "text": "The array is fully sorted, so plain binary search works unchanged.",
+          "contradictory": true
+        },
+        {
+          "id": "no-order",
+          "text": "The array has no usable order, so only a linear scan can work.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "which-half-sorted"
+      ],
+      "modelExplanation": "Because the array isn't fully sorted, nums[mid] vs target alone can't pick a half. Identify which half of mid IS sorted, then decide using that half's range — O(log n)."
+    }
+  },
+  {
+    "uid": "pattern:modified-binary-search:pat-mbs-recognize-1",
+    "field": "hints",
+    "value": [
+      "Find the target in a rotated array of distinct values using O(log n) time.",
+      "A linear scan is O(n); the array's structure still allows halving despite the rotation.",
+      "Key insight: at any midpoint one half is still fully sorted, so you can test which half could hold the target.",
+      "Approach: use a modified binary search that identifies the sorted half each step.",
+      "Pseudocode: while lo<=hi: mid; if the target lies within the sorted half keep it, else search the other half.",
+      "Use modified binary search: at each mid, keep the sorted half if the target lies in it, else the other — O(log n), O(1) space."
+    ]
+  },
+  {
+    "uid": "pattern:modified-binary-search:pat-mbs-recognize-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "A sorted array of DISTINCT values was rotated at an unknown pivot; find a target index in O(log n). Choose an approach.",
+      "approaches": [
+        {
+          "id": "mod-bs",
+          "label": "Modified binary search",
+          "requiredReasonIds": [
+            "one-half-sorted"
+          ]
+        },
+        {
+          "id": "linear",
+          "label": "Linear scan",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A scan is O(n); the array is still 'sorted in halves', which a modified binary search exploits for O(log n)."
+        },
+        {
+          "id": "bs-answer",
+          "label": "Binary search on the answer",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "There is no candidate-answer range with a feasibility test; you are searching within a transformed sorted array."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "one-half-sorted",
+          "text": "At each midpoint one half is still sorted; test whether the target lies within that sorted half and keep it, else keep the other — O(log n), O(1) space."
+        },
+        {
+          "id": "fully-sorted",
+          "text": "The array is fully sorted, so plain binary search applies directly.",
+          "contradictory": true
+        },
+        {
+          "id": "candidate-range",
+          "text": "You search an abstract range of candidate answers with a feasibility test.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "mod-bs"
+      ],
+      "modelExplanation": "Modified binary search: at each midpoint one half is sorted; decide whether the target lies there to discard the other half — O(log n)."
+    }
+  },
+  {
+    "uid": "pattern:modified-binary-search:pat-mbs-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: find the minimum ship capacity so all packages ship within D days. The package weights are positive and D >= 1.",
+      "This isn't searching a rotated array; you're searching a range of candidate capacities.",
+      "Key insight: feasibility ('does this capacity finish within D days?') is monotone in the capacity value.",
+      "Approach: use binary search on the answer with a feasibility test, not a positional array search.",
+      "Pseudocode: lo=max weight, hi=sum; while lo<hi: mid; if feasible(mid) hi=mid else lo=mid+1; return lo.",
+      "No — that's binary search on the ANSWER (search candidate capacities via feasibility); modified binary search targets a transformed sorted array."
+    ]
+  },
+  {
+    "uid": "pattern:modified-binary-search:pat-mbs-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "'Find the minimum ship capacity so all packages ship within D days.' Is that modified binary search on a rotated array? Assume positive integer package weights, preserved order and D >= 1.",
+      "approaches": [
+        {
+          "id": "bs-answer",
+          "label": "Binary search on the answer",
+          "requiredReasonIds": [
+            "candidate-capacity"
+          ]
+        },
+        {
+          "id": "mod-bs",
+          "label": "Modified binary search on a transformed array",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "There is no rotated/transformed array to search; you search a range of candidate capacities via a feasibility test."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "candidate-capacity",
+          "text": "Binary-search the candidate capacity: feasibility ('can we ship within D days at this capacity?') is monotone, so search the answer range."
+        },
+        {
+          "id": "rotated-array",
+          "text": "You are searching within a rotated sorted array by index.",
+          "contradictory": true
+        },
+        {
+          "id": "no-monotone",
+          "text": "Feasibility is not monotone in capacity, so binary search cannot apply.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "bs-answer"
+      ],
+      "modelExplanation": "No — this is binary search on the ANSWER: search candidate capacities using a monotone feasibility test. Modified binary search refers to searching a transformed sorted array."
+    }
+  },
+  {
+    "uid": "lesson:bounds:bnd-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: find the index of the FIRST occurrence of a value in a sorted array with duplicates — bisect_left or bisect_right.",
+      "The error is bisect_right, which lands past the last duplicate rather than at the first.",
+      "Key property: the first occurrence is the leftmost position where the target could sit among equal values.",
+      "Approach: use bisect_left to get that leftmost boundary.",
+      "bisect_left finds the first index with value >= target, or len(nums). Check i < len(nums) and nums[i] == target before reporting an occurrence.",
+      "Use bisect_left to get i, then check i < len(nums) and nums[i] == target. If that fails, the target is absent; otherwise i is its first occurrence. bisect_right points past the equal run."
+    ]
+  },
+  {
+    "uid": "lesson:bounds:bnd-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You need the index of the FIRST occurrence of a value in a sorted array with duplicates. bisect_left or bisect_right? The target might be absent: explain how to check presence after locating the boundary.",
+      "approaches": [
+        {
+          "id": "bisect-left",
+          "label": "Use bisect_left",
+          "requiredReasonIds": [
+            "leftmost-insertion"
+          ]
+        },
+        {
+          "id": "bisect-right",
+          "label": "Use bisect_right",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "bisect_right returns the index just past the LAST occurrence, so it points to the wrong end of a run of duplicates."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "leftmost-insertion",
+          "text": "bisect_left gives the leftmost insertion point; checking i < len(nums) and nums[i] == target verifies it is an actual first occurrence."
+        },
+        {
+          "id": "right-gives-first",
+          "text": "bisect_right returns the index of the first occurrence of the target.",
+          "contradictory": true
+        },
+        {
+          "id": "duplicates-break-bisect",
+          "text": "Neither bisect function works when the array contains duplicates.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "bisect-left"
+      ],
+      "modelExplanation": "Use bisect_left to get i, then check i < len(nums) and nums[i] == target. If that fails, the target is absent; otherwise i is its first occurrence. bisect_right points past the equal run."
+    }
+  },
+  {
+    "uid": "lesson:matrix-search:ms-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: search a matrix sorted within each row and column but NOT globally, deciding if you can binary-search the flattened cells.",
+      "The costly misstep is flattening and binary-searching: row-major order isn't globally sorted here, so binary search is simply invalid.",
+      "At the top-right of the remaining submatrix, values to the left are no larger and values below are no smaller. A too-big value removes its remaining column; a too-small value removes its remaining row.",
+      "Approach: walk a staircase from the top-right (or bottom-left) corner.",
+      "Reasoning: moving left on too-big and down on too-small eliminates a row or column each step for O(m+n); flattened binary search would compare against unsorted order and miss the target.",
+      "Answer: no — flattening isn't globally sorted, so use the O(m+n) staircase from a corner: left on too-big, down on too-small."
+    ]
+  },
+  {
+    "uid": "lesson:bubble-sort:bub-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: decide whether bubble sort is acceptable for n = 1,000,000 elements, and if not, what to use.",
+      "Basic bubble makes n(n-1)/2 comparisons, around 5×10^11 for a million elements.",
+      "The operation-count growth gap is large; Big-O alone does not predict seconds or hours.",
+      "Approach: use an O(n log n) comparison sort such as Python's built-in sorted (Timsort).",
+      "A worst-case n log n comparison bound scales much better; n log2(n) ≈ 2×10^7 is a growth scale, not a promised exact count.",
+      "Use a worst-case O(n log n) sort such as Python sorted. Basic bubble makes n(n-1)/2 comparisons: 499,999,500,000 at n=1,000,000. n log2(n) is about 20,000,000 as a growth-scale comparison, not an exact count or measured run time."
+    ]
+  },
+  {
+    "uid": "lesson:bubble-sort:bub-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You must sort n = 1,000,000 elements. You must decide whether bubble sort is acceptable, and if not, what to use.",
+      "approaches": [
+        {
+          "id": "nlogn-sort",
+          "label": "Use an O(n log n) sort (Python's sorted/Timsort)",
+          "requiredReasonIds": [
+            "quadratic-too-slow"
+          ]
+        },
+        {
+          "id": "bubble",
+          "label": "Use bubble sort",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "The shown basic bubble sort makes 499,999,500,000 adjacent comparisons at n=1,000,000. A worst-case O(n log n) comparison sort has a much smaller growth scale; this count does not predict elapsed seconds."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "quadratic-too-slow",
+          "text": "Bubble makes about 5×10^11 comparisons; n log2(n) is about 2×10^7 as a theoretical scale for a logarithmic-depth sort, not a measured operation count."
+        },
+        {
+          "id": "bubble-is-nlogn",
+          "text": "Bubble sort runs in O(n log n), so it scales fine to a million elements.",
+          "contradictory": true
+        },
+        {
+          "id": "quadratic-fine",
+          "text": "10^12 operations completes essentially instantly, so quadratic is acceptable.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "nlogn-sort"
+      ],
+      "modelExplanation": "Use a worst-case O(n log n) sort such as Python sorted. Basic bubble makes n(n-1)/2 comparisons: 499,999,500,000 at n=1,000,000. n log2(n) is about 20,000,000 as a growth-scale comparison, not an exact count or measured run time."
+    }
+  },
+  {
+    "uid": "lesson:selection-sort:sel-choose-1",
+    "field": "hints",
+    "value": [
+      "Compare the worst-case list writes of the basic in-place bubble, selection and insertion algorithms.",
+      "The costly choice is bubble or insertion sort, which can perform O(n²) writes as they shuffle elements.",
+      "Key property: the cost model weights writes far above reads/comparisons, so write count is what matters.",
+      "Approach: choose selection sort, which commits one element to its final place per position.",
+      "Reasoning: selection sort does at most n swaps regardless of input, whereas bubble/insertion move elements repeatedly; it reads a lot but writes little, matching this cost model.",
+      "Selection sort uses at most n placement swaps (two list writes per swap, including self-swaps in this version), so O(n) writes. Basic bubble/insertion can make O(n²) writes in their worst cases. The returned-copy walkthrough adds O(n) copy writes; the in-place exercise avoids that copy."
+    ]
+  },
+  {
+    "uid": "lesson:selection-sort:sel-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Writes are expensive and reads are cheap. Among the basic in-place bubble, selection and insertion sorts taught here, which has the smallest worst-case growth in list writes?",
+      "approaches": [
+        {
+          "id": "selection",
+          "label": "Selection sort",
+          "requiredReasonIds": [
+            "at-most-n-writes"
+          ]
+        },
+        {
+          "id": "bubble",
+          "label": "Bubble sort",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Basic bubble sort can make O(n²) swaps and writes; selection makes O(n) placement writes."
+        },
+        {
+          "id": "insertion",
+          "label": "Insertion sort",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Insertion sort can make O(n²) shifts and writes; selection makes O(n) placement writes."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "at-most-n-writes",
+          "text": "One placement swap per position means two list writes per swap and O(n) writes total, including self-swaps here; bubble/insertion can write O(n²) times."
+        },
+        {
+          "id": "selection-many-writes",
+          "text": "Selection sort performs O(n²) writes, more than the other quadratic sorts.",
+          "contradictory": true
+        },
+        {
+          "id": "all-same-writes",
+          "text": "All O(n²) sorts perform the same number of writes.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "selection"
+      ],
+      "modelExplanation": "Selection sort uses at most n placement swaps (two list writes per swap, including self-swaps in this version), so O(n) writes. Basic bubble/insertion can make O(n²) writes in their worst cases. The returned-copy walkthrough adds O(n) copy writes; the in-place exercise avoids that copy."
+    }
+  },
+  {
+    "uid": "lesson:insertion-sort:ins-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: choose the best quadratic sort for many small chunks that are each already nearly sorted.",
+      "The missed opportunity is using a non-adaptive quadratic sort that pays full O(n²) even when the data is almost ordered.",
+      "The chunks have only O(n) inversions; insertion sort makes one shift for each inversion.",
+      "Approach: use insertion sort, whose work scales with how far elements must move.",
+      "Insertion sort takes O(n + I); with I = O(n), this is O(n). Its strict > shift test keeps equal values stable. This makes it a useful method for small runs.",
+      "Insertion sort takes O(n + I); with I = O(n), this is O(n). Its strict > shift test keeps equal values stable. This makes it a useful method for small runs."
+    ]
+  },
+  {
+    "uid": "lesson:insertion-sort:ins-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You must sort many small chunks that are already nearly sorted. Which quadratic sort is best and why? Here nearly sorted means the inversion count I is O(n).",
+      "approaches": [
+        {
+          "id": "insertion",
+          "label": "Insertion sort",
+          "requiredReasonIds": [
+            "adaptive-nearly-sorted"
+          ]
+        },
+        {
+          "id": "selection",
+          "label": "Selection sort",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Selection sort always scans the full remaining array regardless of order, so it is O(n²) even on nearly-sorted input — it is not adaptive."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "adaptive-nearly-sorted",
+          "text": "Insertion sort takes O(n + I); with I = O(n), this is O(n). Its strict > shift test keeps equal values stable. This makes it a useful method for small runs."
+        },
+        {
+          "id": "selection-adaptive",
+          "text": "Selection sort speeds up to O(n) on nearly-sorted input.",
+          "contradictory": true
+        },
+        {
+          "id": "insertion-not-stable",
+          "text": "Insertion sort is unstable, so it reorders equal elements.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "insertion"
+      ],
+      "modelExplanation": "Insertion sort takes O(n + I); with I = O(n), this is O(n). Its strict > shift test keeps equal values stable. This makes it a useful method for small runs."
+    }
+  },
+  {
+    "uid": "lesson:counting-sort:cnt-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: choose between counting sort and an O(n log n) comparison sort for 1,000,000 exam scores each in 0–100, and give the complexity.",
+      "A general comparison sort has O(n log n) worst-case work. The fixed small integer range supports O(n+101) counting; adaptive sorting may also exploit ordered runs.",
+      "Key property: every value lies in a small fixed range (0–100), so the max value hi is tiny relative to n.",
+      "Approach: use counting sort over the 0–100 range.",
+      "A 101-entry key range gives O(n + 101) work. This improves the worst-case general comparison bound; it does not promise a measured speedup for every input.",
+      "Counting sort uses O(n + 101) time for keys in 0..100 and is a strong fit. This avoids the worst-case n log n comparison bound. Exact speed depends on the implementation and data; Python sorting can adapt to ordered runs."
+    ]
+  },
+  {
+    "uid": "lesson:counting-sort:cnt-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You must sort 1,000,000 exam scores, each an integer from 0 to 100. Counting sort or an O(n log n) comparison sort?",
+      "approaches": [
+        {
+          "id": "counting-sort",
+          "label": "Counting sort",
+          "requiredReasonIds": [
+            "small-range-linear"
+          ]
+        },
+        {
+          "id": "comparison-sort",
+          "label": "An O(n log n) comparison sort",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A comparison sort is correct; counting has a better general bound for this tiny range. This drill asks which method exploits the bounded integer keys."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "small-range-linear",
+          "text": "The fixed 101-value range makes counting cost O(n + 101), avoiding the general comparison-sort worst-case n log n factor."
+        },
+        {
+          "id": "range-is-huge",
+          "text": "The score range is enormous, so counting sort's counts array would be impractical.",
+          "contradictory": true
+        },
+        {
+          "id": "counting-needs-comparisons",
+          "text": "Counting sort still makes O(n log n) comparisons internally.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "counting-sort"
+      ],
+      "modelExplanation": "Counting sort uses O(n + 101) time for keys in 0..100 and is a strong fit. This avoids the worst-case n log n comparison bound. Exact speed depends on the implementation and data; Python sorting can adapt to ordered runs."
+    }
+  },
+  {
+    "uid": "lesson:bucket-sort:buck-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: judge why bucket sort might beat an O(n log n) comparison sort for a million floats uniformly distributed in [0, 1).",
+      "A general comparison sort has O(n log n) worst-case work; this explicit independent uniform input model and k proportional to n support a lower expected bucket-sort bound.",
+      "Uniform independent samples and k proportional to n give constant expected occupancy per bucket.",
+      "Use k=Θ(n) equal-width float buckets and an integer floor(x*k) index, then sort and concatenate.",
+      "With k=Θ(n) and independent uniform samples, expected bucket occupancy is constant and the total sort can be expected O(n). For floats use an integer index floor(x*k); the shown integer mapping must be adapted. Fixed k=5 does not justify this bound.",
+      "With k=Θ(n) and independent uniform samples, expected bucket occupancy is constant and the total sort can be expected O(n). For floats use an integer index floor(x*k); the shown integer mapping must be adapted. Fixed k=5 does not justify this bound."
+    ]
+  },
+  {
+    "uid": "lesson:bucket-sort:buck-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You have a million floats uniformly distributed in [0, 1). Why might bucket sort beat an O(n log n) comparison sort here? Use k proportional to n and an integer index floor(x*k) for this float variant; assume independent uniform samples.",
+      "approaches": [
+        {
+          "id": "bucket-sort",
+          "label": "Bucket sort",
+          "requiredReasonIds": [
+            "uniform-small-buckets"
+          ]
+        },
+        {
+          "id": "comparison-sort",
+          "label": "An O(n log n) comparison sort",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A comparison sort is correct and robust; this drill highlights the better expected bound available under the explicit random-input and bucket-count assumptions."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "uniform-small-buckets",
+          "text": "With k=Θ(n) and independent uniform samples, expected bucket occupancy is constant and the total sort can be expected O(n). For floats use an integer index floor(x*k); the shown integer mapping must be adapted. Fixed k=5 does not justify this bound."
+        },
+        {
+          "id": "distribution-irrelevant",
+          "text": "Bucket sort's speed does not depend on how the data is distributed.",
+          "contradictory": true
+        },
+        {
+          "id": "comparison-beats-linear",
+          "text": "Uniform data guarantees an O(n) worst-case comparison sort on arbitrary inputs.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "bucket-sort"
+      ],
+      "modelExplanation": "With k=Θ(n) and independent uniform samples, expected bucket occupancy is constant and the total sort can be expected O(n). For floats use an integer index floor(x*k); the shown integer mapping must be adapted. Fixed k=5 does not justify this bound."
+    }
+  },
+  {
+    "uid": "lesson:radix-sort:rad-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You must sort a million nonnegative integers ranging up to 1,000,000,000. Counting sort or radix sort, and why?",
+      "approaches": [
+        {
+          "id": "radix-sort",
+          "label": "Radix sort",
+          "requiredReasonIds": [
+            "digit-passes-avoid-range"
+          ]
+        },
+        {
+          "id": "counting-sort",
+          "label": "Plain counting sort over the value range",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A single counting sort would need an O(hi)=O(10^9) counts array for the billion-wide range — wasteful in time and memory."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "digit-passes-avoid-range",
+          "text": "Radix sort processes ~10 digits with a small base, so it is O(d·(n+b)) ≈ O(n), avoiding the huge O(10^9) counts array that the raw range would require."
+        },
+        {
+          "id": "range-is-small",
+          "text": "The value range is small, so a single counting-sort pass is cheap.",
+          "contradictory": true
+        },
+        {
+          "id": "radix-needs-comparisons",
+          "text": "Radix sort relies on O(n log n) comparisons like a comparison sort.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "radix-sort"
+      ],
+      "modelExplanation": "Radix sort — counting sort would need an O(hi)=O(10^9) counts array (wasteful). Radix processes ~10 digits: O(d·(n+b)) ≈ O(n), avoiding the huge-range blowup."
+    }
+  },
+  {
+    "uid": "lesson:comparators:cmp-choose-1",
+    "field": "hints",
+    "value": [
+      "Sort records by A ascending and numeric B descending. Give a key and explain why a computed key is useful; also describe an option when B is a string.",
+      "A cmp_to_key wrapper may invoke Python comparison code O(n log n) times in the worst case, while a key function is computed once per item. Actual speed depends on callback work and input.",
+      "Negation reverses an ordered numeric key; strings cannot be negated. Stability supports a general two-pass method.",
+      "Approach: pass a tuple key that negates the descending field, e.g. key=lambda x: (x.a, -x.b).",
+      "For numeric B, key=lambda x: (x.a, -x.b). Each key is computed once. For strings or arbitrary comparable B, stable-sort by B descending, then stable-sort by A ascending; the last pass preserves B order on A ties. cmp_to_key is also valid if its comparator defines a consistent order, but may call Python comparison code many times.",
+      "For numeric B, key=lambda x: (x.a, -x.b). Each key is computed once. For strings or arbitrary comparable B, stable-sort by B descending, then stable-sort by A ascending; the last pass preserves B order on A ties. cmp_to_key is also valid if its comparator defines a consistent order, but may call Python comparison code many times."
+    ]
+  },
+  {
+    "uid": "lesson:comparators:cmp-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Sort records by A ascending and numeric B descending. Give a key and explain why a computed key is useful; also describe an option when B is a string.",
+      "approaches": [
+        {
+          "id": "tuple-key",
+          "label": "A tuple key that negates the descending field, e.g. key=lambda x: (x.a, -x.b)",
+          "requiredReasonIds": [
+            "key-computed-once"
+          ]
+        },
+        {
+          "id": "cmp-function",
+          "label": "A cmp_to_key comparator function",
+          "requiredReasonIds": [
+            "consistent-comparator"
+          ],
+          "rejectionFeedback": "A consistent comparator is correct, though this simple numeric ordering usually needs less Python callback work with a key."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "key-computed-once",
+          "text": "For numeric B, a tuple (A,-B) expresses both directions, and the key is computed once per element."
+        },
+        {
+          "id": "cmp-faster",
+          "text": "A cmp_to_key comparator is faster because it compares elements directly.",
+          "contradictory": true
+        },
+        {
+          "id": "cannot-mix-directions",
+          "text": "Python's sort cannot mix ascending and descending fields in one pass.",
+          "contradictory": true
+        },
+        {
+          "id": "consistent-comparator",
+          "text": "A comparator that consistently compares A ascending then B descending expresses the same order; cmp_to_key permits it, with repeated callback cost."
+        }
+      ],
+      "acceptableApproachIds": [
+        "tuple-key"
+      ],
+      "modelExplanation": "For numeric B, key=lambda x: (x.a, -x.b). Each key is computed once. For strings or arbitrary comparable B, stable-sort by B descending, then stable-sort by A ascending; the last pass preserves B order on A ties. cmp_to_key is also valid if its comparator defines a consistent order, but may call Python comparison code many times.",
+      "alternatives": [
+        {
+          "approachId": "cmp-function",
+          "conditions": "The comparator must define a consistent ordering matching A ascending then B descending.",
+          "tradeoff": "Usually more Python callbacks than computing a key once.",
+          "requiredReasonIds": [
+            "consistent-comparator"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "uid": "lesson:interval-sorting:isort-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: to MERGE overlapping intervals, decide whether to sort by start or by end, and what sorting enables.",
+      "The costly baseline is comparing every pair of intervals, which is O(n²).",
+      "In start order, each interval either overlaps the last merged block or starts after it; earlier separated blocks cannot be affected.",
+      "Approach: sort by start, then sweep once, merging each interval into the last kept one when they overlap.",
+      "The forward sweep only extends an end, so it requires start order. Sorting by end alone can lose earlier starts; an adapted reverse sweep is a separate valid algorithm.",
+      "Answer: sort by START, then a single sweep merges overlaps — turning an O(n²) pairwise check into O(n log n) sort + O(n) sweep."
+    ]
+  },
+  {
+    "uid": "lesson:interval-sorting:isort-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You need to MERGE overlapping intervals. Sort by start or by end? What does sorting buy you? Use the taught forward sweep, which only extends the END of the last output block.",
+      "approaches": [
+        {
+          "id": "sort-by-start",
+          "label": "Sort by start, then sweep left to right",
+          "requiredReasonIds": [
+            "start-order-enables-sweep"
+          ]
+        },
+        {
+          "id": "sort-by-end",
+          "label": "Sort by end",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "End order alone is wrong for this forward sweep that only extends ends. An adapted reverse sweep that extends starts would be a valid different merge algorithm."
+        },
+        {
+          "id": "no-sort",
+          "label": "Compare every pair of intervals",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Pairwise comparison is O(n²); sorting first turns the merge into a single O(n) sweep."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "start-order-enables-sweep",
+          "text": "After sorting by start, any interval that overlaps the last kept one starts before that one ends, so a single left-to-right sweep merges them — O(n log n) sort + O(n) sweep."
+        },
+        {
+          "id": "end-order-for-merging",
+          "text": "Sorting by end time is what makes interval merging work.",
+          "contradictory": true
+        },
+        {
+          "id": "merging-needs-no-sort",
+          "text": "Merging overlapping intervals requires no sorting at all.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "sort-by-start"
+      ],
+      "modelExplanation": "Sort by START, then a single left-to-right sweep merges each interval into the last kept one when they overlap — turning an O(n²) pairwise check into O(n log n) sort + O(n) sweep."
+    }
+  },
+  {
+    "uid": "pattern:merge-intervals:pat-mi-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: find the maximum number of non-overlapping meetings you can attend.",
+      "This looks like merging, but you're selecting a maximum-size set, not combining overlaps.",
+      "Key insight: choosing the earliest-finishing compatible meeting leaves the most room for the rest.",
+      "Approach: use greedy interval scheduling, sorting by END time.",
+      "Pseudocode: sort by end; track last end; count each meeting whose start ≥ last end and update last end.",
+      "No — that's greedy interval scheduling: sort by end and greedily pick each meeting starting at or after the last chosen ends."
+    ]
+  },
+  {
+    "uid": "pattern:merge-intervals:pat-mi-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "'Find the maximum number of non-overlapping meetings you can attend.' Is that merge intervals? If not, what? Treat meetings as half-open [start,end) with start < end, so touching endpoints are compatible.",
+      "approaches": [
+        {
+          "id": "greedy-schedule",
+          "label": "Greedy interval scheduling (sort by end)",
+          "requiredReasonIds": [
+            "earliest-finish"
+          ]
+        },
+        {
+          "id": "merge-intervals",
+          "label": "Merge intervals (sort by start)",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Merging combines overlaps into blocks; here we must SELECT the most non-overlapping meetings, which is a different objective."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "earliest-finish",
+          "text": "Sort by END time and greedily take each meeting starting at/after the last chosen one's end; earliest-finish is provably optimal for maximizing the count."
+        },
+        {
+          "id": "combine-overlaps",
+          "text": "The goal is to fuse overlapping ranges into consolidated blocks.",
+          "contradictory": true
+        },
+        {
+          "id": "sort-by-start",
+          "text": "Sorting by start time is what makes this greedy choice optimal.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "greedy-schedule"
+      ],
+      "modelExplanation": "No — maximizing non-overlapping meetings is greedy interval scheduling: sort by end time and pick each compatible meeting. Merging is a different task."
+    }
+  },
+  {
+    "uid": "pattern:greedy-interval-scheduling:pat-gis-recognize-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Recognize: 'Given meeting time ranges, attend the MAXIMUM number without overlaps.' Which pattern and sort key? Meetings are half-open [start,end) with start < end; touching endpoints are compatible.",
+      "approaches": [
+        {
+          "id": "greedy-end",
+          "label": "Greedy interval scheduling, sort by END",
+          "requiredReasonIds": [
+            "earliest-finish-optimal"
+          ]
+        },
+        {
+          "id": "greedy-start",
+          "label": "Greedy, sort by start",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Sorting by start can pick a long early meeting that blocks many later ones; earliest-finish is the provably optimal key."
+        },
+        {
+          "id": "merge-intervals",
+          "label": "Merge intervals",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Merging fuses overlaps; it does not select a maximum non-overlapping set."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "earliest-finish-optimal",
+          "text": "Sort by finish time and greedily take each meeting that starts at/after the last chosen end; finishing earliest leaves the most room, which is provably optimal — O(n log n)."
+        },
+        {
+          "id": "sort-by-duration",
+          "text": "Sorting by shortest duration first is what guarantees optimality.",
+          "contradictory": true
+        },
+        {
+          "id": "need-dp",
+          "text": "Only DP can solve this; no greedy rule is optimal.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "greedy-end"
+      ],
+      "modelExplanation": "Greedy interval scheduling: sort by end time and pick each meeting compatible with the last chosen one — earliest-finish is optimal, O(n log n)."
+    }
+  },
+  {
+    "uid": "pattern:greedy-interval-scheduling:pat-gis-fix-1",
+    "field": "hints",
+    "value": [
+      "Return the maximum count, not the intervals themselves; meetings have start < end and touching endpoints are compatible.",
+      "Sorting by start can pick a long interval that blocks several shorter ones.",
+      "Key property: the optimal greedy always takes the interval that FINISHES earliest.",
+      "Approach: sort by end time, then greedily take an interval whose start >= last end.",
+      "Pseudocode: sort by x[1]; for start,end: if start>=last_end: count+=1; last_end=end.",
+      "Fix: sort with key=lambda x: x[1] (end time)."
+    ]
+  }
+]

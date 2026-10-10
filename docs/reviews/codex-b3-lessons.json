@@ -1,0 +1,1059 @@
+[
+  {
+    "kind": "lesson",
+    "id": "linear-search",
+    "hash": "a237de12b615c1cd",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "First-match index and absent -1 contract checked on empty, duplicate, negative and singleton inputs. No sorting is needed, but len/index access and equality costs are assumed. Set/hash alternatives require hashable values and expected hashing; coding models return the tested result. Function-only cost excludes demo construction/output.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "area",
+      "prerequisites",
+      "explanation",
+      "vocabulary",
+      "concepts",
+      "complexity",
+      "complexityExplanation",
+      "code",
+      "codeExplanations",
+      "bindings",
+      "prediction",
+      "experiments",
+      "exercises",
+      "review",
+      "expectedOutput",
+      "references"
+    ],
+    "codeLinesRead": 11,
+    "lineExplanationsRead": 11,
+    "exerciseIdsRead": [
+      "ls-complete-1",
+      "ls-choose-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheSequentialSearch.html",
+      "https://cp-algorithms.com/num_methods/binary_search.html"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "lesson:linear-search:ls-choose-1",
+        "field": "hints"
+      },
+      {
+        "uid": "lesson:linear-search:ls-choose-1",
+        "field": "recognition"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "binary-search",
+    "hash": "1d031e5c33e0ad94",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Inclusive lo..hi invariants and mid±1 progress checked; equality tests are distinguished from returns. Empty/duplicate inputs preserve any-match-or--1 contract. Average logarithmic search assumes uniformly selected present distinct keys; sortedness validation is outside query scope. Diagram now displays the candidate range.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "area",
+      "prerequisites",
+      "explanation",
+      "vocabulary",
+      "concepts",
+      "complexity",
+      "complexityExplanation",
+      "code",
+      "codeExplanations",
+      "bindings",
+      "prediction",
+      "experiments",
+      "exercises",
+      "review",
+      "expectedOutput",
+      "references"
+    ],
+    "codeLinesRead": 16,
+    "lineExplanationsRead": 16,
+    "exerciseIdsRead": [
+      "bs-fix-1",
+      "bs-choose-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheBinarySearch.html",
+      "https://cp-algorithms.com/num_methods/binary_search.html"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "lesson:binary-search:bs-choose-1",
+        "field": "hints"
+      },
+      {
+        "uid": "lesson:binary-search:bs-choose-1",
+        "field": "recognition"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "binary-search-answer",
+    "hash": "f6a9654b672ca67a",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Positive nonempty integer weights, days>=1, order-preserving greedy feasibility and feasible sum upper bound checked against an independent exhaustive capacity oracle. Invalid inputs reject; R=0 still incurs initialization, so O(n log(R+2)). Exercises explain positive exact-m splitting and valid DP alternatives. Scalar capacities are shown as values, not array indices.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "area",
+      "prerequisites",
+      "explanation",
+      "vocabulary",
+      "concepts",
+      "complexity",
+      "complexityExplanation",
+      "code",
+      "codeExplanations",
+      "bindings",
+      "prediction",
+      "experiments",
+      "exercises",
+      "review",
+      "expectedOutput",
+      "references"
+    ],
+    "codeLinesRead": 22,
+    "lineExplanationsRead": 22,
+    "exerciseIdsRead": [
+      "bsa-choose-1",
+      "bsa-fix-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/description/",
+      "https://cp-algorithms.com/num_methods/binary_search.html"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "lesson:binary-search-answer:bsa-fix-1",
+        "field": "hints"
+      },
+      {
+        "uid": "lesson:binary-search-answer:bsa-choose-1",
+        "field": "hints"
+      },
+      {
+        "uid": "lesson:binary-search-answer:bsa-choose-1",
+        "field": "recognition"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "rotated-array-search",
+    "hash": "4ae88a595d050c38",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Exhaustive rotations of distinct lists through n=6 agree with linear lookup. Distinctness is a correctness precondition: [1,0,1,1,1], target0 produces -1 in this code. A separate duplicate-aware variant must discard equal ambiguous endpoints and may take O(n). Inclusive search range, line tests, model explanations and recognition conditions agree.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "area",
+      "prerequisites",
+      "explanation",
+      "vocabulary",
+      "concepts",
+      "complexity",
+      "complexityExplanation",
+      "code",
+      "codeExplanations",
+      "bindings",
+      "prediction",
+      "experiments",
+      "exercises",
+      "review",
+      "expectedOutput",
+      "references"
+    ],
+    "codeLinesRead": 23,
+    "lineExplanationsRead": 23,
+    "exerciseIdsRead": [
+      "rot-choose-1",
+      "rot-predict-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://leetcode.com/problems/search-in-rotated-sorted-array/description/",
+      "https://cp-algorithms.com/num_methods/binary_search.html"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "lesson:rotated-array-search:rot-choose-1",
+        "field": "recognition"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "bounds",
+    "hash": "d20d99c2f1843e9d",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Both lower/upper half-open loops are visible and match CPython bisect on absent values, empty and all-equal lists. hi=len is rendered as an exclusive endpoint. A lower bound requires bounds-and-equality membership validation. insort insertion shifts O(n) references and may resize; the query O(log n)/O(1) analysis is explicitly scoped separately.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "area",
+      "prerequisites",
+      "explanation",
+      "vocabulary",
+      "concepts",
+      "complexity",
+      "complexityExplanation",
+      "code",
+      "codeExplanations",
+      "bindings",
+      "prediction",
+      "experiments",
+      "exercises",
+      "review",
+      "expectedOutput",
+      "references"
+    ],
+    "codeLinesRead": 26,
+    "lineExplanationsRead": 26,
+    "exerciseIdsRead": [
+      "bnd-complete-1",
+      "bnd-choose-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://docs.python.org/3.14/library/bisect.html",
+      "https://cp-algorithms.com/num_methods/binary_search.html"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "lesson:bounds:bnd-choose-1",
+        "field": "hints"
+      },
+      {
+        "uid": "lesson:bounds:bnd-choose-1",
+        "field": "recognition"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "matrix-search",
+    "hash": "a49e1e80cc8b2c37",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Rectangular globally nondecreasing row-major order is required; row/column sorting alone is insufficient. Flat index quotient/remainder mapping and empty/singleton/duplicate cases tested. Stored row/col highlight the actually examined cell. No O(m*n) validation scan is included in the logarithmic query cost; equality across row boundaries is allowed.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "area",
+      "prerequisites",
+      "explanation",
+      "vocabulary",
+      "concepts",
+      "complexity",
+      "complexityExplanation",
+      "code",
+      "codeExplanations",
+      "bindings",
+      "prediction",
+      "experiments",
+      "exercises",
+      "review",
+      "expectedOutput",
+      "references"
+    ],
+    "codeLinesRead": 23,
+    "lineExplanationsRead": 23,
+    "exerciseIdsRead": [
+      "ms-complete-1",
+      "ms-choose-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://leetcode.com/problems/search-a-2d-matrix/description/",
+      "https://leetcode.com/problems/search-a-2d-matrix-ii/description/",
+      "https://cp-algorithms.com/num_methods/binary_search.html"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "lesson:matrix-search:ms-choose-1",
+        "field": "hints"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "bubble-sort",
+    "hash": "4cf9f584f08ce225",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Shown basic implementation always performs n(n-1)/2 adjacent comparisons, including sorted input; linear best case belongs to the early-exit variant. Strict out-of-order swaps preserve stability, confirmed with tagged equal keys. Copy time is O(n); O(1) auxiliary cost excludes the returned copy, whose storage is O(n). No unsupported wall-clock prediction remains.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "area",
+      "prerequisites",
+      "explanation",
+      "vocabulary",
+      "concepts",
+      "complexity",
+      "complexityExplanation",
+      "code",
+      "codeExplanations",
+      "bindings",
+      "prediction",
+      "experiments",
+      "exercises",
+      "review",
+      "expectedOutput",
+      "references"
+    ],
+    "codeLinesRead": 11,
+    "lineExplanationsRead": 11,
+    "exerciseIdsRead": [
+      "bub-fix-1",
+      "bub-choose-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheBubbleSort.html",
+      "https://raw.githubusercontent.com/python/cpython/v3.14.2/Objects/listobject.c"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "lesson:bubble-sort:bub-choose-1",
+        "field": "hints"
+      },
+      {
+        "uid": "lesson:bubble-sort:bub-choose-1",
+        "field": "recognition"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "selection-sort",
+    "hash": "9adf456cd5519520",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Minimum scan performs n(n-1)/2 comparisons and this exact code executes n placement swaps, including self-swaps. Sorted data still writes each placement pair. Unstable selection distinguished from stable variants. Empty, negative, duplicate and reverse inputs tested; copied-result space is explicitly separated from O(1) working scalars.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "area",
+      "prerequisites",
+      "explanation",
+      "vocabulary",
+      "concepts",
+      "complexity",
+      "complexityExplanation",
+      "code",
+      "codeExplanations",
+      "bindings",
+      "prediction",
+      "experiments",
+      "exercises",
+      "review",
+      "expectedOutput",
+      "references"
+    ],
+    "codeLinesRead": 13,
+    "lineExplanationsRead": 13,
+    "exerciseIdsRead": [
+      "sel-complete-1",
+      "sel-choose-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheSelectionSort.html",
+      "https://raw.githubusercontent.com/python/cpython/v3.14.2/Objects/listobject.c"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "lesson:selection-sort:sel-choose-1",
+        "field": "hints"
+      },
+      {
+        "uid": "lesson:selection-sort:sel-choose-1",
+        "field": "recognition"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "insertion-sort",
+    "hash": "977f5d7654950125",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Strict > shifts preserve stability; tagged records and signed boundaries tested. Adaptive cost is O(n+I), where I is inversion count; near-sorted linearity requires I=O(n). The while counter counts the short-circuit whole condition, not always a key comparison. Held key is displayed separately. Output copy time/storage are included or explicitly excluded by scope.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "area",
+      "prerequisites",
+      "explanation",
+      "vocabulary",
+      "concepts",
+      "complexity",
+      "complexityExplanation",
+      "code",
+      "codeExplanations",
+      "bindings",
+      "prediction",
+      "experiments",
+      "exercises",
+      "review",
+      "expectedOutput",
+      "references"
+    ],
+    "codeLinesRead": 13,
+    "lineExplanationsRead": 13,
+    "exerciseIdsRead": [
+      "ins-fix-1",
+      "ins-choose-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheInsertionSort.html",
+      "https://raw.githubusercontent.com/python/cpython/v3.14.2/Objects/listobject.c"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "lesson:insertion-sort:ins-choose-1",
+        "field": "hints"
+      },
+      {
+        "uid": "lesson:insertion-sort:ins-choose-1",
+        "field": "recognition"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "merge-sort",
+    "hash": "8ced05a58bac439d",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Base cases and two strictly smaller recursive slices introduced before use. Stable <= tie choice checked with tagged records. Slicing/copying is O(n) per recursion level, so total time remains O(n log n); cumulative allocation is distinguished from O(n) peak live storage. Separate input, left/right, destination and live recursion bindings render actual traces.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "area",
+      "prerequisites",
+      "explanation",
+      "vocabulary",
+      "concepts",
+      "complexity",
+      "complexityExplanation",
+      "code",
+      "codeExplanations",
+      "bindings",
+      "prediction",
+      "experiments",
+      "exercises",
+      "review",
+      "expectedOutput",
+      "references"
+    ],
+    "codeLinesRead": 19,
+    "lineExplanationsRead": 19,
+    "exerciseIdsRead": [
+      "mrg-complete-1",
+      "mrg-choose-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://opendatastructures.org/ods-python/11_1_Comparison_Based_Sorti.html",
+      "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheMergeSort.html",
+      "https://visualgo.net/en/sorting"
+    ],
+    "requiredSharedPatches": [],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "quick-sort",
+    "hash": "1932b5f5c14baedf",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Reviewed the exact middle-position-pivot three-list version, not in-place partition quicksort. All-equal best case is O(n); average O(n log n) requires distinct random permutations; crafted extremes give quadratic time and quadratic peak retained-list space. Real depth12 trace retains list lengths1..12. Total-order/no-NaN preconditions and separate classic in-place stack costs are explicit; stable group ordering checked.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "area",
+      "prerequisites",
+      "explanation",
+      "vocabulary",
+      "concepts",
+      "complexity",
+      "complexityExplanation",
+      "code",
+      "codeExplanations",
+      "bindings",
+      "prediction",
+      "experiments",
+      "exercises",
+      "review",
+      "expectedOutput",
+      "references"
+    ],
+    "codeLinesRead": 11,
+    "lineExplanationsRead": 11,
+    "exerciseIdsRead": [
+      "qk-choose-1",
+      "qk-predict-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://opendatastructures.org/ods-python/11_1_Comparison_Based_Sorti.html",
+      "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheQuickSort.html",
+      "https://raw.githubusercontent.com/python/cpython/v3.14.2/Objects/listobject.c"
+    ],
+    "requiredSharedPatches": [],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "counting-sort",
+    "hash": "c01803df042ffbb7",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Shown integer-frequency reconstruction differs from stable record placement. Nonnegative 0..hi keys, O(n+hi) costs and sparse-range tradeoff checked. Temporary repeated-value list can hold O(n) references beyond result/counts, so auxiliary statement includes it. Output binding now shows reconstruction, and expected speed is not treated as unconditional against adaptive Python sorting.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "area",
+      "prerequisites",
+      "explanation",
+      "vocabulary",
+      "concepts",
+      "complexity",
+      "complexityExplanation",
+      "code",
+      "codeExplanations",
+      "bindings",
+      "prediction",
+      "experiments",
+      "exercises",
+      "review",
+      "expectedOutput",
+      "references"
+    ],
+    "codeLinesRead": 14,
+    "lineExplanationsRead": 14,
+    "exerciseIdsRead": [
+      "cnt-choose-1",
+      "cnt-complete-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://opendatastructures.org/ods-python/11_2_Counting_Sort_Radix_So.html",
+      "https://raw.githubusercontent.com/python/cpython/v3.14.2/Objects/listobject.c"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "lesson:counting-sort:cnt-choose-1",
+        "field": "hints"
+      },
+      {
+        "uid": "lesson:counting-sort:cnt-choose-1",
+        "field": "recognition"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "bucket-sort",
+    "hash": "6b22322e02d943f8",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Mapped nonnegative integer x*k//(max+1) into 0..k-1, requiring positive integer k; floats require different integer-index mapping. Actual inner Python sorted gives O(n log n+k) worst time, not a quadratic insertion-sort bound. Expected linearity requires k=Theta(n) and suitable independent occupancy; fixed default k=5 cannot establish it. Bucket matrix and result render actual values.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "area",
+      "prerequisites",
+      "explanation",
+      "vocabulary",
+      "concepts",
+      "complexity",
+      "complexityExplanation",
+      "code",
+      "codeExplanations",
+      "bindings",
+      "prediction",
+      "experiments",
+      "exercises",
+      "review",
+      "expectedOutput",
+      "references"
+    ],
+    "codeLinesRead": 15,
+    "lineExplanationsRead": 15,
+    "exerciseIdsRead": [
+      "buck-choose-1",
+      "buck-predict-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://www-cgrl.cs.mcgill.ca/~godfried/teaching/dm-reading-assignments/Bucket-Sorting-Expected-Complexity.pdf",
+      "https://docs.python.org/3.14/howto/sorting.html",
+      "https://raw.githubusercontent.com/python/cpython/v3.14.2/Objects/listobject.c"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "lesson:bucket-sort:buck-choose-1",
+        "field": "hints"
+      },
+      {
+        "uid": "lesson:bucket-sort:buck-choose-1",
+        "field": "recognition"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "heap-sort",
+    "hash": "606b3a3dfb7bd69d",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Separate copied min-heap plus output list is the displayed algorithm; O(n) heapify and repeated minimum extraction give O(n log n) worst time with O(n) auxiliary heap memory. Classic O(1)-auxiliary array heapsort is distinguished. Explicit loop makes heap shrinking and output growth visible, with one actual pop per counter entry. No stability or blanket practical-speed guarantee is taught.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "area",
+      "prerequisites",
+      "explanation",
+      "vocabulary",
+      "concepts",
+      "complexity",
+      "complexityExplanation",
+      "code",
+      "codeExplanations",
+      "bindings",
+      "prediction",
+      "experiments",
+      "exercises",
+      "review",
+      "expectedOutput",
+      "references"
+    ],
+    "codeLinesRead": 12,
+    "lineExplanationsRead": 12,
+    "exerciseIdsRead": [
+      "hs-choose-1",
+      "hs-predict-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://docs.python.org/3.14/library/heapq.html",
+      "https://opendatastructures.org/ods-python/11_1_Comparison_Based_Sorti.html"
+    ],
+    "requiredSharedPatches": [],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "radix-sort",
+    "hash": "39fd7540066fcc7e",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Stable LSD bucket ordering and digit extraction checked on empty, zero, duplicates and varying lengths. d>=1 includes zero by convention; all-zero input executes zero bucket passes but still costs O(n) copy/max. Nonnegative integer and bounded arithmetic assumptions explicit. Digit buckets and rebuilt output render; unrestricted Python integer bit costs are excluded from unit-cost bound.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "area",
+      "prerequisites",
+      "explanation",
+      "vocabulary",
+      "concepts",
+      "complexity",
+      "complexityExplanation",
+      "code",
+      "codeExplanations",
+      "bindings",
+      "prediction",
+      "experiments",
+      "exercises",
+      "review",
+      "expectedOutput",
+      "references"
+    ],
+    "codeLinesRead": 18,
+    "lineExplanationsRead": 18,
+    "exerciseIdsRead": [
+      "rad-choose-1",
+      "rad-complete-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://opendatastructures.org/ods-python/11_2_Counting_Sort_Radix_So.html"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "lesson:radix-sort:rad-choose-1",
+        "field": "recognition"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "comparators",
+    "hash": "c596b71084ba6c82",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Python3.14 key-once and stable reverse semantics checked against official docs and runtime. Returned sorted lists are materialized for diagrams while original inputs remain inspectable. Tuple keys, numeric descending negation and string multipass alternatives distinguished. cmp_to_key is accepted when only a valid comparator is available. Program bound includes literals and bounded-size printing/key costs; functions/expressions prerequisites named.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "area",
+      "prerequisites",
+      "explanation",
+      "vocabulary",
+      "concepts",
+      "complexity",
+      "complexityExplanation",
+      "code",
+      "codeExplanations",
+      "bindings",
+      "prediction",
+      "experiments",
+      "exercises",
+      "review",
+      "expectedOutput",
+      "references"
+    ],
+    "codeLinesRead": 7,
+    "lineExplanationsRead": 7,
+    "exerciseIdsRead": [
+      "cmp-complete-1",
+      "cmp-choose-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://docs.python.org/3.14/howto/sorting.html",
+      "https://raw.githubusercontent.com/python/cpython/v3.14.2/Objects/listobject.c"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "lesson:comparators:cmp-choose-1",
+        "field": "hints"
+      },
+      {
+        "uid": "lesson:comparators:cmp-choose-1",
+        "field": "recognition"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "interval-sorting",
+    "hash": "ae105415d3888208",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Start-key returned list is shown alongside original intervals. Program complexity includes construction and bounded-size endpoint output. Sorting already ordered input can be linear; a reverse end-sorted merge is a valid adapted sweep, while the displayed forward merge needs start order. Closed merge and positive-duration half-open scheduling conventions are distinguished.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "area",
+      "prerequisites",
+      "explanation",
+      "vocabulary",
+      "concepts",
+      "complexity",
+      "complexityExplanation",
+      "code",
+      "codeExplanations",
+      "bindings",
+      "prediction",
+      "experiments",
+      "exercises",
+      "review",
+      "expectedOutput",
+      "references"
+    ],
+    "codeLinesRead": 4,
+    "lineExplanationsRead": 4,
+    "exerciseIdsRead": [
+      "isort-choose-1",
+      "isort-complete-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://docs.python.org/3.14/howto/sorting.html",
+      "https://leetcode.com/problems/merge-intervals/description/",
+      "https://www.cs.cornell.edu/courses/cs482/2006su/handouts/ahead.pdf"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "lesson:interval-sorting:isort-choose-1",
+        "field": "hints"
+      },
+      {
+        "uid": "lesson:interval-sorting:isort-choose-1",
+        "field": "recognition"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  }
+]

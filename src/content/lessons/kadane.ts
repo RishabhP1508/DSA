@@ -113,9 +113,9 @@ This is different from the fixed-size window (which fixes a width k) and from ta
     {
       id: "kad-fix-1",
       kind: "fix-mistake",
-      prompt: "This Kadane returns 0 for an all-negative array, which is wrong. Fix the initialization.",
+      prompt: "For a nonempty array, this Kadane returns 0 when every element is negative. Fix the initialization and scan without allocating a slice, keeping O(1) auxiliary space under the unit-cost model.",
       starterCode: "def max_sub(nums):\n    best = 0\n    current = 0\n    for x in nums:\n        current = max(x, current + x)\n        best = max(best, current)\n    return best",
-      expected: "def max_sub(nums):\n    best = nums[0]\n    current = nums[0]\n    for x in nums[1:]:\n        current = max(x, current + x)\n        best = max(best, current)\n    return best",
+      expected: "def max_sub(nums):\n    best = nums[0]\n    current = nums[0]\n    for i in range(1, len(nums)):\n        current = max(nums[i], current + nums[i])\n        best = max(best, current)\n    return best",
       hints: ["What should the answer be if all numbers are negative?", "The least-negative single element — not 0.", "Seed best and current from nums[0], then scan nums[1:]."],
     },
     {
@@ -150,13 +150,16 @@ This is different from the fixed-size window (which fixes a width k) and from ta
       verifiedClaims: ["Maximum subarray is solved by Kadane's linear scan"],
       accessDate: "2026-09-20",
     },
+
+    {"url":"https://cp-algorithms.com/others/maximum_average_segment.html","title":"CP-Algorithms — Maximum/minimum subsegment sum","section":"Algorithm 2 (Kadane)","verifiedClaims":["Discarding an unhelpful negative running prefix supports a linear maximum-subarray scan."],"topic":"kadane","purpose":"Delegated Codex review: reconcile learner-facing explanations with the demonstrated implementation.","accessDate":"2026-10-10"},
+    {"url":"https://docs.python.org/3.14/tutorial/introduction.html#lists","title":"Python 3.14 — Lists","section":"Lists; slicing","verifiedClaims":["Slicing a list returns a new list; an indexed scan avoids allocating that slice."],"topic":"kadane","purpose":"Delegated Codex review: reconcile learner-facing explanations with the demonstrated implementation.","accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "d8577076817be4e5",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "a233d916247460a7",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

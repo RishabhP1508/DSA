@@ -1,0 +1,19 @@
+import fs from 'node:fs';
+import {saveExerciseOverride} from './lib/content-edit.mjs';
+const integration=JSON.parse(fs.readFileSync('docs/reviews/codex-fu12-central-integration.json','utf8'));
+let registry=fs.readFileSync('src/content/registry.ts','utf8');
+for(const l of integration.lessons){if(registry.includes('import { '+l.exportName+' }'))throw Error('already integrated');registry=registry.replace('import type { LessonDefinition, PatternDefinition } from "../core/types";',`import type { LessonDefinition, PatternDefinition } from "../core/types";\nimport { ${l.exportName} } from "./lessons/${l.id}";`);registry=registry.replace('  kmp,\n];',`  ${l.exportName},\n  kmp,\n];`);}
+fs.writeFileSync('src/content/registry.ts',registry);
+let cover=fs.readFileSync('src/content/coverage.ts','utf8').replace('COVERAGE_VERSION = 19','COVERAGE_VERSION = 20');
+const entries=integration.lessons.map(l=>`  e(${JSON.stringify(l.coverage.area)},${JSON.stringify(l.coverage.subtopic)},${JSON.stringify(l.coverage.id)},${JSON.stringify({lessonId:l.id,hasVisualExample:true,hasExercise:true,status:'verified'})}),`).join('\n');
+cover=cover.replace('\n];','\n'+entries+'\n];');fs.writeFileSync('src/content/coverage.ts',cover);
+const mapNames={recognition:'EXERCISE_RECOGNITION',tests:'EXERCISE_TESTS',hints:'EXERCISE_HINTS',preludeCode:'EXERCISE_PRELUDE'};
+for(const field of Object.keys(mapNames)){const selected=integration.sharedExercisePatches.filter(p=>p.field===field);if(!selected.length)continue;fs.appendFileSync('src/content/exercise-tests-data.ts',`\n// Complete FU-1/FU-2 contracts and local practice.\nObject.assign(${mapNames[field]}, ${JSON.stringify(Object.fromEntries(selected.map(p=>[p.uid,p.value])),null,2)});\n`);}
+fs.appendFileSync('src/content/exercise-faulty-variants.ts',`\n// Independently authored FU-1/FU-2 faulty solutions.\nObject.assign(EXERCISE_FAULTY, ${JSON.stringify(Object.fromEntries(integration.faultyVariants.map(p=>[p.uid,p.variants])),null,2)});\n`);
+let notion=fs.readFileSync('src/content/notion-practice.ts','utf8');
+for(const l of integration.lessons){const title=l.id==='task-scheduler'?'Task Scheduler':'Meeting Rooms II';const lines=notion.split('\n');const ix=lines.findIndex(line=>line.includes(`title: "${title}"`));if(ix<0)throw Error('missing '+title);lines[ix]='  '+JSON.stringify({source:'notion-export',mainTopic:l.coverage.area,title,url:l.coverage.externalPractice[0].url,coverageIds:l.coverageIds,mappedIds:[l.id],status:'mapped',rationale:l.id==='task-scheduler'?'The dedicated lesson teaches common-cooldown unit-time scheduling with eligible priorities, release queues, idle slots, correctness assumptions and timeline construction; optional duration-only formula is distinguished.':'The dedicated lesson teaches active-end min-heaps and maximum concurrent overlap, releases end<=start under half-open interval semantics, and distinguishes room counting from selecting non-overlapping meetings.'})+',';notion=lines.join('\n');}fs.writeFileSync('src/content/notion-practice.ts',notion);
+for(const p of JSON.parse(fs.readFileSync('docs/reviews/codex-b6-test-text-patches.json','utf8')))saveExerciseOverride(p.uid,p.field,p.value);
+fs.appendFileSync('.gitignore','\n# Portable runtime, delivery archives and local verification artifacts\nvendor/\nreleases/\noutputs/\ndependency-audit.json\n');
+for(const l of integration.lessons){const item=integration.referenceMirror.find(r=>r.id===l.id);fs.appendFileSync('docs/references.md',`\n### ${l.coverage.id} — Codex completion\n\n`+item.references.map(r=>`- [${r.title}](${r.url}) — ${r.section}. Checked ${r.accessDate}: ${r.verifiedClaims.join('; ')}.\n`).join(''));}
+console.log('Integrated two lessons, two coverage entries, eight shared exercise fields, six faulty variants and both external practice mappings.');
+

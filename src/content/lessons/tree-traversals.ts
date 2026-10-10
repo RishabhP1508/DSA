@@ -52,46 +52,124 @@ All three are **O(n)** time (every node visited once) and **O(h)** space (recurs
   ],
 
   concepts: {
-    purpose: "Produce different node orderings from the same DFS by moving the visit step.",
-    operations: "Recurse with the visit before (pre), between (in), or after (post) the child calls.",
-    uses: "Inorder for sorted BST output; preorder for copy/serialize; postorder for subtree-first computation.",
-    tradeoffs: "All O(n)/O(h); the order you pick must match what the problem needs.",
-    commonMistakes: "Using the wrong order for the task; expecting inorder to be sorted on a non-BST; missing the None base case.",
-    edgeCases: "Empty tree yields []. A single node gives the same one-element list in all three orders. Inorder is sorted only when the tree is a valid BST.",
-  },
+  "purpose": "Produce different node orderings from the same DFS by moving the visit step.",
+  "operations": "Recurse with the visit before (pre), between (in), or after (post) the child calls.",
+  "uses": "Inorder for sorted BST output; preorder for copy/serialize; postorder for subtree-first computation.",
+  "tradeoffs": "All O(n)/O(h); the order you pick must match what the problem needs.",
+  "commonMistakes": "Using the wrong order for the task; expecting inorder to be sorted on a non-BST; missing the None base case.",
+  "edgeCases": "Empty tree yields []. A single node gives the same one-element list in all three orders. Inorder is sorted only when the tree is a valid BST. A preorder value list alone does not uniquely serialize an arbitrary tree: record null markers (or another traversal with distinct keys) to preserve shape."
+},
 
   complexity: [
     { operation: "Any DFS traversal", best: "O(n)", average: "O(n)", worst: "O(n)", space: "O(h)", note: "Each node visited once; recursion stack = height h." },
   ],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [
-      { symbol: "n", meaning: "the number of nodes" },
-      { symbol: "h", meaning: "the tree height (recursion depth)" },
-    ],
-    costModel: "Each traversal visits every node exactly once with O(1) work; the recursion stack holds one frame per level of the current path.",
-    time: {
-      bound: "O(n)",
-      case: "worst",
-      explanation: "Each of preorder/inorder/postorder recurses once per node and does constant work at the visit, so each traversal is O(n). Moving the visit line changes the ORDER of output, not the amount of work — all three touch every node once.",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of nodes"
     },
-    space: {
-      bound: "O(h)",
-      case: "worst",
-      explanation: "The recursion stack depth equals the current path length, bounded by the height h (O(log n) balanced, O(n) degenerate). Output lists are O(n) but are the required results, not auxiliary working space.",
-      inputOutputNote: "The three output lists are O(n) results; the O(h) recursion stack is the working space.",
-    },
-    derivation: [
-      { lines: [12, 13, 14], description: "Preorder visits each node once and recurses into both children.", cost: "O(n)", dimension: "time" },
-      { lines: [15, 16, 17, 18, 19, 20], description: "Inorder and postorder do the same visits in a different position.", cost: "O(n)", dimension: "time" },
-      { lines: [13, 16, 19], description: "Recursion depth reaches the height h.", cost: "O(h)", dimension: "space" },
-    ],
-    assumptions: ["Visiting (append) is O(1).", "Recursion reaches depth h."],
-    tradeoffs: "Iterative versions with an explicit stack avoid recursion limits but keep O(h) space; Morris traversal achieves O(1) space at the cost of temporarily mutating the tree.",
-    counters: [{ label: "preorder visits", definition: "executions of the preorder visit (line 13)", countLines: [13] }],
-    fixedDataNote: "This run traverses 7 nodes three ways. Inorder yields sorted [2,3,4,5,7,8,9] because the tree is a BST. The O(n)/O(h) bounds generalise.",
+    {
+      "symbol": "h",
+      "meaning": "the tree height (recursion depth)"
+    }
+  ],
+  "costModel": "Each traversal visits every node exactly once with O(1) work; the recursion stack holds one frame per level of the current path.",
+  "time": {
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "Each of preorder/inorder/postorder recurses once per node and does constant work at the visit, so each traversal is O(n). Moving the visit line changes the ORDER of output, not the amount of work — all three touch every node once."
   },
+  "space": {
+    "bound": "O(h)",
+    "case": "worst",
+    "explanation": "The recursion stack depth equals the current path length, bounded by the height h (O(log n) balanced, O(n) degenerate). Output lists are O(n) but are the required results, not auxiliary working space.",
+    "inputOutputNote": "The three output lists are O(n) results; the O(h) recursion stack is the working space."
+  },
+  "derivation": [
+    {
+      "lines": [
+        12,
+        13,
+        14
+      ],
+      "description": "Preorder visits each node once and recurses into both children.",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "description": "Inorder and postorder do the same visits in a different position.",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        13,
+        16,
+        19
+      ],
+      "description": "Recursion depth reaches the height h.",
+      "cost": "O(h)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Visiting (append) is O(1).",
+    "Recursion reaches depth h.",
+    "A proper acyclic tree. Height h counts nodes; recursion must fit Python’s depth limit. Returned traversal lists are output storage."
+  ],
+  "tradeoffs": "Iterative versions with an explicit stack avoid recursion limits but keep O(h) space; Morris traversal achieves O(1) space at the cost of temporarily mutating the tree.",
+  "counters": [
+    {
+      "label": "preorder visits",
+      "definition": "executions of the preorder visit (line 13)",
+      "countLines": [
+        13
+      ]
+    }
+  ],
+  "fixedDataNote": "This run traverses 7 nodes three ways. Inorder yields sorted [2,3,4,5,7,8,9] because the tree is a BST. The O(n)/O(h) bounds generalise.",
+  "references": [
+    {
+      "url": "https://runestone.academy/ns/books/published/pythonds3/Trees/TreeTraversals.html",
+      "title": "Runestone: tree traversals",
+      "section": "6.8: preorder, inorder, postorder; recursive code listings",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Traversal visit order.",
+        "None is the recursion base case."
+      ],
+      "conventions": [],
+      "accessDate": "2026-10-10"
+    },
+    {
+      "url": "https://opendatastructures.org/ods-python/6_Binary_Trees.html",
+      "title": "Open Data Structures: binary trees",
+      "section": "Chapter 6 definitions and Figures 6.1–6.2",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Unique parents in a rooted tree.",
+        "Depth and height count edges."
+      ],
+      "conventions": [
+        "This app states when its height function counts nodes instead."
+      ],
+      "accessDate": "2026-10-10"
+    }
+  ]
+},
 
   code,
 
@@ -129,8 +207,13 @@ All three are **O(n)** time (every node visited once) and **O(h)** space (recurs
   ],
 
   prediction: [
-    { atEventIndex: 0, prompt: "Which traversal yields a binary search tree's values in sorted order, and why?", answer: "Inorder (left, node, right). In a BST every left descendant is smaller and every right descendant is larger, so visiting left before the node before right produces ascending order.", explanation: "The BST invariant (left < node < right) combined with inorder's left-node-right visiting exactly lays the values out from smallest to largest." },
-  ],
+  {
+    "atEventIndex": 0,
+    "prompt": "Which traversal yields a binary search tree's values in sorted order, and why?",
+    "answer": "Inorder visits left subtree, node, right subtree. A valid BST puts smaller keys left and larger keys right; if its duplicate policy allows equal keys, the result is nondecreasing.",
+    "explanation": "The subtree ordering invariant and the left-node-right order arrange all keys from smallest to largest. Strict increase additionally requires distinct keys."
+  }
+],
 
   experiments: [
     "Move the visit line in each function and confirm the order changes accordingly.",
@@ -161,22 +244,41 @@ All three are **O(n)** time (every node visited once) and **O(h)** space (recurs
   expectedOutput: "[5, 3, 2, 4, 8, 7, 9]\n[2, 3, 4, 5, 7, 8, 9]\n[2, 4, 3, 7, 9, 8, 5]\n",
 
   references: [
-    {
-      url: "https://runestone.academy/ns/books/published/pythonds3/Trees/TreeTraversals.html",
-      title: "Tree Traversals — Problem Solving with Algorithms and DS using Python (Runestone)",
-      section: "Preorder, inorder, postorder",
-      topic: "trees/traversals",
-      purpose: "Confirm the three traversal definitions and the inorder-yields-sorted-BST property.",
-      verifiedClaims: ["Pre/in/post-order differ by visit position; inorder of a BST is sorted; all are O(n)"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://runestone.academy/ns/books/published/pythonds3/Trees/TreeTraversals.html",
+    "title": "Runestone: tree traversals",
+    "section": "6.8: preorder, inorder, postorder; recursive code listings",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Traversal visit order.",
+      "None is the recursion base case."
+    ],
+    "conventions": [],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://opendatastructures.org/ods-python/6_Binary_Trees.html",
+    "title": "Open Data Structures: binary trees",
+    "section": "Chapter 6 definitions and Figures 6.1–6.2",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Unique parents in a rooted tree.",
+      "Depth and height count edges."
+    ],
+    "conventions": [
+      "This app states when its height function counts nodes instead."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "519d1e9198c2a0e0",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "f57cb28fc4eac982",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 5,
   },
 };

@@ -73,7 +73,7 @@ We use a leading \`0\` (\`prefix[0] = 0\`) so the formula \`prefix[b] - prefix[a
       { lines: [9], description: "A range-sum query is one subtraction.", cost: "O(1)", dimension: "time" },
       { lines: [4, 6], description: "The prefix array holds n+1 totals.", cost: "O(n)", dimension: "space" },
     ],
-    assumptions: ["Additions are constant time.", "append is amortized O(1).", "Indices in queries are valid."],
+    assumptions: ["Additions are constant time.", "append is amortized O(1).", "Indices satisfy 0 <= a <= b <= len(nums). The input does not change after preprocessing. Addition and subtraction use a bounded-value unit-cost model."],
     tradeoffs: "If you only need one range sum, a direct O(range) sum is simpler and uses O(1) space; prefix sums pay off when there are many queries.",
     counters: [{ label: "prefix builds", definition: "appends while building prefix (line 6)", countLines: [6] }],
     fixedDataNote: "This run builds prefix for 5 elements and answers one query (nums[1:4] = 6). The O(n) build / O(1) query bounds generalise to n and q.",
@@ -140,13 +140,13 @@ We use a leading \`0\` (\`prefix[0] = 0\`) so the formula \`prefix[b] - prefix[a
 
   references: [
     {
-      url: "https://cp-algorithms.com/data_structures/prefix_sum.html",
-      title: "Prefix sum array — CP-Algorithms",
-      section: "Prefix sums and range queries",
+      url: "https://usaco.guide/silver/prefix-sums",
+      title: "Introduction to Prefix Sums — USACO Guide",
+      section: "Prefix Sums",
       topic: "arrays/prefix-sums",
       purpose: "Confirm the range-sum formula, the leading-zero convention, and O(n) build / O(1) query costs.",
       verifiedClaims: ["Range sum equals prefix[b] - prefix[a]", "Build is O(n); each query is O(1)"],
-      accessDate: "2026-09-20",
+      accessDate: "2026-10-10",
     },
     {
       url: "https://www.geeksforgeeks.org/prefix-sum-array-implementation-applications-competitive-programming/",
@@ -159,11 +159,11 @@ We use a leading \`0\` (\`prefix[0] = 0\`) so the formula \`prefix[b] - prefix[a
     },
   ],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "02e41557e391e579",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "8d39720d4e7efcbc",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

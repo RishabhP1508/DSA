@@ -25,11 +25,7 @@ export const insertionSort: LessonDefinition = {
   area: "Sorting",
   prerequisites: ["bubble-sort", "cases"],
 
-  explanation: `**Insertion sort** builds a sorted prefix one element at a time, the way you sort a hand of cards: take the next card (\`key\`) and slide it left past any larger cards until it sits in the right place. Elements before \`i\` are always kept sorted; each step inserts \`a[i]\` into that sorted region.
-
-Its complexity is **adaptive**, which is what makes it special. In the **worst case** (reverse-sorted) each element shifts past all the ones before it — **O(n²)**. But in the **best case** (already sorted) each element only compares once and never shifts — **O(n)**. On **nearly-sorted** data it is close to linear, which is why real-world hybrid sorts (like Python's Timsort) use insertion sort for small or almost-ordered runs.
-
-It is **stable** and uses **O(1)** extra space. Among the three quadratic sorts, insertion sort is the one you actually see inside production sorting code — precisely because of that O(n) best case on ordered data.`,
+  explanation: "**Insertion sort** builds a sorted prefix one element at a time, the way you sort a hand of cards: take the next card (`key`) and slide it left past any larger cards until it sits in the right place. Elements before `i` are always kept sorted; each step inserts `a[i]` into that sorted region.\n\nIts complexity is **adaptive**, which is what makes it special. In the **worst case** (reverse-sorted) each element shifts past all the ones before it — **O(n²)**. But in the **best case** (already sorted) each element only compares once and never shifts — **O(n)**. Its work is O(n + I), where I is the number of inversions (out-of-order pairs); when I = O(n), it is close to linear, which is why real-world hybrid sorts (like Python's Timsort) use insertion sort for small or almost-ordered runs.\n\nIt is **stable** and uses **O(1)** extra space. Among the three quadratic sorts, insertion sort is the one you actually see inside production sorting code — precisely because of that O(n) best case on ordered data.\n\nThe shown function returns a shallow copy. Its sorting phase needs O(1) auxiliary storage beyond that O(n) result; total new memory including the returned copy is O(n). The in-place exercise instead modifies its supplied list.",
 
   vocabulary: [
     { term: "Insertion sort", definition: "Inserting each element into its correct place within a growing sorted prefix." },
@@ -40,50 +36,117 @@ It is **stable** and uses **O(1)** extra space. Among the three quadratic sorts,
   ],
 
   concepts: {
-    purpose: "Sort by incremental insertion; excellent on small or nearly-sorted data.",
-    operations: "Take the next key; shift larger sorted-prefix elements right; drop the key in.",
-    uses: "Small arrays, nearly-sorted data, and as the base case inside hybrid sorts (Timsort).",
-    tradeoffs: "O(n²) worst but O(n) best (adaptive); O(1) space; stable — the most practical quadratic sort.",
-    commonMistakes: "Off-by-one when shifting (a[j+1] = a[j]); using > vs >= and losing stability; starting i at 0 instead of 1.",
-    edgeCases: "Empty/one element already sorted. Already-sorted input hits the O(n) best case. Reverse-sorted is the O(n²) worst case.",
-  },
+  "purpose": "Sort by incremental insertion; excellent on small or nearly-sorted data.",
+  "operations": "Take the next key; shift larger sorted-prefix elements right; drop the key in.",
+  "uses": "Small arrays, nearly-sorted data, and as the base case inside hybrid sorts (Timsort).",
+  "tradeoffs": "O(n²) worst but O(n) best (adaptive); O(1) space; stable — the most practical quadratic sort.",
+  "commonMistakes": "Off-by-one when shifting (a[j+1] = a[j]); changing > to >= and losing stability; starting i at 0 instead of 1.",
+  "edgeCases": "Empty/one element already sorted. Already-sorted input hits the O(n) best case. Reverse-sorted is the O(n²) worst case."
+},
 
   complexity: [
-    { operation: "Insertion sort", best: "O(n)", average: "O(n^2)", worst: "O(n^2)", space: "O(1)", note: "Adaptive: O(n) on sorted input, O(n²) reverse-sorted." },
-  ],
+  {
+    "operation": "Insertion sort",
+    "best": "O(n)",
+    "average": "O(n^2)",
+    "worst": "O(n^2)",
+    "space": "O(1)",
+    "note": "Adaptive: O(n) on sorted input, O(n²) reverse-sorted. O(1) auxiliary space excludes the copied list that becomes the returned result; including that result requires O(n) memory."
+  }
+],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [{ symbol: "n", meaning: "the number of elements" }],
-    costModel: "Each comparison and shift is O(1). The number of shifts depends on how out-of-order the input is.",
-    time: {
-      bound: "O(n^2)",
-      case: "worst",
-      explanation: "In the worst case (reverse-sorted) inserting a[i] shifts it past all i earlier elements, so total shifts are 1+2+…+(n-1) = n(n-1)/2 — O(n²). But insertion sort is ADAPTIVE: on already-sorted input the inner while never shifts (each key compares once and stops), giving O(n). Average case is O(n²).",
-      otherCases: [
-        { case: "best", bound: "O(n)", note: "Already sorted: one comparison per element, no shifts." },
-        { case: "average", bound: "O(n^2)", note: "Random order: each element shifts about halfway back on average." },
-      ],
-    },
-    space: {
-      bound: "O(1)",
-      case: "worst",
-      explanation: "Shifting happens within the list; only key and indices are extra. (The a[:] copy is defensive.)",
-      inputOutputNote: "The a[:] copy of n elements protects the caller's list; the sort works in O(1) space.",
-    },
-    derivation: [
-      { lines: [4], description: "The outer loop runs n-1 times (one per element to insert).", cost: "O(n)", dimension: "time" },
-      { lines: [7, 8, 9], description: "The inner while shifts up to i elements; worst-case total is n²/2.", cost: "O(n^2)", dimension: "time" },
-      { lines: [5, 6], description: "One key and a couple of indices.", cost: "O(1)", dimension: "space" },
-    ],
-    assumptions: ["Comparisons and shifts are O(1).", "Best case requires (nearly) sorted input; the inner while exits immediately."],
-    tradeoffs: "For large random data O(n log n) sorts win; insertion sort's O(n) best case and stability make it the go-to for small/nearly-sorted runs, which is why Timsort uses it internally.",
-    counters: [
-      { label: "comparisons", definition: "executions of the while-condition compare (line 7)", countLines: [7] },
-      { label: "shifts", definition: "executions of the shift (line 8)", countLines: [8] },
-    ],
-    fixedDataNote: "This run sorts 5 elements. Try a sorted input to see comparisons drop to ~n (the O(n) best case). The O(n²) bound is the worst case.",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of elements"
+    }
+  ],
+  "costModel": "Each comparison and shift is O(1). The number of shifts depends on how out-of-order the input is.",
+  "time": {
+    "bound": "O(n^2)",
+    "case": "worst",
+    "explanation": "In the worst case (reverse-sorted) inserting a[i] shifts it past all i earlier elements, so total shifts are 1+2+…+(n-1) = n(n-1)/2 — O(n²). But insertion sort is ADAPTIVE: on already-sorted input the inner while never shifts (each key compares once and stops), giving O(n). Average case is O(n²).",
+    "otherCases": [
+      {
+        "case": "best",
+        "bound": "O(n)",
+        "note": "Already sorted: one comparison per element, no shifts."
+      },
+      {
+        "case": "average",
+        "bound": "O(n^2)",
+        "note": "Random order: each element shifts about halfway back on average."
+      }
+    ]
   },
+  "space": {
+    "bound": "O(1)",
+    "case": "worst",
+    "explanation": "The sorting phase uses a constant number of scalar indices/values and edits its returned copy. Auxiliary O(1) excludes the required O(n) returned list; total function allocation is O(n).",
+    "inputOutputNote": "The function allocates a returned O(n) shallow-copy list at line 3. Treating that required result as output, the remaining working state is O(1); total new storage including the result is O(n)."
+  },
+  "derivation": [
+    {
+      "lines": [
+        4
+      ],
+      "description": "The outer loop runs n-1 times (one per element to insert).",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        7,
+        8,
+        9
+      ],
+      "description": "The inner while shifts up to i elements; worst-case total is n²/2.",
+      "cost": "O(n^2)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        5,
+        6
+      ],
+      "description": "One key and a couple of indices.",
+      "cost": "O(1)",
+      "dimension": "space"
+    },
+    {
+      "lines": [
+        3
+      ],
+      "description": "The copy visits n element references; it is the returned result.",
+      "cost": "O(n)",
+      "dimension": "time"
+    }
+  ],
+  "assumptions": [
+    "Comparisons and shifts are O(1).",
+    "Best case is already sorted; more generally each shift removes one inversion, yielding O(n + I). \"Nearly sorted\" implies near-linear only when I is O(n)."
+  ],
+  "tradeoffs": "For large random data O(n log n) sorts win; insertion sort's O(n) best case and stability make it the go-to for small/nearly-sorted runs, which is why Timsort uses it internally.",
+  "counters": [
+    {
+      "label": "while-condition checks",
+      "definition": "executions of the whole short-circuit while condition; the key comparison is skipped when j < 0",
+      "countLines": [
+        7
+      ]
+    },
+    {
+      "label": "shifts",
+      "definition": "executions of the shift (line 8)",
+      "countLines": [
+        8
+      ]
+    }
+  ],
+  "fixedDataNote": "This run sorts 5 elements. Try a sorted input to see comparisons drop to ~n (the O(n) best case). The O(n²) bound is the worst case. Function/query analysis excludes demonstration input literal creation and printing."
+},
 
   code,
 
@@ -104,15 +167,27 @@ It is **stable** and uses **O(1)** extra space. Among the three quadratic sorts,
   ],
 
   bindings: [
-    {
-      variable: "a",
-      model: "array",
-      overlays: [
-        { role: "pointer", label: "i", source: "i" },
-        { role: "pointer", label: "j", source: "j" },
-      ],
-    },
-  ],
+  {
+    "variable": "a",
+    "model": "array",
+    "overlays": [
+      {
+        "role": "pointer",
+        "label": "i",
+        "source": "i"
+      },
+      {
+        "role": "pointer",
+        "label": "j",
+        "source": "j"
+      }
+    ]
+  },
+  {
+    "variable": "key",
+    "model": "object"
+  }
+],
 
   prediction: [
     { atEventIndex: 0, prompt: "Why is insertion sort O(n) on already-sorted input but O(n²) on reverse-sorted input?", answer: "On sorted input the inner while stops immediately (no shifts) → one comparison per element → O(n); reverse-sorted forces each element to shift past all before it → O(n²).", explanation: "The inner loop's work depends on how far back the key must move. Sorted data means zero shifts; reverse-sorted means maximum shifts, giving the two extremes." },
@@ -125,53 +200,114 @@ It is **stable** and uses **O(1)** extra space. Among the three quadratic sorts,
   ],
 
   exercises: [
-    {
-      id: "ins-fix-1",
-      kind: "fix-mistake",
-      prompt: "`insertion_sort(a)` should sort the list in place and return it, but the shift overwrites elements incorrectly (wrong source/destination). Fix the shift/insert.",
-      starterCode: "def insertion_sort(a):\n    for i in range(1, len(a)):\n        key = a[i]\n        j = i - 1\n        while j >= 0 and a[j] > key:\n            a[j] = a[j + 1]\n            j -= 1\n        a[j + 1] = key\n    return a",
-      expected: "def insertion_sort(a):\n    for i in range(1, len(a)):\n        key = a[i]\n        j = i - 1\n        while j >= 0 and a[j] > key:\n            a[j + 1] = a[j]\n            j -= 1\n        a[j + 1] = key\n    return a",
-      hints: ["You shift larger elements to the RIGHT.", "The destination is a[j+1], the source is a[j].", "Use a[j + 1] = a[j]."],
-    },
-    {
-      id: "ins-choose-1",
-      kind: "choose-approach",
-      prompt: "You must sort many small chunks that are already nearly sorted. Which quadratic sort is best and why?",
-      expected: "Insertion sort — it is adaptive (near O(n) on nearly-sorted input) and stable, which is exactly why hybrid sorts use it for small runs.",
-      hints: ["Which sort speeds up on nearly-sorted data?", "Insertion sort's best case is O(n).", "That adaptivity + stability make it ideal here."],
-    },
-  ],
+  {
+    "id": "ins-fix-1",
+    "kind": "fix-mistake",
+    "prompt": "`insertion_sort(a)` should sort the list in place and return it, but the shift overwrites elements incorrectly (wrong source/destination). Fix the shift/insert.",
+    "starterCode": "def insertion_sort(a):\n    for i in range(1, len(a)):\n        key = a[i]\n        j = i - 1\n        while j >= 0 and a[j] > key:\n            a[j] = a[j + 1]\n            j -= 1\n        a[j + 1] = key\n    return a",
+    "expected": "def insertion_sort(a):\n    for i in range(1, len(a)):\n        key = a[i]\n        j = i - 1\n        while j >= 0 and a[j] > key:\n            a[j + 1] = a[j]\n            j -= 1\n        a[j + 1] = key\n    return a",
+    "hints": [
+      "Goal: fix insertion sort so shifting elements does not clobber the value being inserted.",
+      "The bug is the shift direction/target: overwriting the wrong slot loses data.",
+      "Key insight: you copy each larger element one slot to the right, freeing a[j+1] for the key.",
+      "Approach: save the key, shift larger elements rightward, then drop the key into the hole.",
+      "Pseudocode: key=a[i]; j=i-1; while j>=0 and a[j]>key: a[j+1]=a[j]; j-=1; a[j+1]=key.",
+      "Use `a[j + 1] = a[j]` for the shift and place the key with `a[j + 1] = key` after the loop."
+    ],
+    "tests": "assert insertion_sort([5, 1, 4, 2, 8]) == [1, 2, 4, 5, 8], 'sorts a mixed list'\nassert insertion_sort([]) == [], 'empty list'\nassert insertion_sort([1]) == [1], 'single element'\nassert insertion_sort([3, 2, 1]) == [1, 2, 3], 'reversed input (max shifting)'\nassert insertion_sort([2, 1, 2]) == [1, 2, 2], 'duplicates'\nprint('OK')"
+  },
+  {
+    "id": "ins-choose-1",
+    "kind": "choose-approach",
+    "prompt": "You must sort many small chunks that are already nearly sorted. Which quadratic sort is best and why? Here nearly sorted means the inversion count I is O(n).",
+    "expected": "Insertion sort takes O(n + I); with I = O(n), this is O(n). Its strict > shift test keeps equal values stable. This makes it a useful method for small runs.",
+    "hints": [
+      "Goal: choose the best quadratic sort for many small chunks that are each already nearly sorted.",
+      "The missed opportunity is using a non-adaptive quadratic sort that pays full O(n²) even when the data is almost ordered.",
+      "The chunks have only O(n) inversions; insertion sort makes one shift for each inversion.",
+      "Approach: use insertion sort, whose work scales with how far elements must move.",
+      "Insertion sort takes O(n + I); with I = O(n), this is O(n). Its strict > shift test keeps equal values stable. This makes it a useful method for small runs.",
+      "Insertion sort takes O(n + I); with I = O(n), this is O(n). Its strict > shift test keeps equal values stable. This makes it a useful method for small runs."
+    ],
+    "recognition": {
+      "scenario": "You must sort many small chunks that are already nearly sorted. Which quadratic sort is best and why? Here nearly sorted means the inversion count I is O(n).",
+      "approaches": [
+        {
+          "id": "insertion",
+          "label": "Insertion sort",
+          "requiredReasonIds": [
+            "adaptive-nearly-sorted"
+          ]
+        },
+        {
+          "id": "selection",
+          "label": "Selection sort",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Selection sort always scans the full remaining array regardless of order, so it is O(n²) even on nearly-sorted input — it is not adaptive."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "adaptive-nearly-sorted",
+          "text": "Insertion sort takes O(n + I); with I = O(n), this is O(n). Its strict > shift test keeps equal values stable. This makes it a useful method for small runs."
+        },
+        {
+          "id": "selection-adaptive",
+          "text": "Selection sort speeds up to O(n) on nearly-sorted input.",
+          "contradictory": true
+        },
+        {
+          "id": "insertion-not-stable",
+          "text": "Insertion sort is unstable, so it reorders equal elements.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "insertion"
+      ],
+      "modelExplanation": "Insertion sort takes O(n + I); with I = O(n), this is O(n). Its strict > shift test keeps equal values stable. This makes it a useful method for small runs."
+    }
+  }
+],
 
-  review: `**Insertion sort** inserts each element into a growing sorted prefix, shifting larger elements right. It is **adaptive**: **O(n)** on (nearly) sorted input, **O(n²)** worst case, with **O(1)** space and **stability**. That O(n) best case is why it powers the small-run base case of production sorts like Timsort.`,
+  review: "**Insertion sort** inserts each element into a growing sorted prefix, shifting larger elements right. It is **adaptive**: **O(n)** on sorted input and **O(n + I)** for I inversions, **O(n²)** worst case, with **O(1)** space and **stability**. That O(n) best case is why it powers the small-run base case of production sorts like Timsort. The walkthrough also allocates its O(n) returned copy.",
 
   expectedOutput: "[1, 2, 4, 5, 8]\n",
 
   references: [
-    {
-      url: "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheInsertionSort.html",
-      title: "The Insertion Sort — Problem Solving with Algorithms and DS using Python (Runestone)",
-      section: "Insertion sort analysis",
-      topic: "sorting/insertion",
-      purpose: "Confirm insertion sort's adaptive O(n) best / O(n²) worst analysis and shifting mechanics.",
-      verifiedClaims: ["Insertion sort is O(n) on sorted input and O(n²) worst case", "It is stable and in place"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://en.wikipedia.org/wiki/Timsort",
-      title: "Timsort — Wikipedia",
-      section: "Use of insertion sort on small runs",
-      topic: "sorting/insertion",
-      purpose: "Cross-check that Python's Timsort uses insertion sort for small runs.",
-      verifiedClaims: ["Timsort uses insertion sort for small runs due to its efficiency on short/nearly-sorted sequences"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheInsertionSort.html",
+    "title": "TheInsertionSort",
+    "section": "Algorithm, analysis and visual example",
+    "topic": "sorting/insertion-sort",
+    "purpose": "Check the specific claims and conventions used here.",
+    "verifiedClaims": [
+      "Insertion shifts larger prefix items; ordered input takes linear work."
+    ],
+    "accessDate": "2026-10-10",
+    "conventions": []
+  },
+  {
+    "url": "https://raw.githubusercontent.com/python/cpython/v3.14.2/Objects/listobject.c",
+    "title": "CPython 3.14.2 list implementation",
+    "section": "list slicing; list_resize; binarysort",
+    "topic": "sorting/insertion-sort",
+    "purpose": "Check the specific claims and conventions used here.",
+    "verifiedClaims": [
+      "List copies allocate references; binary insertion sorting moves entries to make room."
+    ],
+    "accessDate": "2026-10-10",
+    "conventions": [
+      "This app returns a defensive copy and uses ascending minimum-selection rather than descending maximum-selection."
+    ]
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "830bba3a3b00c36e",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "977f5d7654950125",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 3,
   },
 };

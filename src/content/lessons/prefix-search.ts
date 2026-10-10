@@ -54,11 +54,7 @@ export const prefixSearch: LessonDefinition = {
   area: "Trees and tries",
   prerequisites: ["trie-insertion"],
 
-  explanation: `A trie's defining superpower is **prefix search** — answering "is there any word starting with this prefix?" and "which/how many words start with it?" — the engine behind **autocomplete**. Unlike a hash set (which only knows exact words), a trie makes this a simple path walk.
-
-**\`starts_with(prefix)\`** just follows the prefix's characters from the root; if the path exists you reach a node, and *everything in that node's subtree* is a word (or word-prefix) sharing that prefix. This is **O(P)** where P is the prefix length — again independent of how many words the trie stores. To **enumerate or count** all words with the prefix, you first walk to the prefix node (O(P)), then traverse its **subtree** (DFS/BFS), collecting nodes with \`is_word\`. For "ca" that subtree holds "cat", "car", "care" → count \`3\`.
-
-The complexity split is worth internalizing: **existence** of a prefix is O(P), but **listing k matching words** costs O(P + total characters in the subtree) — you must actually visit each matching word. That's why autocomplete feels instant to *check* but takes more work to *populate* the suggestion list. The recognition cue: any "starts with / autocomplete / common-prefix" query points at a trie.`,
+  explanation: "A **prefix query** follows the characters of a prefix through a trie. If an edge is missing, starts_with returns False; if the full path exists, it returns True. The empty prefix follows zero edges and returns True, even in an empty trie; this is the path-existence convention. Counting words with the empty prefix instead returns the number of stored words.\n\nThe example also counts complete words below the prefix node using an explicit stack. With prefix length P and S nodes in that subtree, counting takes expected O(P+S) time and O(S) worst-case auxiliary stack space. starts_with alone needs expected O(P) time and O(1) working space. A terminal flag distinguishes a stored word from a shared intermediate prefix.\n\nEnumerating suggestions additionally constructs the strings it returns. If K is the total number of characters copied to output, a full enumeration costs O(P+S+K) with a shared path buffer. A result limit can stop early, so listing ten suggestions need not visit the entire subtree. A hash set can scan its words for prefixes, but it has no trie-style prefix index.",
 
   vocabulary: [
     { term: "Prefix search", definition: "Finding whether/which stored words begin with a given prefix." },
@@ -78,38 +74,139 @@ The complexity split is worth internalizing: **existence** of a prefix is O(P), 
   },
 
   complexity: [
-    { operation: "starts_with (existence)", best: "O(1)", average: "O(P)", worst: "O(P)", space: "O(1)", note: "P = prefix length; independent of word count." },
-    { operation: "count/enumerate with prefix", best: "O(P)", average: "O(P + S)", worst: "O(P + S)", space: "O(S)", note: "S = size of the prefix subtree (chars in matching words)." },
-  ],
+  {
+    "operation": "starts_with (existence)",
+    "best": "O(1)",
+    "average": "O(P)",
+    "worst": "O(P)",
+    "space": "O(1)",
+    "note": "P = prefix length; independent of word count."
+  },
+  {
+    "operation": "count words with prefix",
+    "best": "O(P)",
+    "worst": "O(P + S)",
+    "space": "O(S)",
+    "note": "S counts visited subtree nodes; enumeration adds K copied output characters."
+  }
+],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [
-      { symbol: "P", meaning: "the length of the prefix" },
-      { symbol: "S", meaning: "the total size of the prefix's subtree (nodes/chars in matching words)" },
-    ],
-    costModel: "Walking one node per prefix character is expected O(1) each; enumerating visits each subtree node once.",
-    time: {
-      bound: "O(P)",
-      case: "worst",
-      explanation: "starts_with walks exactly P characters from the root, one expected-O(1) child lookup each — so prefix EXISTENCE is O(P), regardless of how many words are stored. Counting or enumerating all words with the prefix additionally traverses the prefix node's subtree, visiting each of its S nodes once — so that is O(P + S). The key insight: checking a prefix is cheap and word-count-independent, but producing the matches costs proportional to how many/large they are.",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "P",
+      "meaning": "the length of the prefix"
     },
-    space: {
-      bound: "O(1)",
-      case: "worst",
-      explanation: "starts_with uses only a node pointer — O(1). Enumeration uses a stack/queue over the subtree, up to O(S).",
-      inputOutputNote: "The trie is the stored data; starts_with is O(1) extra, enumeration is O(S) for its traversal frontier/results.",
-    },
-    derivation: [
-      { lines: [16, 17, 18, 19, 20], description: "starts_with walks P characters — O(P).", cost: "O(P)", dimension: "time" },
-      { lines: [28, 29, 30, 31, 32, 33], description: "Counting traverses the prefix subtree (S nodes) after the O(P) walk.", cost: "O(P + S)", dimension: "time" },
-      { lines: [28], description: "The enumeration stack holds up to O(S) nodes.", cost: "O(1)", dimension: "space" },
-    ],
-    assumptions: ["Child lookups are expected O(1).", "S counts the nodes in the matched subtree."],
-    tradeoffs: "A hash set answers exact membership in O(word length) but cannot do prefix queries; the trie supports them at O(P) for existence and O(P+S) for enumeration — the reason autocomplete uses tries.",
-    counters: [],
-    fixedDataNote: "This run: 'ca' and 'do' are prefixes (True), 'z' is not (False); 3 words start with 'ca'. The O(P)/O(P+S) bounds generalise to prefix and subtree sizes.",
+    {
+      "symbol": "S",
+      "meaning": "the total size of the prefix's subtree (nodes/chars in matching words)"
+    }
+  ],
+  "costModel": "Walking one node per prefix character is expected O(1) each; enumerating visits each subtree node once.",
+  "time": {
+    "bound": "O(P+S)",
+    "case": "expected",
+    "explanation": "The panel analyzes count_with_prefix: reach the prefix in expected O(P), then visit S subtree nodes. starts_with alone costs expected O(P). Full string enumeration is different and additionally costs K copied output characters."
   },
+  "space": {
+    "bound": "O(S)",
+    "case": "worst",
+    "explanation": "The explicit stack can retain O(S) pending subtree nodes. Counting returns a scalar; the stored trie is input.",
+    "inputOutputNote": "The stored trie is input. starts_with uses O(1) working pointers; count_prefix uses up to O(S) pending nodes and returns a scalar. An enumeration additionally retains its returned strings as output."
+  },
+  "derivation": [
+    {
+      "lines": [
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "description": "starts_with walks P characters — O(P).",
+      "cost": "O(P)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33
+      ],
+      "description": "Counting traverses the prefix subtree (S nodes) after the O(P) walk.",
+      "cost": "O(P + S)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        28
+      ],
+      "description": "Subtree traversal can keep O(S) pending nodes on its explicit stack.",
+      "cost": "O(S)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Child lookups are expected O(1).",
+    "S counts the nodes in the matched subtree.",
+    "Expected constant-time dictionary lookup. Empty prefix is always a root path; count zero stored words as zero.",
+    "S counts nodes visited below the prefix. Copying complete suggestion strings adds K output characters."
+  ],
+  "tradeoffs": "A trie provides a prefix index; a hash set must scan words. Counting costs O(P+S); full string enumeration adds K copied output characters.",
+  "counters": [],
+  "fixedDataNote": "This run: 'ca' and 'do' are prefixes (True), 'z' is not (False); 3 words start with 'ca'. The O(P)/O(P+S) bounds generalise to prefix and subtree sizes.",
+  "references": [
+    {
+      "url": "https://cp-algorithms.com/string/aho_corasick.html",
+      "title": "CP Algorithms: trie construction",
+      "section": "Construction of the trie",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Paths share prefixes.",
+        "Terminal flags distinguish complete words."
+      ],
+      "conventions": [
+        "App uses dictionaries for arbitrary characters rather than a fixed 26-child array."
+      ],
+      "accessDate": "2026-10-10"
+    },
+    {
+      "url": "https://www.cs.usfca.edu/~galles/visualization/Trie.html",
+      "title": "USFCA: Trie Visualization",
+      "topic": "trie",
+      "section": "Inserted APP and APPLE; inspected shared A-P-P path and terminal coloring.",
+      "purpose": "Inspect character-edge and terminal-node visual conventions.",
+      "verifiedClaims": [
+        "Shared prefix nodes remain common.",
+        "APP stays terminal when APPLE is added."
+      ],
+      "conventions": [
+        "Reference uses uppercase; app accepts arbitrary characters."
+      ],
+      "accessDate": "2026-10-10"
+    },
+    {
+      "url": "https://docs.python.org/3.14/library/stdtypes.html#dict.setdefault",
+      "title": "Python 3.14: dictionary operations",
+      "topic": "python-dict",
+      "section": "dict.setdefault and insertion-order guarantee",
+      "purpose": "Check supported dictionary behavior against the language manual.",
+      "verifiedClaims": [
+        "setdefault returns an existing value or inserts its default.",
+        "Dictionaries preserve insertion order, not sorted-key order."
+      ],
+      "conventions": [
+        "Online manual currently displays 3.14.8; executable behavior was probed on bundled 3.14.2."
+      ],
+      "accessDate": "2026-10-10"
+    }
+  ]
+},
 
   code,
 
@@ -159,12 +256,22 @@ The complexity split is worth internalizing: **existence** of a prefix is O(P), 
   ],
 
   bindings: [
-    { variable: "t", model: "object" },
-  ],
+  {
+    "variable": "t",
+    "model": "trie",
+    "path": "root"
+  }
+],
 
+  bindingsRationale: "The binding resolves t.root and follows each node’s children dictionary. Letter edges show shared prefixes; is_word terminal flags distinguish complete words.",
   prediction: [
-    { atEventIndex: 0, prompt: "Checking a prefix exists is O(P). Why does listing all words with that prefix cost O(P + S) instead?", answer: "Because after the O(P) walk to the prefix node, you must traverse its entire subtree (S nodes) to visit every matching word — you cannot produce k matches without visiting them.", explanation: "Existence only needs to reach the prefix node. Enumeration additionally visits each node of the prefix's subtree, so it costs O(P) to reach plus O(S) to walk the matches." },
-  ],
+  {
+    "atEventIndex": 0,
+    "prompt": "Checking a prefix path costs expected O(P). What additional work does counting or listing all matching words require?",
+    "answer": "Counting visits the S nodes below the prefix, for expected O(P+S). Listing copied word strings also pays for K returned characters, so include O(K).",
+    "explanation": "Walking to the prefix and traversing its subtree are separate costs. The counting example returns one integer; string suggestions add the cost of materializing their text."
+  }
+],
 
   experiments: [
     "Call starts_with('') (empty prefix) and reason about why it matches everything.",
@@ -173,53 +280,133 @@ The complexity split is worth internalizing: **existence** of a prefix is O(P), 
   ],
 
   exercises: [
-    {
-      id: "prefix-complete-1",
-      kind: "complete-code",
-      prompt: "Complete starts_with: walk the prefix, returning False if the path breaks.",
-      starterCode: "def starts_with(self, prefix):\n    node = self.root\n    for ch in prefix:\n        # TODO: descend or return False\n        pass\n    return True",
-      expected: "def starts_with(self, prefix):\n    node = self.root\n    for ch in prefix:\n        if ch not in node.children:\n            return False\n        node = node.children[ch]\n    return True",
-      hints: ["If a character's child is missing, the prefix can't exist.", "Otherwise descend to it.", "if ch not in node.children: return False; node = node.children[ch]"],
-    },
-    {
-      id: "prefix-choose-1",
-      kind: "choose-approach",
-      prompt: "You're building autocomplete over a large dictionary. Why a trie over a hash set, and what's the cost to check a prefix vs list 10 suggestions?",
-      expected: "A trie supports prefix queries a hash set can't. Checking a prefix exists is O(P) (prefix length). Listing suggestions costs O(P + S) — reaching the prefix node then walking its subtree to collect the matching words.",
-      hints: ["Hash sets do exact match only.", "Prefix existence is a path walk: O(P).", "Listing matches walks the subtree: O(P + S)."],
-    },
-  ],
+  {
+    "id": "prefix-complete-1",
+    "kind": "complete-code",
+    "prompt": "Complete starts_with: walk the prefix, returning False if the path breaks.",
+    "starterCode": "def starts_with(self, prefix):\n    node = self.root\n    for ch in prefix:\n        # TODO: descend or return False\n        pass\n    return True",
+    "expected": "def starts_with(self, prefix):\n    node = self.root\n    for ch in prefix:\n        if ch not in node.children:\n            return False\n        node = node.children[ch]\n    return True",
+    "hints": [
+      "Goal: return whether any stored word starts with the given prefix.",
+      "You don't scan all words; you walk the shared prefix path in the trie.",
+      "Key insight: if any character along the path has no child, the prefix cannot exist.",
+      "Approach: descend character by character, failing fast on a missing child.",
+      "Pseudocode: node = root; for ch in prefix: if ch not in node.children return False; descend; return True.",
+      "Write `if ch not in node.children: return False` then `node = node.children[ch]`."
+    ],
+    "tests": "class TrieNode:\n    def __init__(self):\n        self.children = {}\n        self.is_word = False\nclass Trie:\n    def __init__(self):\n        self.root = TrieNode()\n    def _add(self, word):\n        node = self.root\n        for ch in word:\n            node = node.children.setdefault(ch, TrieNode())\n        node.is_word = True\nt = Trie()\nt._add('apple')\nt._add('app')\nassert starts_with(t, 'app') is True, 'app is a prefix'\nassert starts_with(t, 'appl') is True, 'appl is a prefix'\nassert starts_with(t, 'apple') is True, 'the full word is its own prefix'\nassert starts_with(t, '') is True, 'empty prefix always matches'\nassert starts_with(t, 'apx') is False, 'path breaks -> False'\nassert starts_with(t, 'b') is False, 'missing first char -> False'\nprint('OK')"
+  },
+  {
+    "id": "prefix-choose-1",
+    "kind": "choose-approach",
+    "prompt": "You need to list all stored words matching a prefix for repeated autocomplete queries. Which structure provides a prefix index, and what is the cost including copied suggestion characters?",
+    "expected": "A trie reaches the prefix in expected O(P) and walks S subtree nodes. Copying K output characters gives O(P+S+K) for full enumeration; a hash set must scan its stored words.",
+    "hints": [
+      "Find the node representing the prefix.",
+      "Repeated scans of all stored words repeat prefix comparisons.",
+      "A trie shares those comparisons on one path.",
+      "Walk the matching subtree and collect terminal paths.",
+      "Use a shared character buffer; copy it only for terminal output strings.",
+      "Reaching the prefix costs expected O(P), traversal O(S), and copied output O(K), for O(P+S+K)."
+    ],
+    "recognition": {
+      "scenario": "You need to list all stored words matching a prefix for repeated autocomplete queries. Which structure provides a prefix index, and what is the cost including copied suggestion characters?",
+      "approaches": [
+        {
+          "id": "trie",
+          "label": "A trie",
+          "requiredReasonIds": [
+            "trie-prefix-queries"
+          ]
+        },
+        {
+          "id": "hash-set",
+          "label": "A hash set of words",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A hash set only answers exact membership; it cannot efficiently find all words sharing a prefix, which is exactly what autocomplete needs."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "trie-prefix-queries",
+          "text": "A trie supplies a prefix index: reach the prefix, visit S subtree nodes and copy K output characters in expected O(P+S+K)."
+        },
+        {
+          "id": "set-prefix-cheap",
+          "text": "A hash set finds all words with a given prefix in O(P) just like a trie.",
+          "contradictory": true
+        },
+        {
+          "id": "trie-exact-faster",
+          "text": "The reason to pick a trie is that exact membership is faster than a hash set.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "trie"
+      ],
+      "modelExplanation": "A trie supports prefix queries a hash set can't. Checking a prefix exists is O(P); listing suggestions is O(P + S) — reaching the prefix node then walking its subtree to collect the matching words."
+    }
+  }
+],
 
-  review: `**Prefix search** is the trie's signature feature: **\`starts_with\`** walks the prefix path in **O(P)** (independent of word count), and **enumerating/counting** matches walks the prefix node's subtree for **O(P + S)**. This powers **autocomplete**, which a hash set cannot do. Remember the split: prefix *existence* is cheap; *listing* matches costs proportional to how many there are.`,
+  review: "starts_with follows a prefix path in expected O(P), with O(1) working space; the empty path exists at the root. Counting visits S subtree nodes in O(P+S) with O(S) worst-case pending stack space. Enumerating copied strings additionally costs K output characters. Hash sets can scan prefixes but do not index them.",
 
   expectedOutput: "True\nTrue\nFalse\n3\n",
 
   references: [
-    {
-      url: "https://neetcode.io/roadmap",
-      title: "NeetCode roadmap",
-      section: "Tries — startsWith / prefix queries",
-      topic: "trees/prefix-search",
-      purpose: "Confirm startsWith walks the prefix in O(P) and prefix enumeration traverses the subtree.",
-      verifiedClaims: ["Trie prefix existence is O(prefix length); listing matches traverses the prefix subtree"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://www.geeksforgeeks.org/trie-insert-and-search/",
-      title: "Trie — Insert and Search — GeeksforGeeks",
-      section: "Prefix search / startsWith",
-      topic: "trees/prefix-search",
-      purpose: "Cross-check the prefix-walk approach and the distinction from exact word search.",
-      verifiedClaims: ["startsWith follows the prefix path; it differs from exact search which checks the end-of-word flag"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://cp-algorithms.com/string/aho_corasick.html",
+    "title": "CP Algorithms: trie construction",
+    "section": "Construction of the trie",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Paths share prefixes.",
+      "Terminal flags distinguish complete words."
+    ],
+    "conventions": [
+      "App uses dictionaries for arbitrary characters rather than a fixed 26-child array."
+    ],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://www.cs.usfca.edu/~galles/visualization/Trie.html",
+    "title": "USFCA: Trie Visualization",
+    "topic": "trie",
+    "section": "Inserted APP and APPLE; inspected shared A-P-P path and terminal coloring.",
+    "purpose": "Inspect character-edge and terminal-node visual conventions.",
+    "verifiedClaims": [
+      "Shared prefix nodes remain common.",
+      "APP stays terminal when APPLE is added."
+    ],
+    "conventions": [
+      "Reference uses uppercase; app accepts arbitrary characters."
+    ],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://docs.python.org/3.14/library/stdtypes.html#dict.setdefault",
+    "title": "Python 3.14: dictionary operations",
+    "topic": "python-dict",
+    "section": "dict.setdefault and insertion-order guarantee",
+    "purpose": "Check supported dictionary behavior against the language manual.",
+    "verifiedClaims": [
+      "setdefault returns an existing value or inserts its default.",
+      "Dictionaries preserve insertion order, not sorted-key order."
+    ],
+    "conventions": [
+      "Online manual currently displays 3.14.8; executable behavior was probed on bundled 3.14.2."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "c231d5daed085b80",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "48d89750581c170e",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 5,
   },
 };

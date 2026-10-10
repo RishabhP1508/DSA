@@ -12,8 +12,9 @@ def nearest_distances(sources, adj, n):
     dist = [-1] * n
     q = deque()
     for s in sources:          # seed ALL sources at distance 0
-        dist[s] = 0
-        q.append(s)
+        if dist[s] == -1:
+            dist[s] = 0
+            q.append(s)
     while q:
         node = q.popleft()
         for nb in adj[node]:
@@ -32,11 +33,7 @@ export const multiSourceBfs: LessonDefinition = {
   area: "Graphs",
   prerequisites: ["graph-bfs"],
 
-  explanation: `**Multi-source BFS** finds, for every vertex, its distance to the **nearest** of several sources — all in a single **O(V + E)** pass. The trick is beautifully simple: instead of seeding the BFS queue with one start, seed it with **all sources at distance 0** at once. Then run ordinary BFS. Because BFS expands in distance order and each vertex is claimed the **first** time it's reached, that first reach is necessarily from its closest source.
-
-Contrast this with the naive approach: running a separate BFS from each of k sources and taking the minimum, which costs **O(k·(V + E))**. Multi-source BFS collapses that to **O(V + E)** by letting the sources' expansion fronts grow simultaneously and meet — no vertex is processed more than once. It's the same queue, same visited logic; only the *initialization* changes.
-
-This pattern is everywhere in grid problems: "rotting oranges" (all rotten cells are sources, find time to rot everything), "walls and gates" / "nearest 0", "shortest distance to any exit." The recognition cue: **"distance to the nearest of several targets" in an unweighted graph/grid** → seed BFS with all targets at once. Here vertices at positions 0..4 with sources {0, 4} get distances \`[0, 1, 2, 1, 0]\` — a "V" shape, each vertex measured to whichever source is closer.`,
+  explanation: "Seed every distinct source with distance zero, then perform one unit-edge BFS. First discovery gives minimum distance FROM any source. Repeated source entries are ignored after their first seed; reading k supplied entries still costs O(k). Initializing V distances and scanning reachable adjacency gives O(k+V+E) time. With distinct sources k<=V, this simplifies to O(V+E). In an undirected grid these are also distances TO a nearest source; in a directed graph reverse the edges when the question asks distance to a target. Empty sources leave -1 distances, and an empty graph with no sources returns [].",
 
   vocabulary: [
     { term: "Multi-source BFS", definition: "BFS seeded with several sources simultaneously to find nearest-source distances." },
@@ -47,81 +44,265 @@ This pattern is everywhere in grid problems: "rotting oranges" (all rotten cells
   ],
 
   concepts: {
-    purpose: "Compute nearest-source distances for all vertices in one BFS instead of k separate ones.",
-    operations: "Seed the queue with all sources at distance 0; run standard BFS, fixing each vertex on first reach.",
-    uses: "Rotting oranges, nearest 0 / walls and gates, nearest exit, fire/flood spread, nearest facility.",
-    tradeoffs: "O(V + E) total vs O(k·(V + E)) for k separate BFS runs; needs all sources known up front.",
-    commonMistakes: "Seeding only one source then looping (that's k separate BFS); updating a distance after the first reach (BFS already gives the minimum); forgetting to mark sources as distance 0.",
-    edgeCases: "A vertex that is itself a source has distance 0. Unreachable vertices keep -1. All vertices as sources → all distances 0.",
-  },
+  "purpose": "Compute nearest-source distances for all vertices in one BFS instead of k separate ones.",
+  "operations": "Seed the queue with all sources at distance 0; run standard BFS, fixing each vertex on first reach.",
+  "uses": "Rotting oranges, nearest 0 / walls and gates, nearest exit, fire/flood spread, nearest facility.",
+  "tradeoffs": "O(V + E) total vs O(k·(V + E)) for k separate BFS runs; needs all sources known up front.",
+  "commonMistakes": "Seeding only one source then looping (that's k separate BFS); updating a distance after the first reach (BFS already gives the minimum); forgetting to mark sources as distance 0.",
+  "edgeCases": "Empty sources leave all distances -1. Duplicate sources are deduplicated. Valid labels are 0..n−1 and adjacency includes every reached vertex. Directed distances are from a nearest source; reverse edges to find distance to a nearest target."
+},
 
   complexity: [
-    { operation: "Multi-source BFS", best: "O(V + E)", average: "O(V + E)", worst: "O(V + E)", space: "O(V)", note: "One pass regardless of source count; vs O(k·(V+E)) for k separate BFS." },
-  ],
+  {
+    "operation": "Multi-source BFS",
+    "best": "O(k+V)",
+    "worst": "O(k+V+E)",
+    "space": "O(V)",
+    "note": "k counts supplied entries, including duplicates; if distinct k<=V."
+  }
+],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [
-      { symbol: "V", meaning: "the number of vertices" },
-      { symbol: "E", meaning: "the number of edges" },
-      { symbol: "k", meaning: "the number of sources (for the comparison)" },
-    ],
-    costModel: "deque and array operations are O(1). Each vertex is enqueued once (on its first, nearest reach); each edge is scanned once.",
-    time: {
-      bound: "O(V + E)",
-      case: "worst",
-      explanation: "Seeding all k sources is O(k) ≤ O(V). Then it's an ordinary BFS: each vertex is enqueued exactly once (the first time it's reached, which is from its nearest source) and each edge is scanned once — O(V + E). The number of sources does NOT multiply the cost, because the fronts share one queue and one distance array. Running BFS separately from each source would be O(k·(V+E)); multi-source folds it into a single O(V+E) sweep.",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "V",
+      "meaning": "the number of vertices"
     },
-    space: {
-      bound: "O(V)",
-      case: "worst",
-      explanation: "The distance array is O(V) and the queue holds up to O(V) vertices (the combined front). ",
-      inputOutputNote: "The graph (V + E) is the input; the distance array and queue are the O(V) auxiliary space (and result).",
+    {
+      "symbol": "E",
+      "meaning": "the number of edges"
     },
-    derivation: [
-      { lines: [7, 8, 9], description: "Seed all sources at distance 0 — O(k), at most O(V).", cost: "O(V)", dimension: "time" },
-      { lines: [10, 11], description: "Each vertex is dequeued once (first reach).", cost: "O(V)", dimension: "time" },
-      { lines: [12, 13, 14, 15], description: "Each edge is scanned once, fixing the nearest distance.", cost: "O(V + E)", dimension: "time" },
-      { lines: [5, 6], description: "Distance array and queue are each O(V).", cost: "O(V)", dimension: "space" },
-    ],
-    assumptions: ["Unweighted graph (BFS gives shortest distances).", "All sources known before starting.", "First reach = nearest source (BFS distance order)."],
-    tradeoffs: "Separate BFS per source is O(k·(V+E)) and O(V) space; multi-source is O(V+E) — a k-fold speedup — at the cost of needing all sources up front.",
-    counters: [{ label: "vertices settled", definition: "dequeues (line 11)", countLines: [11] }],
-    fixedDataNote: "This run with sources {0,4} on a 5-vertex line gives [0,1,2,1,0] — each vertex's distance to its nearer source. The O(V+E) bound is independent of the source count.",
+    {
+      "symbol": "k",
+      "meaning": "number of supplied source entries, including duplicates"
+    }
+  ],
+  "costModel": "deque and array operations are O(1). Each vertex is enqueued once (on its first, nearest reach); each edge is scanned once.",
+  "time": {
+    "bound": "O(k+V+E)",
+    "case": "worst",
+    "explanation": "Read k source entries, initialize V distances and enqueue each reachable vertex once. Scan its outgoing adjacency entries once."
   },
+  "space": {
+    "bound": "O(V)",
+    "case": "worst",
+    "explanation": "The queue contains at most V distinct reached vertices after deduplicated seeding. The V-entry distance list is returned output.",
+    "inputOutputNote": "The returned V distances and input graph are excluded; the queue has O(V) auxiliary entries."
+  },
+  "derivation": [
+    {
+      "lines": [
+        7,
+        8,
+        10
+      ],
+      "description": "Read k entries and enqueue each distinct source once.",
+      "cost": "O(k)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        11,
+        12
+      ],
+      "description": "Each vertex is dequeued once (first reach).",
+      "cost": "O(V)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        13,
+        14,
+        15,
+        16
+      ],
+      "description": "Each edge is scanned once, fixing the nearest distance.",
+      "cost": "O(V + E)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        5,
+        6
+      ],
+      "description": "Distance array and queue are each O(V).",
+      "cost": "O(V)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Unweighted graph (BFS gives shortest distances).",
+    "All sources known before starting.",
+    "First reach = nearest source (BFS distance order).",
+    "Valid source labels, closed adjacency, unit-weight edges.",
+    "Arbitrary duplicate source entries contribute O(k); k<=V only when sources are distinct."
+  ],
+  "tradeoffs": "Compared with k separate traversals, one multi-source traversal shares frontier work. Reading arbitrary supplied sources costs O(k); directed distance-to-target queries reverse edges.",
+  "counters": [
+    {
+      "label": "vertices removed",
+      "definition": "executions of node = q.popleft() at line 12",
+      "countLines": [
+        12
+      ]
+    }
+  ],
+  "fixedDataNote": "Distinct sources 0 and 4 yield [0,1,2,1,0] on the undirected line. For distinct sources the generalized bound is O(V+E).",
+  "references": [
+    {
+      "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+      "title": "Open Data Structures: graph traversal",
+      "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "BFS discovers reachable vertices in distance order.",
+        "DFS records visited vertices before recursion."
+      ],
+      "conventions": [],
+      "accessDate": "2026-10-10"
+    },
+    {
+      "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+      "title": "MIT 6.006 Lecture 9: BFS",
+      "section": "Pages 1–4: representations, shortest paths, BFS",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Undirected adjacency stores both directions.",
+        "A path length counts edges."
+      ],
+      "conventions": [
+        "App may use -1 for unreachable distances instead of infinity."
+      ],
+      "accessDate": "2026-10-10"
+    }
+  ]
+},
 
   code,
 
   codeExplanations: [
-    { line: 1, executable: true, explanation: "Import deque." },
-    { line: 2, executable: false, explanation: "Blank line." },
-    { line: 3, executable: false, explanation: "Comment: seed many sources at once." },
-    { line: 4, executable: true, explanation: "Define nearest_distances(sources, adj, n)." },
-    { line: 5, executable: true, explanation: "dist[v] = -1 means unreached." },
-    { line: 6, executable: true, explanation: "The BFS queue." },
-    { line: 7, executable: true, explanation: "Seed EVERY source..." },
-    { line: 8, executable: true, explanation: "...at distance 0..." },
-    { line: 9, executable: true, explanation: "...and enqueue it." },
-    { line: 10, executable: true, explanation: "Standard BFS loop." },
-    { line: 11, executable: true, explanation: "Dequeue a vertex." },
-    { line: 12, executable: true, explanation: "For each neighbour..." },
-    { line: 13, executable: true, explanation: "...if unreached (first time = nearest)..." },
-    { line: 14, executable: true, explanation: "...set its distance to parent + 1..." },
-    { line: 15, executable: true, explanation: "...and enqueue it." },
-    { line: 16, executable: true, explanation: "Return all nearest-source distances." },
-    { line: 17, executable: false, explanation: "Blank line." },
-    { line: 18, executable: true, explanation: "A 5-vertex line graph 0-1-2-3-4." },
-    { line: 19, executable: false, explanation: "Comment: sources 0 and 4." },
-    { line: 20, executable: true, explanation: "Distances to nearest source → [0, 1, 2, 1, 0]." },
-  ],
+  {
+    "line": 1,
+    "executable": true,
+    "explanation": "Import deque."
+  },
+  {
+    "line": 2,
+    "executable": false,
+    "explanation": "Blank line."
+  },
+  {
+    "line": 3,
+    "executable": false,
+    "explanation": "Comment: seed many sources at once."
+  },
+  {
+    "line": 4,
+    "executable": true,
+    "explanation": "Define nearest_distances(sources, adj, n)."
+  },
+  {
+    "line": 5,
+    "executable": true,
+    "explanation": "dist[v] = -1 means unreached."
+  },
+  {
+    "line": 6,
+    "executable": true,
+    "explanation": "The BFS queue."
+  },
+  {
+    "line": 7,
+    "executable": true,
+    "explanation": "Seed EVERY source..."
+  },
+  {
+    "line": 8,
+    "executable": true,
+    "explanation": "Seed each source once, even if its label is repeated."
+  },
+  {
+    "line": 9,
+    "explanation": "Every distinct source has distance zero.",
+    "executable": true
+  },
+  {
+    "line": 10,
+    "executable": true,
+    "explanation": "Enqueue this source exactly once."
+  },
+  {
+    "line": 11,
+    "executable": true,
+    "explanation": "Standard BFS loop."
+  },
+  {
+    "line": 12,
+    "executable": true,
+    "explanation": "Dequeue a vertex."
+  },
+  {
+    "line": 13,
+    "executable": true,
+    "explanation": "For each neighbour..."
+  },
+  {
+    "line": 14,
+    "executable": true,
+    "explanation": "...if unreached (first time = nearest)..."
+  },
+  {
+    "line": 15,
+    "executable": true,
+    "explanation": "...set its distance to parent + 1..."
+  },
+  {
+    "line": 16,
+    "executable": true,
+    "explanation": "...and enqueue it."
+  },
+  {
+    "line": 17,
+    "executable": true,
+    "explanation": "Return all nearest-source distances."
+  },
+  {
+    "line": 18,
+    "executable": false,
+    "explanation": "Blank line."
+  },
+  {
+    "line": 19,
+    "executable": true,
+    "explanation": "A 5-vertex line graph 0-1-2-3-4."
+  },
+  {
+    "line": 20,
+    "executable": false,
+    "explanation": "Comment: sources 0 and 4."
+  },
+  {
+    "line": 21,
+    "executable": true,
+    "explanation": "Distances to nearest source → [0, 1, 2, 1, 0]."
+  }
+],
 
   bindings: [
     { variable: "dist", model: "array" },
   ],
 
   prediction: [
-    { atEventIndex: 0, prompt: "Why is multi-source BFS O(V + E) rather than O(k·(V + E)) for k sources?", answer: "Because all sources share ONE queue and one distance array; each vertex is settled once (on its first, nearest reach) regardless of how many sources there are — so it's a single BFS sweep, not k of them.", explanation: "Seeding all sources at distance 0 lets their fronts expand together and claim each vertex once. The source count only affects the O(k) seeding, which is ≤ O(V); the sweep itself stays O(V + E)." },
-  ],
+  {
+    "atEventIndex": 0,
+    "prompt": "Why does multi-source BFS share one traversal instead of repeating BFS from every source?",
+    "answer": "All sources are seeded at distance zero in one queue, and each distinct vertex is discovered once. Reading k source entries, including duplicates, costs O(k); the complete bound is O(k+V+E).",
+    "explanation": "With distinct valid sources k<=V, giving O(V+E). Repeated source entries must still be read, so arbitrary k cannot be dropped."
+  }
+],
 
   experiments: [
     "Use a single source and confirm it reduces to ordinary BFS distances.",
@@ -130,53 +311,116 @@ This pattern is everywhere in grid problems: "rotting oranges" (all rotten cells
   ],
 
   exercises: [
-    {
-      id: "msbfs-choose-1",
-      kind: "choose-approach",
-      prompt: "In a grid, every empty cell needs its distance to the NEAREST gate (several gates). Separate BFS per gate or multi-source BFS? Complexity of each?",
-      expected: "Multi-source BFS: seed all gates at distance 0 and run one BFS — O(V + E) (cells + edges). Separate BFS per gate is O(k·(V + E)) for k gates, far slower.",
-      hints: ["How many gates, and do you know them up front?", "Seed them all at once.", "One BFS: O(V+E), not O(k·(V+E))."],
-    },
-    {
-      id: "msbfs-fix-1",
-      kind: "fix-mistake",
-      prompt: "Complete `seed_sources(n, sources)`: return the initial `(dist, queue)` for multi-source BFS over n vertices. This seeds only the first source — fix it to seed all sources.",
-      starterCode: "from collections import deque\ndef seed_sources(n, sources):\n    dist = [-1] * n\n    q = deque()\n    dist[sources[0]] = 0\n    q.append(sources[0])\n    return dist, list(q)",
-      expected: "from collections import deque\ndef seed_sources(n, sources):\n    dist = [-1] * n\n    q = deque()\n    for s in sources:\n        dist[s] = 0\n        q.append(s)\n    return dist, list(q)",
-      hints: ["Multi-source means ALL sources start at distance 0.", "Loop over every source.", "for s in sources: dist[s] = 0; q.append(s)"],
-    },
-  ],
+  {
+    "id": "msbfs-choose-1",
+    "kind": "choose-approach",
+    "prompt": "In a grid, every empty cell needs its distance to the NEAREST gate (several gates). Separate BFS per gate or multi-source BFS? Complexity of each?",
+    "expected": "Multi-source BFS: seed all gates at distance 0 and run one BFS — O(V + E) (cells + edges). Separate BFS per gate is O(k·(V + E)) for k gates, far slower.",
+    "hints": [
+      "Goal: give every empty grid cell its distance to the NEAREST of several gates — separate BFS per gate or multi-source BFS, with costs.",
+      "The costly approach is a separate BFS from each gate, repeating the whole sweep k times.",
+      "Key property: all gates are sources at distance 0, and a single frontier can expand from all of them simultaneously.",
+      "Approach: seed every gate into the queue at distance 0 and run one BFS.",
+      "Reasoning: one combined wavefront assigns each cell its nearest-gate distance in O(V+E); running BFS per gate costs O(k·(V+E)), far slower for many gates.",
+      "Answer: multi-source BFS — seed all gates at distance 0 and run one BFS, O(V+E), versus O(k·(V+E)) for per-gate BFS."
+    ],
+    "recognition": {
+      "scenario": "In a grid every empty cell must learn its distance to the NEAREST of several gates.",
+      "approaches": [
+        {
+          "id": "multi-source-bfs",
+          "label": "Multi-source BFS seeding all gates at distance 0",
+          "requiredReasonIds": [
+            "seed-all-sources"
+          ]
+        },
+        {
+          "id": "bfs-per-gate",
+          "label": "Run a separate BFS from each gate",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "One BFS per gate is O(k·(V + E)) for k gates and recomputes overlapping frontiers, far slower than seeding them all at once."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "seed-all-sources",
+          "text": "Putting every gate in the queue at distance 0 lets a single BFS expand all frontiers together, so each cell is first reached by its nearest gate — O(V + E)."
+        },
+        {
+          "id": "per-gate-same-cost",
+          "text": "Running a separate BFS from each gate costs the same as one multi-source BFS.",
+          "contradictory": true
+        },
+        {
+          "id": "cant-seed-multiple",
+          "text": "BFS can only start from one source, so multiple gates must be handled one at a time.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "multi-source-bfs"
+      ],
+      "modelExplanation": "Multi-source BFS: seed all gates at distance 0 and run one BFS — O(V + E). Separate BFS per gate is O(k·(V + E)) for k gates, far slower."
+    }
+  },
+  {
+    "id": "msbfs-fix-1",
+    "kind": "fix-mistake",
+    "prompt": "Complete `seed_sources(n, sources)`: return the initial `(dist, queue)` for multi-source BFS over n vertices. This seeds only the first source — fix it to seed all sources.",
+    "starterCode": "from collections import deque\ndef seed_sources(n, sources):\n    dist = [-1] * n\n    q = deque()\n    dist[sources[0]] = 0\n    q.append(sources[0])\n    return dist, list(q)",
+    "expected": "from collections import deque\ndef seed_sources(n, sources):\n    dist = [-1] * n\n    q = deque()\n    for s in sources:\n        if dist[s] == -1:\n            dist[s] = 0\n            q.append(s)\n    return dist, list(q)",
+    "hints": [
+      "Goal: fix multi-source BFS so distances are measured from all sources at once.",
+      "Seeding only the first source makes every distance wrong.",
+      "Key insight: in multi-source BFS every source starts at distance 0 in the same queue.",
+      "Approach: loop over all sources, setting distance 0 and enqueuing each.",
+      "Pseudocode: dist = [-1]*n; q = deque(); for s in sources: dist[s] = 0; q.append(s).",
+      "Replace the single seed with `for s in sources: dist[s] = 0; q.append(s)`."
+    ],
+    "tests": "dist, q = seed_sources(5, [0, 4])\nassert dist == [0, -1, -1, -1, 0], f'all sources start at distance 0 (buggy seeds only the first), got {dist}'\nassert sorted(q) == [0, 4], f'all sources enqueued, got {sorted(q)}'\ndist, q = seed_sources(3, [1])\nassert dist == [-1, 0, -1] and q == [1], 'single source'\ndist, q = seed_sources(4, [0, 1, 2, 3])\nassert dist == [0, 0, 0, 0] and sorted(q) == [0, 1, 2, 3], 'every vertex a source'\ndist, q = seed_sources(2, [])\nassert dist == [-1, -1] and q == [], 'no sources leaves all unreached'\nprint('OK')"
+  }
+],
 
-  review: `**Multi-source BFS** seeds the queue with **all sources at distance 0** and runs one ordinary BFS, so each vertex is settled on its **first (nearest) reach** — giving every vertex's distance to its closest source in **O(V + E)**, independent of the source count. It replaces k separate BFS runs (O(k·(V+E))) and powers grid problems like rotting oranges and nearest-gate. Cue: "distance to the nearest of several targets" (unweighted) → seed all targets at once.`,
+  review: "Multi-source BFS computes distances from a set of sources in one queue traversal. Deduplicate seeding, count input source entries k, and use the directed edge orientation the question requires: O(k+V+E), or O(V+E) for distinct sources.",
 
   expectedOutput: "[0, 1, 2, 1, 0]\n",
 
   references: [
-    {
-      url: "https://neetcode.io/roadmap",
-      title: "NeetCode roadmap",
-      section: "Graphs — Rotting Oranges / multi-source BFS",
-      topic: "graphs/multi-source-bfs",
-      purpose: "Confirm the multi-source BFS technique (seed all sources) and its O(V+E) cost vs per-source BFS.",
-      verifiedClaims: ["Seeding BFS with all sources at distance 0 computes nearest-source distances in O(V+E)"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://cp-algorithms.com/graph/breadth-first-search.html",
-      title: "Breadth-first search — CP-Algorithms",
-      section: "Multiple sources",
-      topic: "graphs/multi-source-bfs",
-      purpose: "Cross-check that BFS from multiple sources computes minimum distances in a single O(V+E) pass.",
-      verifiedClaims: ["BFS initialized from multiple sources yields distance to the nearest source in O(V+E)"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+    "title": "Open Data Structures: graph traversal",
+    "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "BFS discovers reachable vertices in distance order.",
+      "DFS records visited vertices before recursion."
+    ],
+    "conventions": [],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+    "title": "MIT 6.006 Lecture 9: BFS",
+    "section": "Pages 1–4: representations, shortest paths, BFS",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Undirected adjacency stores both directions.",
+      "A path length counts edges."
+    ],
+    "conventions": [
+      "App may use -1 for unreachable distances instead of infinity."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "a2e13b9ebb57d72f",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "14146ab50bd23b4d",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 5,
   },
 };

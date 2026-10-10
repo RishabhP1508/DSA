@@ -13,14 +13,17 @@ import {
   importBackup,
   progressSummary,
   BACKUP_VERSION,
+  loadPreRestoreSnapshot,
+  migrateProgress,
 } from "../storage/progress";
 
 export function BackupView() {
   const [summary, setSummary] = useState<Awaited<ReturnType<typeof progressSummary>> | null>(null);
   const [status, setStatus] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
+  const [hasPrevious,setHasPrevious] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
-  const refresh = () => void progressSummary().then(setSummary);
+  const refresh = () => { void progressSummary().then(setSummary);void loadPreRestoreSnapshot().then(value=>setHasPrevious(!!value)); };
   useEffect(refresh, []);
 
   const doExport = async () => {
@@ -53,9 +56,16 @@ export function BackupView() {
     if (fileRef.current) fileRef.current.value = "";
   };
 
+  const recoverPrevious = async () => {
+    const snapshot=await loadPreRestoreSnapshot();if(!snapshot)return;
+    const envelope=await exportBackup();
+    const result=await importBackup(JSON.stringify({...envelope,data:migrateProgress(snapshot)}));
+    setStatus(result.ok?{kind:'ok',text:'Previous snapshot restored. No saved source was executed.'}:{kind:'error',text:result.error});
+    refresh();
+  };
   return (
     <div className="app-body">
-      <main className="content">
+      <main className="content" id="main-content">
         <div className="lesson-content">
           <h2>Backup &amp; progress</h2>
           <p className="dim">
@@ -92,11 +102,11 @@ export function BackupView() {
               Import a backup file. It is validated first; only a valid DSA Visual Lab backup will
               replace your current data.
             </p>
-            <input ref={fileRef} type="file" accept="application/json,.json" onChange={onFile} />
+            <label className="answer-label">Choose a backup to restore<input aria-label="Backup file to restore" ref={fileRef} type="file" accept="application/json,.json" onChange={onFile} /></label><p className="dim tiny">A snapshot of your current data is kept before a successful import.</p>{hasPrevious&&<button onClick={()=>void recoverPrevious()}>Restore previous snapshot</button>}
           </section>
 
           {status && (
-            <p className={status.kind === "ok" ? "self-result correct" : "error"}>{status.text}</p>
+            <p role="status" className={status.kind === "ok" ? "self-result correct" : "error"}>{status.text}</p>
           )}
         </div>
       </main>

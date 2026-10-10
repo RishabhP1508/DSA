@@ -41,9 +41,9 @@ class FakeWorker {
     const full = {
       v: PROTOCOL_VERSION,
       runId,
-      owner: "test",
-      sourceRev: 0,
-      inputRev: 0,
+      owner: this.posted[0].owner,
+      sourceRev: this.posted[0].sourceRev,
+      inputRev: this.posted[0].inputRev,
       seq: this.seq++,
       payload: {},
       ...msg,
@@ -123,11 +123,11 @@ describe("R2 engine — streaming assembly (R2-REQ-7)", () => {
     const w = FakeWorker.instances[0];
     w.emit({ kind: "ready" });
     w.emit({ kind: "exec-start" });
-    w.emit({ kind: "trace-batch", payload: { events: [{ index: 0 } as never, { index: 1 } as never] } });
-    w.emit({ kind: "trace-batch", payload: { events: [{ index: 2 } as never] } });
+    w.emit({ kind: "trace-batch", payload: { events: [{ index: 0, kind: "line", line: 1, frames: [], objects: {} }, { index: 1, kind: "line", line: 1, frames: [], objects: {} }] } });
+    w.emit({ kind: "trace-batch", payload: { events: [{ index: 2, kind: "line", line: 1, frames: [], objects: {} }] } });
     w.emit({
       kind: "result",
-      payload: { status: "completed", tail: [{ index: 3 } as never], stdout: "", stderr: "", incomplete: false },
+      payload: { status: "completed", tail: [{ index: 3, kind: "line", line: 1, frames: [], objects: {} }], stdout: "", stderr: "", incomplete: false },
     });
     const res = await p;
     expect(res.events.map((e) => e.index)).toEqual([0, 1, 2, 3]);
@@ -210,7 +210,7 @@ describe("R2 engine — supersede, stop, stale rejection (R2-REQ-2,6)", () => {
     await p1; // settled as stopped
     await tick();
     // The OLD worker now tries to report a result — must be ignored.
-    w1.emit({ kind: "result", payload: { status: "completed", tail: [{ index: 99 } as never], stdout: "STALE", stderr: "", incomplete: false } });
+    w1.emit({ kind: "result", payload: { status: "completed", tail: [{ index: 99, kind: "line", line: 1, frames: [], objects: {} }], stdout: "STALE", stderr: "", incomplete: false } });
     await tick();
     const w2 = FakeWorker.instances[FakeWorker.instances.length - 1];
     w2.emit({ kind: "ready" });

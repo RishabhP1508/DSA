@@ -20,10 +20,13 @@
  */
 
 import type { RunLimits, RunResult, RunStatus, TraceEvent, EngineState } from "../core/types";
+import { createRunnerTransport } from './runner-transport';
 import {
   PROTOCOL_VERSION,
   hash32,
   validateOutbound,
+  validateInbound,
+  messageByteSize,
   type InboundMessage,
   type OutboundMessage,
 } from "./protocol";
@@ -74,10 +77,25 @@ interface PendingRun {
   execStarted: boolean;
   settled: boolean;
   seq: number;
+  receivedSeq: number;
+  traceBytes: number;
+  outputBytes: number;
+  limits: RunLimits;
+}
+
+export interface RunProgress {
+  runId: number;
+  owner: string;
+  source: string;
+  stdin: string;
+  eventCount: number;
+  event?: TraceEvent;
+  stdout: string;
+  stderr: string;
 }
 
 function defaultWorkerFactory(): Worker {
-  return new Worker(new URL("./run.worker.ts", import.meta.url), { type: "module" });
+  return createRunnerTransport();
 }
 
 export class ExecutionEngine {
@@ -93,6 +111,7 @@ export class ExecutionEngine {
    */
   onStateChange?: (state: EngineState) => void;
   private subscribers = new Set<(state: EngineState) => void>();
+  private progressSubscribers = new Set<(progress: RunProgress) => void>();
 
   constructor(events: EngineEvents = {}) {
     this.events = events;
@@ -113,10 +132,21 @@ export class ExecutionEngine {
     };
   }
 
+  subscribeProgress(fn: (progress: RunProgress) => void): () => void {
+    this.progressSubscribers.add(fn);
+    return () => { this.progressSubscribers.delete(fn); };
+  }
+
+  private progress(p: PendingRun): void {
+    const update = { runId: p.runId, owner: p.owner, source: p.source, stdin: p.stdin,
+      eventCount: p.streamed.length, event: p.streamed.at(-1),
+      stdout: p.stdoutChunks.join(''), stderr: p.stderrChunks.join('') };
+    for (const fn of this.progressSubscribers) fn(update);
+  }
+
   private setState(s: EngineState): void {
     this._state = s;
     this.onStateChange?.(s);
-    this.events.onStateChange?.(s);
     for (const fn of this.subscribers) fn(s);
   }
 
@@ -136,7 +166,18 @@ export class ExecutionEngine {
     const sourceRev = hash32(source);
     const inputRev = hash32(stdin);
 
-    const worker = this.workerFactory();
+    const request: InboundMessage = { v: PROTOCOL_VERSION, runId, owner, sourceRev, inputRev,
+      seq: 0, kind: 'run', payload: { source, stdin, limits } };
+    const valid = validateInbound(request);
+    let worker: Worker;
+    try {
+      if (!valid.ok) throw new Error(valid.reason);
+      worker = this.workerFactory();
+    } catch (e) {
+      this.setState('error');
+      return Promise.resolve({ runId, status: 'error', events: [], stdout: '', stderr: String(e),
+        error: { type: 'EngineError', message: String(e) }, source, stdin, sourceRev, inputRev });
+    }
 
     return new Promise<RunResult>((resolve) => {
       const pending: PendingRun = {
@@ -156,6 +197,10 @@ export class ExecutionEngine {
         execStarted: false,
         settled: false,
         seq: 0,
+        receivedSeq: -1,
+        traceBytes: 0,
+        outputBytes: 0,
+        limits,
       };
       this.pending = pending;
 
@@ -194,14 +239,15 @@ export class ExecutionEngine {
         kind: "run",
         payload: { source, stdin, limits },
       };
-      worker.postMessage(runMsg);
+      try { worker.postMessage(runMsg); }
+      catch (e) { this.settle(pending, { runId, status: 'error', events: [], stdout: '', stderr: String(e), error: { type: 'EngineError', message: String(e) } }); }
     });
   }
 
-  /** Stop the current run immediately (works during init AND execution). */
-  stop(): void {
+  /** Stop immediately during init or execution; an owner may stop only its own run. */
+  stop(owner?: string): void {
     const p = this.pending;
-    if (!p) return;
+    if (!p || (owner !== undefined && p.owner !== owner)) return;
     // Best-effort notify, then hard-terminate.
     try {
       const stopMsg: InboundMessage = {
@@ -224,7 +270,7 @@ export class ExecutionEngine {
       events: p.streamed,
       stdout: p.stdoutChunks.join(""),
       stderr: p.stderrChunks.join(""),
-    });
+    }, 'user');
   }
 
   dispose(): void {
@@ -250,7 +296,7 @@ export class ExecutionEngine {
   }
 
   /** Resolve a pending run exactly once, clearing timers and killing its worker. */
-  private settle(p: PendingRun, result: RunResult, _reason?: string): void {
+  private settle(p: PendingRun, result: RunResult, reason?: "user" | "supersede" | "dispose"): void {
     if (p.settled) return;
     p.settled = true;
     // Stamp the source/input this result was produced from, so the UI can detect
@@ -262,6 +308,7 @@ export class ExecutionEngine {
     result.inputRev = p.inputRev;
     result.source = p.source;
     result.stdin = p.stdin;
+    if (result.status === 'stopped') { result.incomplete = true; result.stopReason = reason ?? 'user'; }
     if (p.initTimer) clearTimeout(p.initTimer);
     if (p.execTimer) clearTimeout(p.execTimer);
     // Detach handlers before terminating so a late message can't re-enter.
@@ -290,7 +337,8 @@ export class ExecutionEngine {
     }
     const msg: OutboundMessage = v.value;
     // Stale-run rejection: the message must belong to THIS run.
-    if (msg.runId !== p.runId) return;
+    if (msg.runId !== p.runId || msg.owner !== p.owner || msg.sourceRev !== p.sourceRev || msg.inputRev !== p.inputRev || msg.seq <= p.receivedSeq) return;
+    p.receivedSeq = msg.seq;
 
     switch (msg.kind) {
       case "ready": {
@@ -317,24 +365,33 @@ export class ExecutionEngine {
             incomplete: true,
             limitHit: "time",
           });
-        }, DEFAULT_LIMITS.timeMs);
+        }, p.limits.timeMs);
         return;
       }
       case "trace-batch": {
-        for (const e of msg.payload.events) p.streamed.push(e);
+        if (!p.execStarted || !this.acceptEvents(p, msg.payload.events)) return;
+        this.progress(p);
         return;
       }
       case "output": {
+        if (!p.execStarted) return;
+        const bytes = new TextEncoder().encode(msg.payload.text).byteLength;
+        if (p.outputBytes + bytes > p.limits.maxTraceBytes) { this.limit(p, 'bytes'); return; }
+        p.outputBytes += bytes;
         if (msg.payload.stream === "stdout") p.stdoutChunks.push(msg.payload.text);
         else p.stderrChunks.push(msg.payload.text);
+        this.progress(p);
         return;
       }
       case "result": {
         const pay = msg.payload;
+        if (messageByteSize({error: pay.error, exitCode: pay.exitCode, analysis: pay.analysis}) > p.limits.maxTraceBytes) { this.limit(p, 'bytes'); return; }
         // Final message carries only the TAIL not already streamed.
-        const events = p.streamed.concat(pay.tail);
+        if (!this.acceptEvents(p, pay.tail)) return;
+        const events = p.streamed;
         const stdout = pay.stdout || p.stdoutChunks.join("");
         const stderr = pay.stderr || p.stderrChunks.join("");
+        if (new TextEncoder().encode(stdout + stderr).byteLength > p.limits.maxTraceBytes) { this.limit(p, 'bytes'); return; }
         this.settle(p, {
           runId: p.runId,
           status: pay.status,
@@ -350,6 +407,7 @@ export class ExecutionEngine {
         return;
       }
       case "error": {
+        if (p.outputBytes + new TextEncoder().encode(msg.payload.message).byteLength > p.limits.maxTraceBytes) { this.limit(p, 'bytes'); return; }
         this.settle(p, {
           runId: p.runId,
           status: "error",
@@ -361,6 +419,23 @@ export class ExecutionEngine {
         return;
       }
     }
+  }
+
+  private acceptEvents(p: PendingRun, events: TraceEvent[]): boolean {
+    // Validate the entire batch's ordering before accepting any of it.
+    if (events.some((event, offset) => event.index !== p.streamed.length + offset)) return false;
+    for (const event of events) {
+      if (p.streamed.length >= p.limits.maxEvents) { this.limit(p, 'events'); return false; }
+      const bytes = messageByteSize(event);
+      if (p.traceBytes + bytes > p.limits.maxTraceBytes) { this.limit(p, 'bytes'); return false; }
+      p.streamed.push(event); p.traceBytes += bytes;
+    }
+    return true;
+  }
+
+  private limit(p: PendingRun, limitHit: 'events' | 'bytes'): void {
+    this.settle(p, { runId: p.runId, status: limitHit === 'events' ? 'event-limit' : 'trace-limit',
+      events: p.streamed, stdout: p.stdoutChunks.join(''), stderr: p.stderrChunks.join(''), incomplete: true, limitHit });
   }
 }
 

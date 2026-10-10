@@ -41,13 +41,13 @@ The efficiency point that every graph algorithm's complexity rests on: iterating
   ],
 
   concepts: {
-    purpose: "Fluently build and traverse adjacency lists — the structure underlying all graph algorithms.",
-    operations: "Build with defaultdict(list); store (neighbour, weight) for weighted graphs; iterate adj[u] for neighbours.",
-    uses: "Input to BFS/DFS, topological sort, Dijkstra, MST; degree counting; neighbour queries.",
-    tradeoffs: "O(V+E) space and O(degree) neighbour iteration; O(degree) to check a specific edge (matrix does that in O(1)).",
-    commonMistakes: "KeyError from a plain dict (use defaultdict or setdefault); forgetting weights when the algorithm needs them; adding both directions for a directed graph.",
-    edgeCases: "Isolated vertex has an empty list. Directed edges appear once. Duplicate/parallel edges appear multiple times.",
-  },
+  "purpose": "Fluently build and traverse adjacency lists — the structure underlying all graph algorithms.",
+  "operations": "Build with defaultdict(list); store (neighbour, weight) for weighted graphs; iterate adj[u] for neighbours.",
+  "uses": "Input to BFS/DFS, topological sort, Dijkstra, MST; degree counting; neighbour queries.",
+  "tradeoffs": "O(V+E) space and O(degree) neighbour iteration; O(degree) to check a specific edge (matrix does that in O(1)).",
+  "commonMistakes": "KeyError from a plain dict (use defaultdict or setdefault); forgetting weights when the algorithm needs them; adding both directions for a directed graph.",
+  "edgeCases": "This weighted example is directed: u->v does not add v->u. Only source keys are created during construction; populate every vertex explicitly if isolated vertices must be represented. Looking up a missing defaultdict key creates an empty list."
+},
 
   complexity: [
     { operation: "Build adjacency list", best: "O(V + E)", average: "O(V + E)", worst: "O(V + E)", space: "O(V + E)", note: "One append per edge." },
@@ -55,33 +55,97 @@ The efficiency point that every graph algorithm's complexity rests on: iterating
   ],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [
-      { symbol: "V", meaning: "the number of vertices" },
-      { symbol: "E", meaning: "the number of edges" },
-    ],
-    costModel: "Each append and each neighbour visit is O(1). The sum of all vertices' degrees equals 2E (undirected) or E (directed).",
-    time: {
-      bound: "O(V + E)",
-      case: "worst",
-      explanation: "Building the list does one O(1) append per edge — O(E) — over V vertices, so O(V + E). Iterating EVERY vertex's neighbours across the whole graph visits each edge once (directed) or twice (undirected), because the total length of all adjacency lists is the sum of degrees = O(E). Adding the O(V) to visit each vertex gives O(V + E). This is exactly why graph traversals are O(V + E), not O(V²).",
+  "scope": "program",
+  "variables": [
+    {
+      "symbol": "V",
+      "meaning": "the number of vertices"
     },
-    space: {
-      bound: "O(V + E)",
-      case: "worst",
-      explanation: "The list stores one entry per vertex plus one per edge — O(V + E), the natural size of the graph.",
-      inputOutputNote: "The adjacency list IS the graph; its O(V+E) size is inherent.",
-    },
-    derivation: [
-      { lines: [5, 6], description: "One O(1) append per edge builds the list — O(E) over V vertices.", cost: "O(V + E)", dimension: "time" },
-      { lines: [10], description: "Iterating a vertex's neighbours is O(its degree); across the graph, O(E).", cost: "O(V + E)", dimension: "time" },
-      { lines: [4, 6], description: "The list holds V vertices and E edge entries.", cost: "O(V + E)", dimension: "space" },
-    ],
-    assumptions: ["Appends and neighbour visits are O(1).", "Directed edges are stored once; the total list length is O(E)."],
-    tradeoffs: "Iterating neighbours is O(degree) per vertex (O(E) total) — great for traversal. Checking one specific edge is O(degree); a matrix does that in O(1) but costs O(V²) space.",
-    counters: [],
-    fixedDataNote: "This run builds a 5-edge weighted directed graph, iterates vertex 0's two neighbours, and reports vertex 2's out-degree (2). The O(V+E) bounds generalise.",
+    {
+      "symbol": "E",
+      "meaning": "the number of edges"
+    }
+  ],
+  "costModel": "Each append and each neighbour visit is O(1). The sum of all vertices' degrees equals 2E (undirected) or E (directed).",
+  "time": {
+    "bound": "O(E)",
+    "case": "worst",
+    "explanation": "Building E directed entries costs expected O(E); scanning vertex 0 costs its outgoing degree, at most E. If all V vertex keys were created explicitly, construction would be O(V+E)."
   },
+  "space": {
+    "bound": "O(V + E)",
+    "case": "worst",
+    "explanation": "The displayed dictionary stores source keys and E neighbor/weight pairs. Its size is O(V+E), but destination-only and isolated vertices need not have keys; the graph renderer includes referenced destination vertices.",
+    "inputOutputNote": "The adjacency list IS the graph; its O(V+E) size is inherent."
+  },
+  "derivation": [
+    {
+      "lines": [
+        5,
+        6
+      ],
+      "description": "One O(1) append per edge builds the list — O(E) over V vertices.",
+      "cost": "O(V + E)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        10
+      ],
+      "description": "Iterating a vertex's neighbours is O(its degree); across the graph, O(E).",
+      "cost": "O(V + E)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        4,
+        6
+      ],
+      "description": "The list holds V vertices and E edge entries.",
+      "cost": "O(V + E)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Appends and neighbour visits are O(1).",
+    "Directed edges are stored once; the total list length is O(E).",
+    "Directed weighted edges; dictionary lookup is expected constant time and list append amortized constant time.",
+    "The shown defaultdict creates source keys only; lookup of a missing key mutates it by adding an empty list."
+  ],
+  "tradeoffs": "Iterating neighbours is O(degree) per vertex (O(E) total) — great for traversal. Checking one specific edge is O(degree); a matrix does that in O(1) but costs O(V²) space.",
+  "counters": [],
+  "fixedDataNote": "This run builds a 5-edge weighted directed graph, iterates vertex 0's two neighbours, and reports vertex 2's out-degree (2). The O(V+E) bounds generalise.",
+  "references": [
+    {
+      "url": "https://opendatastructures.org/ods-python/12_2_AdjacencyLists_Graph_a.html",
+      "title": "Open Data Structures: adjacency lists",
+      "section": "12.2; Figure 12.3; Theorem 12.2",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Adjacency storage is O(V+E).",
+        "Scanning one neighbor list costs its degree."
+      ],
+      "conventions": [],
+      "accessDate": "2026-10-10"
+    },
+    {
+      "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+      "title": "MIT 6.006 Lecture 9: BFS",
+      "section": "Pages 1–4: representations, shortest paths, BFS",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Undirected adjacency stores both directions.",
+        "A path length counts edges."
+      ],
+      "conventions": [
+        "App may use -1 for unreachable distances instead of infinity."
+      ],
+      "accessDate": "2026-10-10"
+    }
+  ]
+},
 
   code,
 
@@ -103,8 +167,13 @@ The efficiency point that every graph algorithm's complexity rests on: iterating
   ],
 
   bindings: [
-    { variable: "adj", model: "graph", directed: false },
-  ],
+  {
+    "variable": "adj",
+    "model": "graph",
+    "directed": true,
+    "adjacencyFormat": "weighted-pairs"
+  }
+],
 
   prediction: [
     { atEventIndex: 0, prompt: "Why is iterating ALL adjacency lists O(V + E) and not O(V^2)?", answer: "Because the total length of all the lists is the sum of degrees, which equals 2E (undirected) or E (directed) — so visiting every neighbour is O(E), plus O(V) to touch each vertex.", explanation: "Each edge contributes to exactly one (directed) or two (undirected) adjacency-list entries, so summing all list lengths gives O(E). A matrix scan would be O(V²), but list iteration is bounded by actual edges — the basis of O(V+E) traversal costs." },
@@ -139,31 +208,41 @@ The efficiency point that every graph algorithm's complexity rests on: iterating
   expectedOutput: "{0: [(1, 4), (2, 1)], 2: [(1, 2), (3, 5)], 1: [(3, 1)]}\n1 4\n2 1\n2\n",
 
   references: [
-    {
-      url: "https://docs.python.org/3/library/collections.html#collections.defaultdict",
-      title: "collections — defaultdict — Python documentation",
-      section: "defaultdict(list)",
-      topic: "graphs/adjacency-lists",
-      purpose: "Confirm defaultdict(list) auto-creates empty lists so appends need no key check.",
-      verifiedClaims: ["defaultdict(list) provides an empty list for missing keys on first access"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://algs4.cs.princeton.edu/40graphs/",
-      title: "Undirected Graphs — Algorithms, 4th Edition (Princeton)",
-      section: "Adjacency-lists representation",
-      topic: "graphs/adjacency-lists",
-      purpose: "Cross-check that the sum of adjacency-list lengths is O(E), giving O(V+E) traversal.",
-      verifiedClaims: ["The adjacency-lists representation has total length proportional to V + E"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://opendatastructures.org/ods-python/12_2_AdjacencyLists_Graph_a.html",
+    "title": "Open Data Structures: adjacency lists",
+    "section": "12.2; Figure 12.3; Theorem 12.2",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Adjacency storage is O(V+E).",
+      "Scanning one neighbor list costs its degree."
+    ],
+    "conventions": [],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+    "title": "MIT 6.006 Lecture 9: BFS",
+    "section": "Pages 1–4: representations, shortest paths, BFS",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Undirected adjacency stores both directions.",
+      "A path length counts edges."
+    ],
+    "conventions": [
+      "App may use -1 for unreachable distances instead of infinity."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "e95247e000f89495",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "701532f135396d6c",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 5,
   },
 };

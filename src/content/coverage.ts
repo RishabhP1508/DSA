@@ -13,7 +13,7 @@
 import type { CoverageEntry } from "../core/types";
 import { NOTION_PRACTICE } from "./notion-practice";
 
-export const COVERAGE_VERSION = 19;
+export const COVERAGE_VERSION = 20;
 
 function e(
   area: string,
@@ -195,6 +195,8 @@ export const coverage: CoverageEntry[] = [
   e("Range queries", "Fenwick trees", "range/fenwick", { lessonId: "fenwick-tree", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Range queries", "Segment trees", "range/segment", { lessonId: "segment-tree", hasVisualExample: true, hasExercise: true, status: "verified" }),
   e("Strings", "KMP string matching", "strings/kmp", { lessonId: "kmp", hasVisualExample: true, hasExercise: true, status: "verified" }),
+  e("Heaps","Task Scheduler: common cooldown scheduling","heaps/task-scheduler",{"lessonId":"task-scheduler","hasVisualExample":true,"hasExercise":true,"status":"verified"}),
+  e("Sorting","Meeting Rooms II: minimum room count","sorting/meeting-rooms-ii",{"lessonId":"meeting-rooms-ii","hasVisualExample":true,"hasExercise":true,"status":"verified"}),
 ];
 
 /**

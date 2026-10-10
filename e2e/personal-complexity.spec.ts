@@ -26,15 +26,15 @@ async function setProgram(page: import("@playwright/test").Page, code: string) {
 test("supported form shows an auto-supported bound + observed stats", async ({ page }) => {
   test.setTimeout(120_000);
   await page.goto("/");
-  await page.getByRole("button", { name: "Playground" }).click();
-  await expect(page.getByRole("button", { name: "▶ Run" })).toBeEnabled({ timeout: 60_000 });
+  await page.getByRole("button", { name: "Playground", exact: true }).click();
+  await expect(page.getByRole("button", { name: "▶ Run", exact: true })).toBeEnabled({ timeout: 60_000 });
 
   await setProgram(
     page,
     "def total(a):\n    t = 0\n    for x in a:\n        t = t + x\n    return t\n\nprint(total([1, 2, 3]))\n",
   );
-  await page.getByRole("button", { name: "▶ Run" }).click();
-  await expect(page.getByText(/completed/)).toBeVisible({ timeout: 60_000 });
+  await page.getByRole("button", { name: "▶ Run", exact: true }).click();
+  await expect(page.getByText(/· completed/)).toBeVisible({ timeout: 60_000 });
 
   // The personal complexity panel shows a supported bound (O(n...)) and the
   // honest observed-stats table.
@@ -47,15 +47,15 @@ test("supported form shows an auto-supported bound + observed stats", async ({ p
 test("recursion shows 'not determined automatically' with a reason", async ({ page }) => {
   test.setTimeout(120_000);
   await page.goto("/");
-  await page.getByRole("button", { name: "Playground" }).click();
-  await expect(page.getByRole("button", { name: "▶ Run" })).toBeEnabled({ timeout: 60_000 });
+  await page.getByRole("button", { name: "Playground", exact: true }).click();
+  await expect(page.getByRole("button", { name: "▶ Run", exact: true })).toBeEnabled({ timeout: 60_000 });
 
   await setProgram(
     page,
     "def fib(n):\n    if n < 2:\n        return n\n    return fib(n - 1) + fib(n - 2)\n\nprint(fib(6))\n",
   );
-  await page.getByRole("button", { name: "▶ Run" }).click();
-  await expect(page.getByText(/completed/)).toBeVisible({ timeout: 60_000 });
+  await page.getByRole("button", { name: "▶ Run", exact: true }).click();
+  await expect(page.getByText(/· completed/)).toBeVisible({ timeout: 60_000 });
 
   await expect(page.locator(".cx-not-determined")).toContainText(
     /not determined automatically/i,

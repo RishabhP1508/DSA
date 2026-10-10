@@ -27,6 +27,8 @@ import { runProgram } from "./lib/pyodide-harness.mjs";
 import { contentHashOf } from "./lib/content-hash.mjs";
 import { validateExample } from "./lib/example-model.mjs";
 import { resolveToday, verifiedAtFor } from "./lib/evidence-date.mjs";
+import { evidenceSelection } from './lib/evidence-selection.mjs';
+import { definitionId } from './lib/definition-id.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -58,6 +60,9 @@ function readPriorEvidence(filePath) {
 }
 
 const { lessons, patterns } = await loadCurriculum();
+// Optional scoped regeneration supports independent review batches without
+// rewriting content another reviewer is actively authoring. Default stays all.
+const selected = evidenceSelection(process.env.EVIDENCE_ONLY, lessons, patterns);
 const { COVERAGE_VERSION } = await import(pathToFileURL(path.join(ROOT, "src/content/coverage.ts")).href);
 
 /**
@@ -93,8 +98,8 @@ function fileIndex(dir) {
   for (const f of readdirSync(path.join(ROOT, dir)).filter((x) => x.endsWith(".ts"))) {
     const p = path.join(ROOT, dir, f);
     const src = readFileSync(p, "utf8");
-    const m = src.match(/\n\s*id:\s*"([^"]+)"/);
-    if (m) map.set(m[1], p);
+    const id = definitionId(src, p);
+    if (id) map.set(id, p);
   }
   return map;
 }
@@ -172,13 +177,15 @@ function writeEvidence(filePath, evidenceBlock) {
   // Now the file must end with `...\n};`. Insert the fresh evidence before it.
   const idx = src.lastIndexOf("\n};");
   if (idx === -1) throw new Error(`no closing }; in ${filePath}`);
-  src = src.slice(0, idx) + "\n" + evidenceBlock + "\n};" + src.slice(idx + "\n};".length);
+  const comma = src.slice(0,idx).trimEnd().endsWith(",") ? "" : ",";
+  src = src.slice(0, idx).trimEnd() + comma + "\n" + evidenceBlock + "\n};" + src.slice(idx + "\n};".length);
   writeFileSync(filePath, src, "utf8");
 }
 
 let done = 0;
 for (const [kind, items, files] of [["lesson", lessons, lessonFiles], ["pattern", patterns, patternFiles]]) {
   for (const item of items) {
+    if (selected && !selected.has(kind + ':' + item.id)) continue;
     const filePath = files.get(item.id);
     if (!filePath) { console.log(`  ! no file for ${kind} ${item.id}`); continue; }
     const { checks, unresolved } = await evidenceFor(kind, item);

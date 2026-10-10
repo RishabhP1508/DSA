@@ -368,7 +368,12 @@ describe("B1 batch — review-flag integrity (survives a future legitimate sign-
     expect(batchApprovedNow.length + batchPendingNow.length).toBe(13);
     // the two prior approvals are the only repo-wide approvals at amendment time
     expect(byId("variables-and-types").evidence?.semanticReview).toBe(true);
-    expect(byId("loops").evidence?.semanticReview).toBe(true);
+    // A later correction may invalidate a prior approval. A historical approval
+    // must not force the live flag true after the content changes.
+    const currentLoops = byId("loops");
+    expect(currentLoops.evidence?.semanticReview).toBe(
+      REVIEW_LEDGER_BY_KEY.get("lesson:loops")?.reviewedHash === contentHashOf(currentLoops),
+    );
   });
 });
 

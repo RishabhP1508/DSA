@@ -1,13 +1,13 @@
 # Curriculum coverage inventory
 
-Coverage version: 18. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
+Coverage version: 20. Versioned checklist of every required subtopic (Notion syllabus + agreed additions). A broad heading does NOT count as coverage of its subtopics. Source of truth: `src/content/coverage.ts`.
 
-**Evidence-verified (structural): 131 / 131.**
-**Human semantic review (R5.3): 131 / 131 coverage entries complete; 0 pending.**
+**Evidence-verified (structural): 133 / 133.**
+**Recorded semantic review: 133 / 133 coverage entries complete; 0 pending.**
 
-> Two count families, kept SEPARATE (do not mix them): (a) **EXAMPLES** — 131 lessons + 29 patterns = 160 executable examples, of which 160 are semantically reviewed and 0 pending; (b) **COVERAGE ENTRIES** — the 131 rows in this inventory, of which 131 are semantically reviewed and 0 pending.
+> Two count families, kept SEPARATE (do not mix them): (a) **EXAMPLES** — 133 lessons + 29 patterns = 162 executable examples, of which 162 are semantically reviewed and 0 pending; (b) **COVERAGE ENTRIES** — the 133 rows in this inventory, of which 133 are semantically reviewed and 0 pending.
 
-Two layers: *evidence-verified* means the item passes all machine checks (output, line explanations, complexity panel, example-model contract, references) with a current content-hash tie (see `verify:coverage-evidence`). *Semantic-reviewed* means a person read the teaching claim/definition/reasoning (`evidence.semanticReview: true`). Any item still pending semantic review is structurally verified but NOT claimed as fully reviewed. The six-batch review log is `.kiro/specs/R5-curriculum/batch-review.md`.
+Two layers: *evidence-verified* means the item passes machine checks with a current content-hash tie (see `verify:coverage-evidence`). *Semantic-reviewed* records a subject review at that exact hash by a human or explicitly human-delegated technical reviewer (`evidence.semanticReview: true`). Provenance is in `src/content/review-ledger.ts`; current review packets are under `docs/reviews/`. Automated checks enforce integrity but do not prove the reading or reasoning happened. Any pending item remains structurally verified without a completed semantic-review claim.
 
 Status legend: planned · in-progress · authored · verified. Reviewed column: ✅ = semantic review done, ⏳ = pending.
 
@@ -149,7 +149,7 @@ Status legend: planned · in-progress · authored · verified. Reviewed column: 
 | Divide and conquer | `dp/divide-and-conquer` | verified | ✅ | dp-divide-and-conquer | — |
 | N-Queens | `dp/n-queens` | verified | ✅ | dp-n-queens | — |
 
-## Heaps (7/7)
+## Heaps (8/8)
 
 | Subtopic | id | Status | Reviewed | Lesson | Ext. practice |
 |---|---|---|---|---|---|
@@ -160,6 +160,7 @@ Status legend: planned · in-progress · authored · verified. Reviewed column: 
 | Running median | `heaps/running-median` | verified | ✅ | running-median | 1 |
 | Merging sorted data | `heaps/merge-sorted` | verified | ✅ | merge-sorted-data | 1 |
 | Two-heap pattern | `heaps/two-heap` | verified | ✅ | two-heap-pattern | 1 |
+| Task Scheduler: common cooldown scheduling | `heaps/task-scheduler` | verified | ✅ | task-scheduler | 1 |
 
 ## Hashing (7/7)
 
@@ -183,7 +184,7 @@ Status legend: planned · in-progress · authored · verified. Reviewed column: 
 | XOR cancellation | `bits/xor-cancellation` | verified | ✅ | xor-cancellation | 2 |
 | Counting set bits | `bits/count-set-bits` | verified | ✅ | count-set-bits | 2 |
 
-## Sorting (11/11)
+## Sorting (12/12)
 
 | Subtopic | id | Status | Reviewed | Lesson | Ext. practice |
 |---|---|---|---|---|---|
@@ -198,6 +199,7 @@ Status legend: planned · in-progress · authored · verified. Reviewed column: 
 | Radix sort | `sorting/radix` | verified | ✅ | radix-sort | — |
 | Custom ordering/comparators | `sorting/comparators` | verified | ✅ | comparators | 1 |
 | Interval sorting | `sorting/intervals` | verified | ✅ | interval-sorting | 2 |
+| Meeting Rooms II: minimum room count | `sorting/meeting-rooms-ii` | verified | ✅ | meeting-rooms-ii | 1 |
 
 ## Searching (6/6)
 
@@ -219,5 +221,5 @@ Status legend: planned · in-progress · authored · verified. Reviewed column: 
 
 ---
 
-External practice (optional): **RECONCILED from the supplied Notion export** (R5.6). Notion occurrences: **79**; unique Notion problems: **75**; mapped occurrences: **77**; unresolved occurrences: **2**; additional optional problems (not in the export): **25**. Each coverage entry's practice column is DERIVED from `src/content/notion-practice.ts` via each occurrence's EXPLICIT in-topic `coverageIds` (never by shared-pattern id matching, which leaked questions across topics); 79 occurrences surface across 64 subtopics. Titles + canonical links only; local lessons teach each technique regardless. The 2 unresolved occurrences (Task Scheduler, Meeting Rooms II) have a documented content gap and are NOT surfaced. The historical Cloudflare-blocked access attempts are preserved in `.kiro/specs/R5-curriculum/external-practice-manifest.md`.
+External practice (optional): **RECONCILED from the supplied Notion export** (R5.6). Notion occurrences: **79**; unique Notion problems: **75**; mapped occurrences: **79**; unresolved occurrences: **0**; additional optional problems (not in the export): **25**. Each coverage entry's practice column is DERIVED from `src/content/notion-practice.ts` via each occurrence's EXPLICIT in-topic `coverageIds` (never by shared-pattern id matching); 81 occurrences surface across 66 subtopics. Titles + canonical links only; local lessons teach each technique. Unresolved rows, if any, retain their reasons and are not surfaced. The historical blocked-access attempts are preserved in `.kiro/specs/R5-curriculum/external-practice-manifest.md`; Task Scheduler and Meeting Rooms II are now taught in dedicated lessons.
 

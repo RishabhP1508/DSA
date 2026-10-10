@@ -20,12 +20,13 @@ describe("exercise-id — global uniqueness", () => {
     expect(unique.size).toBe(ids.length); // no collisions
   });
 
-  it("matches the known count (388 exercises)", () => {
+  it("matches the known count (393 exercises including the follow-ups and IPO prediction)", () => {
     // 381 at the R5 baseline + 2 from the heap-sift lesson (sift-predict-1,
     // sift-choose-1) + 5 learner-facing bridge exercises added by the practice-
     // bridge amendment (ps-product-except-self-1, pal-longest-substring-1,
     // mono-histogram-1, dpcomb-combination-sum-1, bit-log-sum-1).
-    expect(allComposite().length).toBe(388);
+    // Four exercises in the two completed follow-ups and one IPO prediction.
+    expect(allComposite().length).toBe(393);
   });
 
   it("flags exactly the four known ambiguous bare ids", () => {

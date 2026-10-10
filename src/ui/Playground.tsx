@@ -8,6 +8,8 @@
 
 import { useEffect, useState } from "react";
 import { useEngine, PLAYBACK_SPEEDS } from "./useEngine";
+import { RuntimeProgress } from "./RuntimeProgress";
+import { ObservedStep } from "./ObservedStep";
 import { CodeEditor } from "./CodeEditor";
 import { VariablesPanel } from "./VariablesPanel";
 import { PersonalComplexityPanel } from "./PersonalComplexityPanel";
@@ -155,14 +157,15 @@ export function Playground() {
   // While stale, stop highlighting the old trace's line (it no longer maps to
   // the edited source), but keep the recorded trace, output and error visible —
   // this is the learner's own program.
+  useEffect(() => { if(stale && engine.playing) engine.pause(); }, [stale, engine]);
   const currentLine = stale ? null : engine.event?.line ?? null;
   const err = engine.result?.error;
 
   return (
     <div className="app-body">
-      <main className="content playground">
+      <main className="content playground" id="main-content">
         <div className="lesson-content">
-          <h2>Code Playground</h2>
+          <div className="eyebrow">FOLLOW YOUR “WHAT IF?”</div><h1>Code Playground</h1>
           <p className="dim">
             Your own single-file Python, executed with the same real tracer as the lessons. State is
             observed, not guessed — the panels show actual variables, calls, output and errors.
@@ -178,12 +181,12 @@ export function Playground() {
                 <span className="spacer" />
                 <button
                   onClick={() => (engine.playing ? engine.pause() : engine.play())}
-                  disabled={!engine.result || engine.length === 0}
+                  disabled={!engine.result || stale || engine.length === 0}
                 >
                   {engine.playing ? "⏸ Pause" : "▶ Play"}
                 </button>
-                <button onClick={engine.restart} disabled={!engine.result}>⏮ Restart</button>
-                <button onClick={engine.prev} disabled={!engine.result || engine.position <= 0}>‹ Prev</button>
+                <button onClick={engine.restart} disabled={!engine.result || stale}>⏮ Restart</button>
+                <button onClick={engine.prev} disabled={!engine.result || stale || engine.position <= 0}>‹ Prev</button>
                 <button onClick={engine.next} disabled={!engine.result || engine.position >= engine.length - 1}>
                   Next ›
                 </button>
@@ -234,7 +237,7 @@ export function Playground() {
                   <input
                     type="file"
                     accept=".py,text/x-python,text/plain"
-                    style={{ display: "none" }}
+                    className="visually-hidden-file"
                     onChange={(e) => {
                       void importFile(e.target.files?.[0] ?? null);
                       e.target.value = "";
@@ -251,7 +254,8 @@ export function Playground() {
                 </div>
               )}
 
-              <CodeEditor value={source} onChange={setSource} highlightLine={currentLine} />
+              <RuntimeProgress running={engine.running} progress={engine.progress} result={engine.result} />
+        <CodeEditor value={source} onChange={setSource} highlightLine={currentLine} breakpoints={engine.breakpoints} onToggleBreakpoint={engine.toggleBreakpoint} />
 
               {savedAt && <div className="dim tiny">Draft saved {new Date(savedAt).toLocaleString()}</div>}
 
@@ -298,8 +302,8 @@ export function Playground() {
             </div>
 
             <div className="workspace-right">
-              <VisualizeAs event={engine.event} binding={vizBinding} onChange={setVizBinding} />
-              {vizBinding && engine.event && (
+              <VisualizeAs event={!stale?engine.event:undefined} binding={vizBinding} onChange={setVizBinding} />
+              {!stale && vizBinding && engine.event && (
                 <div className="viz-slot">
                   <Visualizer event={engine.event} binding={vizBinding} />
                 </div>
@@ -307,7 +311,7 @@ export function Playground() {
               {/* Playground code is the learner's own — no authored artifacts to
                   disable. The recorded trace stays available after an edit; the
                   banner just notes it predates the edit until re-run. */}
-              <VariablesPanel event={engine.event} output={engine.outputSoFar} />
+              <ObservedStep source={source} event={!stale?engine.event:undefined} previous={!stale?engine.result?.events[engine.position-1]:undefined}/><VariablesPanel event={engine.event} output={engine.outputSoFar} />
               <PersonalComplexityPanel
                 result={engine.result}
                 currentIndex={engine.position}

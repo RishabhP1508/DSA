@@ -10,9 +10,9 @@ intervals = [[1, 3], [2, 6], [8, 10], [15, 18]]
 # Step 1: sort by start so overlaps are adjacent.
 intervals.sort()
 # Step 2: sweep, merging into the last kept interval when they overlap.
-merged = [intervals[0]]
-for start, end in intervals[1:]:
-    if start <= merged[-1][1]:
+merged = []
+for start, end in intervals:
+    if merged and start <= merged[-1][1]:
         merged[-1][1] = max(merged[-1][1], end)
     else:
         merged.append([start, end])
@@ -26,13 +26,13 @@ export const intervals: LessonDefinition = {
 
   explanation: `An **interval** is a pair \`[start, end]\` representing a range (a meeting, a booking, a segment). A very common task is to **merge overlapping intervals** into the fewest non-overlapping ranges.
 
-The key insight is that overlaps are only easy to see once the intervals are **sorted by start**. After sorting, you sweep left to right keeping a list of merged results. For each interval, compare its \`start\` to the \`end\` of the **last merged** interval: if \`start <= last_end\`, they overlap (or touch), so you **extend** the last interval's end to \`max(last_end, end)\`; otherwise there is a gap, so you **append** a new interval.
+The key insight is that overlaps are only easy to see once the intervals are **sorted by start**. After sorting, you sweep left to right keeping a list of merged results. For the first interval, append a new result. Once the result is nonempty, compare each interval's \`start\` to the \`end\` of the **last merged** interval: if \`start <= last_end\`, they overlap (or touch), so you **extend** the last interval's end to \`max(last_end, end)\`; otherwise there is a gap, so you **append** a new interval.
 
 This is a **greedy sweep**: sorting guarantees that once you move past an interval, nothing later can overlap what you already closed. The cost is dominated by the sort — **O(n log n)** — with a single linear merge pass afterward. Interval problems (merge, insert, meeting rooms, overlap counting) almost all start with "sort by start (or end), then sweep."`,
 
   vocabulary: [
     { term: "Interval", definition: "A [start, end] pair representing a range." },
-    { term: "Overlap", definition: "Two intervals overlap when one starts at or before the other ends." },
+    { term: "Overlap", definition: "For closed intervals [a,b] and [c,d], overlap means max(a,c) <= min(b,d). After sorting by start, compare the next start with the last merged end." },
     { term: "Merge", definition: "Combine overlapping intervals into one covering range." },
     { term: "Sweep", definition: "Process intervals in sorted order, maintaining running state." },
     { term: "Greedy", definition: "Make the locally obvious choice (extend or append) that provably leads to the optimum here." },
@@ -43,12 +43,12 @@ This is a **greedy sweep**: sorting guarantees that once you move past an interv
     operations: "Sort by start; sweep, extending the last interval on overlap or appending on a gap.",
     uses: "Calendar merging, meeting rooms, free/busy times, range consolidation, insert-interval.",
     tradeoffs: "Sorting costs O(n log n); if intervals arrive pre-sorted, the merge alone is O(n).",
-    commonMistakes: "Forgetting to sort first; using < instead of <= (touching intervals like [1,2],[2,3] should merge); shrinking the end instead of taking the max; comparing to the wrong (not the last) merged interval.",
-    edgeCases: "Single interval (returned as-is). Fully nested intervals ([1,10],[2,3]) — the max keeps the larger end. Touching endpoints depend on whether <= or < is intended.",
+    commonMistakes: "Forgetting to sort first; using < when endpoints are closed (here touching intervals merge); shrinking the end instead of taking the max; reading merged[-1] before checking that merged is nonempty.",
+    edgeCases: "Empty input returns an empty list. Single interval is copied to the result. Fully nested intervals keep the larger end. This example uses closed intervals, so touching endpoints merge. Each start must be <= its end; sorting mutates the input's order.",
   },
 
   complexity: [
-    { operation: "Merge intervals", best: "O(n log n)", average: "O(n log n)", worst: "O(n log n)", space: "O(n)", note: "Dominated by the sort; linear merge pass; output up to n intervals." },
+    { operation: "Merge intervals", best: "O(n)", average: "O(n log n)", worst: "O(n log n)", space: "O(n)", note: "Worst case is dominated by sorting; Python's adaptive sort is linear on ordered runs. Output up to n intervals." },
   ],
 
   complexityExplanation: {
@@ -72,7 +72,7 @@ This is a **greedy sweep**: sorting guarantees that once you move past an interv
       { lines: [6, 11], description: "The merged output holds up to n intervals.", cost: "O(n)", dimension: "space" },
     ],
     assumptions: ["Comparisons for sorting are O(1).", "Touching intervals (start == last end) should merge, so we use <=.", "append is amortized O(1)."],
-    tradeoffs: "If the input is already sorted by start, skip the sort and the whole thing is O(n); otherwise the sort's O(n log n) is unavoidable.",
+    tradeoffs: "If the input is already sorted by start, skip the sort and the whole thing is O(n); otherwise this comparison-based implementation has O(n log n) worst-case sorting cost.",
     counters: [
       { label: "intervals swept", definition: "iterations of the sweep loop body (line 8)", countLines: [8] },
       { label: "new intervals appended", definition: "executions of the append (line 11)", countLines: [11] },
@@ -88,9 +88,9 @@ This is a **greedy sweep**: sorting guarantees that once you move past an interv
     { line: 3, executable: false, explanation: "Comment: sort so overlaps become adjacent." },
     { line: 4, executable: true, explanation: "Sort by start (lists sort lexicographically, so by first element then second)." },
     { line: 5, executable: false, explanation: "Comment: sweep and merge into the last kept interval." },
-    { line: 6, executable: true, explanation: "Seed merged with the first interval." },
-    { line: 7, executable: true, explanation: "Iterate the remaining intervals, unpacking each into start, end." },
-    { line: 8, executable: true, explanation: "Overlap test: does this interval start at or before the last merged interval's end?" },
+    { line: 6, executable: true, explanation: "Start an empty result; this also handles an empty input safely." },
+    { line: 7, executable: true, explanation: "Iterate all intervals, unpacking each into start, end." },
+    { line: 8, executable: true, explanation: "If merged is nonempty, test for overlap with its last interval. Short-circuiting avoids merged[-1] on an empty result." },
     { line: 9, executable: true, explanation: "Overlap → extend the last interval's end to the max of the two ends." },
     { line: 10, executable: false, explanation: "Otherwise (a gap)..." },
     { line: 11, executable: true, explanation: "...append this interval as a new separate range." },
@@ -116,10 +116,10 @@ This is a **greedy sweep**: sorting guarantees that once you move past an interv
     {
       id: "int-fix-1",
       kind: "fix-mistake",
-      prompt: "This merge forgets a crucial first step and gives wrong results on unsorted input. Fix it.",
+      prompt: "Fix this merge for unsorted or empty input. The input contains valid closed intervals (start <= end); touching endpoints merge. Return [] for an empty list. Sorting may change the input order.",
       starterCode: "def merge(intervals):\n    merged = [intervals[0]]\n    for start, end in intervals[1:]:\n        if start <= merged[-1][1]:\n            merged[-1][1] = max(merged[-1][1], end)\n        else:\n            merged.append([start, end])\n    return merged",
-      expected: "def merge(intervals):\n    intervals.sort()\n    merged = [intervals[0]]\n    for start, end in intervals[1:]:\n        if start <= merged[-1][1]:\n            merged[-1][1] = max(merged[-1][1], end)\n        else:\n            merged.append([start, end])\n    return merged",
-      hints: ["What makes overlaps adjacent?", "The sweep only works on sorted input.", "Add intervals.sort() before building merged."],
+      expected: "def merge(intervals):\n    intervals.sort()\n    merged = []\n    for start, end in intervals:\n        if merged and start <= merged[-1][1]:\n            merged[-1][1] = max(merged[-1][1], end)\n        else:\n            merged.append([start, end])\n    return merged",
+      hints: ["Check both ordering and empty input.", "Sort first, then start with an empty result.", "Test merged before reading merged[-1], and append the first interval."],
     },
     {
       id: "int-choose-1",
@@ -153,13 +153,15 @@ This is a **greedy sweep**: sorting guarantees that once you move past an interv
       verifiedClaims: ["Interval problems generally start by sorting on start or end, then sweeping"],
       accessDate: "2026-09-20",
     },
+    {"url":"https://leetcode.com/problems/merge-intervals/description/","title":"Merge Intervals","section":"Examples and constraints","topic":"intervals","purpose":"Check the specific delegated-review correction against the source.","verifiedClaims":["Closed intervals touching at an endpoint merge; merge covers every input interval."],"accessDate":"2026-10-10"},
+    {"url":"https://docs.python.org/3.14/howto/sorting.html","title":"Python Sorting Techniques","section":"Sort stability and complex sorts","topic":"intervals","purpose":"Check the specific delegated-review correction against the source.","verifiedClaims":["list.sort mutates its input; Timsort exploits existing ordered runs."],"accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "895f9f8c2f7fd541",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "a1204be518ade3e7",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

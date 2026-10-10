@@ -1,0 +1,337 @@
+[
+  {
+    "kind": "pattern",
+    "id": "binary-search-on-answer",
+    "hash": "bed466186b7cb844",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Monotone false-to-true search requires a feasible upper bound. Standalone can_ship now rejects a package heavier than cap; positive nonempty weights and days>=1 validated by least_capacity. Brute capacity oracle covers singleton R=0 and days>n. Initialization-inclusive O(n log(R+2)) and scalar diagram bindings agree. DP is a valid alternative with its own state recurrence.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "category",
+      "summary",
+      "clues",
+      "naiveApproach",
+      "whyItHelps",
+      "conditions",
+      "alternatives",
+      "counterexamples",
+      "walkthroughCode",
+      "walkthroughExpectedOutput",
+      "complexityNote",
+      "complexityExplanation",
+      "codeExplanations",
+      "bindings",
+      "linkedLessons",
+      "exercises",
+      "references"
+    ],
+    "codeLinesRead": 25,
+    "lineExplanationsRead": 25,
+    "exerciseIdsRead": [
+      "pat-bsa-recognize-1",
+      "pat-bsa-choose-1",
+      "pat-bsa-fix-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/description/",
+      "https://cp-algorithms.com/num_methods/binary_search.html"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "pattern:binary-search-on-answer:pat-bsa-recognize-1",
+        "field": "hints"
+      },
+      {
+        "uid": "pattern:binary-search-on-answer:pat-bsa-recognize-1",
+        "field": "recognition"
+      },
+      {
+        "uid": "pattern:binary-search-on-answer:pat-bsa-fix-1",
+        "field": "hints"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "merge-intervals",
+    "hash": "17fae99a8a79efa4",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Empty-safe nonmutating closed-interval union uses start-sorted references and fresh result pairs. Touching, nesting, negative endpoints and empty input checked; no input-pair aliases are mutated. Python key/merge buffers and separate sorted list require O(n) auxiliary space, excluding required output. Reverse end-order sweep is an adapted alternative; selecting intervals and counting rooms have different objectives.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "category",
+      "summary",
+      "clues",
+      "naiveApproach",
+      "whyItHelps",
+      "conditions",
+      "alternatives",
+      "counterexamples",
+      "walkthroughCode",
+      "walkthroughExpectedOutput",
+      "complexityNote",
+      "complexityExplanation",
+      "codeExplanations",
+      "bindings",
+      "linkedLessons",
+      "exercises",
+      "references"
+    ],
+    "codeLinesRead": 12,
+    "lineExplanationsRead": 12,
+    "exerciseIdsRead": [
+      "pat-mi-recognize-1",
+      "pat-mi-choose-1",
+      "pat-mi-fix-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://leetcode.com/problems/merge-intervals/description/",
+      "https://docs.python.org/3.14/howto/sorting.html",
+      "https://raw.githubusercontent.com/python/cpython/v3.14.2/Objects/listobject.c"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "pattern:merge-intervals:pat-mi-choose-1",
+        "field": "hints"
+      },
+      {
+        "uid": "pattern:merge-intervals:pat-mi-choose-1",
+        "field": "recognition"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "greedy-interval-scheduling",
+    "hash": "e5cfd10d2b22c242",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Earliest compatible finish maximizes equally weighted meeting count by stays-ahead/exchange reasoning. Finite start<end meetings use touching-compatible half-open scheduling; output is a count. Brute subset oracle verifies small tied/nested/negative cases. Python in-place sort still uses O(n) keys/merge buffers. Weighted values require DP, and resource counting/arrows are not automatically this selection pattern.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "category",
+      "summary",
+      "clues",
+      "naiveApproach",
+      "whyItHelps",
+      "conditions",
+      "alternatives",
+      "counterexamples",
+      "walkthroughCode",
+      "walkthroughExpectedOutput",
+      "complexityNote",
+      "complexityExplanation",
+      "codeExplanations",
+      "bindings",
+      "linkedLessons",
+      "exercises",
+      "references"
+    ],
+    "codeLinesRead": 13,
+    "lineExplanationsRead": 13,
+    "exerciseIdsRead": [
+      "pat-gis-recognize-1",
+      "pat-gis-choose-1",
+      "pat-gis-fix-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://www.cs.cornell.edu/courses/cs482/2006su/handouts/ahead.pdf",
+      "https://docs.python.org/3.14/howto/sorting.html",
+      "https://raw.githubusercontent.com/python/cpython/v3.14.2/Objects/listobject.c"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "pattern:greedy-interval-scheduling:pat-gis-recognize-1",
+        "field": "recognition"
+      },
+      {
+        "uid": "pattern:greedy-interval-scheduling:pat-gis-fix-1",
+        "field": "hints"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "modified-binary-search",
+    "hash": "22b5905b5840403c",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Distinct rotated-array implementation checked across all small rotations, with a concrete duplicate counterexample proving incorrectness outside the contract. Sorted-half identification and endpoint updates agree with trace and inclusive-range diagram. Halving counter uses midpoint execution and excludes the final failed loop condition. Feasibility-search alternatives require positive shipping inputs rather than an ordinary array-order assumption.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "category",
+      "summary",
+      "clues",
+      "naiveApproach",
+      "whyItHelps",
+      "conditions",
+      "alternatives",
+      "counterexamples",
+      "walkthroughCode",
+      "walkthroughExpectedOutput",
+      "complexityNote",
+      "complexityExplanation",
+      "codeExplanations",
+      "bindings",
+      "linkedLessons",
+      "exercises",
+      "references"
+    ],
+    "codeLinesRead": 20,
+    "lineExplanationsRead": 20,
+    "exerciseIdsRead": [
+      "pat-mbs-recognize-1",
+      "pat-mbs-choose-1",
+      "pat-mbs-fix-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://leetcode.com/problems/search-in-rotated-sorted-array/description/",
+      "https://cp-algorithms.com/num_methods/binary_search.html"
+    ],
+    "requiredSharedPatches": [
+      {
+        "uid": "pattern:modified-binary-search:pat-mbs-recognize-1",
+        "field": "hints"
+      },
+      {
+        "uid": "pattern:modified-binary-search:pat-mbs-recognize-1",
+        "field": "recognition"
+      },
+      {
+        "uid": "pattern:modified-binary-search:pat-mbs-choose-1",
+        "field": "hints"
+      },
+      {
+        "uid": "pattern:modified-binary-search:pat-mbs-choose-1",
+        "field": "recognition"
+      }
+    ],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "divide-and-conquer",
+    "hash": "042da46976f0fc39",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Base case, strictly smaller children and correct combine are required; efficient independent splits avoid repeated states, while overlap can motivate memoization. Correct recurrence is2T(n/2)+O(n), including linear slices per level. Stable merge oracle and recursive bindings agree. Balanced vs unbalanced depth and quicksort variant memory are distinguished; quickselect expected linearity requires random pivots.",
+    "fieldsRead": [
+      "id",
+      "title",
+      "category",
+      "summary",
+      "clues",
+      "naiveApproach",
+      "whyItHelps",
+      "conditions",
+      "alternatives",
+      "counterexamples",
+      "walkthroughCode",
+      "walkthroughExpectedOutput",
+      "complexityNote",
+      "complexityExplanation",
+      "codeExplanations",
+      "bindings",
+      "linkedLessons",
+      "exercises",
+      "references"
+    ],
+    "codeLinesRead": 19,
+    "lineExplanationsRead": 19,
+    "exerciseIdsRead": [
+      "pat-dac-recognize-1",
+      "pat-dac-choose-1",
+      "pat-dac-fix-1"
+    ],
+    "effectiveExerciseFieldsRead": [
+      "prompt",
+      "starterCode",
+      "buggyCode",
+      "expected",
+      "preludeCode",
+      "tests",
+      "hints",
+      "recognition scenario/options/reasons/model/rejections"
+    ],
+    "referenceUrlsRead": [
+      "https://opendatastructures.org/ods-python/11_1_Comparison_Based_Sorti.html",
+      "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheMergeSort.html"
+    ],
+    "requiredSharedPatches": [],
+    "assessmentStatus": "technical review completed against the recorded effective hash; parent records ledger/evidence only after integration checks",
+    "limits": [
+      "No full browser/worker integration claim from subagent; parent owns that verification.",
+      "Evidence hashes intentionally unchanged until central regeneration."
+    ]
+  }
+]

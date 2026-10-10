@@ -141,13 +141,14 @@ Which to use? The slice is perfect for clarity and small strings; the two-pointe
       verifiedClaims: ["Reverse-and-compare uses O(n) extra space; two pointers use O(1)"],
       accessDate: "2026-09-20",
     },
+    {"url":"https://cp-algorithms.com/string/manacher.html","title":"CP-Algorithms palindromes","section":"Trivial algorithm; Working with parities","topic":"palindromes","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Naive expansion around centers costs O(n^2); odd and even centers differ."],"accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "d548e2fe88049675",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "8395ca2ac78c8bfd",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

@@ -1,0 +1,26 @@
+import fs from 'node:fs';
+import {get,save} from '../../scripts/lib/content-edit.mjs';
+const id='dp-grid-paths',x=get('lesson',id);
+x.code=x.code.replace('    if not grid or not grid[0]:','    if not grid:').replace('        raise ValueError("grid must be rectangular")','        raise ValueError("grid must be rectangular")\n    if not grid[0]:\n        return 0');
+for(const e of x.codeExplanations)if(e.line>7)e.line+=2;
+x.codeExplanations.push({line:8,executable:true,explanation:'All rows have equal width; check whether that width is zero.'},{line:9,executable:true,explanation:'Return zero when the rectangular grid has no cells.'});
+x.codeExplanations.sort((a,b)=>a.line-b.line);
+for(const d of x.complexityExplanation.derivation)d.lines=d.lines.map(n=>n>7?n+2:n);
+for(const c of x.complexityExplanation.counters)c.countLines=c.countLines.map(n=>n>7?n+2:n);
+x.concepts.edgeCases='Empty grid [] or rectangular empty rows return 0 by convention. Ragged grids raise ValueError, including an empty first row followed by nonempty rows. One row/column accumulates all costs. Finite negative cell costs are valid because right/down movement has no cycles.';
+save('lesson',id,x,['codeExplanations','complexityExplanation','concepts'],x.code);
+const rc=get('lesson','dp-recursive-calls'),row=rc.complexity.find(r=>r.operation==='memoized Fibonacci');row.best=row.average=row.worst='O(n)';row.space='O(n)';row.note='Cold unbounded memoization: n+1 states, O(n) scalar work and stored cells under ordinary expected hashing.';save('lesson',rc.id,rc,['complexity']);
+const climb=get('lesson','dp-climbing-stairs');climb.bindings=[{variable:'a',model:'object'},{variable:'b',model:'object'}];save('lesson',climb.id,climb,['bindings']);
+const house=get('lesson','dp-house-robber');house.bindings.push({variable:'prev',model:'object'},{variable:'curr',model:'object'});
+// Start from the intended first patch, never from stale effective overrides.
+const initial=JSON.parse(fs.readFileSync('docs/reviews/codex-b6-shared-patches.json'));
+const final=JSON.parse(fs.readFileSync('docs/reviews/codex-b6-final-shared-patches.json'));
+const p=final.find(p=>p.uid==='lesson:dp-house-robber:dphr-choose-1');
+const desired=structuredClone(initial.find(p=>p.uid==='lesson:dp-house-robber:dphr-choose-1'&&p.field==='recognition').value);
+desired.reasons[0].text='Take/skip prefix DP compares skipping the current house with taking it plus the best two positions earlier; for [4,5,4], the endpoints give 8.';
+desired.reasons.find(r=>r.id==='dp-gives-11').text='DP returns 5 for [4,5,4], so selecting both endpoints cannot improve it.';
+p.value=desired;
+house.exercises.find(e=>e.id==='dphr-choose-1').recognition=desired;
+save('lesson',house.id,house,['bindings','exercises']);
+fs.writeFileSync('docs/reviews/codex-b6-final-shared-patches.json',JSON.stringify(final,null,2));
+console.log('Ragged empty-row regression, memo comparison, rolling bindings and composed final recognition fixed.');

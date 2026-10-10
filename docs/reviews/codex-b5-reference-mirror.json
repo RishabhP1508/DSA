@@ -1,0 +1,1371 @@
+[
+  {
+    "kind": "lesson",
+    "id": "tree-dfs",
+    "references": [
+      {
+        "url": "https://runestone.academy/ns/books/published/pythonds3/Trees/TreeTraversals.html",
+        "title": "Runestone: tree traversals",
+        "section": "6.8: preorder, inorder, postorder; recursive code listings",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Traversal visit order.",
+          "None is the recursion base case."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://opendatastructures.org/ods-python/6_Binary_Trees.html",
+        "title": "Open Data Structures: binary trees",
+        "section": "Chapter 6 definitions and Figures 6.1–6.2",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Unique parents in a rooted tree.",
+          "Depth and height count edges."
+        ],
+        "conventions": [
+          "This app states when its height function counts nodes instead."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "tree-bfs",
+    "references": [
+      {
+        "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+        "title": "Open Data Structures: graph traversal",
+        "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "BFS discovers reachable vertices in distance order.",
+          "DFS records visited vertices before recursion."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+        "title": "MIT 6.006 Lecture 9: BFS",
+        "section": "Pages 1–4: representations, shortest paths, BFS",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Undirected adjacency stores both directions.",
+          "A path length counts edges."
+        ],
+        "conventions": [
+          "App may use -1 for unreachable distances instead of infinity."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "tree-traversals",
+    "references": [
+      {
+        "url": "https://runestone.academy/ns/books/published/pythonds3/Trees/TreeTraversals.html",
+        "title": "Runestone: tree traversals",
+        "section": "6.8: preorder, inorder, postorder; recursive code listings",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Traversal visit order.",
+          "None is the recursion base case."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://opendatastructures.org/ods-python/6_Binary_Trees.html",
+        "title": "Open Data Structures: binary trees",
+        "section": "Chapter 6 definitions and Figures 6.1–6.2",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Unique parents in a rooted tree.",
+          "Depth and height count edges."
+        ],
+        "conventions": [
+          "This app states when its height function counts nodes instead."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "bst-operations",
+    "references": [
+      {
+        "url": "https://opendatastructures.org/ods-python/6_2_BinarySearchTree_Unbala.html",
+        "title": "Open Data Structures: unbalanced BST",
+        "section": "6.2.1 searching; 6.2.2 addition; 6.2.4 summary; Figures 6.5–6.7",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "A search follows one root-to-leaf path.",
+          "Unbalanced height can be linear."
+        ],
+        "conventions": [
+          "Source rejects duplicate keys; this insertion example sends equal keys right."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://docs.python.org/3.14/library/stdtypes.html#dict.setdefault",
+        "title": "Python 3.14: dictionary operations",
+        "topic": "python-dict",
+        "section": "dict.setdefault and insertion-order guarantee",
+        "purpose": "Check supported dictionary behavior against the language manual.",
+        "verifiedClaims": [
+          "setdefault returns an existing value or inserts its default.",
+          "Dictionaries preserve insertion order, not sorted-key order."
+        ],
+        "conventions": [
+          "Online manual currently displays 3.14.8; executable behavior was probed on bundled 3.14.2."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "tree-height-depth",
+    "references": [
+      {
+        "url": "https://opendatastructures.org/ods-python/6_Binary_Trees.html",
+        "title": "Open Data Structures: binary trees",
+        "section": "Chapter 6 definitions and Figures 6.1–6.2",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Unique parents in a rooted tree.",
+          "Depth and height count edges."
+        ],
+        "conventions": [
+          "This app states when its height function counts nodes instead."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://runestone.academy/ns/books/published/pythonds3/Trees/TreeTraversals.html",
+        "title": "Runestone: tree traversals",
+        "section": "6.8: preorder, inorder, postorder; recursive code listings",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Traversal visit order.",
+          "None is the recursion base case."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "lowest-common-ancestor",
+    "references": [
+      {
+        "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/",
+        "title": "LeetCode: BST lowest common ancestor",
+        "section": "Definition, examples 1–2, constraints",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "A node is its own ancestor.",
+          "Targets exist and keys are unique."
+        ],
+        "conventions": [
+          "App additionally permits p == q."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://opendatastructures.org/ods-python/6_2_BinarySearchTree_Unbala.html",
+        "title": "Open Data Structures: unbalanced BST",
+        "section": "6.2.1 searching; 6.2.2 addition; 6.2.4 summary; Figures 6.5–6.7",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "A search follows one root-to-leaf path.",
+          "Unbalanced height can be linear."
+        ],
+        "conventions": [
+          "Source rejects duplicate keys; this insertion example sends equal keys right."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "tree-construction",
+    "references": [
+      {
+        "url": "https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/",
+        "title": "LeetCode: sorted array to BST",
+        "section": "Description, examples, constraints",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Input keys are strictly increasing.",
+          "Output should be height balanced."
+        ],
+        "conventions": [
+          "App accepts an empty array and uses the upper middle on even lengths."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://opendatastructures.org/ods-python/6_2_BinarySearchTree_Unbala.html",
+        "title": "Open Data Structures: unbalanced BST",
+        "section": "6.2.1 searching; 6.2.2 addition; 6.2.4 summary; Figures 6.5–6.7",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "A search follows one root-to-leaf path.",
+          "Unbalanced height can be linear."
+        ],
+        "conventions": [
+          "Source rejects duplicate keys; this insertion example sends equal keys right."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "trie-insertion",
+    "references": [
+      {
+        "url": "https://cp-algorithms.com/string/aho_corasick.html",
+        "title": "CP Algorithms: trie construction",
+        "section": "Construction of the trie",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Paths share prefixes.",
+          "Terminal flags distinguish complete words."
+        ],
+        "conventions": [
+          "App uses dictionaries for arbitrary characters rather than a fixed 26-child array."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://www.cs.usfca.edu/~galles/visualization/Trie.html",
+        "title": "USFCA: Trie Visualization",
+        "topic": "trie",
+        "section": "Inserted APP and APPLE; inspected shared A-P-P path and terminal coloring.",
+        "purpose": "Inspect character-edge and terminal-node visual conventions.",
+        "verifiedClaims": [
+          "Shared prefix nodes remain common.",
+          "APP stays terminal when APPLE is added."
+        ],
+        "conventions": [
+          "Reference uses uppercase; app accepts arbitrary characters."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://docs.python.org/3.14/library/stdtypes.html#dict.setdefault",
+        "title": "Python 3.14: dictionary operations",
+        "topic": "python-dict",
+        "section": "dict.setdefault and insertion-order guarantee",
+        "purpose": "Check supported dictionary behavior against the language manual.",
+        "verifiedClaims": [
+          "setdefault returns an existing value or inserts its default.",
+          "Dictionaries preserve insertion order, not sorted-key order."
+        ],
+        "conventions": [
+          "Online manual currently displays 3.14.8; executable behavior was probed on bundled 3.14.2."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "prefix-search",
+    "references": [
+      {
+        "url": "https://cp-algorithms.com/string/aho_corasick.html",
+        "title": "CP Algorithms: trie construction",
+        "section": "Construction of the trie",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Paths share prefixes.",
+          "Terminal flags distinguish complete words."
+        ],
+        "conventions": [
+          "App uses dictionaries for arbitrary characters rather than a fixed 26-child array."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://www.cs.usfca.edu/~galles/visualization/Trie.html",
+        "title": "USFCA: Trie Visualization",
+        "topic": "trie",
+        "section": "Inserted APP and APPLE; inspected shared A-P-P path and terminal coloring.",
+        "purpose": "Inspect character-edge and terminal-node visual conventions.",
+        "verifiedClaims": [
+          "Shared prefix nodes remain common.",
+          "APP stays terminal when APPLE is added."
+        ],
+        "conventions": [
+          "Reference uses uppercase; app accepts arbitrary characters."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://docs.python.org/3.14/library/stdtypes.html#dict.setdefault",
+        "title": "Python 3.14: dictionary operations",
+        "topic": "python-dict",
+        "section": "dict.setdefault and insertion-order guarantee",
+        "purpose": "Check supported dictionary behavior against the language manual.",
+        "verifiedClaims": [
+          "setdefault returns an existing value or inserts its default.",
+          "Dictionaries preserve insertion order, not sorted-key order."
+        ],
+        "conventions": [
+          "Online manual currently displays 3.14.8; executable behavior was probed on bundled 3.14.2."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "word-search",
+    "references": [
+      {
+        "url": "https://leetcode.com/problems/word-search/",
+        "title": "LeetCode: Word Search",
+        "section": "Description, examples, constraints",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Neighbors share a side.",
+          "One path cannot reuse a cell."
+        ],
+        "conventions": [
+          "App extends the source domain to empty inputs and arbitrary character values."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://cp-algorithms.com/string/aho_corasick.html",
+        "title": "CP Algorithms: trie construction",
+        "section": "Construction of the trie",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Paths share prefixes.",
+          "Terminal flags distinguish complete words."
+        ],
+        "conventions": [
+          "App uses dictionaries for arbitrary characters rather than a fixed 26-child array."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "avl-rotations",
+    "references": [
+      {
+        "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/a2c80596cf4a2b5fbc854afdd2f23dcb_MIT6_006S20_lec7.pdf",
+        "title": "MIT 6.006 Lecture 7: AVL",
+        "section": "Pages 1–3: rotations, height balance, local rebalance",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Rotations preserve inorder.",
+          "Balanced subtree heights differ by at most one."
+        ],
+        "conventions": [
+          "MIT height counts edges; app caches node-count heights."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://runestone.academy/ns/books/published/pythonds3/Trees/AVLTreeImplementation.html",
+        "title": "Runestone: AVL implementation",
+        "section": "Rotation pointers and double-rotation cases",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Transfer the middle subtree during rotation.",
+          "Repair metadata after rewiring."
+        ],
+        "conventions": [
+          "App has no parent pointers and returns the new subtree root."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "graph-representations",
+    "references": [
+      {
+        "url": "https://opendatastructures.org/ods-python/12_2_AdjacencyLists_Graph_a.html",
+        "title": "Open Data Structures: adjacency lists",
+        "section": "12.2; Figure 12.3; Theorem 12.2",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Adjacency storage is O(V+E).",
+          "Scanning one neighbor list costs its degree."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+        "title": "MIT 6.006 Lecture 9: BFS",
+        "section": "Pages 1–4: representations, shortest paths, BFS",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Undirected adjacency stores both directions.",
+          "A path length counts edges."
+        ],
+        "conventions": [
+          "App may use -1 for unreachable distances instead of infinity."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "adjacency-lists",
+    "references": [
+      {
+        "url": "https://opendatastructures.org/ods-python/12_2_AdjacencyLists_Graph_a.html",
+        "title": "Open Data Structures: adjacency lists",
+        "section": "12.2; Figure 12.3; Theorem 12.2",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Adjacency storage is O(V+E).",
+          "Scanning one neighbor list costs its degree."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+        "title": "MIT 6.006 Lecture 9: BFS",
+        "section": "Pages 1–4: representations, shortest paths, BFS",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Undirected adjacency stores both directions.",
+          "A path length counts edges."
+        ],
+        "conventions": [
+          "App may use -1 for unreachable distances instead of infinity."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "graph-bfs",
+    "references": [
+      {
+        "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+        "title": "Open Data Structures: graph traversal",
+        "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "BFS discovers reachable vertices in distance order.",
+          "DFS records visited vertices before recursion."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+        "title": "MIT 6.006 Lecture 9: BFS",
+        "section": "Pages 1–4: representations, shortest paths, BFS",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Undirected adjacency stores both directions.",
+          "A path length counts edges."
+        ],
+        "conventions": [
+          "App may use -1 for unreachable distances instead of infinity."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "graph-dfs",
+    "references": [
+      {
+        "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+        "title": "Open Data Structures: graph traversal",
+        "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "BFS discovers reachable vertices in distance order.",
+          "DFS records visited vertices before recursion."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+        "title": "MIT 6.006 Lecture 9: BFS",
+        "section": "Pages 1–4: representations, shortest paths, BFS",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Undirected adjacency stores both directions.",
+          "A path length counts edges."
+        ],
+        "conventions": [
+          "App may use -1 for unreachable distances instead of infinity."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "connected-components",
+    "references": [
+      {
+        "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+        "title": "Open Data Structures: graph traversal",
+        "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "BFS discovers reachable vertices in distance order.",
+          "DFS records visited vertices before recursion."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://opendatastructures.org/ods-python/12_2_AdjacencyLists_Graph_a.html",
+        "title": "Open Data Structures: adjacency lists",
+        "section": "12.2; Figure 12.3; Theorem 12.2",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Adjacency storage is O(V+E).",
+          "Scanning one neighbor list costs its degree."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "graph-cycle-detection",
+    "references": [
+      {
+        "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+        "title": "Open Data Structures: graph traversal",
+        "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "BFS discovers reachable vertices in distance order.",
+          "DFS records visited vertices before recursion."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://visualgo.net/en/dfsbfs",
+        "title": "VisuAlgo: graph traversal",
+        "section": "Directed graph settings; cycle states; 7-6 topological sorting (DFS and Kahn BFS)",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Topological order requires a DAG.",
+          "Kahn starts with zero in-degree."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "topological-sort",
+    "references": [
+      {
+        "url": "https://visualgo.net/en/dfsbfs",
+        "title": "VisuAlgo: graph traversal",
+        "section": "Directed graph settings; cycle states; 7-6 topological sorting (DFS and Kahn BFS)",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Topological order requires a DAG.",
+          "Kahn starts with zero in-degree."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+        "title": "Open Data Structures: graph traversal",
+        "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "BFS discovers reachable vertices in distance order.",
+          "DFS records visited vertices before recursion."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/kevin-wayne/algs4/master/src/main/java/edu/princeton/cs/algs4/TopologicalX.java",
+        "title": "Princeton algs4: queue-based topological sorting",
+        "section": "Class documentation lines 11–24; indegree queue and count check lines 46–75",
+        "topic": "trees-graphs-range",
+        "purpose": "Cross-check the exact implementation variant and boundary contract.",
+        "verifiedClaims": [
+          "A complete topological order exists exactly for directed acyclic graphs.",
+          "Vertices enter the queue when remaining indegree becomes zero.",
+          "A processed count below V rejects a complete order."
+        ],
+        "conventions": [
+          "Source consumes an existing graph; app builds adjacency internally and includes O(V+E) in auxiliary storage.",
+          "Main app examples raise on cycles; the lesson prefix-count exercise intentionally returns the processed prefix."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "multi-source-bfs",
+    "references": [
+      {
+        "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+        "title": "Open Data Structures: graph traversal",
+        "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "BFS discovers reachable vertices in distance order.",
+          "DFS records visited vertices before recursion."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+        "title": "MIT 6.006 Lecture 9: BFS",
+        "section": "Pages 1–4: representations, shortest paths, BFS",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Undirected adjacency stores both directions.",
+          "A path length counts edges."
+        ],
+        "conventions": [
+          "App may use -1 for unreachable distances instead of infinity."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "shortest-paths-unweighted",
+    "references": [
+      {
+        "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+        "title": "Open Data Structures: graph traversal",
+        "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "BFS discovers reachable vertices in distance order.",
+          "DFS records visited vertices before recursion."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+        "title": "MIT 6.006 Lecture 9: BFS",
+        "section": "Pages 1–4: representations, shortest paths, BFS",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Undirected adjacency stores both directions.",
+          "A path length counts edges."
+        ],
+        "conventions": [
+          "App may use -1 for unreachable distances instead of infinity."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "union-find",
+    "references": [
+      {
+        "url": "https://cp-algorithms.com/data_structures/disjoint_set_union.html",
+        "title": "CP Algorithms: disjoint-set union",
+        "section": "Path compression; union by rank; time complexity",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Rank plus compression gives amortized inverse-Ackermann cost.",
+          "Rank alone bounds an individual operation logarithmically."
+        ],
+        "conventions": [
+          "App uses iterative path halving, a compression variant."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/kevin-wayne/algs4/master/src/main/java/edu/princeton/cs/algs4/UF.java",
+        "title": "Princeton algs4: rank and path-halving union-find",
+        "section": "Class documentation lines 57–68; find lines 109–115; union lines 149–159",
+        "topic": "trees-graphs-range",
+        "purpose": "Cross-check the exact implementation variant and boundary contract.",
+        "verifiedClaims": [
+          "Rank plus path halving gives an inverse-Ackermann amortized operation bound.",
+          "Initialization is linear; an individual worst-case operation may be logarithmic.",
+          "Only equal-rank unions increase the surviving rank."
+        ],
+        "conventions": [
+          "Source Java implementation; app uses the same rank and halving strategy in Python.",
+          "App reports retained parent/rank arrays separately from constant working space per operation."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "dijkstra",
+    "references": [
+      {
+        "url": "https://cp-algorithms.com/graph/dijkstra_sparse.html",
+        "title": "CP Algorithms: sparse Dijkstra",
+        "section": "priority_queue implementation and stale-entry discussion",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Lazy heaps retain duplicate vertex entries.",
+          "Discard obsolete distances before scanning edges."
+        ],
+        "conventions": [
+          "App uses heapq rather than decrease-key."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/d819e7f4568aced8d5b59e03db6c7b67_MIT6_006S20_lec13.pdf",
+        "title": "MIT 6.006 Lecture 13: Dijkstra",
+        "section": "Pages 1–3: nonnegative weights, priority queue, correctness",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Nonnegative edges support distance finalization."
+        ],
+        "conventions": [
+          "MIT uses decrease-key; app uses lazy duplicate entries and a stale guard."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "bellman-ford",
+    "references": [
+      {
+        "url": "https://cp-algorithms.com/graph/bellman_ford.html",
+        "title": "CP Algorithms: Bellman–Ford",
+        "section": "Negative-cycle detection",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "An extra relaxation detects a source-reachable negative cycle."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/2430d7903a5529451d80c17f89a41fe8_MIT6_006S20_lec12.pdf",
+        "title": "MIT 6.006 Lecture 12: Bellman–Ford",
+        "section": "Pages 1–3: simple shortest paths and negative-cycle witnesses",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "A finite optimum has a simple representative with at most V−1 edges."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "floyd-warshall",
+    "references": [
+      {
+        "url": "https://cp-algorithms.com/graph/all-pair-shortest-path-floyd-warshall.html",
+        "title": "CP Algorithms: Floyd–Warshall",
+        "section": "Phase invariant; implementation; negative cycles",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "k is the outer phase loop.",
+          "Negative cycles invalidate affected pairs."
+        ],
+        "conventions": [
+          "App numbers vertices from zero and uses Python infinity."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/2430d7903a5529451d80c17f89a41fe8_MIT6_006S20_lec12.pdf",
+        "title": "MIT 6.006 Lecture 12: Bellman–Ford",
+        "section": "Pages 1–3: simple shortest paths and negative-cycle witnesses",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "A finite optimum has a simple representative with at most V−1 edges."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/kevin-wayne/algs4/master/src/main/java/edu/princeton/cs/algs4/FloydWarshall.java",
+        "title": "Princeton algs4: Floyd–Warshall",
+        "section": "Class documentation lines 18–38; initialization/phase/negative diagonal lines 57–95",
+        "topic": "trees-graphs-range",
+        "purpose": "Cross-check the exact implementation variant and boundary contract.",
+        "verifiedClaims": [
+          "Floyd–Warshall permits negative edges when shortest distances are well defined.",
+          "The outer loop controls allowed intermediate vertices.",
+          "A negative diagonal detects a negative cycle.",
+          "Distance matrix storage is quadratic."
+        ],
+        "conventions": [
+          "Source additionally stores a predecessor matrix and rejects negative-cycle distance queries.",
+          "App returns the distance matrix; its returned matrix is output storage, and affected pairs must not be interpreted as finite shortest distances."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "prim",
+    "references": [
+      {
+        "url": "https://cp-algorithms.com/graph/mst_prim.html",
+        "title": "CP Algorithms: Prim",
+        "section": "Cut argument; dense and sparse implementations; no-MST check",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "An MST spans a connected undirected graph.",
+          "Dense matrix Prim costs O(V²)."
+        ],
+        "conventions": [
+          "App uses a lazy edge heap, not the source ordered-set decrease-key version."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://cp-algorithms.com/graph/mst_kruskal_with_dsu.html",
+        "title": "CP Algorithms: Kruskal with DSU",
+        "section": "Rank-aware DSU implementation and sorted edge sweep",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Process edges by increasing weight.",
+          "Use rank and compression for DSU."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/kevin-wayne/algs4/master/src/main/java/edu/princeton/cs/algs4/PrimMST.java",
+        "title": "Princeton algs4: Prim minimum spanning forest",
+        "section": "Class documentation lines 39–55; component loop lines 82–90; cut checks lines 175–190",
+        "topic": "trees-graphs-range",
+        "purpose": "Cross-check the exact implementation variant and boundary contract.",
+        "verifiedClaims": [
+          "Negative weights and ties are valid for spanning trees.",
+          "Disconnected graphs require a forest contract or an explicit no-MST result.",
+          "Cut optimality compares crossing-edge weights."
+        ],
+        "conventions": [
+          "Princeton repeats indexed-heap Prim for every component; app lazy-heap Prim rejects disconnected nonempty input.",
+          "Indexed heap O(E log V) and O(V) extra storage are not the bounds of the app lazy heap."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "kruskal",
+    "references": [
+      {
+        "url": "https://cp-algorithms.com/graph/mst_kruskal_with_dsu.html",
+        "title": "CP Algorithms: Kruskal with DSU",
+        "section": "Rank-aware DSU implementation and sorted edge sweep",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Process edges by increasing weight.",
+          "Use rank and compression for DSU."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://cp-algorithms.com/graph/mst_prim.html",
+        "title": "CP Algorithms: Prim",
+        "section": "Cut argument; dense and sparse implementations; no-MST check",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "An MST spans a connected undirected graph.",
+          "Dense matrix Prim costs O(V²)."
+        ],
+        "conventions": [
+          "App uses a lazy edge heap, not the source ordered-set decrease-key version."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/kevin-wayne/algs4/master/src/main/java/edu/princeton/cs/algs4/PrimMST.java",
+        "title": "Princeton algs4: Prim minimum spanning forest",
+        "section": "Class documentation lines 39–55; component loop lines 82–90; cut checks lines 175–190",
+        "topic": "trees-graphs-range",
+        "purpose": "Cross-check the exact implementation variant and boundary contract.",
+        "verifiedClaims": [
+          "Negative weights and ties are valid for spanning trees.",
+          "Disconnected graphs require a forest contract or an explicit no-MST result.",
+          "Cut optimality compares crossing-edge weights."
+        ],
+        "conventions": [
+          "Princeton repeats indexed-heap Prim for every component; app lazy-heap Prim rejects disconnected nonempty input.",
+          "Indexed heap O(E log V) and O(V) extra storage are not the bounds of the app lazy heap."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "fenwick-tree",
+    "references": [
+      {
+        "url": "https://cp-algorithms.com/data_structures/fenwick.html",
+        "title": "CP Algorithms: Fenwick tree",
+        "section": "One-based indexing approach; finding minimum",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Low-bit jumps implement sum update/query.",
+          "Minimum variants have restrictions."
+        ],
+        "conventions": [
+          "App exposes one-based indices; inclusive range endpoints."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://cp-algorithms.com/data_structures/segment_tree.html",
+        "title": "CP Algorithms: segment trees",
+        "section": "Simplest sum tree; construction; update and query",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Build is linear; point update and query logarithmic."
+        ],
+        "conventions": [
+          "Source commonly uses recursive 4n storage; app uses iterative 2n."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://web.stanford.edu/class/archive/cs/cs166/cs166.1166/handouts/070%20Problem%20Set%203.pdf",
+        "title": "Stanford CS166: Fenwick trees",
+        "section": "Problem Three, printed page 3 (PDF page 3), parts i–iii",
+        "topic": "trees-graphs-range",
+        "purpose": "Cross-check the exact implementation variant and boundary contract.",
+        "verifiedClaims": [
+          "One-based incremental updates and inclusive prefix sums.",
+          "Fenwick storage can be an implicit array with logarithmic operations."
+        ],
+        "conventions": [
+          "The app demonstrates repeated add construction in O(n log(n+1)); a linear initializer is a separate algorithm.",
+          "App prefix(0) is zero and an empty inclusive range has lo=hi+1."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "segment-tree",
+    "references": [
+      {
+        "url": "https://codeforces.com/blog/entry/18051",
+        "title": "Al.Cash: Efficient and easy segment trees",
+        "section": "Single-element modifications; arbitrary sized array; non-commutative combiners",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Compact 2n layout supports arbitrary n.",
+          "Ordered operations require two query accumulators."
+        ],
+        "conventions": [
+          "App uses addition, one accumulator and half-open zero-based ranges."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://cp-algorithms.com/data_structures/segment_tree.html",
+        "title": "CP Algorithms: segment trees",
+        "section": "Simplest sum tree; construction; update and query",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Build is linear; point update and query logarithmic."
+        ],
+        "conventions": [
+          "Source commonly uses recursive 4n storage; app uses iterative 2n."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "bfs-shortest-path",
+    "references": [
+      {
+        "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+        "title": "Open Data Structures: graph traversal",
+        "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "BFS discovers reachable vertices in distance order.",
+          "DFS records visited vertices before recursion."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+        "title": "MIT 6.006 Lecture 9: BFS",
+        "section": "Pages 1–4: representations, shortest paths, BFS",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Undirected adjacency stores both directions.",
+          "A path length counts edges."
+        ],
+        "conventions": [
+          "App may use -1 for unreachable distances instead of infinity."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "tree-bfs",
+    "references": [
+      {
+        "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+        "title": "Open Data Structures: graph traversal",
+        "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "BFS discovers reachable vertices in distance order.",
+          "DFS records visited vertices before recursion."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+        "title": "MIT 6.006 Lecture 9: BFS",
+        "section": "Pages 1–4: representations, shortest paths, BFS",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Undirected adjacency stores both directions.",
+          "A path length counts edges."
+        ],
+        "conventions": [
+          "App may use -1 for unreachable distances instead of infinity."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "tree-dfs",
+    "references": [
+      {
+        "url": "https://runestone.academy/ns/books/published/pythonds3/Trees/TreeTraversals.html",
+        "title": "Runestone: tree traversals",
+        "section": "6.8: preorder, inorder, postorder; recursive code listings",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Traversal visit order.",
+          "None is the recursion base case."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://opendatastructures.org/ods-python/6_Binary_Trees.html",
+        "title": "Open Data Structures: binary trees",
+        "section": "Chapter 6 definitions and Figures 6.1–6.2",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Unique parents in a rooted tree.",
+          "Depth and height count edges."
+        ],
+        "conventions": [
+          "This app states when its height function counts nodes instead."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "graph-dfs-components",
+    "references": [
+      {
+        "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+        "title": "Open Data Structures: graph traversal",
+        "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "BFS discovers reachable vertices in distance order.",
+          "DFS records visited vertices before recursion."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://opendatastructures.org/ods-python/12_2_AdjacencyLists_Graph_a.html",
+        "title": "Open Data Structures: adjacency lists",
+        "section": "12.2; Figure 12.3; Theorem 12.2",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Adjacency storage is O(V+E).",
+          "Scanning one neighbor list costs its degree."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "topological-sort",
+    "references": [
+      {
+        "url": "https://visualgo.net/en/dfsbfs",
+        "title": "VisuAlgo: graph traversal",
+        "section": "Directed graph settings; cycle states; 7-6 topological sorting (DFS and Kahn BFS)",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Topological order requires a DAG.",
+          "Kahn starts with zero in-degree."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+        "title": "Open Data Structures: graph traversal",
+        "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "BFS discovers reachable vertices in distance order.",
+          "DFS records visited vertices before recursion."
+        ],
+        "conventions": [],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/kevin-wayne/algs4/master/src/main/java/edu/princeton/cs/algs4/TopologicalX.java",
+        "title": "Princeton algs4: queue-based topological sorting",
+        "section": "Class documentation lines 11–24; indegree queue and count check lines 46–75",
+        "topic": "trees-graphs-range",
+        "purpose": "Cross-check the exact implementation variant and boundary contract.",
+        "verifiedClaims": [
+          "A complete topological order exists exactly for directed acyclic graphs.",
+          "Vertices enter the queue when remaining indegree becomes zero.",
+          "A processed count below V rejects a complete order."
+        ],
+        "conventions": [
+          "Source consumes an existing graph; app builds adjacency internally and includes O(V+E) in auxiliary storage.",
+          "Main app examples raise on cycles; the lesson prefix-count exercise intentionally returns the processed prefix."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "union-find",
+    "references": [
+      {
+        "url": "https://cp-algorithms.com/data_structures/disjoint_set_union.html",
+        "title": "CP Algorithms: disjoint-set union",
+        "section": "Path compression; union by rank; time complexity",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Rank plus compression gives amortized inverse-Ackermann cost.",
+          "Rank alone bounds an individual operation logarithmically."
+        ],
+        "conventions": [
+          "App uses iterative path halving, a compression variant."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/kevin-wayne/algs4/master/src/main/java/edu/princeton/cs/algs4/UF.java",
+        "title": "Princeton algs4: rank and path-halving union-find",
+        "section": "Class documentation lines 57–68; find lines 109–115; union lines 149–159",
+        "topic": "trees-graphs-range",
+        "purpose": "Cross-check the exact implementation variant and boundary contract.",
+        "verifiedClaims": [
+          "Rank plus path halving gives an inverse-Ackermann amortized operation bound.",
+          "Initialization is linear; an individual worst-case operation may be logarithmic.",
+          "Only equal-rank unions increase the surviving rank."
+        ],
+        "conventions": [
+          "Source Java implementation; app uses the same rank and halving strategy in Python.",
+          "App reports retained parent/rank arrays separately from constant working space per operation."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "dijkstra",
+    "references": [
+      {
+        "url": "https://cp-algorithms.com/graph/dijkstra_sparse.html",
+        "title": "CP Algorithms: sparse Dijkstra",
+        "section": "priority_queue implementation and stale-entry discussion",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Lazy heaps retain duplicate vertex entries.",
+          "Discard obsolete distances before scanning edges."
+        ],
+        "conventions": [
+          "App uses heapq rather than decrease-key."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/d819e7f4568aced8d5b59e03db6c7b67_MIT6_006S20_lec13.pdf",
+        "title": "MIT 6.006 Lecture 13: Dijkstra",
+        "section": "Pages 1–3: nonnegative weights, priority queue, correctness",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Nonnegative edges support distance finalization."
+        ],
+        "conventions": [
+          "MIT uses decrease-key; app uses lazy duplicate entries and a stale guard."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "trie-prefix",
+    "references": [
+      {
+        "url": "https://cp-algorithms.com/string/aho_corasick.html",
+        "title": "CP Algorithms: trie construction",
+        "section": "Construction of the trie",
+        "topic": "trees-graphs-range",
+        "purpose": "Verify the stated algorithm and identify implementation conventions.",
+        "verifiedClaims": [
+          "Paths share prefixes.",
+          "Terminal flags distinguish complete words."
+        ],
+        "conventions": [
+          "App uses dictionaries for arbitrary characters rather than a fixed 26-child array."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://www.cs.usfca.edu/~galles/visualization/Trie.html",
+        "title": "USFCA: Trie Visualization",
+        "topic": "trie",
+        "section": "Inserted APP and APPLE; inspected shared A-P-P path and terminal coloring.",
+        "purpose": "Inspect character-edge and terminal-node visual conventions.",
+        "verifiedClaims": [
+          "Shared prefix nodes remain common.",
+          "APP stays terminal when APPLE is added."
+        ],
+        "conventions": [
+          "Reference uses uppercase; app accepts arbitrary characters."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  }
+]

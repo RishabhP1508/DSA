@@ -33,36 +33,37 @@ export const fastSlowPointersPattern: PatternDefinition = {
   title: "Fast & Slow Pointers",
   category: "Linked lists & sequences",
   summary:
-    "Run two pointers through one sequence at different speeds to find cycles, midpoints, or the k-th-from-end in one pass with O(1) space.",
+    "Compare positions in a retained linked structure: two speeds find a middle/cycle; a fixed gap with equal speeds finds a kth-from-end node.",
 
   clues: [
-    "A linked list (or an implicit successor function) where you must detect a loop or find a relative position.",
-    "You need the MIDDLE node, the k-th node from the END, or whether following 'next' ever repeats.",
-    "Constraint: O(1) extra space (so you can't just store every node in a set).",
-    "Phrases like 'detect a cycle', 'find the middle', 'happy number', 'start of the loop'.",
-  ],
+  "A linked list (or an implicit successor function) where you must detect a loop or find a relative position.",
+  "You need the MIDDLE node, the k-th node from the END, or whether following 'next' ever repeats.",
+  "Constraint: O(1) extra space (so you can't just store every node in a set).",
+  "Phrases like 'detect a cycle', 'find the middle', 'happy number', 'start of the loop'."
+],
 
-  naiveApproach: `Store every node (or value) you visit in a hash set and stop when you see a repeat — correct, but **O(n) extra space**. For finding the middle, a naive approach walks the list twice (count, then walk half). Both work but use more memory or passes than necessary.`,
+  naiveApproach: "Store every node identity you visit in a hash set and stop when you see a repeat — correct, but **O(n) extra space**. For finding the middle, a naive approach walks the list twice (count, then walk half). Both work but use more memory or passes than necessary. For a linked list, storing values is insufficient for cycle detection: different nodes may have equal values. Retain identities (or id values), with expected constant-time set access.",
 
-  whyItHelps: `Advance a **slow** pointer one step and a **fast** pointer two steps. If the list is acyclic, fast runs off the end. If there's a **cycle**, fast gains one node on slow every iteration, so it eventually **laps** slow and they land on the **same node** (compared by identity, \`is\`) — detecting the loop in **O(1) space**. The same two-speed idea finds the **middle** (when fast reaches the end, slow is halfway) and the **k-th from the end** (offset fast by k first). One pass, constant memory.`,
+  whyItHelps: "Advance a **slow** pointer one step and a **fast** pointer two steps. If the list is acyclic, fast runs off the end. If there's a **cycle**, fast gains one node on slow every iteration, so it eventually **laps** slow and they land on the **same node** (compared by identity, `is`) — detecting the loop in **O(1) space**. The same two-speed idea finds the **middle** (when fast reaches the end, slow is halfway) For the **kth from the end**, use a k-link initial gap and then move both one link per iteration. One pass, constant memory.",
 
   conditions: [
-    "Compare by IDENTITY (`slow is fast`), not value — a cycle is about revisiting the same node object.",
-    "The fast pointer must check both `fast` and `fast.next` before stepping twice (or it will dereference None).",
-    "There is a single successor per node (a functional graph), so 'two speeds' is well-defined.",
-  ],
+  "Compare by IDENTITY (`slow is fast`), not value — a cycle is about revisiting the same node object.",
+  "The fast pointer must check both `fast` and `fast.next` before stepping twice (or it will dereference None).",
+  "There is a single successor per node (a functional graph), so 'two speeds' is well-defined.",
+  "This is a retained linked-node structure, not a read-once consumable iterator. A kth-from-end variant first makes a k-link gap, then advances both cursors one link at a time."
+],
 
   alternatives: [
-    "Visited hash set — also detects cycles and finds the entry easily, but costs O(n) space; use it when you need the full set of visited nodes.",
-    "Count-then-walk — a simple two-pass way to find the middle when O(1) space isn't required.",
-    "Cycle START (not just detection) — after meeting, reset one pointer to the head and advance both by one; they meet at the entry (Floyd phase 2).",
-  ],
+  "Visited hash set — also detects cycles and finds the entry easily, but costs O(n) space; use it when you need the full set of visited nodes.",
+  "Count-then-walk — a simple two-pass way to find the middle when a separate counting pass is acceptable (this baseline also uses O(1) space).",
+  "Cycle START (not just detection) — after meeting, reset one pointer to the head and advance both by one; they meet at the entry (Floyd phase 2)."
+],
 
   counterexamples: [
-    "Comparing values (`slow.val == fast.val`) instead of identity can falsely report a cycle when distinct nodes share a value.",
-    "Data structures with multiple successors (trees/graphs) aren't a single 'next' chain — use graph cycle detection (colors / visited) instead.",
-    "If you must return the actual set of nodes in the loop, the hash-set approach is more convenient than pointers.",
-  ],
+  "Comparing values (`slow.val == fast.val`) instead of identity can falsely report a cycle when distinct nodes share a value.",
+  "Data structures with multiple successors (trees/graphs) aren't a single 'next' chain — use graph cycle detection (colors / visited) instead.",
+  "If you must return the actual set of nodes in the loop, the hash-set approach is more convenient than pointers."
+],
 
   walkthroughCode,
   walkthroughExpectedOutput: "False\nTrue\n",
@@ -70,143 +71,378 @@ export const fastSlowPointersPattern: PatternDefinition = {
     "O(n) time (fast traverses at most ~n nodes before meeting or ending) and O(1) space (two pointers). The hash-set alternative is O(n) time but O(n) space.",
 
   complexityExplanation: {
-    scope: "program",
-    variables: [{ symbol: "n", meaning: "the number of nodes in the list" }],
-    costModel: "The slow pointer advances one node per iteration and the fast pointer two. If there is a cycle, fast catches slow within O(n) steps; otherwise fast reaches the end in O(n).",
-    time: {
-      bound: "O(n)",
-      case: "worst",
-      explanation: "The loop (lines 9-13) advances slow by 1 and fast by 2 each iteration. Without a cycle, fast reaches the end after ~n/2 iterations. With a cycle, once slow enters the loop, fast closes the gap by one node per step and they meet within the cycle length, so O(n) overall.",
-    },
-    space: {
-      bound: "O(1)",
-      case: "worst",
-      explanation: "Only two node references are kept; nothing grows with n.",
-      inputOutputNote: "The linked list is the input; the answer is a boolean.",
-    },
-    derivation: [
-      { lines: [9, 10, 11], description: "Each iteration advances slow by 1 and fast by 2; O(n) iterations.", cost: "O(n)", dimension: "time" },
-      { lines: [12], description: "Constant-time identity check per iteration.", cost: "O(1)", dimension: "time" },
-      { lines: [8], description: "Two pointers only.", cost: "O(1)", dimension: "space" },
-    ],
-    assumptions: ["`is` compares node identity, not value (so equal values don't false-positive).", "Following .next is O(1)."],
-    tradeoffs: "A visited hash-set also detects cycles in O(n) time but O(n) space; Floyd's two-pointer method achieves O(1) space.",
-    counters: [{ label: "steps", definition: "iterations of the fast/slow loop (line 9)", countLines: [9] }],
-    fixedDataNote: "This run tests a 3-node acyclic list (fast reaches the end) then a cyclic one (pointers meet). The O(n) bound generalises.",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of nodes in the list"
+    }
+  ],
+  "costModel": "The slow pointer advances one node per iteration and the fast pointer two. If there is a cycle, fast catches slow within O(n) steps; otherwise fast reaches the end in O(n).",
+  "time": {
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "The loop (lines 9-13) advances slow by 1 and fast by 2 each iteration. Without a cycle, fast reaches the end after ~n/2 iterations. With a cycle, once slow enters the loop, fast closes the gap by one node per step and they meet within the cycle length, so O(n) overall."
   },
+  "space": {
+    "bound": "O(1)",
+    "case": "worst",
+    "explanation": "Only two node references are kept; nothing grows with n.",
+    "inputOutputNote": "The linked list is the input; the answer is a boolean. The bound covers the named algorithm; demonstration construction and collected print output are separate allocations."
+  },
+  "derivation": [
+    {
+      "lines": [
+        9,
+        10,
+        11
+      ],
+      "description": "Each iteration advances slow by 1 and fast by 2; O(n) iterations.",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        12
+      ],
+      "description": "Constant-time identity check per iteration.",
+      "cost": "O(1)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        8
+      ],
+      "description": "Two pointers only.",
+      "cost": "O(1)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "`is` compares node identity, not value (so equal values don't false-positive).",
+    "Following .next is O(1)."
+  ],
+  "tradeoffs": "A visited hash-set also detects cycles in O(n) time but O(n) space; Floyd's two-pointer method achieves O(1) space.",
+  "counters": [
+    {
+      "label": "steps",
+      "definition": "iterations of the fast/slow loop (line 9)",
+      "countLines": [
+        9
+      ]
+    }
+  ],
+  "fixedDataNote": "This run tests a 3-node acyclic list (fast reaches the end) then a cyclic one (pointers meet). The O(n) bound generalises."
+},
 
   codeExplanations: [
-    { line: 1, executable: false, explanation: "Comment: Floyd's tortoise-and-hare cycle detection." },
-    { line: 2, executable: true, explanation: "Define the linked-list Node class." },
-    { line: 3, executable: true, explanation: "Constructor taking a value." },
-    { line: 4, executable: true, explanation: "Store the value." },
-    { line: 5, executable: true, explanation: "next starts as None." },
-    { line: 6, executable: false, explanation: "Blank line." },
-    { line: 7, executable: true, explanation: "Define has_cycle(head)." },
-    { line: 8, executable: true, explanation: "Both pointers start at the head." },
-    { line: 9, executable: true, explanation: "Loop while fast can take two steps (fast and fast.next exist)." },
-    { line: 10, executable: true, explanation: "Slow advances one node." },
-    { line: 11, executable: true, explanation: "Fast advances two nodes." },
-    { line: 12, executable: true, explanation: "If they are the SAME node object, a cycle exists." },
-    { line: 13, executable: true, explanation: "Report the cycle." },
-    { line: 14, executable: true, explanation: "Fast reached the end: no cycle." },
-    { line: 15, executable: false, explanation: "Blank line." },
-    { line: 16, executable: true, explanation: "Build three nodes." },
-    { line: 17, executable: true, explanation: "Link them 1 -> 2 -> 3 (acyclic)." },
-    { line: 18, executable: true, explanation: "Acyclic list prints False." },
-    { line: 19, executable: true, explanation: "Point node 3's next back to node 2, creating a loop." },
-    { line: 20, executable: true, explanation: "Now the same list has a cycle -> True." },
-  ],
+  {
+    "line": 1,
+    "executable": false,
+    "explanation": "Comment: Floyd's tortoise-and-hare cycle detection."
+  },
+  {
+    "line": 2,
+    "executable": true,
+    "explanation": "Define the linked-list Node class."
+  },
+  {
+    "line": 3,
+    "executable": true,
+    "explanation": "Constructor taking a value."
+  },
+  {
+    "line": 4,
+    "executable": true,
+    "explanation": "Store the value."
+  },
+  {
+    "line": 5,
+    "executable": true,
+    "explanation": "next starts as None."
+  },
+  {
+    "line": 6,
+    "executable": false,
+    "explanation": "Blank line."
+  },
+  {
+    "line": 7,
+    "executable": true,
+    "explanation": "Define has_cycle(head)."
+  },
+  {
+    "line": 8,
+    "executable": true,
+    "explanation": "Both pointers start at the head."
+  },
+  {
+    "line": 9,
+    "executable": true,
+    "explanation": "Loop while fast can take two steps (fast and fast.next exist)."
+  },
+  {
+    "line": 10,
+    "executable": true,
+    "explanation": "Slow advances one node."
+  },
+  {
+    "line": 11,
+    "executable": true,
+    "explanation": "Fast advances two nodes."
+  },
+  {
+    "line": 12,
+    "executable": true,
+    "explanation": "If they are the SAME node object, a cycle exists."
+  },
+  {
+    "line": 13,
+    "executable": true,
+    "explanation": "Report the cycle."
+  },
+  {
+    "line": 14,
+    "executable": true,
+    "explanation": "Fast reached the end: no cycle."
+  },
+  {
+    "line": 15,
+    "executable": false,
+    "explanation": "Blank line."
+  },
+  {
+    "line": 16,
+    "executable": true,
+    "explanation": "Build three nodes."
+  },
+  {
+    "line": 17,
+    "executable": true,
+    "explanation": "Link them 1 -> 2 -> 3 (acyclic)."
+  },
+  {
+    "line": 18,
+    "executable": true,
+    "explanation": "Acyclic list prints False."
+  },
+  {
+    "line": 19,
+    "executable": true,
+    "explanation": "Point node 3's next back to node 2, creating a loop."
+  },
+  {
+    "line": 20,
+    "executable": true,
+    "explanation": "Now the same list has a cycle -> True."
+  }
+],
 
   bindings: [
-    {
-      variable: "a",
-      model: "linked-list",
-      overlays: [
-        { role: "pointer", label: "slow", source: "slow" },
-        { role: "pointer", label: "fast", source: "fast" },
-      ],
-    },
-  ],
+  {
+    "variable": "a",
+    "model": "linked-list",
+    "overlays": [
+      {
+        "role": "pointer",
+        "label": "slow",
+        "source": "slow"
+      },
+      {
+        "role": "pointer",
+        "label": "fast",
+        "source": "fast"
+      }
+    ]
+  }
+],
 
   linkedLessons: ["linked-list-cycle-detection", "linked-list-slow-fast", "linked-list-middle"],
 
   exercises: [
-    {
-      id: "pat-fs-recognize-1",
-      kind: "choose-approach",
-      prompt:
-        "Recognize: 'Detect whether a linked list has a cycle, using O(1) extra memory.' Which pattern, and why not a hash set?",
-      expected:
-        "Fast & slow pointers (Floyd's). It detects the cycle in O(1) space by having fast lap slow. A visited hash set also works but uses O(n) space, which the O(1) constraint rules out.",
-      correctPatternId: "fast-slow-pointers",
-      hints: [
-        "The O(1)-space constraint is the tell.",
-        "Two pointers at speeds 1 and 2.",
-        "They collide inside a loop.",
+  {
+    "id": "pat-fs-recognize-1",
+    "kind": "choose-approach",
+    "prompt": "Recognize: 'Detect whether a linked list has a cycle, using O(1) extra memory.' Which pattern, and why not a hash set?",
+    "expected": "Fast & slow pointers (Floyd's). It detects the cycle in O(1) space by having fast lap slow. A visited hash set also works but uses O(n) space, which the O(1) constraint rules out.",
+    "correctPatternId": "fast-slow-pointers",
+    "hints": [
+      "Goal: detect whether a linked list has a cycle using O(1) extra memory.",
+      "A visited hash set detects cycles but costs O(n) space, which the O(1) constraint forbids.",
+      "Key insight: in a loop a pointer moving twice as fast will eventually lap and collide with the slow one.",
+      "Approach: use Floyd's fast and slow pointers at speeds 2 and 1.",
+      "Pseudocode: slow=fast=head; while fast and fast.next: slow=slow.next; fast=fast.next.next; if slow is fast return True; return False.",
+      "Use fast & slow pointers (Floyd's): they collide inside a loop, giving O(1) space unlike a hash set."
+    ],
+    "recognition": {
+      "scenario": "Detect whether a linked list has a cycle, using O(1) extra memory.",
+      "approaches": [
+        {
+          "id": "floyd",
+          "label": "Fast & slow pointers (Floyd's)",
+          "requiredReasonIds": [
+            "lap-in-cycle"
+          ]
+        },
+        {
+          "id": "visited-set",
+          "label": "Hash set of visited nodes",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "It detects the cycle but stores up to n nodes — O(n) space, which the O(1) constraint forbids."
+        }
       ],
-    },
-    {
-      id: "pat-fs-fix-1",
-      kind: "fix-mistake",
-      prompt:
-        "`has_cycle(head)` returns whether the linked list has a cycle. This crashes on even-length/acyclic lists. Fix the loop condition.",
-      starterCode:
-        "def has_cycle(head):\n    slow = fast = head\n    while fast:\n        slow = slow.next\n        fast = fast.next.next\n        if slow is fast:\n            return True\n    return False",
-      expected:
-        "def has_cycle(head):\n    slow = fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        if slow is fast:\n            return True\n    return False",
-      hints: [
-        "fast.next.next reads two links ahead.",
-        "Both fast and fast.next must exist before stepping twice.",
-        "Guard with `while fast and fast.next`.",
+      "reasons": [
+        {
+          "id": "lap-in-cycle",
+          "text": "A one-step pointer and a two-step pointer must eventually meet inside a cycle, giving O(1)-space detection."
+        },
+        {
+          "id": "set-membership",
+          "text": "Recording each visited node in a hash set detects a repeat visit, correctly finding a cycle when O(n) space is acceptable."
+        },
+        {
+          "id": "must-sort",
+          "text": "The nodes must be sorted before checking.",
+          "contradictory": true
+        }
       ],
-    },
-    {
-      id: "pat-fs-recognize-2",
-      kind: "choose-approach",
-      prompt:
-        "Recognize: 'Return the middle node of a singly linked list in one pass.' Which pattern?",
-      expected:
-        "Fast & slow pointers. When the fast pointer (two steps) reaches the end, the slow pointer (one step) is at the middle — a single O(n) pass, O(1) space.",
-      correctPatternId: "fast-slow-pointers",
-      hints: [
-        "One pass, no length count.",
-        "Fast moves twice as fast.",
-        "Slow lands halfway when fast finishes.",
+      "acceptableApproachIds": [
+        "floyd"
       ],
-    },
-  ],
+      "alternatives": [
+        {
+          "approachId": "visited-set",
+          "conditions": "When O(n) extra memory is acceptable.",
+          "tradeoff": "Uses O(n) space versus Floyd's O(1).",
+          "requiredReasonIds": [
+            "set-membership"
+          ]
+        }
+      ],
+      "modelExplanation": "Fast & slow pointers (Floyd's): the fast pointer laps the slow one inside any cycle, detecting it in O(n) time and O(1) space — satisfying the memory limit."
+    }
+  },
+  {
+    "id": "pat-fs-fix-1",
+    "kind": "fix-mistake",
+    "prompt": "The loop checks only fast and crashes on odd nonempty acyclic lists when fast.next is None. Add the missing short-circuit guard; even acyclic lists reach fast=None and exit safely.",
+    "starterCode": "def has_cycle(head):\n    slow = fast = head\n    while fast:\n        slow = slow.next\n        fast = fast.next.next\n        if slow is fast:\n            return True\n    return False",
+    "expected": "def has_cycle(head):\n    slow = fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        if slow is fast:\n            return True\n    return False",
+    "hints": [
+      "Goal: has_cycle(head) = does the linked list contain a cycle.",
+      "fast moves two steps per iteration, so reading fast.next.next can dereference None.",
+      "Key property: before a double step, BOTH fast and fast.next must exist.",
+      "Approach: guard the loop condition so fast never steps past the end.",
+      "Pseudocode: while fast and fast.next: slow=slow.next; fast=fast.next.next; if slow is fast: return True.",
+      "Fix: change the loop to `while fast and fast.next:`."
+    ],
+    "tests": "class Node:\n    def __init__(self, val, nxt=None):\n        self.val = val; self.next = nxt\ndef build(vals):\n    head = None\n    for v in reversed(vals):\n        head = Node(v, head)\n    return head\nassert has_cycle(build([1,2,3,4])) is False, 'even-length acyclic must not crash'\nassert has_cycle(build([1,2,3])) is False\nassert has_cycle(None) is False\nassert has_cycle(build([1])) is False\na=Node(1); b=Node(2); c=Node(3); a.next=b; b.next=c; c.next=b\nassert has_cycle(a) is True\nprint('OK')"
+  },
+  {
+    "id": "pat-fs-recognize-2",
+    "kind": "choose-approach",
+    "prompt": "Recognize: 'Return the middle node of a singly linked list in one pass.' Which pattern?",
+    "expected": "Fast & slow pointers. When the fast pointer (two steps) reaches the end, the slow pointer (one step) is at the middle — a single O(n) pass, O(1) space.",
+    "correctPatternId": "fast-slow-pointers",
+    "hints": [
+      "Goal: return the middle node of a singly linked list in one pass.",
+      "Counting nodes first then walking is two passes; a single traversal can locate the middle directly.",
+      "Key insight: if one pointer moves twice as fast, it reaches the end exactly when the slow one reaches the middle.",
+      "Approach: use fast & slow pointers, advancing fast by two and slow by one.",
+      "Pseudocode: slow=fast=head; while fast and fast.next: slow=slow.next; fast=fast.next.next; return slow.",
+      "Use fast & slow pointers: slow lands at the middle when fast finishes, in one O(n) pass with O(1) space."
+    ],
+    "recognition": {
+      "scenario": "Return the middle node of a singly linked list in one pass.",
+      "approaches": [
+        {
+          "id": "floyd",
+          "label": "Fast & slow pointers",
+          "requiredReasonIds": [
+            "fast-double-speed"
+          ]
+        },
+        {
+          "id": "count-twice",
+          "label": "Count length, then walk to length/2",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "That is two passes; the fast/slow method finds the middle in a single pass."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "fast-double-speed",
+          "text": "When the fast pointer (two steps at a time) reaches the end, the slow pointer (one step) sits at the middle — a single O(n) pass, O(1) space."
+        },
+        {
+          "id": "index-access",
+          "text": "You can index the middle directly because a linked list supports O(1) random access.",
+          "contradictory": true
+        },
+        {
+          "id": "needs-two-passes",
+          "text": "Finding the middle inherently requires two passes over the list.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "floyd"
+      ],
+      "modelExplanation": "Fast & slow pointers: advance fast by two and slow by one; when fast falls off the end, slow is at the middle — one pass, O(1) space."
+    }
+  }
+],
 
   references: [
-    {
-      url: "https://en.wikipedia.org/wiki/Cycle_detection#Floyd's_tortoise_and_hare",
-      title: "Cycle detection — Floyd's tortoise and hare (Wikipedia)",
-      section: "Tortoise and hare; constant space",
-      topic: "patterns/fast-slow-pointers",
-      purpose: "Confirm the two-speed mechanism, guaranteed meeting inside a cycle, and O(1) space.",
-      verifiedClaims: [
-        "Two pointers at speeds 1 and 2 meet inside a cycle if one exists, using O(1) memory.",
-      ],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://leetcode.com/problems/linked-list-cycle/editorial/",
-      title: "Linked List Cycle — LeetCode editorial",
-      section: "Floyd vs hash set",
-      topic: "patterns/fast-slow-pointers",
-      purpose: "Cross-check the O(1)-space fast/slow method against the O(n)-space hash-set alternative.",
-      verifiedClaims: [
-        "Floyd's fast/slow detection is O(n) time and O(1) space; the hash-set method is O(n) space.",
-      ],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://cp-algorithms.com/others/tortoise_and_hare.html",
+    "title": "Floyd cycle finding",
+    "section": "Steps 1 and 2; proof of cycle-entry recovery",
+    "topic": "fast-slow-pointers",
+    "purpose": "Check the specific claims and conventions used here.",
+    "verifiedClaims": [
+      "Floyd compares positions at different speeds and recovers the cycle entry."
+    ],
+    "accessDate": "2026-10-10",
+    "conventions": [
+      "Source pseudocode uses C++ pointer equality. App Python compares node identity with is; slow moves one link, fast two, then resets one pointer for entry recovery."
+    ]
+  },
+  {
+    "url": "https://opendatastructures.org/ods-python/3_1_SLList_Singly_Linked_Li.html",
+    "title": "Open Data Structures: SLList",
+    "section": "3.1 stack and queue operations; Figure 3.1",
+    "topic": "fast-slow-pointers",
+    "purpose": "Check the specific claims and conventions used here.",
+    "verifiedClaims": [
+      "Retained node references permit independent traversals."
+    ],
+    "accessDate": "2026-10-10",
+    "conventions": [
+      "Source and app use next links and optional head/tail references. Access by index requires traversal; constant-time deletion needs the predecessor."
+    ]
+  },
+  {
+    "url": "https://docs.python.org/3.14/builtins/stdtypes.html",
+    "title": "Python 3.14: Built-in types",
+    "section": "Identity, equality, numeric types; floor division and float conversion",
+    "topic": "fast-slow-pointers",
+    "purpose": "Check the specific claims and conventions used here.",
+    "verifiedClaims": [
+      "Linked-node identity is not value equality."
+    ],
+    "accessDate": "2026-10-10",
+    "conventions": [
+      "Python object identity is compared with is. Equality can be customized by __eq__, so equal node values do not imply identical nodes. Relinking retains each node and its associated value."
+    ]
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "407c76101b334c0b",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "6ecdb849e2629cc4",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 4,
   },
 };

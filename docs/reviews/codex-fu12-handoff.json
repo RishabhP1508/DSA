@@ -1,0 +1,256 @@
+{
+  "contentPaths": [
+    "src/content/lessons/task-scheduler.ts",
+    "src/content/lessons/meeting-rooms-ii.ts"
+  ],
+  "focusedTestPath": "src/visualizers/codex-fu12-applications.real.test.tsx",
+  "evidencePaths": [
+    "docs/reviews/codex-fu12-assessments.json",
+    "docs/reviews/codex-fu12-central-integration.json",
+    "docs/reviews/codex-fu12-packets.mjs",
+    "docs/reviews/codex-fu12-reference-mirror.json",
+    "docs/reviews/codex-fu12-review.md",
+    "docs/reviews/codex-fu12-verification-results.json",
+    "docs/reviews/codex-fu12-verify.mjs"
+  ],
+  "proposedCoverageIds": [
+    "heaps/task-scheduler",
+    "sorting/meeting-rooms-ii"
+  ],
+  "pendingSharedEdits": [
+    {
+      "uid": "lesson:task-scheduler:scheduler-complete-1",
+      "field": "tests",
+      "value": "from collections import Counter\n\ndef check_schedule(tasks, cooldown, duration):\n    original = list(tasks)\n    slots = schedule(tasks, cooldown)\n    assert isinstance(slots, list), \"return a list, not printed output\"\n    assert tasks == original, \"do not mutate the input tasks\"\n    assert Counter(x for x in slots if x is not None) == Counter(tasks), \"execute each supplied task exactly once\"\n    previous = {}\n    for time, label in enumerate(slots):\n        if label is not None:\n            assert label not in previous or time - previous[label] >= cooldown + 1, \"a repeated task ran too early\"\n            previous[label] = time\n    assert len(slots) == duration, \"the schedule contains unnecessary idle time\"\n\nfor tasks, cooldown, duration in [\n    ([], 4, 0),\n    (list(\"AAA\"), 2, 7),\n    (list(\"AABB\"), 2, 5),\n    (list(\"ABCABC\"), 2, 6),\n    (list(\"AAAAABC\"), 2, 13),\n    (list(\"AAABBC\"), 2, 7),\n    (list(\"BAA\"), 0, 3),\n    (list(\"AB\"), 12, 2),\n]:\n    check_schedule(tasks, cooldown, duration)\nfor bad in [-1, 1.5, True]:\n    try:\n        schedule([], bad)\n    except ValueError:\n        pass\n    else:\n        raise AssertionError(\"reject invalid cooldown\")\nfor bad_label in [\"a\", \"AA\", 4, None]:\n    try:\n        schedule([bad_label], 1)\n    except ValueError:\n        pass\n    else:\n        raise AssertionError(\"reject a label outside A-Z\")"
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-complete-1",
+      "field": "hints",
+      "value": [
+        "For A, A, A with cooldown 2, the valid shortest timeline is A, idle, idle, A, idle, idle, A. Slots between uses count toward the cooldown; the execution slot does not.",
+        "Keep one remaining count per label. A label waiting for its cooldown is different from a label that is ready to run; one container cannot express both priorities conveniently.",
+        "After running a label at zero-based slot t, its next legal use is t+cooldown+1. Release it before choosing at that slot. Because every label has the same cooldown, release times enter the queue in order.",
+        "Use a heap of (-remaining, label) for eligible labels and a deque of (release, -remaining, label) for waiting labels. Choose the largest remaining eligible count; use None only when ready is empty but waiting still has work.",
+        "Pseudocode: count labels; heapify priorities; while ready OR waiting: t=output length; move all released labels to ready; if ready, pop/run/decrement and enqueue unfinished work for t+c+1; otherwise append None; return the output.",
+        "The complete solution is:\n\n```python\nfrom collections import Counter, deque\nimport heapq\n\ndef schedule(tasks, cooldown):\n    if type(cooldown) is not int or cooldown < 0:\n        raise ValueError(\"cooldown must be a nonnegative integer\")\n    for task in tasks:\n        if not isinstance(task, str) or len(task) != 1 or not \"A\" <= task <= \"Z\":\n            raise ValueError(\"tasks must be single letters A-Z\")\n    counts = Counter(tasks)\n    ready = [(-count, label) for label, count in counts.items()]\n    heapq.heapify(ready)\n    waiting = deque()\n    timeline = []\n    while ready or waiting:\n        time = len(timeline)\n        while waiting and waiting[0][0] <= time:\n            ready_at, neg_count, label = waiting.popleft()\n            heapq.heappush(ready, (neg_count, label))\n        if ready:\n            neg_count, label = heapq.heappop(ready)\n            timeline.append(label)\n            neg_count += 1\n            if neg_count < 0:\n                waiting.append((time + cooldown + 1, neg_count, label))\n        else:\n            timeline.append(None)\n    return timeline\n```\nThe OR condition preserves cooling work, the release offset preserves the gap, and the largest-remaining priority avoids postponing a long repetition chain. Work takes O(N log(K+1)+T) expected/amortized time, O(K) working storage, and O(T) returned timeline storage; K<=26 here."
+      ]
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "field": "hints",
+      "value": [
+        "The output must identify each task or idle slot, so a correct duration is only part of the work.",
+        "Compare AA B with cooldown 1: fixed input order may waste a slot even though B can fill A’s gap.",
+        "Eligibility depends on the last use; priority among eligible labels depends on how much work remains.",
+        "Keep eligible and cooling work separately, or scan the small label alphabet with explicit next-release times.",
+        "For each slot: release ready labels; choose the eligible largest remaining count; append its label or None; move unfinished chosen work to its future release.",
+        "A ready heap with a release queue is the primary approach. A scan choosing the same priority is a valid alternative for at most 26 labels. A formula alone does not produce slots, and preserving input order can be longer."
+      ]
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "field": "recognition",
+      "value": {
+        "scenario": "A single CPU must execute every task in a finite A-Z list. All tasks are initially available, each takes one slot, order may change, and equal labels need the same nonnegative integer cooldown. Return an actual minimum-length timeline, including idle slots. Choose an approach and a reason that address this output.",
+        "approaches": [
+          {
+            "id": "ready-heap",
+            "label": "Largest remaining eligible count, with a release queue and output slots",
+            "requiredReasonIds": [
+              "priority-and-release"
+            ]
+          },
+          {
+            "id": "scan-counts",
+            "label": "Scan all label counts and next-release times for the best eligible label each slot",
+            "requiredReasonIds": [
+              "small-alphabet"
+            ]
+          },
+          {
+            "id": "duration-only",
+            "label": "Use only the maximum-frequency duration formula",
+            "requiredReasonIds": [],
+            "rejectionFeedback": "The formula gives a minimum duration, but this request also needs the task/idle label at each slot. Add a construction algorithm."
+          },
+          {
+            "id": "input-order",
+            "label": "Keep the supplied task order and wait whenever the next task is cooling",
+            "requiredReasonIds": [],
+            "rejectionFeedback": "Order may change. For A,A,B with cooldown 1, preserving order gives A,idle,A,B, while A,B,A finishes in three slots."
+          }
+        ],
+        "reasons": [
+          {
+            "id": "priority-and-release",
+            "text": "The heap chooses among eligible labels by remaining work; the queue prevents a repeated label from returning before t+c+1."
+          },
+          {
+            "id": "small-alphabet",
+            "text": "There are at most 26 labels, so an explicit scan can choose the same largest-remaining eligible priority and record each slot."
+          },
+          {
+            "id": "number-is-enough",
+            "text": "The required output is only the duration, so no arrangement needs to be constructed.",
+            "contradictory": true
+          },
+          {
+            "id": "too-early",
+            "text": "After a label at t, the same label is always legal again at t+c.",
+            "contradictory": true
+          }
+        ],
+        "acceptableApproachIds": [
+          "ready-heap"
+        ],
+        "alternatives": [
+          {
+            "approachId": "scan-counts",
+            "conditions": "The same largest-remaining eligible rule is used and each chosen label receives release time t+c+1.",
+            "tradeoff": "A scan costs O(K) per output slot rather than heap operations around task executions. It is a reasonable O(N+T) choice for the fixed 26-label alphabet.",
+            "requiredReasonIds": [
+              "small-alphabet"
+            ]
+          }
+        ],
+        "reflectionPrompt": "Why does A,A,B with cooldown 1 distinguish the supplied order from a legal optimal reordering?",
+        "modelExplanation": "Both accepted approaches separate eligibility from remaining work and produce the actual timeline. A,B,A uses the B slot to satisfy A’s cooldown. A frequency formula alone can certify the duration but cannot identify which label occupies each slot. These claims rely on unit duration, reorderable initially available tasks and one common cooldown; they are not a general scheduler for release dates or unequal task lengths."
+      }
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-complete-1",
+      "field": "tests",
+      "value": "for intervals, expected in [\n    ([], 0),\n    ([[0, 5], [5, 8]], 1),\n    ([[0, 10], [0, 10], [0, 10]], 3),\n    ([[0, 12], [2, 10], [4, 8]], 3),\n    ([[20, 25], [5, 15], [10, 20], [0, 10]], 2),\n    ([[-4, -1], [-1, 2], [-3, 0]], 2),\n    ([[0, 2], [0, 3], [0, 4], [4, 6]], 3),\n    ([[8, 10]], 1),\n]:\n    original = [pair[:] for pair in intervals]\n    actual = min_rooms(intervals)\n    assert type(actual) is int, \"return the room count, not printed output\"\n    assert actual == expected, (intervals, actual, expected)\n    assert intervals == original, \"do not mutate the caller's meetings\"\nfor intervals in [[[2, 2]], [[4, 1]], [[0, 1.5]], [[False, 2]]]:\n    try:\n        min_rooms(intervals)\n    except ValueError:\n        pass\n    else:\n        raise AssertionError(\"reject noninteger or nonpositive-duration meetings\")"
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-complete-1",
+      "field": "hints",
+      "value": [
+        "For [0,5) and [5,8), one room is enough: the first meeting has ended when the second starts. Three identical nonempty intervals need three rooms.",
+        "Once meetings are in start order, you only need the earliest active end to know whether any room can be released. A min-heap makes that end available without rescanning every active meeting.",
+        "The active-meeting variant removes every end <= the new start. Its current heap length can decrease, so retain a separate maximum; returning its final length loses earlier overlap.",
+        "Make a sorted copy by start. For each meeting, pop all expired ends, push this end, then update peak with the heap length. The input must contain integer start < end pairs.",
+        "Pseudocode: validate pairs; sort by start; heap=[]; peak=0; for (s,e): while heap and minimum<=s, pop; push e; peak=max(peak,heap length); return peak. The displayed history list is useful for playback but not required to compute the count.",
+        "The complete solution is:\n\n```python\nimport heapq\n\ndef min_rooms(intervals):\n    for start, end in intervals:\n        if type(start) is not int or type(end) is not int or start >= end:\n            raise ValueError(\"meetings need integer start < end\")\n    by_start = sorted(intervals, key=lambda meeting: meeting[0])\n    end_heap = []\n    peak = 0\n    active_counts = []\n    for start, end in by_start:\n        while end_heap and end_heap[0] <= start:\n            heapq.heappop(end_heap)\n        heapq.heappush(end_heap, end)\n        peak = max(peak, len(end_heap))\n        active_counts.append(len(end_heap))\n    return peak\n```\nAfter each push, heap length counts meetings active at that start. Its maximum is both necessary (those meetings cannot share rooms) and sufficient (released rooms can be reused). Sorting and all heap operations take O(n log(n+1)) worst-case time; the copied list, sort workspace and displayed history use O(n) auxiliary space."
+      ]
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "field": "hints",
+      "value": [
+        "Every meeting must be held, so an algorithm that selects a compatible subset solves a different problem.",
+        "Two overlapping meetings need two rooms even if their occupied time ranges merge into one connected block.",
+        "A simultaneous count is a lower bound on rooms. Reusing every free room in start order reaches that bound.",
+        "Consider an active end-time heap or a sweep of start/end events. Both must implement same-time room reuse.",
+        "Heap pseudocode: sort starts; remove all ends<=start; add the new end; update peak. Event pseudocode: sort (time,delta), with -1 before +1 at ties; accumulate and update peak.",
+        "The end-time heap and the properly tied event sweep both pass. Merge-union and earliest-finish subset selection do not count the resources needed for all meetings. In the active heap variant, keep the maximum rather than its final length."
+      ]
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "field": "recognition",
+      "value": {
+        "scenario": "Every meeting has integer start < end and must be held; meetings cannot move or be dropped. Times may be negative and input may be unsorted. A room is reusable when its previous end equals a new start. Return the minimum number of identical rooms. Choose an approach and a supporting reason.",
+        "approaches": [
+          {
+            "id": "end-heap",
+            "label": "Sort by start, remove expired active ends, and retain the peak heap length",
+            "requiredReasonIds": [
+              "active-overlap"
+            ]
+          },
+          {
+            "id": "event-sweep",
+            "label": "Sort start/end events, process ends before same-time starts, and retain the peak count",
+            "requiredReasonIds": [
+              "event-ties"
+            ]
+          },
+          {
+            "id": "merge-union",
+            "label": "Merge overlapping ranges and count the merged ranges",
+            "requiredReasonIds": [],
+            "rejectionFeedback": "Merged ranges measure occupied blocks of time, not simultaneous rooms. [0,3) and [1,2) merge to one range but need two rooms."
+          },
+          {
+            "id": "select-subset",
+            "label": "Choose the largest nonoverlapping subset using earliest finishes",
+            "requiredReasonIds": [],
+            "rejectionFeedback": "That selects meetings to keep in one room. This problem requires holding every meeting and counting rooms instead."
+          }
+        ],
+        "reasons": [
+          {
+            "id": "active-overlap",
+            "text": "After expired ends are removed, the heap counts meetings active at each start; their maximum is the necessary and sufficient room count."
+          },
+          {
+            "id": "event-ties",
+            "text": "A start adds one active meeting and an end removes one; ending first at a tie implements the stated room-reuse rule."
+          },
+          {
+            "id": "strict-only",
+            "text": "An end equal to a start must still occupy a separate room.",
+            "contradictory": true
+          },
+          {
+            "id": "drop-conflicts",
+            "text": "Overlapping meetings may be discarded so that the rest fit into one room.",
+            "contradictory": true
+          }
+        ],
+        "acceptableApproachIds": [
+          "end-heap"
+        ],
+        "alternatives": [
+          {
+            "approachId": "event-sweep",
+            "conditions": "Each meeting contributes a +1 start and -1 end, and end events precede starts at the same time (or their deltas are grouped).",
+            "tradeoff": "The sweep stores O(n) events and also takes O(n log(n+1)) time; it is especially convenient when only a count is needed.",
+            "requiredReasonIds": [
+              "event-ties"
+            ]
+          }
+        ],
+        "reflectionPrompt": "How does [0,3), [1,2) distinguish room counting from merging or selecting meetings?",
+        "modelExplanation": "Two rooms are needed while those two meetings overlap. An active-end heap or a correctly tied event sweep finds the maximum overlap. Any simultaneous meetings need distinct rooms, and processing starts in order can reuse any room whose meeting has ended; a new room is needed only when all existing rooms are busy. The local all-expired heap can shrink, so its peak, not its final length, is the answer."
+      }
+    }
+  ],
+  "faultyVariants": [
+    {
+      "uid": "lesson:task-scheduler:scheduler-complete-1",
+      "variants": {
+        "plausibleWrong": "from collections import Counter, deque\nimport heapq\n\ndef schedule(tasks, cooldown):\n    if type(cooldown) is not int or cooldown < 0:\n        raise ValueError(\"cooldown must be a nonnegative integer\")\n    for task in tasks:\n        if not isinstance(task, str) or len(task) != 1 or not \"A\" <= task <= \"Z\":\n            raise ValueError(\"tasks must be single letters A-Z\")\n    counts = Counter(tasks)\n    ready = [(-count, label) for label, count in counts.items()]\n    heapq.heapify(ready)\n    waiting = deque()\n    timeline = []\n    while ready or waiting:\n        time = len(timeline)\n        while waiting and waiting[0][0] <= time:\n            ready_at, neg_count, label = waiting.popleft()\n            heapq.heappush(ready, (neg_count, label))\n        if ready:\n            neg_count, label = heapq.heappop(ready)\n            timeline.append(label)\n            neg_count += 1\n            if neg_count < 0:\n                waiting.append((time + cooldown, neg_count, label))\n        else:\n            timeline.append(None)\n    return timeline",
+        "earlyExit": "from collections import Counter, deque\nimport heapq\n\ndef schedule(tasks, cooldown):\n    if type(cooldown) is not int or cooldown < 0:\n        raise ValueError(\"cooldown must be a nonnegative integer\")\n    for task in tasks:\n        if not isinstance(task, str) or len(task) != 1 or not \"A\" <= task <= \"Z\":\n            raise ValueError(\"tasks must be single letters A-Z\")\n    counts = Counter(tasks)\n    ready = [(-count, label) for label, count in counts.items()]\n    heapq.heapify(ready)\n    waiting = deque()\n    timeline = []\n    while ready:\n        time = len(timeline)\n        while waiting and waiting[0][0] <= time:\n            ready_at, neg_count, label = waiting.popleft()\n            heapq.heappush(ready, (neg_count, label))\n        if ready:\n            neg_count, label = heapq.heappop(ready)\n            timeline.append(label)\n            neg_count += 1\n            if neg_count < 0:\n                waiting.append((time + cooldown + 1, neg_count, label))\n        else:\n            timeline.append(None)\n    return timeline",
+        "printAnswer": "from collections import Counter, deque\nimport heapq\n\ndef schedule(tasks, cooldown):\n    if type(cooldown) is not int or cooldown < 0:\n        raise ValueError(\"cooldown must be a nonnegative integer\")\n    for task in tasks:\n        if not isinstance(task, str) or len(task) != 1 or not \"A\" <= task <= \"Z\":\n            raise ValueError(\"tasks must be single letters A-Z\")\n    counts = Counter(tasks)\n    ready = [(-count, label) for label, count in counts.items()]\n    heapq.heapify(ready)\n    waiting = deque()\n    timeline = []\n    while ready or waiting:\n        time = len(timeline)\n        while waiting and waiting[0][0] <= time:\n            ready_at, neg_count, label = waiting.popleft()\n            heapq.heappush(ready, (neg_count, label))\n        if ready:\n            neg_count, label = heapq.heappop(ready)\n            timeline.append(label)\n            neg_count += 1\n            if neg_count < 0:\n                waiting.append((time + cooldown + 1, neg_count, label))\n        else:\n            timeline.append(None)\n    print(timeline)"
+      }
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-complete-1",
+      "variants": {
+        "plausibleWrong": "import heapq\n\ndef min_rooms(intervals):\n    for start, end in intervals:\n        if type(start) is not int or type(end) is not int or start >= end:\n            raise ValueError(\"meetings need integer start < end\")\n    by_start = sorted(intervals, key=lambda meeting: meeting[0])\n    end_heap = []\n    peak = 0\n    active_counts = []\n    for start, end in by_start:\n        while end_heap and end_heap[0] < start:\n            heapq.heappop(end_heap)\n        heapq.heappush(end_heap, end)\n        peak = max(peak, len(end_heap))\n        active_counts.append(len(end_heap))\n    return peak",
+        "earlyExit": "import heapq\n\ndef min_rooms(intervals):\n    for start, end in intervals:\n        if type(start) is not int or type(end) is not int or start >= end:\n            raise ValueError(\"meetings need integer start < end\")\n    by_start = sorted(intervals, key=lambda meeting: meeting[0])\n    end_heap = []\n    peak = 0\n    active_counts = []\n    for start, end in by_start:\n        while end_heap and end_heap[0] <= start:\n            heapq.heappop(end_heap)\n        heapq.heappush(end_heap, end)\n        peak = max(peak, len(end_heap))\n        active_counts.append(len(end_heap))\n        return peak\n    return peak",
+        "printAnswer": "import heapq\n\ndef min_rooms(intervals):\n    for start, end in intervals:\n        if type(start) is not int or type(end) is not int or start >= end:\n            raise ValueError(\"meetings need integer start < end\")\n    by_start = sorted(intervals, key=lambda meeting: meeting[0])\n    end_heap = []\n    peak = 0\n    active_counts = []\n    for start, end in by_start:\n        while end_heap and end_heap[0] <= start:\n            heapq.heappop(end_heap)\n        heapq.heappush(end_heap, end)\n        peak = max(peak, len(end_heap))\n        active_counts.append(len(end_heap))\n    print(peak)"
+      }
+    }
+  ],
+  "hashes": [
+    {
+      "id": "task-scheduler",
+      "hash": "e406fabf9a8e5dc5"
+    },
+    {
+      "id": "meeting-rooms-ii",
+      "hash": "866695c4805a26d6"
+    }
+  ],
+  "unresolvedFactualGaps": [],
+  "integrationTasks": [
+    "Register both exports in the lesson registry.",
+    "Apply sharedExercisePatches and authored faultyVariants from central-integration JSON.",
+    "Add proposed coverage entries and update FU-1/FU-2 external-practice manifest to these actual application lessons.",
+    "Mirror exact source records in docs/references.md.",
+    "Parent browser-worker/layout and aggregate verification, then review/accept the delegated assessments and regenerate evidence/ledger/coverage."
+  ]
+}

@@ -4,6 +4,10 @@ inclusion: always
 
 # Current milestone: functional repair before UI redesign
 
+> Superseded milestone: the user delegated the remaining technical review and
+> authorized Codex to finish the new UI and Windows delivery. Read
+> `docs/completion.md` for current status; preserve this original repair record.
+
 The current milestone is **functional repair before UI redesign** — not release,
 not "only packaging remains." An audit of `main` @ `249a2f8` disproved earlier
 completion claims; the reproduced findings and the R0–R9 repair plan are in

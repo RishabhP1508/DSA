@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@custom-variant dark (&:is(.dark *));
+@theme inline {
+ --color-background:var(--background); --color-foreground:var(--foreground);
+ --color-card:var(--card); --color-card-foreground:var(--foreground);
+ --color-popover:var(--card); --color-popover-foreground:var(--foreground);
+ --color-primary:var(--primary); --color-primary-foreground:var(--primary-foreground);
+ --color-secondary:var(--secondary); --color-secondary-foreground:var(--foreground);
+ --color-muted:var(--secondary); --color-muted-foreground:var(--muted);
+ --color-accent:var(--secondary); --color-accent-foreground:var(--foreground);
+ --color-destructive:#ba3535; --color-border:var(--border); --color-input:var(--border); --color-ring:var(--primary);
+ --radius-sm:.4rem; --radius-md:.6rem; --radius-lg:.8rem; --radius-xl:1rem;
+}
+:root{--background:#f7f7f2;--foreground:#25352f;--card:#fff;--primary:#176951;--primary-foreground:#fff;--secondary:#eef2eb;--muted:#62726a;--muted-foreground:var(--muted);--border:#dde4dc;--radius:.7rem;}
+.dark{--background:#17211d;--foreground:#e3ece5;--card:#202e27;--primary:#56ad8b;--primary-foreground:#10271c;--secondary:#293a31;--muted:#a8bdb0;--border:#3d5245;}

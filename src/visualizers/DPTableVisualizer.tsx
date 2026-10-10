@@ -14,6 +14,7 @@
 import type { TraceEvent, TraceValue, VisualBinding } from "../core/types";
 import { displayValue } from "../engine/replay";
 import { resolveBindingObject, deref, resolveOverlays, resolveVariable } from "./helpers";
+import { sequencePreview, sequenceCount, sequenceNotice, recordedIndex, hiddenPointers, boundedSvgStyle, DiagramNotice, gridPreview, cellDisplay, valueNotice } from './limits';
 
 const CELL = 46;
 const GAP = 3;
@@ -64,52 +65,54 @@ export function DPTableVisualizer({ event, binding }: { event: TraceEvent; bindi
   const computed = computedSet(event, binding);
 
   if (!is2D) {
-    const cells = obj.entries;
+    const cells = sequencePreview(obj);
+    const displayed = cells.map(cell => cellDisplay(cell.value, event.objects));
     const width = PAD * 2 + Math.max(1, cells.length) * (CELL + GAP);
     const height = TOP + CELL + 26;
     const x = (i: number) => PAD + i * (CELL + GAP);
     return (
-      <svg className="array-viz" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`DP table ${binding.variable}, ${cells.length} cells`}>
-        <text x={PAD} y={22} className="viz-title">{binding.variable} (dp[{cells.length}])</text>
+      <><svg className="array-viz" style={boundedSvgStyle(width, height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`DP table ${binding.variable}, ${sequenceCount(obj)}`}>
+        <text x={PAD} y={22} className="viz-title">{binding.variable} (dp, {sequenceCount(obj)})</text>
         {cells.map((c, i) => {
-          const filled = computed?.has(String(i)) ?? false;
-          const active = iMark === i;
+          const index = recordedIndex(c);
+          const filled = computed?.has(c.key) ?? false;
+          const active = index !== undefined && iMark === index;
           return (
-            <g key={i}>
+            <g key={c.key} data-index={c.key}>
               <rect x={x(i)} y={TOP} width={CELL} height={CELL} rx={5} className={active ? "cell cell-active" : filled ? "cell cell-filled" : "cell"} />
-              <text x={x(i) + CELL / 2} y={TOP + CELL / 2 + 5} className="cell-value-sm">{displayValue(c.value, event.objects)}</text>
-              <text x={x(i) + CELL / 2} y={TOP + CELL + 15} className="cell-index">{i}</text>
+              <text x={x(i) + CELL / 2} y={TOP + CELL / 2 + 5} className="cell-value-sm">{displayed[i].text}</text>
+              <text x={x(i) + CELL / 2} y={TOP + CELL + 15} className="cell-index">{c.key}</text>
             </g>
           );
         })}
-      </svg>
+      </svg><DiagramNotice text={[sequenceNotice(obj, cells), hiddenPointers(overlays, cells), valueNotice(displayed)].filter(Boolean).join(' ')}/></>
     );
   }
 
   // 2D
-  const rows = obj.entries.map((r) => deref(event, r.value)?.entries ?? []);
-  const cols = rows.reduce((m, r) => Math.max(m, r.length), 0);
+  const { rows, columns: cols, summary, notice } = gridPreview(event, obj);
+  const displayed = rows.map(row => row.cells.map(cell => cellDisplay(cell.value, event.objects)));
   const width = PAD * 2 + Math.max(1, cols) * (CELL + GAP);
   const height = TOP + Math.max(1, rows.length) * (CELL + GAP) + 8;
   const x = (c: number) => PAD + c * (CELL + GAP);
   const y = (r: number) => TOP + r * (CELL + GAP);
 
   return (
-    <svg className="array-viz" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`DP table ${binding.variable}, ${rows.length} by ${cols}`}>
-      <text x={PAD} y={22} className="viz-title">{binding.variable} (dp[{rows.length}][{cols}])</text>
+    <><svg className="array-viz" style={boundedSvgStyle(width, height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`DP table ${binding.variable}, ${summary}`}>
+      <text x={PAD} y={22} className="viz-title">{binding.variable} (dp, {summary})</text>
       {rows.map((row, r) =>
-        Array.from({ length: cols }).map((_, c) => {
-          const cell = row[c];
-          const active = iMark === r && jMark === c;
-          const filled = computed?.has(`${r},${c}`) ?? false;
+        row.cells.map((cell, c) => {
+          const column = recordedIndex(cell);
+          const active = row.index !== undefined && column !== undefined && iMark === row.index && jMark === column;
+          const filled = computed?.has(`${row.key},${cell.key}`) ?? false;
           return (
-            <g key={`${r}-${c}`}>
+            <g key={`${row.key}-${cell.key}`} data-row={row.key} data-col={cell.key} aria-label={`${binding.variable}[${row.key}][${cell.key}]`}>
               <rect x={x(c)} y={y(r)} width={CELL} height={CELL} rx={4} className={active ? "cell cell-active" : filled ? "cell cell-filled" : "cell"} />
-              {cell && <text x={x(c) + CELL / 2} y={y(r) + CELL / 2 + 5} className="cell-value-sm">{displayValue(cell.value, event.objects)}</text>}
+              <text x={x(c) + CELL / 2} y={y(r) + CELL / 2 + 5} className="cell-value-sm">{displayed[r][c].text}</text>
             </g>
           );
         }),
       )}
-    </svg>
+    </svg><DiagramNotice text={[notice, valueNotice(displayed.flat()), iMark !== undefined && jMark !== undefined && !rows.some(row => row.index === iMark && row.cells.some(cell => recordedIndex(cell) === jMark)) ? `Recorded current coordinates [${iMark}][${jMark}] have no cell in the displayed recorded data.` : ''].filter(Boolean).join(' ')}/></>
   );
 }

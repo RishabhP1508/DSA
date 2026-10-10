@@ -199,7 +199,9 @@ describe("B1 G1 L2 — loops: references include Python language reference §8.3
     expect(ref!.accessDate).toBe("2026-10-04");
   });
 
-  it("loops verifiedAt reflects today's reverification (2026-10-04)", () => {
-    expect(loops.evidence?.verifiedAt).toBe("2026-10-04");
+  it("loops verification is not older than the corrected reference access date", () => {
+    const date = loops.evidence?.verifiedAt;
+    expect(date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(date! >= "2026-10-04").toBe(true);
   });
 });

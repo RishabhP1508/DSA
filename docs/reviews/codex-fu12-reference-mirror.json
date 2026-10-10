@@ -1,0 +1,166 @@
+[
+  {
+    "kind": "lesson",
+    "id": "task-scheduler",
+    "references": [
+      {
+        "url": "https://leetcode.com/problems/task-scheduler/",
+        "title": "LeetCode 621 Task Scheduler",
+        "section": "Description, examples, constraints",
+        "topic": "task-scheduler",
+        "purpose": "Verify the original optional-practice contract.",
+        "verifiedClaims": [
+          "Tasks take one slot and may be reordered.",
+          "Equal task labels require the common cooldown between executions.",
+          "Original labels are A through Z; cooldown zero is allowed."
+        ],
+        "conventions": [
+          "The local lesson returns an actual optimal timeline, with None for idle slots, rather than only its duration.",
+          "The local function also accepts an empty task list and any nonnegative integer cooldown."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://neetcode.io/solutions/task-scheduler",
+        "title": "NeetCode Task Scheduler explanation",
+        "section": "Prerequisites; 1. Brute Force intuition; 2. Max-Heap intuition/Python; 3. Greedy; 4. Math",
+        "topic": "task-scheduler",
+        "purpose": "Cross-check largest-remaining priority, cooldown waiting and the minimum-duration bound.",
+        "verifiedClaims": [
+          "A ready priority structure and cooldown queue separate selection from eligibility.",
+          "Choose an eligible label with the largest remaining count.",
+          "For nonempty input the optimal duration is max(N,(F-1)*(c+1)+M), where M labels tie at frequency F."
+        ],
+        "conventions": [
+          "This lesson checks releases before a zero-based slot t and re-enables a label at t+c+1.",
+          "The source count-only implementation can jump over idle time; this local implementation records each idle, so its output-length cost T must be included."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://docs.python.org/3.14/library/heapq.html",
+        "title": "Python 3.14 heapq",
+        "section": "heap invariant; heapify/heappush/heappop; Priority Queue Implementation Notes",
+        "topic": "heaps",
+        "purpose": "Check the exact supported Python heap operations and tuple priorities.",
+        "verifiedClaims": [
+          "The unqualified API is a zero-based min-heap.",
+          "heapify builds in linear time; push/pop sift logarithmically.",
+          "Tuple priorities compare subsequent fields when priorities tie."
+        ],
+        "conventions": [
+          "The root is index 0; the remaining array is not fully sorted.",
+          "This example deliberately uses the portable negative-priority convention although Python 3.14 also supplies native max-heap functions."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://docs.python.org/3.14/library/collections.html",
+        "title": "Python 3.14 collections",
+        "section": "Counter; deque objects",
+        "topic": "task-scheduler",
+        "purpose": "Verify counting and FIFO endpoint operations on the target language family.",
+        "verifiedClaims": [
+          "Counter stores counts of hashable labels.",
+          "deque supports append and popleft with approximately constant endpoint cost."
+        ],
+        "conventions": [
+          "Only strings A-Z are accepted here, so labels are hashable and comparable.",
+          "A common cooldown makes release times increase with the time of execution, permitting a FIFO waiting queue."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://www.cs.usfca.edu/~galles/visualization/Heap.html",
+        "title": "USFCA Heap Visualization",
+        "section": "Insert 15; insert 10; Remove Smallest, with Skip Forward after each operation",
+        "topic": "heaps",
+        "purpose": "Inspect changing heap array and tree views before choosing a local visual binding.",
+        "verifiedClaims": [
+          "The smaller root is removed first, leaving the remaining value.",
+          "The root changes as actual heap contents change."
+        ],
+        "conventions": [
+          "The inspected reference uses a one-based array with a sentinel; the local Python list uses zero-based indexing without a sentinel.",
+          "Only the layout idea is used; no reference diagram or code is copied."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "meeting-rooms-ii",
+    "references": [
+      {
+        "url": "https://neetcode.io/solutions/meeting-rooms-ii",
+        "title": "NeetCode Meeting Rooms II explanation",
+        "section": "Description; 1. Min Heap; 2. Sweep Line Algorithm; Common Pitfalls",
+        "topic": "meeting-rooms-ii",
+        "purpose": "Read the accessible teaching contract and compare both heap conventions and a sweep alternative.",
+        "verifiedClaims": [
+          "Every meeting must be accommodated, rather than selecting a subset.",
+          "A meeting ending at t may share a room with one starting at t.",
+          "Sort by start before processing; a sweep of starts and ends is also valid."
+        ],
+        "conventions": [
+          "This lesson removes ALL expired active meetings and returns the recorded peak heap size.",
+          "The source one-pop variant retains one end time per allocated room and may return final heap length; these invariants must not be mixed.",
+          "The local function accepts negative integer times as an extension; start must still be strictly less than end."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://cs-people.bu.edu/januario/teaching/cs330/su23/slides/CS330-Lec06-with-notes.pdf",
+        "title": "Boston University CS330 Greedy Algorithms lecture",
+        "section": "PDF pages 17-21, 28-36: interval partitioning, priority queues, depth and earliest-start correctness",
+        "topic": "meeting-rooms-ii",
+        "purpose": "Independently verify the minimum-room lower bound, start-order reasoning and heap implementation cost.",
+        "verifiedClaims": [
+          "The number of simultaneous intervals is a lower bound on required rooms.",
+          "Start-order assignment opens a new room only when all existing rooms conflict, attaining that lower bound.",
+          "Sorting plus a linear number of logarithmic priority-queue operations takes O(n log n)."
+        ],
+        "conventions": [
+          "The lecture uses open intervals in its diagram; this app states half-open [start,end) intervals so a same-time end releases before a start.",
+          "The slide pseudocode uses a strict compatibility operator and an update operation named DECREASE-KEY; neither is copied. The local <= release test and pop/push operations are explicit.",
+          "No classroom identifiers are returned by this count-only local function."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://docs.python.org/3.14/library/heapq.html",
+        "title": "Python 3.14 heapq",
+        "section": "heap invariant; heapify/heappush/heappop; Priority Queue Implementation Notes",
+        "topic": "heaps",
+        "purpose": "Check the exact supported Python heap operations and tuple priorities.",
+        "verifiedClaims": [
+          "The unqualified API is a zero-based min-heap.",
+          "heapify builds in linear time; push/pop sift logarithmically.",
+          "Tuple priorities compare subsequent fields when priorities tie."
+        ],
+        "conventions": [
+          "The root is index 0; the remaining array is not fully sorted.",
+          "This example deliberately uses the portable negative-priority convention although Python 3.14 also supplies native max-heap functions."
+        ],
+        "accessDate": "2026-10-10"
+      },
+      {
+        "url": "https://www.cs.usfca.edu/~galles/visualization/Heap.html",
+        "title": "USFCA Heap Visualization",
+        "section": "Insert 15; insert 10; Remove Smallest, with Skip Forward after each operation",
+        "topic": "heaps",
+        "purpose": "Inspect changing heap array and tree views before choosing a local visual binding.",
+        "verifiedClaims": [
+          "The smaller root is removed first, leaving the remaining value.",
+          "The root changes as actual heap contents change."
+        ],
+        "conventions": [
+          "The inspected reference uses a one-based array with a sentinel; the local Python list uses zero-based indexing without a sentinel.",
+          "Only the layout idea is used; no reference diagram or code is copied."
+        ],
+        "accessDate": "2026-10-10"
+      }
+    ]
+  }
+]

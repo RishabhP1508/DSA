@@ -1,5 +1,13 @@
 # R9 — Functional-repair handoff
 
+> **Historical Kiro milestone record.** The statuses and counts below describe
+> the original handoff, not the finished Codex takeover. The user subsequently
+> delegated technical review/sign-off and authorized completion of the UI and
+> Windows package. All 162 current items have recorded reviews; FU-1/FU-2 are
+> now dedicated lessons, FU-3 is implemented, and real second-origin tests
+> replace the old skipped gate. See [current completion record](../../../docs/completion.md)
+> for final evidence and delivery status. Preserve the original evidence below.
+
 > **Status: functional repair verified on `main`; NOT YET ready for UI review.**
 > One functional-content requirement is still open: **human semantic review of
 > the learner-facing content is pending repo-wide (**160 of 160 items

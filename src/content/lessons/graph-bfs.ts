@@ -44,46 +44,128 @@ BFS visits every reachable vertex once and scans every incident edge once, so it
   ],
 
   concepts: {
-    purpose: "Traverse a graph in distance order; the basis of unweighted shortest paths and level problems.",
-    operations: "Dequeue, record, enqueue unseen neighbours; mark visited on enqueue.",
-    uses: "Unweighted shortest paths, reachability, connected components, multi-source BFS, bipartite checks.",
-    tradeoffs: "O(V + E) time, O(V) space; needs the visited set (unlike trees) to handle cycles.",
-    commonMistakes: "Omitting the visited set (infinite loops on cycles); marking visited on dequeue (a vertex gets queued via multiple edges); using list.pop(0) (O(n)) instead of deque.popleft.",
-    edgeCases: "Disconnected graph: BFS reaches only the start's component. Self-loops/back-edges skipped by seen. Single vertex returns just it.",
-  },
+  "purpose": "Traverse a graph in distance order; the basis of unweighted shortest paths and level problems.",
+  "operations": "Dequeue, record, enqueue unseen neighbours; mark visited on enqueue.",
+  "uses": "Unweighted shortest paths, reachability, connected components, multi-source BFS, bipartite checks.",
+  "tradeoffs": "O(V + E) time, O(V) space; needs the visited set (unlike trees) to handle cycles.",
+  "commonMistakes": "Omitting the visited set (infinite loops on cycles); marking visited on dequeue (a vertex gets queued via multiple edges); using list.pop(0) (O(n)) instead of deque.popleft.",
+  "edgeCases": "The start must be a valid vertex and every reached vertex must have an adjacency entry. Only its reachable component is returned. Directed graphs follow outgoing edges; disconnected vertices remain unseen."
+},
 
   complexity: [
-    { operation: "Graph BFS", best: "O(V + E)", average: "O(V + E)", worst: "O(V + E)", space: "O(V)", note: "Each vertex enqueued once; each edge scanned once." },
-  ],
+  {
+    "operation": "Graph BFS",
+    "best": "O(1)",
+    "average": "O(V + E)",
+    "worst": "O(V + E)",
+    "space": "O(V)",
+    "note": "One enqueue per reached vertex. Each reachable adjacency entry is scanned once; an undirected edge contributes two entries."
+  }
+],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [
-      { symbol: "V", meaning: "the number of vertices" },
-      { symbol: "E", meaning: "the number of edges" },
-    ],
-    costModel: "deque.popleft/append and set add/lookup are O(1). Each vertex is enqueued once; each edge is examined once from its endpoint.",
-    time: {
-      bound: "O(V + E)",
-      case: "worst",
-      explanation: "The visited set ensures each of the V vertices is enqueued and dequeued exactly once — O(V). While processing a vertex we scan its adjacency list, and across all vertices those scans total the number of edges — O(E). Summing gives O(V + E). Naming both matters: sparse graphs (E ≈ V) run in ≈ O(V); dense graphs (E ≈ V²) run in ≈ O(V²).",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "V",
+      "meaning": "the number of vertices"
     },
-    space: {
-      bound: "O(V)",
-      case: "worst",
-      explanation: "The visited set holds up to V vertices, and the queue holds at most O(V) at once (a full frontier). The order list is also O(V).",
-      inputOutputNote: "The graph (V + E) is the input; the queue, visited set, and order list are the O(V) auxiliary structures.",
-    },
-    derivation: [
-      { lines: [9, 10], description: "Each vertex is dequeued exactly once — O(V) total.", cost: "O(V)", dimension: "time" },
-      { lines: [11, 12, 13, 14], description: "Scanning all adjacency lists examines each edge once — O(E) total.", cost: "O(V + E)", dimension: "time" },
-      { lines: [5, 6], description: "Visited set and queue each hold up to V vertices.", cost: "O(V)", dimension: "space" },
-    ],
-    assumptions: ["Adjacency-list graph; set/deque ops are O(1).", "Marking visited on enqueue guarantees one queue entry per vertex."],
-    tradeoffs: "DFS has the same O(V+E) cost but explores depth-first (uses O(V) stack); BFS's queue gives distance order, which DFS does not.",
-    counters: [{ label: "vertices dequeued", definition: "executions of the dequeue (line 9)", countLines: [9] }],
-    fixedDataNote: "This run visits 4 vertices in BFS order from 0 → [0,1,2,3]. The O(V+E) bound generalises to any graph.",
+    {
+      "symbol": "E",
+      "meaning": "the number of edges"
+    }
+  ],
+  "costModel": "deque.popleft/append and set add/lookup are O(1). Each vertex is enqueued once; each edge is examined once from its endpoint.",
+  "time": {
+    "bound": "O(V + E)",
+    "case": "expected",
+    "explanation": "Every reachable vertex is enqueued once because it is marked when discovered. Scan all outgoing entries of those vertices once: expected O(Vr+Er), bounded by O(V+E)."
   },
+  "space": {
+    "bound": "O(V)",
+    "case": "worst",
+    "explanation": "The seen set and queue each hold at most V reached vertices. Returned order values are output storage.",
+    "inputOutputNote": "Exclude the input adjacency mapping and returned order list. The seen set and queue use O(V) auxiliary storage."
+  },
+  "derivation": [
+    {
+      "lines": [
+        9,
+        10
+      ],
+      "description": "Each vertex is dequeued exactly once — O(V) total.",
+      "cost": "O(V)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "description": "Scanning all adjacency lists examines each edge once — O(E) total.",
+      "cost": "O(V + E)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        5,
+        6
+      ],
+      "description": "Visited set and queue each hold up to V vertices.",
+      "cost": "O(V)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Adjacency-list graph; set/deque ops are O(1).",
+    "Marking visited on enqueue guarantees one queue entry per vertex.",
+    "A valid start and a closed adjacency mapping (including sinks). Hash-set operations have expected O(1) cost.",
+    "Each reachable directed entry is scanned once; an undirected edge appears twice. An isolated start takes O(1)."
+  ],
+  "tradeoffs": "DFS has the same O(V+E) cost but explores depth-first (uses O(V) stack); BFS's queue gives distance order, which DFS does not.",
+  "counters": [
+    {
+      "label": "vertices dequeued",
+      "definition": "executions of the dequeue (line 9)",
+      "countLines": [
+        9
+      ]
+    }
+  ],
+  "fixedDataNote": "This run visits 4 vertices in BFS order from 0 → [0,1,2,3]. The O(V+E) bound generalises to any graph.",
+  "references": [
+    {
+      "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+      "title": "Open Data Structures: graph traversal",
+      "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "BFS discovers reachable vertices in distance order.",
+        "DFS records visited vertices before recursion."
+      ],
+      "conventions": [],
+      "accessDate": "2026-10-10"
+    },
+    {
+      "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+      "title": "MIT 6.006 Lecture 9: BFS",
+      "section": "Pages 1–4: representations, shortest paths, BFS",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Undirected adjacency stores both directions.",
+        "A path length counts edges."
+      ],
+      "conventions": [
+        "App may use -1 for unreachable distances instead of infinity."
+      ],
+      "accessDate": "2026-10-10"
+    }
+  ]
+},
 
   code,
 
@@ -146,31 +228,41 @@ BFS visits every reachable vertex once and scans every incident edge once, so it
   expectedOutput: "[0, 1, 2, 3]\n",
 
   references: [
-    {
-      url: "https://cp-algorithms.com/graph/breadth-first-search.html",
-      title: "Breadth-first search — CP-Algorithms",
-      section: "Algorithm and complexity",
-      topic: "graphs/bfs",
-      purpose: "Confirm graph BFS is O(V+E) with a queue and visited set and finds unweighted shortest paths.",
-      verifiedClaims: ["Graph BFS is O(V + E); it requires a visited set to handle cycles; it finds unweighted shortest paths"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://neetcode.io/roadmap",
-      title: "NeetCode roadmap",
-      section: "Graphs — BFS",
-      topic: "graphs/bfs",
-      purpose: "Cross-check the BFS template and its distance-order property.",
-      verifiedClaims: ["BFS visits vertices in order of distance from the source"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+    "title": "Open Data Structures: graph traversal",
+    "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "BFS discovers reachable vertices in distance order.",
+      "DFS records visited vertices before recursion."
+    ],
+    "conventions": [],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+    "title": "MIT 6.006 Lecture 9: BFS",
+    "section": "Pages 1–4: representations, shortest paths, BFS",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Undirected adjacency stores both directions.",
+      "A path length counts edges."
+    ],
+    "conventions": [
+      "App may use -1 for unreachable distances instead of infinity."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "2cbba2d45fe2a0b7",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "158618b140660aa6",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 5,
   },
 };

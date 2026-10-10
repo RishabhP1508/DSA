@@ -148,7 +148,7 @@ Watching the call stack in the visualization makes this concrete: a frame appear
     },
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "34076dce4cf0d3ba",
     verifiedAt: "2026-10-03",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

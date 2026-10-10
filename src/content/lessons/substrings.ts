@@ -24,7 +24,7 @@ export const substrings: LessonDefinition = {
 
 To generate **all** substrings, pick every start \`i\` and every end \`j > i\`: that is two nested loops. For a string of length n there are about **n(n+1)/2 = O(n²)** substrings, and each slice \`s[i:j]\` also copies up to n characters, so materializing them all is **O(n²) count and O(n³) total character work** in the worst case. That quadratic-or-worse explosion is exactly why efficient string algorithms **avoid enumerating all substrings** and instead use sliding windows, prefix structures, or specialized methods like KMP.
 
-The lesson's takeaway is a warning as much as a technique: generating all substrings is easy but expensive. When a problem says "find the longest/shortest substring with some property," reach for a sliding window (**O(n)**), not brute-force enumeration.`,
+The lesson's takeaway is a warning as much as a technique: generating all substrings is easy but expensive. When a problem says "find the longest/shortest substring with some property," investigate whether a sliding window applies. A linear window needs a monotone validity rule: moving one boundary must repair violations without discarding a better answer. No-repeat substrings fit; longest palindromic substrings need center expansion or a specialized algorithm instead.`,
 
   vocabulary: [
     { term: "Substring", definition: "A contiguous slice of a string, s[i:j]." },
@@ -43,7 +43,7 @@ The lesson's takeaway is a warning as much as a technique: generating all substr
   },
 
   complexity: [
-    { operation: "Generate all substrings", best: "O(n^2)", average: "O(n^2)", worst: "O(n^3)", space: "O(n^3)", note: "O(n^2) substrings; each slice copies up to n chars." },
+    { operation: "Generate all substrings", best: "O(n^3)", average: "O(n^3)", worst: "O(n^3)", space: "O(n^3)", note: "O(n^2) substrings; each slice copies up to n chars." },
   ],
 
   complexityExplanation: {
@@ -51,7 +51,7 @@ The lesson's takeaway is a warning as much as a technique: generating all substr
     variables: [{ symbol: "n", meaning: "the length of the string" }],
     costModel: "There are n(n+1)/2 = O(n²) substrings. Building each slice s[i:j] copies its length, up to n characters.",
     time: {
-      bound: "O(n^2)",
+      bound: "O(n^3)",
       case: "worst",
       explanation: "The nested loops produce one substring per (i, j) pair with j > i, which is about n²/2 = O(n²) substrings just to enumerate their bounds. If we also BUILD each substring, slicing copies up to n characters each, giving O(n³) total character work in the worst case. This quadratic-to-cubic cost is why enumerating all substrings is avoided.",
     },
@@ -67,7 +67,7 @@ The lesson's takeaway is a warning as much as a technique: generating all substr
       { lines: [3, 7], description: "Storing all substrings holds O(n²) strings totalling O(n³) characters.", cost: "O(n^3)", dimension: "space" },
     ],
     assumptions: ["Slicing s[i:j] copies its characters (Python strings are immutable, so a new string is created).", "We store every substring."],
-    tradeoffs: "If a problem only needs the best substring by some property, a sliding window processes it in O(n) without enumerating all O(n²) substrings — a massive saving.",
+    tradeoffs: "If a problem only needs the best substring by some property, a sliding window can process it in expected O(n) when the constraint permits monotone boundary movement; it is not a universal solution to every substring problem.",
     counters: [{ label: "substrings generated", definition: "executions of the append (line 7)", countLines: [7] }],
     fixedDataNote: "This run enumerates all 6 substrings of 'abc' (n=3 → n(n+1)/2 = 6). The O(n²)/O(n³) bounds describe how it explodes for larger n.",
   },
@@ -97,7 +97,7 @@ The lesson's takeaway is a warning as much as a technique: generating all substr
   ],
 
   prediction: [
-    { atEventIndex: 0, prompt: "How many substrings does a string of length n have, and what does that imply for brute force?", answer: "n(n+1)/2 = O(n^2) substrings, so enumerating them all is at least O(n^2) — avoid it when a window would do.", explanation: "Each (start, end) pair with end > start is a substring: n(n+1)/2 of them. Any algorithm that lists them all is Ω(n²), which is why sliding windows (O(n)) are preferred for 'best substring' problems." },
+    { atEventIndex: 0, prompt: "How many substrings does a string of length n have, and what does that imply for brute force?", answer: "n(n+1)/2 = O(n^2) substrings, so enumerating them all is at least O(n^2) — avoid it when a window would do.", explanation: "Each (start, end) pair with end > start is a substring: n(n+1)/2 of them. Any algorithm that lists them all is Ω(n²), so an efficient method should avoid full enumeration when possible; a window needs a suitable monotone constraint." },
   ],
 
   experiments: [
@@ -123,7 +123,7 @@ The lesson's takeaway is a warning as much as a technique: generating all substr
     },
   ],
 
-  review: `A **substring** is a contiguous slice \`s[i:j]\` (unlike a **subsequence**, which may skip). A string of length n has **O(n²)** substrings, so enumerating them all is **O(n²)** count (**O(n³)** to build/store them) — expensive. When a problem targets the best substring by some property, prefer a **sliding window (O(n))** over brute-force enumeration.`,
+  review: `A **substring** is a contiguous slice \`s[i:j]\` (unlike a **subsequence**, which may skip). A string of length n has **O(n²)** substrings, so enumerating them all is **O(n²)** count (**O(n³)** to build/store them) — expensive. When a problem targets the best substring by some property, check the conditions before choosing a **sliding window**. No-repeat windows work in expected O(n); palindrome symmetry does not have the same monotone validity rule.`,
 
   expectedOutput: "['a', 'ab', 'abc', 'b', 'bc', 'c']\n",
 
@@ -146,13 +146,15 @@ The lesson's takeaway is a warning as much as a technique: generating all substr
       verifiedClaims: ["A string of length n has n(n+1)/2 non-empty substrings"],
       accessDate: "2026-09-20",
     },
+    {"url":"https://docs.python.org/3.14/tutorial/introduction.html#strings","title":"Python strings","section":"Strings and slicing","topic":"substrings","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["A string slice selects characters with an exclusive end."],"accessDate":"2026-10-10"},
+    {"url":"https://cp-algorithms.com/string/manacher.html","title":"CP-Algorithms palindromes","section":"Trivial algorithm","topic":"substrings","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Palindrome substring search can require center expansion rather than a monotone sliding window."],"accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "a2f95d2f3a339e53",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "f73d909defbe3956",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };

@@ -1,0 +1,4143 @@
+{
+  "checkedAt": "2026-10-10T22:45:33.056Z",
+  "scope": "Every registered lesson and pattern; authored prediction indices where present. Bounds are not semantic signoff.",
+  "runtime": {
+    "pyodide": "314.0.7",
+    "pythonVersion": "3.14.2 (main, Sep 14 2026, 03:03:51) [Clang 23.0.0git (https:/github.com/llvm/llvm-project e5927fecf8a6ce89e1a4eac5b8",
+    "tracerSha256": "659e73d161a3c010a5b3c4d6d2badd3ee3bc201f1c40f0479f2d52540f52711d"
+  },
+  "counts": {
+    "lessons": 133,
+    "patterns": 29,
+    "realTraces": 162,
+    "completedTraces": 162,
+    "failedTraces": 0,
+    "itemsWithPredictions": 133,
+    "itemsWithoutPredictions": 29,
+    "checkpoints": 133,
+    "validCheckpoints": 133,
+    "invalidCheckpoints": 0,
+    "unvalidatedCheckpoints": 0
+  },
+  "items": [
+    {
+      "kind": "lesson",
+      "id": "variables-and-types",
+      "contentHash": "612fac88ec9babef",
+      "status": "completed",
+      "eventCount": 15,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 8,
+          "valid": true,
+          "prompt": "`best = scores` has just run. Will `best is scores` print True or False, and will mutating `best` change `scores`?",
+          "answer": "True — they are the same object (aliasing) — so appending through `best` also changes `scores`.",
+          "event": {
+            "index": 8,
+            "kind": "line",
+            "line": 15,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 9,
+            "kind": "line",
+            "line": 17,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "expressions",
+      "contentHash": "32b82b97f920056f",
+      "status": "completed",
+      "eventCount": 7,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "What is `2 + 3 * 4` in Python, and why?",
+          "answer": "14, because * has higher precedence than + so 3*4 happens first.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 3,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "conditions",
+      "contentHash": "be2f2011ca4c5afe",
+      "status": "completed",
+      "eventCount": 6,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "If temp were 20, what would label be?",
+          "answer": "warm",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "loops",
+      "contentHash": "a25a71184fd4c0a1",
+      "status": "completed",
+      "eventCount": 23,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "How many times does the for-loop body (line 5) run, and what is the final total?",
+          "answer": "3 times; total is 27.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "functions",
+      "contentHash": "34076dce4cf0d3ba",
+      "status": "completed",
+      "eventCount": 9,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "What does add return if you call add(10, -3)?",
+          "answer": "7",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "scope",
+      "contentHash": "612ab2035b310049",
+      "status": "completed",
+      "eventCount": 11,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "After bump() runs, what is the value of the GLOBAL count?",
+          "answer": "10",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "io",
+      "contentHash": "c76bd4181538df89",
+      "status": "completed",
+      "eventCount": 6,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "If line 4 were `n = input('Number: ')` (no int()), what would `n * 2` print for input 5?",
+          "answer": "'55' — because n would be the string '5', and '5' * 2 repeats the string.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "references-mutation",
+      "contentHash": "5eeecfc8bcb206fd",
+      "status": "completed",
+      "eventCount": 16,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "After both calls, what are `shared` and `x`?",
+          "answer": "shared is [1, 2, 3]; x is 5.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "classes",
+      "contentHash": "e57a6eba22fe7173",
+      "status": "completed",
+      "eventCount": 21,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "If you created a second counter d = Counter(0) and called d.increment() once, would c.value change?",
+          "answer": "No — c and d are independent instances; d.increment() only changes d.value.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "errors",
+      "contentHash": "40378ecd5eb1e320",
+      "status": "completed",
+      "eventCount": 9,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Does line 5's print ('print(nums[5])') produce any output? Why?",
+          "answer": "No — nums[5] raises IndexError before print runs, so control jumps straight to the except block.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "representations",
+      "contentHash": "13848cb935af1779",
+      "status": "completed",
+      "eventCount": 34,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Which representation answers 'who are the neighbours of node 0?' faster: the edge list or the adjacency map?",
+          "answer": "The adjacency map, in expected O(1) to reach node 0's set (then O(degree) to read it).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 3,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "complexity",
+      "contentHash": "de74e7e7e0ad82d6",
+      "status": "completed",
+      "eventCount": 18,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "If nums had 1000 elements instead of 4, roughly how many comparisons would find_max do?",
+          "answer": "About 1000 — one per element (O(n)).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "cases",
+      "contentHash": "0a02e964bdeb39e7",
+      "status": "completed",
+      "eventCount": 20,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "For a 100-element list, how many comparisons does the best case take, and the worst case?",
+          "answer": "Best: 1 (match at index 0). Worst: 100 (absent → scan all).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "amortized",
+      "contentHash": "eb623945ef0610d5",
+      "status": "completed",
+      "eventCount": 16,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Appending n items to a list: what is the TOTAL time, and the per-append AMORTIZED time?",
+          "answer": "O(n) total; O(1) amortized per append.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "correctness",
+      "contentHash": "944aeb240d2884f6",
+      "status": "completed",
+      "eventCount": 32,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "At the moment the loop exits for n = 5, what is i, and what does that tell you about total?",
+          "answer": "i = 6 (= n+1); the invariant then says total = sum of 1..5 = 15.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "array-traversal",
+      "contentHash": "e074694311042558",
+      "status": "completed",
+      "eventCount": 12,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "How many times does line 4 run for this 4-element list, and for an n-element list?",
+          "answer": "4 times here; n times in general.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "two-pointers",
+      "contentHash": "62f086c53ee27b63",
+      "status": "completed",
+      "eventCount": 15,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "How many swaps does reversing a 5-element array take, and why not 5?",
+          "answer": "2 swaps — pointers meet in the middle, so about n/2 swaps.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "prefix-sums",
+      "contentHash": "8d39720d4e7efcbc",
+      "status": "completed",
+      "eventCount": 17,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Using prefix = [0, 3, 4, 8, 9, 14], what is the sum of nums[0:3]?",
+          "answer": "8 — prefix[3] - prefix[0] = 8 - 0.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "sliding-window",
+      "contentHash": "617190ca5146555d",
+      "status": "completed",
+      "eventCount": 26,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "When the window slides from [2,1,5] to [1,5,1], which element enters and which leaves, and what is the new sum?",
+          "answer": "1 enters (nums[3]), 2 leaves (nums[0]); new sum 8 - 2 + 1 = 7.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "kadane",
+      "contentHash": "a233d916247460a7",
+      "status": "completed",
+      "eventCount": 35,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "If every number in nums were negative, why would seeding best = nums[0] (instead of 0) matter?",
+          "answer": "Because the best nonempty subarray is the single least-negative element; seeding best = 0 would wrongly return 0.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "in-place-modification",
+      "contentHash": "ffc709f8e3ce96fb",
+      "status": "completed",
+      "eventCount": 29,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "During pass 1, why can the write pointer `insert` not overwrite a value ahead of the read pointer `i`?",
+          "answer": "Because insert is always <= i, so we only overwrite positions at or before the one we've already read.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 3,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "matrix-traversal",
+      "contentHash": "a18bdb8bfddf195f",
+      "status": "completed",
+      "eventCount": 21,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "A grid has 4 rows and 5 columns. How many cell visits does a full traversal make, and is that O(n^2)?",
+          "answer": "20 visits (4*5). It is O(R*C); calling it O(n^2) is only right if R = C.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "intervals",
+      "contentHash": "a1204be518ade3e7",
+      "status": "completed",
+      "eventCount": 19,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why must the intervals be sorted by start before the sweep works?",
+          "answer": "So overlapping intervals are adjacent; then comparing each interval only to the LAST merged one is sufficient.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "string-frequency",
+      "contentHash": "6378ad9293f6eb22",
+      "status": "completed",
+      "eventCount": 18,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why use freq.get(ch, 0) + 1 instead of freq[ch] + 1?",
+          "answer": "Because freq[ch] raises KeyError the first time ch is seen; get(ch, 0) returns 0 for unseen keys.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "string-two-pointers",
+      "contentHash": "2940595d02fe2042",
+      "status": "completed",
+      "eventCount": 20,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "For 'racecar' (length 7), how many comparisons run, and why not 7?",
+          "answer": "3 comparisons — pointers converge over about n/2 pairs, and the middle character needs no comparison.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "string-sliding-window",
+      "contentHash": "d901d2ce508ce111",
+      "status": "completed",
+      "eventCount": 64,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why is this O(n) and not O(n^2), even though the window resizes?",
+          "answer": "Because both edges only move forward: i advances n times and start advances at most n times total, so combined movement is O(n).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "string-parsing",
+      "contentHash": "5363bf6fc5194bf7",
+      "status": "completed",
+      "eventCount": 11,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "After split, what type are the elements of parts, and why does sum(parts) fail?",
+          "answer": "They are strings; sum expects numbers, and adding strings to the integer start value raises a TypeError.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "palindromes",
+      "contentHash": "8395ca2ac78c8bfd",
+      "status": "completed",
+      "eventCount": 4,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Both s == s[::-1] and the two-pointer method are O(n) time. How do they differ in space?",
+          "answer": "The slice uses O(n) extra space (a reversed copy); the two-pointer method uses O(1).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "anagrams",
+      "contentHash": "0eba2489bd20916a",
+      "status": "completed",
+      "eventCount": 5,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "The sorting method is O(n log n). What is the frequency-map method's time and space, and why is it faster?",
+          "answer": "O(n) time, O(k) space — counting characters avoids the O(n log n) sort.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "substrings",
+      "contentHash": "f73d909defbe3956",
+      "status": "completed",
+      "eventCount": 24,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "How many substrings does a string of length n have, and what does that imply for brute force?",
+          "answer": "n(n+1)/2 = O(n^2) substrings, so enumerating them all is at least O(n^2) — avoid it when a window would do.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "linear-search",
+      "contentHash": "a237de12b615c1cd",
+      "status": "completed",
+      "eventCount": 26,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "For an unsorted 1000-element array, what is linear search's worst-case comparison count, and can binary search help?",
+          "answer": "1000 comparisons worst case (O(n)); binary search cannot be used because it requires sorted data.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "binary-search",
+      "contentHash": "1d031e5c33e0ad94",
+      "status": "completed",
+      "eventCount": 44,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "About how many comparisons does binary search need for 1,000,000 sorted elements, and why so few?",
+          "answer": "About 20 (log2(1,000,000) ≈ 20), because each comparison halves the remaining range.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "binary-search-answer",
+      "contentHash": "f6a9654b672ca67a",
+      "status": "completed",
+      "eventCount": 283,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why can we binary-search capacities instead of trying each one?",
+          "answer": "Because feasibility is monotonic: if capacity C works, every larger capacity works too, so there is a single boundary to locate.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "rotated-array-search",
+      "contentHash": "4ae88a595d050c38",
+      "status": "completed",
+      "eventCount": 49,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "In [4,5,6,7,0,1,2] with mid at index 3 (value 7), which half is sorted and how do you know?",
+          "answer": "The left half is sorted, because nums[lo]=4 <= nums[mid]=7.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "bounds",
+      "contentHash": "d20d99c2f1843e9d",
+      "status": "completed",
+      "eventCount": 42,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "On [1,2,2,2,3,5], what does bisect_right(nums, 2) - bisect_left(nums, 2) compute?",
+          "answer": "3 — the number of 2's in the array.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "matrix-search",
+      "contentHash": "a49e1e80cc8b2c37",
+      "status": "completed",
+      "eventCount": 55,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "For a flat index mid on a matrix with `cols` columns, how do you get its (row, col)?",
+          "answer": "row = mid // cols, col = mid % cols.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "bubble-sort",
+      "contentHash": "4cf9f584f08ce225",
+      "status": "completed",
+      "eventCount": 44,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "How many comparisons does basic bubble sort do on 5 elements, and what is the general formula?",
+          "answer": "10 comparisons; in general n(n-1)/2 = O(n²).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "selection-sort",
+      "contentHash": "9adf456cd5519520",
+      "status": "completed",
+      "eventCount": 53,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Compared to bubble sort, what does selection sort minimize, and does its comparison count depend on input order?",
+          "answer": "It minimizes swaps (at most n); its comparison count is always ~n²/2 regardless of input order.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "insertion-sort",
+      "contentHash": "977f5d7654950125",
+      "status": "completed",
+      "eventCount": 41,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why is insertion sort O(n) on already-sorted input but O(n²) on reverse-sorted input?",
+          "answer": "On sorted input the inner while stops immediately (no shifts) → one comparison per element → O(n); reverse-sorted forces each element to shift past all before it → O(n²).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "merge-sort",
+      "contentHash": "8ced05a58bac439d",
+      "status": "completed",
+      "eventCount": 118,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why is merge sort O(n log n) in the WORST case, unlike quicksort?",
+          "answer": "The split is always into equal halves, giving log n levels, and merging is O(n) per level regardless of input — so it is always O(n log n) with no O(n²) case.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "quick-sort",
+      "contentHash": "1932b5f5c14baedf",
+      "status": "completed",
+      "eventCount": 83,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "What makes quicksort O(n log n) on average but O(n^2) in the worst case?",
+          "answer": "Pivot balance: roughly-even partitions give ~log n depth (O(n log n)); consistently lopsided partitions give ~n depth (O(n²)).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "counting-sort",
+      "contentHash": "c01803df042ffbb7",
+      "status": "completed",
+      "eventCount": 39,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Counting sort is O(n + hi). When is it a great choice, and when is it a terrible one?",
+          "answer": "Great when hi is small (comparable to n) — then it's effectively linear; terrible when hi is huge relative to n (e.g. values up to a billion) — the O(hi) counts array wastes time and space.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "bucket-sort",
+      "contentHash": "6b22322e02d943f8",
+      "status": "completed",
+      "eventCount": 52,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Does a uniform input alone make this default k=5 implementation expected O(n)? What is its worst bound?",
+          "answer": "No. For expected linear work, k must grow like n and occupancy must be suitably uniform/independent. This version uses Python sorted, so its worst bound is O(n log n + k).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "heap-sort",
+      "contentHash": "606b3a3dfb7bd69d",
+      "status": "completed",
+      "eventCount": 24,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Heap sort is O(n log n). Which step is O(n) and which is O(n log n)?",
+          "answer": "heapify is O(n); the n heappops (O(log n) each) total O(n log n) and dominate.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "radix-sort",
+      "contentHash": "39fd7540066fcc7e",
+      "status": "completed",
+      "eventCount": 168,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why must each digit pass in radix sort be STABLE?",
+          "answer": "Because when two numbers have the same current digit, they must keep the order established by the lower digits already processed; a non-stable pass would scramble that and break correctness.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "comparators",
+      "contentHash": "c596b71084ba6c82",
+      "status": "completed",
+      "eventCount": 8,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "sorting ['bb','a','ccc','dd'] by len gives ['a','bb','dd','ccc']. Why is 'bb' before 'dd' and not the reverse?",
+          "answer": "Because Timsort is stable: 'bb' and 'dd' tie on length 2, so they keep their original input order (bb came first).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "interval-sorting",
+      "contentHash": "ae105415d3888208",
+      "status": "completed",
+      "eventCount": 14,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "For 'select the maximum number of non-overlapping intervals', do you sort by start or by end, and why?",
+          "answer": "By END — greedily keeping the interval that finishes earliest leaves the most room for the rest, which is optimal.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "stack-queue-operations",
+      "contentHash": "7f379d26bcdf3751",
+      "status": "completed",
+      "eventCount": 9,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why use collections.deque instead of a list for a QUEUE?",
+          "answer": "Because a queue removes from the front, and list.pop(0) is O(n) (it shifts every element), while deque.popleft is O(1).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "monotonic-stack",
+      "contentHash": "342be63760409f8d",
+      "status": "completed",
+      "eventCount": 95,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "There's a while loop inside a for loop — why is this O(n) and not O(n^2)?",
+          "answer": "Because each index is pushed once and popped at most once over the entire run, so total stack operations are at most 2n → O(n).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "parentheses-matching",
+      "contentHash": "2f08634792aab3fb",
+      "status": "completed",
+      "eventCount": 40,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why must we check that the stack is EMPTY at the end, not just that no mismatch occurred?",
+          "answer": "Because unclosed openers (e.g. '(((') never cause a mismatch but leave items on the stack; a non-empty stack means dangling openers, so it's invalid.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "expression-evaluation",
+      "contentHash": "3135c836a61afdcd",
+      "status": "completed",
+      "eventCount": 30,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "For '-' and '/', why does operand order matter, and which popped value is the right-hand side?",
+          "answer": "Because subtraction/division aren't commutative; the FIRST value popped (b) is the right-hand operand, and the second (a) is the left, so you compute a - b and a / b.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "bfs-queues",
+      "contentHash": "2e245216518b3f20",
+      "status": "completed",
+      "eventCount": 43,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why mark a node visited when ENQUEUEING it rather than when dequeuing it?",
+          "answer": "To ensure each node is added to the queue only once; marking on dequeue lets a node be enqueued multiple times (once per edge into it) before it's processed.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "min-max-tracking",
+      "contentHash": "d06b86e6c201924d",
+      "status": "completed",
+      "eventCount": 48,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why isn't a single `min_value` variable enough to support get_min through pops?",
+          "answer": "Because when you pop the current minimum, you'd need the previous minimum, which a single variable no longer holds — you need the per-level history the parallel stack provides.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "maps-sets",
+      "contentHash": "b144574b388e816f",
+      "status": "completed",
+      "eventCount": 10,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why do we say dict/set operations are 'expected' O(1) rather than 'always' O(1)?",
+          "answer": "Because hashing gives O(1) on average, but collisions (many keys in one slot) can, in the worst case, degrade an operation to O(n).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "hashing-frequency",
+      "contentHash": "d30d59dea192c2ea",
+      "status": "completed",
+      "eventCount": 10,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "This lesson and the string-frequency lesson use the same technique. What is the key difference, and why is the complexity the same?",
+          "answer": "The domain: here we count arbitrary hashable items (numbers/tuples/objects), not just characters. It's still one O(n) pass of expected-O(1) dict updates, so the complexity is identical.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "duplicate-detection",
+      "contentHash": "d7b5e75d70d57aed",
+      "status": "completed",
+      "eventCount": 34,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why must we check `x in seen` BEFORE adding x, not after?",
+          "answer": "Because adding first would put x in the set immediately, so the very same element would appear 'seen' and falsely report a duplicate.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "value-to-index",
+      "contentHash": "03058a26153bdd0d",
+      "status": "completed",
+      "eventCount": 15,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why check `need in seen` before inserting the current value, and how does this handle target = 2*x with two equal values?",
+          "answer": "Checking first prevents pairing an element with itself; for two equal values, the first is stored, then the second finds it as its complement — returning the two distinct indices.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "grouping",
+      "contentHash": "2ecb0bfaec932a6b",
+      "status": "completed",
+      "eventCount": 24,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why is `\"\".join(sorted(w))` a good grouping key for anagrams?",
+          "answer": "Because anagrams contain the same letters, so sorting them produces an identical string — a canonical key shared by exactly the words that are anagrams of each other.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "prefix-sums-map",
+      "contentHash": "6c624c007c15dc40",
+      "status": "completed",
+      "eventCount": 43,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why does prefix-counting handle negatives, and why is a fixed-width window a different problem?",
+          "answer": "Prefix differences work without monotonicity. Fixed-width windows work with negatives too, but examine only one length; this task counts all lengths. Sum-threshold variable windows can lose their shrink/grow guarantee with negatives.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "caching-seen",
+      "contentHash": "e204707d577bcd02",
+      "status": "completed",
+      "eventCount": 125,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Naive fib is O(2^n). Why does adding a memo dict make it O(n)?",
+          "answer": "Because there are only n distinct arguments; the memo ensures each is computed once and every repeat is an O(1) cache hit, eliminating the overlapping recomputation that caused the exponential blow-up.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "bit-logical-ops",
+      "contentHash": "f0a77f6b1719bed3",
+      "status": "completed",
+      "eventCount": 7,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "What is the difference between `&` and `and` in Python?",
+          "answer": "`&` is bitwise AND (combines bits of two integers); `and` is boolean/logical AND (evaluates truthiness and short-circuits).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "bit-shifts",
+      "contentHash": "8fc6d30d5a5e907d",
+      "status": "completed",
+      "eventCount": 5,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "What does 1 << 5 produce, and why is it useful?",
+          "answer": "32 (0b100000) — a mask with only bit 5 set, used to test/set/clear that specific bit.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "bit-check-set-clear",
+      "contentHash": "db9506e3e4e13134",
+      "status": "completed",
+      "eventCount": 7,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why does CLEARING a bit use `n & ~(1 << i)` rather than `n & (1 << i)`?",
+          "answer": "Because ~(1 << i) is all 1s except a 0 at position i; ANDing keeps every other bit and forces bit i to 0. `n & (1 << i)` would instead keep only bit i and zero everything else.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "xor-cancellation",
+      "contentHash": "41a8061f4973f924",
+      "status": "completed",
+      "eventCount": 19,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Which three XOR properties make this work, and why do the pairs vanish?",
+          "answer": "x ^ x = 0 (self-cancel), x ^ 0 = x (identity), and commutativity/associativity (order-free). Each duplicated value XORs with its twin to 0, leaving only the unique value.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "count-set-bits",
+      "contentHash": "e46e11de4715767e",
+      "status": "completed",
+      "eventCount": 20,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why does the loop run only s times (number of set bits) instead of w times (total bits)?",
+          "answer": "Because n & (n - 1) clears exactly ONE set bit each iteration, so the loop ends after removing all s of them — independent of the total bit width w.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "min-max-heaps",
+      "contentHash": "6c21b6995b657143",
+      "status": "completed",
+      "eventCount": 20,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "How can you get a MAX-heap in Python 3.14, and what are the child-index formulas for heapq's 0-based layout?",
+          "answer": "Use the native max-heap API — heapify_max / heappush_max / heappop_max — which keeps the largest at maxheap[0]. (Portable alternative: negate values with the min-heap functions.) With 0-based indexing, the children of index i are at 2i+1 and 2i+2 (parent at (i-1)//2).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "heap-sift",
+      "contentHash": "6229334a1cf982c8",
+      "status": "completed",
+      "eventCount": 50,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Sift-up just swapped 0 from index 6 up to index 2, giving [1, 3, 0, 7, 4, 5, 2]. Which index does 0 compare against next, and does it swap?",
+          "answer": "0 is now at index 2; its parent is at (2-1)//2 = 0, holding 1. Since 0 < 1 it swaps again, moving 0 to the root: [0, 3, 1, 7, 4, 5, 2].",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "top-k",
+      "contentHash": "dbe40ceb7b86cc0f",
+      "status": "completed",
+      "eventCount": 37,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "To keep the k LARGEST elements, why do we use a MIN-heap of size k rather than a max-heap?",
+          "answer": "Because a min-heap's root is the smallest of the k candidates, so when the heap overflows we can pop that smallest in O(log k) — cheaply discarding the weakest candidate. A max-heap would keep the largest at the root, which we don't want to remove.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "kth-largest",
+      "contentHash": "7b64f0c65e9f9cca",
+      "status": "completed",
+      "eventCount": 34,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "After the size-k min-heap holds the k largest elements, which element is the kth largest, and where is it?",
+          "answer": "The smallest of those k, which is at heap[0] (the root of the min-heap).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "running-median",
+      "contentHash": "59f4c4b71c7e01eb",
+      "status": "completed",
+      "eventCount": 63,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why does maintaining two heaps give O(1) median queries, and O(log n) inserts?",
+          "answer": "The two roots (max of the lower half, min of the upper half) are exactly the middle element(s), read in O(1); each insert only does a constant number of O(log n) heap operations to keep the halves balanced.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "merge-sorted-data",
+      "contentHash": "f601c829a21cc276",
+      "status": "completed",
+      "eventCount": 75,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why does the frontier algorithm have O(k + N log(k+1)) time, and which storage belongs to the displayed result?",
+          "answer": "Inspect k input sources, then pop each of the N values and push its successor into a heap of at most k fronts. The heap work is bounded by log(k+1), including k=1. Frontier storage is O(k); the displayed returned list additionally stores N output values.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "two-heap-pattern",
+      "contentHash": "b085653b41869d2c",
+      "status": "completed",
+      "eventCount": 55,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "What signals that a problem fits the balanced median form of two heaps?",
+          "answer": "When you need fast, repeated access to the boundary/partition between a smaller half and a larger half of a CHANGING dataset (e.g. the median), rather than full sorted order.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "tree-dfs",
+      "contentHash": "8c4bd50424c157e3",
+      "status": "completed",
+      "eventCount": 123,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why is DFS's space O(h) rather than O(log n)?",
+          "answer": "Because the recursion stack is as deep as the tree's height h; only for a balanced tree is h ≈ log n. A degenerate (list-like) tree has h = n, making the stack O(n).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "tree-bfs",
+      "contentHash": "e719eba1228698e7",
+      "status": "completed",
+      "eventCount": 90,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "DFS space is O(h) (height). Why is BFS space O(w) (width), and when is that worse?",
+          "answer": "O(w)",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "tree-traversals",
+      "contentHash": "f57cb28fc4eac982",
+      "status": "completed",
+      "eventCount": 209,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Which traversal yields a binary search tree's values in sorted order, and why?",
+          "answer": "Inorder visits left subtree, node, right subtree. A valid BST puts smaller keys left and larger keys right; if its duplicate policy allows equal keys, the result is nondecreasing.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "bst-operations",
+      "contentHash": "d5cf50c46527978b",
+      "status": "completed",
+      "eventCount": 125,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "If you insert values 1, 2, 3, 4, 5 in that order, what shape is the BST and what does that do to search time?",
+          "answer": "A degenerate right-leaning chain (like a linked list) with height n, so search/insert become O(n) instead of O(log n).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "tree-height-depth",
+      "contentHash": "de8d80b85bdfbdb2",
+      "status": "completed",
+      "eventCount": 107,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Earlier lessons said DFS/BST are 'O(h)'. What is h, and what makes it O(log n) vs O(n)?",
+          "answer": "h is the tree's height (longest root-to-leaf path). It's ~log n when the tree is balanced and grows to n when the tree is skewed/degenerate.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "lowest-common-ancestor",
+      "contentHash": "335ee763bc93066d",
+      "status": "completed",
+      "eventCount": 63,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why does the BST LCA run in O(h), but LCA in a GENERAL binary tree is O(n)?",
+          "answer": "In a BST, value comparisons let you descend one path (pruning the other subtree) — O(h). A general tree has no ordering, so you can't prune; you may have to search the whole tree — O(n).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "tree-construction",
+      "contentHash": "a54955dd8b1c3402",
+      "status": "completed",
+      "eventCount": 133,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why does picking the MIDDLE element as the root produce a balanced tree, and why not just insert the sorted values one-by-one?",
+          "answer": "The middle splits the array into equal halves at every level, so both subtrees have ~n/2 nodes and the height is ~log n. Inserting sorted values one-by-one makes each new value a right child, producing a degenerate O(n)-height chain.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "trie-insertion",
+      "contentHash": "a0d882b93c8e53c5",
+      "status": "completed",
+      "eventCount": 179,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why does search('ca') return False even though 'cat', 'car', and 'care' were all inserted?",
+          "answer": "Because 'ca' is only a prefix — the node at the end of 'ca' was never marked is_word. search requires reaching a node whose is_word flag is True.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "prefix-search",
+      "contentHash": "48d89750581c170e",
+      "status": "completed",
+      "eventCount": 195,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Checking a prefix path costs expected O(P). What additional work does counting or listing all matching words require?",
+          "answer": "Counting visits the S nodes below the prefix, for expected O(P+S). Listing copied word strings also pays for K returned characters, so include O(K).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "word-search",
+      "contentHash": "745fc48ded2a7c80",
+      "status": "completed",
+      "eventCount": 276,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "What breaks if you forget to restore the cell (board[r][c] = tmp) after exploring its neighbours?",
+          "answer": "Cells consumed by a failed path remain marked with the unique marker object. Later alternatives cannot use them, so valid words can be missed.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "avl-rotations",
+      "contentHash": "378517a19ceb2355",
+      "status": "completed",
+      "eventCount": 52,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why does a plain BST need AVL-style rotations, and what do rotations guarantee about height?",
+          "answer": "A plain BST can become an O(n)-height chain. A complete AVL update restores every affected node’s balance using the appropriate single or double rotations, maintaining O(log(n+1)) height. This example demonstrates one right rotation.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "graph-representations",
+      "contentHash": "358da22f2b8aae98",
+      "status": "completed",
+      "eventCount": 32,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "A social network has 1,000,000 users but each has only ~100 friends. Adjacency list or matrix, and why?",
+          "answer": "An adjacency list stores about 100 million directed neighbor entries for one million users with average undirected degree 100. A matrix needs one trillion cells, most empty.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "adjacency-lists",
+      "contentHash": "701532f135396d6c",
+      "status": "completed",
+      "eventCount": 22,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why is iterating ALL adjacency lists O(V + E) and not O(V^2)?",
+          "answer": "Because the total length of all the lists is the sum of degrees, which equals 2E (undirected) or E (directed) — so visiting every neighbour is O(E), plus O(V) to touch each vertex.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "graph-bfs",
+      "contentHash": "158618b140660aa6",
+      "status": "completed",
+      "eventCount": 51,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Tree BFS needed no visited set, but graph BFS does. Why?",
+          "answer": "Because graphs contain cycles and multiple paths to the same vertex; without a visited set BFS would revisit vertices endlessly. Trees are acyclic with single parents, so no tracking is needed.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "graph-dfs",
+      "contentHash": "7e65de190951f31f",
+      "status": "completed",
+      "eventCount": 46,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why must you mark a vertex visited BEFORE recursing into its neighbours?",
+          "answer": "Because graphs have cycles; if you marked after, a cycle could recurse back into a vertex already on the current path, causing infinite recursion.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "connected-components",
+      "contentHash": "c85962fa5228cb99",
+      "status": "completed",
+      "eventCount": 73,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why is counting components O(V + E) total even though a traversal is launched from many vertices?",
+          "answer": "All component traversals share one seen set, so each vertex is removed once and each adjacency entry scanned once. An undirected edge has two entries, still O(E) total.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "graph-cycle-detection",
+      "contentHash": "f7ac50e7cb143b8f",
+      "status": "completed",
+      "eventCount": 100,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "In undirected cycle detection, why must we exclude the PARENT when we see a visited neighbour?",
+          "answer": "Because the edge back to the parent is the same undirected edge we just arrived on — not a cycle. Only a visited neighbour that ISN'T the parent means a genuine second path back, i.e. a cycle.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "topological-sort",
+      "contentHash": "8d35e103b81676bb",
+      "status": "completed",
+      "eventCount": 92,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "How does Kahn's algorithm detect that no topological order exists (a cycle)?",
+          "answer": "Fewer than n vertices are processed; a directed cycle exists.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "multi-source-bfs",
+      "contentHash": "14146ab50bd23b4d",
+      "status": "completed",
+      "eventCount": 58,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why does multi-source BFS share one traversal instead of repeating BFS from every source?",
+          "answer": "All sources are seeded at distance zero in one queue, and each distinct vertex is discovered once. Reading k source entries, including duplicates, costs O(k); the complete bound is O(k+V+E).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "shortest-paths-unweighted",
+      "contentHash": "24c5cc38b62191b2",
+      "status": "completed",
+      "eventCount": 65,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why does BFS minimize hop count, and when does that also minimize total edge weight?",
+          "answer": "BFS reaches vertices by increasing edge count. Equal positive weights make minimum hops minimum cost. Unequal weights can make a route with more edges cheaper; use Dijkstra for finite nonnegative weights and Bellman–Ford when negative edges are allowed.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "union-find",
+      "contentHash": "f685346da91b8a96",
+      "status": "completed",
+      "eventCount": 96,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "What do path compression and union by rank together achieve, and why not omit them?",
+          "answer": "Together they keep the trees nearly flat, giving amortized O(α(n)) ≈ O(1) per operation. Omitting them lets trees grow to O(n) height, degrading find/union toward O(n).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dijkstra",
+      "contentHash": "ed13ace6af5f5374",
+      "status": "completed",
+      "eventCount": 91,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why does Dijkstra require non-negative edge weights, and what do you use if some edges are negative?",
+          "answer": "Dijkstra finalizes a vertex's distance when it's popped (closest first); a negative edge encountered later could make an already-settled vertex reachable more cheaply, breaking that guarantee. For negative edges use Bellman–Ford.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "bellman-ford",
+      "contentHash": "107ddf63e222902a",
+      "status": "completed",
+      "eventCount": 62,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why exactly V-1 relaxation passes, and how does a V-th pass detect a negative cycle?",
+          "answer": "Without a source-reachable negative cycle, each reachable vertex has a shortest representative that is simple and uses at most V−1 edges. V−1 full passes therefore suffice; an additional reachable improvement exposes a negative cycle.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "floyd-warshall",
+      "contentHash": "3e88a4a42cf0178c",
+      "status": "completed",
+      "eventCount": 208,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why must the intermediate vertex loop k be the OUTERMOST of the three loops?",
+          "answer": "Because d[i][j] must consider paths using intermediates {0..k} before {0..k+1}; making k outermost ensures d[i][k] and d[k][j] are already finalized for intermediates < k when used. Nesting k inside i/j would use inconsistent, partial values and give wrong results.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "prim",
+      "contentHash": "55a5e218c8627f60",
+      "status": "completed",
+      "eventCount": 71,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Both Prim and Dijkstra pop from a min-heap. What DIFFERENT quantity does each minimize?",
+          "answer": "Dijkstra minimizes the total DISTANCE FROM THE SOURCE to a vertex; Prim minimizes the WEIGHT OF THE SINGLE EDGE needed to attach a vertex to the growing tree.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "kruskal",
+      "contentHash": "757c20a4dd94f9f2",
+      "status": "completed",
+      "eventCount": 111,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "In Kruskal, how does Union-Find decide whether to keep an edge, and what would happen without it?",
+          "answer": "It checks whether the edge's endpoints already share a root (same component); if so the edge would form a cycle and is skipped, otherwise it's kept and the sets are unioned. Without union-find, each cycle check would need an O(V+E) traversal, making Kruskal much slower.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "linked-list-traversal",
+      "contentHash": "307bd234a6470b5f",
+      "status": "completed",
+      "eventCount": 31,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "The loop condition is `while current is not None`. What would go wrong if it were `while current.next is not None` instead?",
+          "answer": "The last node (value 3) would never be processed, and it would crash on an empty list because current could be None.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "linked-list-slow-fast",
+      "contentHash": "d05f80d3a7da0d3c",
+      "status": "completed",
+      "eventCount": 71,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "For an odd-length list like 1 -> 2 -> 3 -> 4, which node does `slow` end on, and why?",
+          "answer": "Node 3 (the second of the two middles). Fast steps head->3->None; slow steps head->2->3.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "linked-list-cycle-detection",
+      "contentHash": "39d3b9278a1d42d4",
+      "status": "completed",
+      "eventCount": 83,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why does the code use `slow is fast` rather than `slow == fast`?",
+          "answer": "Because we must compare node identity — whether the two pointers reference the same node object — not whether two nodes happen to store equal values.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "linked-list-reversal",
+      "contentHash": "7b51b215363ffc9d",
+      "status": "completed",
+      "eventCount": 103,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "What breaks if you write `curr.next = prev` BEFORE `nxt = curr.next`?",
+          "answer": "You lose the rest of the list: curr.next now points at prev, so you can no longer reach the nodes after curr, and the loop can't continue correctly.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "linked-list-middle",
+      "contentHash": "177fe06df5798e65",
+      "status": "completed",
+      "eventCount": 121,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Both methods use the 'second middle' convention for even lengths. Which change to `middle` would make it return the FIRST middle instead?",
+          "answer": "Start fast at head.next (or stop one step earlier), so slow advances one fewer time.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "linked-list-dummy-nodes",
+      "contentHash": "b180ab157478a517",
+      "status": "completed",
+      "eventCount": 166,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why is removing the head node no longer a special case once a dummy is used?",
+          "answer": "Because the dummy sits before the head, the head has a real predecessor (prev = dummy). The single line prev.next = curr.next unlinks the head just like any other node.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "linked-list-merging",
+      "contentHash": "e6305727a6e75f48",
+      "status": "completed",
+      "eventCount": 117,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "What does the dummy head buy us here that a plain `head = None` would not?",
+          "answer": "It removes the special case for attaching the very first node: tail = dummy is always valid, so `tail.next = ...` works uniformly, and the answer is dummy.next.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "linked-list-pointer-manipulation",
+      "contentHash": "94d4075cc6df9487",
+      "status": "completed",
+      "eventCount": 161,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why must this version read second.next before assigning second.next = first?",
+          "answer": "Overwriting second.next first loses the original successor. Reading it afterward obtains first and can create a cycle instead of reconnecting the suffix.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "linked-list-variants",
+      "contentHash": "693bb9bc61dbd682",
+      "status": "completed",
+      "eventCount": 131,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why would `while node is not None` never stop on the circular ring, and how does the example avoid that?",
+          "answer": "In a ring, no node's next is None — the tail points back to the head — so the condition is always true. The example instead takes a fixed number of steps (a for-loop of 6), bounding the walk.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "linked-list-deques",
+      "contentHash": "6bb00cb0cf3326d3",
+      "status": "completed",
+      "eventCount": 13,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why prefer collections.deque over a Python list when you need a queue?",
+          "answer": "Because deque.popleft()/appendleft() are O(1), while list.pop(0)/insert(0, x) are O(n) — every remaining element shifts. For a queue, deque is far faster at scale.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-base-cases",
+      "contentHash": "fd283b474bd68708",
+      "status": "completed",
+      "eventCount": 29,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "If the `n<=1` base-case return is removed but the negative-input guard remains, how does fact(5) stop?",
+          "answer": "With the base-case return removed, valid n keeps decreasing until the negative-input guard raises ValueError. If both the guard and base case are removed, calls continue until RecursionError.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-recursive-calls",
+      "contentHash": "cd3b176761578562",
+      "status": "completed",
+      "eventCount": 156,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "The trace shows repeated fib(k) arguments while computing fib(6). What property is present, and how does memoization help?",
+          "answer": "The repeated equal arguments are overlapping subproblems. With a correct state and recurrence, cache each Fibonacci result, giving O(n) scalar work for n+1 index states.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-backtracking",
+      "contentHash": "73e310b733d34fff",
+      "status": "completed",
+      "eventCount": 57,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why are the two `if` guards (open_c < n and close_c < open_c) so important to efficiency?",
+          "answer": "They prune the search: branches that would create invalid strings are never explored, so we build only valid prefixes instead of generating all 2^(2n) strings and filtering.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-subsets",
+      "contentHash": "c0d4723aa0315815",
+      "status": "completed",
+      "eventCount": 70,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why must we store path[:] instead of path, and why does the inner loop start at `start` (not 0)?",
+          "answer": "path[:] stores a snapshot; storing path aliases the one mutable list that is later emptied, so all results would look identical. Starting at `start` (using i+1 when recursing) stops elements from being reused and prevents duplicate subsets like [1,2] and [2,1].",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-permutations",
+      "contentHash": "ecc9a873462f66b2",
+      "status": "completed",
+      "eventCount": 230,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "What distinguishes the permutation template from the subset template — why a `used` array instead of a `start` index?",
+          "answer": "Permutations use every element and care about order, so we need to revisit earlier elements in later positions — a used array tracks what's placed. Subsets/combinations use a start index to forbid reordering, which is exactly what permutations must allow.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-combinations",
+      "contentHash": "f00d2ca1a2ef2bc9",
+      "status": "completed",
+      "eventCount": 92,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why does recursing from `i + 1` (not from `start` or `1`) prevent duplicate combinations?",
+          "answer": "It forces the chosen numbers to strictly increase, so a set like {1,3} is only ever generated as [1,3], never as [3,1]. Since order doesn't matter, fixing one increasing order gives each combination exactly once.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-memoization",
+      "contentHash": "b1957733e9da47dd",
+      "status": "completed",
+      "eventCount": 63,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Adding @lru_cache turns naive Fibonacci from O(2ⁿ) into O(n). What exactly does the cache change about the work done?",
+          "answer": "It makes each distinct subproblem fib(k) compute its body only once; every later call with the same k is an O(1) lookup. The exponential re-computation of the same values is eliminated.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 1,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-tabulation",
+      "contentHash": "be88413378e189b9",
+      "status": "completed",
+      "eventCount": 30,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why can each transition `dp[i] = dp[i-1] + dp[i-2]` be a simple lookup with no recomputation?",
+          "answer": "Because we fill i in increasing order, dp[i-1] and dp[i-2] were computed on earlier iterations and are already stored. The fill order guarantees every dependency is ready before it's used.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 3,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-1d-2d",
+      "contentHash": "65752bd6f13b687a",
+      "status": "completed",
+      "eventCount": 26,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why is the natural state two dimensional, and how can the code still use one row of storage?",
+          "answer": "A subproblem is identified by (row,column). A full table stores both axes. During row compression, the outer-loop row is implicit and a length-n array keeps the previous-row value and current-row left value needed for each update.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 3,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-knapsack",
+      "contentHash": "92f80a92b6ddc9fe",
+      "status": "completed",
+      "eventCount": 101,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why can't you just greedily take items with the best value-per-weight ratio in the 0/1 knapsack?",
+          "answer": "A high-ratio indivisible item can block a more valuable combination. With weights [4,3,3], values [5,3,3], cap6, greedy gets 5 but taking both weight3 items gets 6. Ratio-greedy has a general guarantee for positive-weight divisible items, not general 0/1 selection.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 3,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-subsequences",
+      "contentHash": "a9d93f887df378a0",
+      "status": "completed",
+      "eventCount": 46,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Is 'aec' a subsequence of 'abcde'? Explain using the order rule.",
+          "answer": "No. A subsequence must preserve order. In 'abcde', 'e' appears after 'c', so to keep 'a','e','c' you'd need 'c' after 'e' — impossible without reordering.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-state-transitions",
+      "contentHash": "52e41c4f20588a12",
+      "status": "completed",
+      "eventCount": 31,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why is remembering only `min_price` and `best` enough — why don't we need the full price history?",
+          "answer": "To decide today's profit we only need the cheapest earlier price (best buy point) and the best profit so far. Everything else about the history is irrelevant to the next decision, so those two values are a minimal sufficient state.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-climbing-stairs",
+      "contentHash": "3bbd3beb135c5b15",
+      "status": "completed",
+      "eventCount": 20,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "How do you derive ways(n) = ways(n-1) + ways(n-2) from the rules of the problem?",
+          "answer": "Your last move onto step n was either a 1-step (from step n-1) or a 2-step (from step n-2). These cases are exhaustive and disjoint, so the total ways is the sum of ways to reach n-1 and n-2.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 3,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-house-robber",
+      "contentHash": "5dfc8f2248546969",
+      "status": "completed",
+      "eventCount": 19,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why does the 'rob it' branch add best from TWO houses back (prev), not one?",
+          "answer": "Because robbing house i forbids robbing the adjacent house i-1. So the best compatible total is nums[i] plus best(i-2), skipping the neighbor. Reaching only one back would allow an illegal adjacent pair.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 3,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-grid-paths",
+      "contentHash": "4cd4e3652f3802d6",
+      "status": "completed",
+      "eventCount": 54,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "How does this DP differ from the unique-paths counting DP, structurally?",
+          "answer": "The coordinate state and row-major fill pattern remain, but path counting uses above+left with boundary ones, while minimum path sum uses cellCost+min(above,left) with cumulative-cost boundaries.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 3,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-coin-change",
+      "contentHash": "d0c4ce9fe7fa8ca2",
+      "status": "completed",
+      "eventCount": 131,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why not just greedily take the largest coin that fits each time?",
+          "answer": "Greedy can be suboptimal for some coin systems. For coins [1,3,4] and amount 6, greedy takes 4 then 1+1 = 3 coins, but 3+3 = 2 coins is better. DP checks every last-coin choice and guarantees the minimum.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-lis",
+      "contentHash": "44cd16b63e5d0caa",
+      "status": "completed",
+      "eventCount": 92,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why is the answer max(dp) rather than dp[-1] (the value for the last element)?",
+          "answer": "Because dp[i] is the longest increasing subsequence ENDING at i, and the overall longest can end at any index — not necessarily the last one. So we take the maximum over all endpoints.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-lcs",
+      "contentHash": "5fd89eac17d69daf",
+      "status": "completed",
+      "eventCount": 71,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "On a character mismatch, why is dp[i][j] = max(dp[i-1][j], dp[i][j-1])?",
+          "answer": "If the last characters differ, they can't both be in the LCS's end, so the LCS of these prefixes is the better of: the LCS ignoring a's last character (dp[i-1][j]) or ignoring b's last character (dp[i][j-1]).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-divide-and-conquer",
+      "contentHash": "5805ae7a93140f75",
+      "status": "completed",
+      "eventCount": 244,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why must we handle a 'crossing' case separately instead of just taking max(left, right)?",
+          "answer": "The optimal subarray might straddle the midpoint — using elements from both halves — which neither the left-only nor right-only recursion considers. The crossing scan computes that spanning case so no candidate is missed.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 3,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-n-queens",
+      "contentHash": "c043d5ebfcb009f3",
+      "status": "completed",
+      "eventCount": 295,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "How do the sets diag1 and diag2 make diagonal-conflict checks O(1)?",
+          "answer": "For rows increasing down and columns right, row−col labels \\ diagonals and row+col labels / diagonals. The sets store occupied keys, so membership is expected O(1) with ordinary hashes.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 3,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "fenwick-tree",
+      "contentHash": "cd3e4ca8333bc7a5",
+      "status": "completed",
+      "eventCount": 164,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why does `i += i & (-i)` (update) walk UP the tree while `i -= i & (-i)` (prefix) walks DOWN, and why are both O(log n)?",
+          "answer": "i & -i extracts the least significant set bit. Updating adds that block size to reach a later covering cell; querying subtracts it to reach the preceding disjoint prefix block. Each move raises the update low-bit position or clears a query bit, so at most floor(log₂ n)+1 cells are touched for a positive valid index.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 2,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "segment-tree",
+      "contentHash": "fa3d8511fc0b1ca8",
+      "status": "completed",
+      "eventCount": 128,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "Why choose a segment tree over a Fenwick tree, given the BIT is simpler?",
+          "answer": "A segment tree stores aggregates that can be combined over selected ranges, including min/max/gcd without subtraction. The displayed sum BIT derives a range from two prefix sums; that subtraction needs an inverse. Specialized minimum BIT variants have extra restrictions, while range updates with lazy propagation are a separate segment-tree extension.",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 3,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "task-scheduler",
+      "contentHash": "e406fabf9a8e5dc5",
+      "status": "completed",
+      "eventCount": 101,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 83,
+          "valid": true,
+          "prompt": "At the highlighted None-append line for slot 5, ready is empty and the front waiting entry is A with release slot 6. What is appended for slot 5?",
+          "answer": "None",
+          "event": {
+            "index": 83,
+            "kind": "line",
+            "line": 27,
+            "frame": "schedule"
+          },
+          "next": {
+            "index": 84,
+            "kind": "line",
+            "line": 15,
+            "frame": "schedule"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "meeting-rooms-ii",
+      "contentHash": "866695c4805a26d6",
+      "status": "completed",
+      "eventCount": 63,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 43,
+          "valid": true,
+          "prompt": "At the highlighted pop line, the current meeting is [10,20), start is 10, and end_heap contains ends 10 and 15. After the expired end is removed and 20 is pushed, what is the active count?",
+          "answer": "2",
+          "event": {
+            "index": 43,
+            "kind": "line",
+            "line": 13,
+            "frame": "min_rooms"
+          },
+          "next": {
+            "index": 44,
+            "kind": "line",
+            "line": 12,
+            "frame": "min_rooms"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "lesson",
+      "id": "kmp",
+      "contentHash": "b6677b9b59c10ad5",
+      "status": "completed",
+      "eventCount": 235,
+      "expectedOutputMatches": true,
+      "checkpoints": [
+        {
+          "ordinal": 0,
+          "index": 0,
+          "valid": true,
+          "prompt": "On a mismatch after matching j characters, why does KMP set j = lps[j-1] instead of restarting j at 0 and rescanning the text?",
+          "answer": "The j characters already matched are exactly the pattern's own prefix, so the longest prefix-that-is-also-a-suffix (lps[j-1]) is the most of that we can keep aligned without rechecking. Restarting at 0 (and moving the text pointer back) would redo work KMP has proven unnecessary, which is what makes naive search O(n·m).",
+          "event": {
+            "index": 0,
+            "kind": "call",
+            "line": 0,
+            "frame": "<module>"
+          },
+          "next": {
+            "index": 1,
+            "kind": "line",
+            "line": 4,
+            "frame": "<module>"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "pattern",
+      "id": "sliding-window",
+      "contentHash": "dc095fe23ec0561f",
+      "status": "completed",
+      "eventCount": 31,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "prefix-sums-hashmap",
+      "contentHash": "aec635695aa06bcf",
+      "status": "completed",
+      "eventCount": 33,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "kadane",
+      "contentHash": "00f44dbdc6a1c10a",
+      "status": "completed",
+      "eventCount": 42,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "two-pointers",
+      "contentHash": "85dd9c69c2621a85",
+      "status": "completed",
+      "eventCount": 26,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "fast-slow-pointers",
+      "contentHash": "6ecdb849e2629cc4",
+      "status": "completed",
+      "eventCount": 46,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "bfs-shortest-path",
+      "contentHash": "cc87b16548600da8",
+      "status": "completed",
+      "eventCount": 55,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "backtracking",
+      "contentHash": "e982169a31af8808",
+      "status": "completed",
+      "eventCount": 70,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "binary-search-on-answer",
+      "contentHash": "bed466186b7cb844",
+      "status": "completed",
+      "eventCount": 333,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "top-k-heap",
+      "contentHash": "6e915ecffb790b5f",
+      "status": "completed",
+      "eventCount": 32,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "two-heaps",
+      "contentHash": "fa39fab4979b6ed0",
+      "status": "completed",
+      "eventCount": 68,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "k-way-merge",
+      "contentHash": "4ddcbd3fa5647945",
+      "status": "completed",
+      "eventCount": 63,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "monotonic-stack",
+      "contentHash": "9fc6b611bc9d8161",
+      "status": "completed",
+      "eventCount": 31,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "merge-intervals",
+      "contentHash": "17fae99a8a79efa4",
+      "status": "completed",
+      "eventCount": 34,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "greedy-interval-scheduling",
+      "contentHash": "e5cfd10d2b22c242",
+      "status": "completed",
+      "eventCount": 42,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "cyclic-sort",
+      "contentHash": "76a032cae0856e32",
+      "status": "completed",
+      "eventCount": 36,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "matrix-traversal",
+      "contentHash": "a3c74ba54ea38f82",
+      "status": "completed",
+      "eventCount": 48,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "in-place-linkedlist-reversal",
+      "contentHash": "b8cd8ab8a3d4253e",
+      "status": "completed",
+      "eventCount": 90,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "tree-bfs",
+      "contentHash": "a46d8158f33e2625",
+      "status": "completed",
+      "eventCount": 84,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "tree-dfs",
+      "contentHash": "b98d79459499ed4a",
+      "status": "completed",
+      "eventCount": 83,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "graph-dfs-components",
+      "contentHash": "1edb49a48caf29b5",
+      "status": "completed",
+      "eventCount": 72,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "topological-sort",
+      "contentHash": "54704d9a363f66f7",
+      "status": "completed",
+      "eventCount": 92,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "union-find",
+      "contentHash": "d29f1056463de97b",
+      "status": "completed",
+      "eventCount": 91,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "dijkstra",
+      "contentHash": "216dd9045bd7bbb6",
+      "status": "completed",
+      "eventCount": 91,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "trie-prefix",
+      "contentHash": "557f3fb82e64a0c5",
+      "status": "completed",
+      "eventCount": 111,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "modified-binary-search",
+      "contentHash": "22b5905b5840403c",
+      "status": "completed",
+      "eventCount": 23,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "bitwise-xor",
+      "contentHash": "4251c634f6142710",
+      "status": "completed",
+      "eventCount": 19,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "dynamic-programming",
+      "contentHash": "a804cf5eb195c8e5",
+      "status": "completed",
+      "eventCount": 110,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "knapsack",
+      "contentHash": "7104d0599a0d5e38",
+      "status": "completed",
+      "eventCount": 73,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    },
+    {
+      "kind": "pattern",
+      "id": "divide-and-conquer",
+      "contentHash": "042da46976f0fc39",
+      "status": "completed",
+      "eventCount": 118,
+      "expectedOutputMatches": true,
+      "checkpoints": []
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,667 @@
+[
+  {
+    "uid": "lesson:bst-operations:bst-complete-1",
+    "field": "hints",
+    "value": [
+      "Compare the target with the current node.",
+      "A valid BST lets you discard a whole subtree, though it may contain very few nodes.",
+      "Equality succeeds; a smaller value follows left and a larger value follows right.",
+      "Continue iteratively until equality or a missing child.",
+      "while root: compare; return True on equality; choose the matching child; return False when absent.",
+      "The model walks one root-to-leaf path in O(h) time and O(1) working space."
+    ]
+  },
+  {
+    "uid": "lesson:bst-operations:bst-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You need ordered operations (range queries, floor/ceil) AND guaranteed fast lookup on data that keeps changing.",
+      "approaches": [
+        {
+          "id": "balanced-bst",
+          "label": "A self-balancing BST (AVL / red-black)",
+          "requiredReasonIds": [
+            "balanced-ordered-and-fast"
+          ]
+        },
+        {
+          "id": "plain-bst",
+          "label": "A plain (unbalanced) BST",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A plain BST supports ordered queries but can degrade to an O(n)-height chain on bad insert orders, losing the guaranteed fast lookup."
+        },
+        {
+          "id": "hash-map",
+          "label": "A hash map",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A dict maintains insertion order, not sorted-key order. Without another index, range/floor/ceiling queries require scanning keys."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "balanced-ordered-and-fast",
+          "text": "A balanced BST keeps height O(log n), guaranteeing O(log n) search/insert/delete while its in-order structure answers range and floor/ceil queries."
+        },
+        {
+          "id": "hashmap-does-ranges",
+          "text": "A hash map answers range and floor/ceil queries efficiently.",
+          "contradictory": true
+        },
+        {
+          "id": "plain-bst-always-logn",
+          "text": "A plain BST always has O(log n) height regardless of insertion order.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "balanced-bst"
+      ],
+      "modelExplanation": "A balanced BST (AVL/red-black) gives guaranteed O(log n) search/insert/delete AND ordered queries. A plain BST risks O(n) if unbalanced; a hash map is expected O(1) but supports no order/range queries."
+    }
+  },
+  {
+    "uid": "lesson:prefix-search:prefix-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You need to list all stored words matching a prefix for repeated autocomplete queries. Which structure provides a prefix index, and what is the cost including copied suggestion characters?",
+      "approaches": [
+        {
+          "id": "trie",
+          "label": "A trie",
+          "requiredReasonIds": [
+            "trie-prefix-queries"
+          ]
+        },
+        {
+          "id": "hash-set",
+          "label": "A hash set of words",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A hash set only answers exact membership; it cannot efficiently find all words sharing a prefix, which is exactly what autocomplete needs."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "trie-prefix-queries",
+          "text": "A trie supplies a prefix index: reach the prefix, visit S subtree nodes and copy K output characters in expected O(P+S+K)."
+        },
+        {
+          "id": "set-prefix-cheap",
+          "text": "A hash set finds all words with a given prefix in O(P) just like a trie.",
+          "contradictory": true
+        },
+        {
+          "id": "trie-exact-faster",
+          "text": "The reason to pick a trie is that exact membership is faster than a hash set.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "trie"
+      ],
+      "modelExplanation": "A trie reaches the prefix in expected O(P) and walks S subtree nodes. Copying K output characters gives O(P+S+K) for full enumeration; a hash set must scan its stored words."
+    }
+  },
+  {
+    "uid": "lesson:prefix-search:prefix-choose-1",
+    "field": "hints",
+    "value": [
+      "Find the node representing the prefix.",
+      "Repeated scans of all stored words repeat prefix comparisons.",
+      "A trie shares those comparisons on one path.",
+      "Walk the matching subtree and collect terminal paths.",
+      "Use a shared character buffer; copy it only for terminal output strings.",
+      "Reaching the prefix costs expected O(P), traversal O(S), and copied output O(K), for O(P+S+K)."
+    ]
+  },
+  {
+    "uid": "lesson:word-search:ws-fix-1",
+    "field": "tests",
+    "value": "assert exist([list('ABCE'), list('SFCS'), list('ADEE')], 'ABCCED') is True\nassert exist([list('ABCE'), list('SFCS'), list('ADEE')], 'SEE') is True\nassert exist([list('ABCE'), list('SFCS'), list('ADEE')], 'ABCB') is False, 'cannot reuse a cell'\n# Missing-restore bug: a dead-end path marks cells '#'; without restoring them a\n# later correct path cannot reuse those cells. On this board 'AAB' is reachable\n# ONLY if cells are restored after each failed branch (no-restore returns False).\nassert exist([['C','A','A'],['A','A','A'],['B','C','D']], 'AAB') is True, 'needs cells restored after a dead-end path'\nassert exist([['A','A'],['A','A']], 'AAAAA') is False, 'only 4 cells, no reuse'\nassert exist([['A']], 'A') is True\nassert exist([['A']], 'B') is False\nprint('OK')\nassert exist([], '') is True\nassert exist([], 'A') is False\nassert exist([[]], 'A') is False\nb=[['#','A']]\nassert exist(b,'#A#') is False\nassert b==[['#','A']]\nassert exist(b,'#A') is True\nassert b==[['#','A']]\ntry:\n exist([['A'],[]],'A')\nexcept ValueError:\n pass\nelse:\n raise AssertionError('reject ragged rows')"
+  },
+  {
+    "uid": "lesson:word-search:ws-fix-1",
+    "field": "hints",
+    "value": [
+      "The word is matched along one path and each cell may occur once in that path.",
+      "A failed start must leave the board unchanged for another start.",
+      "Save the original character before replacing it with the unique marker.",
+      "Compute the branch result, restore the saved character, then return the result.",
+      "tmp = board[r][c]; board[r][c] = marker; found = explore(); board[r][c] = tmp; return found.",
+      "Restoring before returning preserves the board on both successful and failed searches."
+    ]
+  },
+  {
+    "uid": "lesson:word-search:ws-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You must search a character grid for MANY words at once, deciding whether to search each word separately or share work across them.",
+      "approaches": [
+        {
+          "id": "trie-guided-dfs",
+          "label": "Build a trie of all words and run one trie-guided DFS",
+          "requiredReasonIds": [
+            "shared-prefix-once"
+          ]
+        },
+        {
+          "id": "repeated-single-dfs",
+          "label": "Run a separate single-word DFS for each word",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Searching each word independently re-explores the same grid paths once per word (O(m·n·3^L) each), wasting the work shared by common prefixes."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "shared-prefix-once",
+          "text": "A trie shares comparisons among words along each grid path, pruning a path when no dictionary prefix can continue; different grid paths can still repeat a prefix."
+        },
+        {
+          "id": "words-no-shared-prefixes",
+          "text": "The words share no prefixes, so a trie saves nothing over separate searches.",
+          "contradictory": true
+        },
+        {
+          "id": "trie-slower-per-word",
+          "text": "A trie-guided DFS is slower than repeating single-word DFS because the trie adds overhead.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "trie-guided-dfs"
+      ],
+      "modelExplanation": "Build a trie of all the words and run one DFS (Word Search II): walk the grid guided by the trie so shared prefixes are explored once, instead of paying O(m·n·3^L) separately per word."
+    }
+  },
+  {
+    "uid": "lesson:dijkstra:dij-fix-1",
+    "field": "hints",
+    "value": [
+      "A shorter route can push a second candidate for a vertex.",
+      "The old larger candidate remains in heapq because there is no decrease-key removal.",
+      "Compare the popped distance with the recorded best distance.",
+      "Skip a candidate whose popped distance is larger before scanning its outgoing edges.",
+      "if d > dist[node]: continue; otherwise relax outgoing edges.",
+      "The guard prevents repeated obsolete expansions. With nonnegative edges the unguarded relaxation loop can still compute correct distances, but loses the intended work bound."
+    ]
+  },
+  {
+    "uid": "lesson:floyd-warshall:fw-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You need shortest distances between ALL pairs of vertices in a small, dense graph (V ≈ 200, edges ≈ V²).",
+      "approaches": [
+        {
+          "id": "floyd-warshall",
+          "label": "Floyd–Warshall",
+          "requiredReasonIds": [
+            "fw-dense-allpairs"
+          ]
+        },
+        {
+          "id": "dijkstra-each-source",
+          "label": "Binary-heap Dijkstra from every vertex",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "For dense input the binary-heap upper bound adds a logarithmic factor; Floyd–Warshall is a simple cubic all-pairs choice. Array-based dense Dijkstra is also cubic, so this comparison is specific to the heap variant."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "fw-dense-allpairs",
+          "text": "Floyd–Warshall is O(V³) with tiny triple-loop code, and on a dense graph that beats the O(V³ log V) of Dijkstra-from-every-source while being far simpler."
+        },
+        {
+          "id": "fw-slower-dense",
+          "text": "Floyd–Warshall is asymptotically slower than Dijkstra-from-every-source on dense graphs.",
+          "contradictory": true
+        },
+        {
+          "id": "fw-single-source",
+          "text": "Floyd–Warshall only computes paths from a single source.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "floyd-warshall"
+      ],
+      "modelExplanation": "Floyd–Warshall: O(V³) with tiny code; on a dense graph, Dijkstra from every source is ~O(V³ log V). Floyd–Warshall avoids the log factor and is simpler for all-pairs on dense/small graphs."
+    }
+  },
+  {
+    "uid": "lesson:prim:prim-fix-1",
+    "field": "tests",
+    "value": "adj = {0: [(1, 1), (2, 4)], 1: [(0, 1), (2, 2), (3, 6)], 2: [(0, 4), (1, 2), (3, 3)], 3: [(1, 6), (2, 3)]}\nassert prim(adj, 4) == 6, f'MST weight is 1+2+3 = 6 (buggy revisits and overcounts), got {prim(adj, 4)}'\n# A different graph so a hard-coded total cannot pass.\nadj2 = {0: [(1, 10), (2, 1)], 1: [(0, 10), (2, 2)], 2: [(0, 1), (1, 2)]}\nassert prim(adj2, 3) == 3, f'MST weight is 1+2 = 3, got {prim(adj2, 3)}'\n# Single vertex: no edges, zero weight.\nassert prim({0: []}, 1) == 0, 'single vertex MST weight is 0'\nprint('OK')\nassert prim({},0)==0\ntry:\n prim({0:[],1:[]},2)\nexcept ValueError:\n pass\nelse:\n raise AssertionError('no disconnected MST')\nassert prim({0:[(1,-3)],1:[(0,-3)]},2)==-3"
+  },
+  {
+    "uid": "lesson:kruskal:kru-fix-1",
+    "field": "tests",
+    "value": "# MST total weight; unsorted edges must still yield the minimum.\nassert kruskal(4, [(0,1,10),(0,2,6),(0,3,5),(1,3,15),(2,3,4)]) == 19, 'MST edges 2-3(4),0-3(5),0-1(10)'\nassert kruskal(2, [(0,1,7)]) == 7\nassert kruskal(3, [(0,1,1),(1,2,2),(0,2,3)]) == 3, 'take 1 and 2, skip the cycle edge 3'\nassert kruskal(1, []) == 0\nprint('OK')\nassert kruskal(0,[])==0\nassert kruskal(4,[(0,1,-3),(2,3,2)])==-1\nassert kruskal(2,[(0,0,-9),(0,1,7),(0,1,-2)])==-2"
+  },
+  {
+    "uid": "pattern:tree-bfs:pat-tbfs-recognize-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Return the average value of the nodes on each level of a binary tree.",
+      "approaches": [
+        {
+          "id": "tree-bfs",
+          "label": "Tree BFS (level order with a queue)",
+          "requiredReasonIds": [
+            "per-level-snapshot"
+          ]
+        },
+        {
+          "id": "tree-dfs",
+          "label": "Tree DFS",
+          "requiredReasonIds": [
+            "depth-buckets"
+          ]
+        }
+      ],
+      "reasons": [
+        {
+          "id": "per-level-snapshot",
+          "text": "Process the tree level by level: snapshot the queue length each iteration to isolate one level and average its values — O(n)."
+        },
+        {
+          "id": "path-sum-needed",
+          "text": "The task needs a running path sum down each root-to-leaf route.",
+          "contradictory": true
+        },
+        {
+          "id": "must-sort-values",
+          "text": "Node values must be sorted before averaging.",
+          "contradictory": true
+        },
+        {
+          "id": "depth-buckets",
+          "text": "Carry each node’s depth in DFS and update a sum/count bucket for that depth. This also computes level averages in O(n)."
+        }
+      ],
+      "acceptableApproachIds": [
+        "tree-bfs",
+        "tree-dfs"
+      ],
+      "modelExplanation": "BFS with a queue-size snapshot is direct; DFS carrying depth into sum/count buckets is also a valid O(n) solution.",
+      "alternatives": []
+    }
+  },
+  {
+    "uid": "pattern:tree-bfs:pat-tbfs-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Find the maximum root-to-leaf path sum. Tree BFS or Tree DFS?",
+      "approaches": [
+        {
+          "id": "tree-dfs",
+          "label": "Tree DFS",
+          "requiredReasonIds": [
+            "carry-path-sum"
+          ]
+        },
+        {
+          "id": "tree-bfs",
+          "label": "Tree BFS",
+          "requiredReasonIds": [
+            "queue-running-total"
+          ]
+        }
+      ],
+      "reasons": [
+        {
+          "id": "carry-path-sum",
+          "text": "A path problem needs to carry a running sum down each root-to-leaf route, which recursion (DFS) does naturally — O(n)."
+        },
+        {
+          "id": "per-level-work",
+          "text": "The work is defined per level, so a breadth-first queue is the fit.",
+          "contradictory": true
+        },
+        {
+          "id": "need-heap",
+          "text": "You must keep a heap of partial sums to solve it.",
+          "contradictory": true
+        },
+        {
+          "id": "queue-running-total",
+          "text": "Queue pairs (node, running total), update the maximum at leaves, and pass the extended total to children. This also visits each node once."
+        }
+      ],
+      "acceptableApproachIds": [
+        "tree-dfs",
+        "tree-bfs"
+      ],
+      "modelExplanation": "DFS carries path totals with O(h) frames; BFS carrying (node,total) is also correct, using O(w) frontier storage. Both take O(n) time.",
+      "alternatives": []
+    }
+  },
+  {
+    "uid": "pattern:tree-bfs:pat-tbfs-choose-1",
+    "field": "hints",
+    "value": [
+      "The task compares totals at leaves, not level totals.",
+      "A traversal must preserve the sum along each node’s root path.",
+      "DFS can pass the running sum as an argument; BFS can queue it alongside the node.",
+      "Use DFS for a natural O(h)-frame implementation or BFS with (node,total) pairs.",
+      "At each node add its value; at leaves compare with the best; otherwise propagate the total to children.",
+      "Both traversals take O(n); their frontier storage differs: O(h) for DFS and O(w) for BFS."
+    ]
+  },
+  {
+    "uid": "pattern:tree-bfs:pat-tbfs-fix-1",
+    "field": "hints",
+    "value": [
+      "Siblings should appear in the same output group.",
+      "The starter removes one node per outer round and therefore creates one group per node.",
+      "At a round’s beginning the queue contains exactly the next whole level.",
+      "Save its size before adding children, then remove that many nodes.",
+      "while q: level=[]; for _ in range(len(q)): remove node, record value, append children; append level.",
+      "range(len(q)) evaluates its length once, isolating the current level even while children are appended."
+    ]
+  },
+  {
+    "uid": "pattern:tree-dfs:pat-tdfs-recognize-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Find all root-to-leaf paths whose values sum to a target.",
+      "approaches": [
+        {
+          "id": "tree-dfs",
+          "label": "Tree DFS with backtracking",
+          "requiredReasonIds": [
+            "recurse-path-backtrack"
+          ]
+        },
+        {
+          "id": "tree-bfs",
+          "label": "Tree BFS",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Level-order processing does not carry the current path and running sum needed to record qualifying routes."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "recurse-path-backtrack",
+          "text": "Tree DFS carrying a shared path and running total, copying matching leaf paths and backtracking: O(n+K) time, O(h) auxiliary space, plus O(K) output values."
+        },
+        {
+          "id": "level-grouping",
+          "text": "The task groups nodes by depth, so a queue-based level sweep fits.",
+          "contradictory": true
+        },
+        {
+          "id": "sorted-required",
+          "text": "The tree must be a BST and sorted for this to work.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "tree-dfs"
+      ],
+      "modelExplanation": "Tree DFS carrying a shared path and running total, copying matching leaf paths and backtracking: O(n+K) time, O(h) auxiliary space, plus O(K) output values."
+    }
+  },
+  {
+    "uid": "pattern:tree-dfs:pat-tdfs-recognize-1",
+    "field": "hints",
+    "value": [
+      "Record complete root-to-leaf paths whose totals match.",
+      "Rebuilding ancestors repeatedly repeats work; copying saved paths still costs output size.",
+      "Maintain one current path and running total during DFS.",
+      "At a matching leaf save a copy, then undo the path append before returning.",
+      "append; add value; if matching leaf: record path[:]; recurse as needed; pop.",
+      "Traversal costs O(n) and copied output K costs O(K): O(n+K) time with O(h) working path/frames."
+    ]
+  },
+  {
+    "uid": "pattern:tree-dfs:pat-tdfs-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Return the values of the tree grouped by level. Tree DFS or Tree BFS?",
+      "approaches": [
+        {
+          "id": "tree-bfs",
+          "label": "Tree BFS",
+          "requiredReasonIds": [
+            "breadth-first-levels"
+          ]
+        },
+        {
+          "id": "tree-dfs",
+          "label": "Tree DFS",
+          "requiredReasonIds": [
+            "dfs-depth-groups"
+          ]
+        }
+      ],
+      "reasons": [
+        {
+          "id": "breadth-first-levels",
+          "text": "Grouping by level is breadth-first work: a queue processes one full level at a time — O(n)."
+        },
+        {
+          "id": "path-context-needed",
+          "text": "The task needs a running path sum, so recursion is natural.",
+          "contradictory": true
+        },
+        {
+          "id": "needs-two-heaps",
+          "text": "Two heaps are needed to balance the levels.",
+          "contradictory": true
+        },
+        {
+          "id": "dfs-depth-groups",
+          "text": "Carry the depth in DFS and append each node to the bucket for that depth, visiting left before right to preserve per-level left-to-right order."
+        }
+      ],
+      "acceptableApproachIds": [
+        "tree-bfs",
+        "tree-dfs"
+      ],
+      "modelExplanation": "BFS queue-size rounds group levels directly. DFS with depth buckets also works in O(n), visiting left before right for the usual level order.",
+      "alternatives": []
+    }
+  },
+  {
+    "uid": "pattern:graph-dfs-components:pat-gdc-recognize-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Count the number of islands in a grid of land and water cells.",
+      "approaches": [
+        {
+          "id": "flood-fill",
+          "label": "Graph DFS / connected components (flood fill)",
+          "requiredReasonIds": [
+            "one-dfs-per-component"
+          ]
+        },
+        {
+          "id": "union-find-static",
+          "label": "Union-Find",
+          "requiredReasonIds": [
+            "union-land-neighbors"
+          ]
+        }
+      ],
+      "reasons": [
+        {
+          "id": "one-dfs-per-component",
+          "text": "Treat land cells as nodes connected to adjacent land; launch a DFS from each unvisited land cell and count one component per launch — O(V+E)."
+        },
+        {
+          "id": "dynamic-edges",
+          "text": "Edges arrive incrementally, so a near-constant incremental union is required.",
+          "contradictory": true
+        },
+        {
+          "id": "weighted-shortest",
+          "text": "You need the shortest weighted path, so Dijkstra applies.",
+          "contradictory": true
+        },
+        {
+          "id": "union-land-neighbors",
+          "text": "Create a set for each land cell, union side-adjacent land cells, then count distinct land roots. This also counts static islands."
+        }
+      ],
+      "acceptableApproachIds": [
+        "flood-fill",
+        "union-find-static"
+      ],
+      "modelExplanation": "Flood-fill DFS/BFS is a direct O(V+E) static solution. Union-Find over land cells is also correct, with O(V+E*α(V)) amortized processing and extra DSU state.",
+      "alternatives": []
+    }
+  },
+  {
+    "uid": "pattern:topological-sort:pat-topo-fix-1",
+    "field": "tests",
+    "value": "o = topo_order({0: [2], 1: [2], 2: [3], 3: []}, {0: 0, 1: 0, 2: 2, 3: 1})\npos = {v: k for k, v in enumerate(o)}\nassert set(o) == {0, 1, 2, 3}, f'every node once, got {o}'\nassert pos[2] > pos[0] and pos[2] > pos[1], f'2 after its prerequisites, got {o}'\nassert pos[3] == 3, f'3 last, got {o}'\nassert topo_order({0: [1], 1: [2], 2: []}, {0: 0, 1: 1, 2: 1}) == [0, 1, 2], 'chain'\nassert topo_order({0: [1], 1: [0]}, {0: 1, 1: 1}) == [], 'a cycle emits no node'\nassert topo_order({0: []}, {0: 0}) == [0], 'single node'\nprint('OK')\nassert topo_order({0:[1],1:[],2:[3],3:[2]},{0:0,1:1,2:1,3:1})==[]\nassert topo_order({0:[1],1:[0,2],2:[]},{0:1,1:1,2:1})==[]\nassert topo_order({}, {})==[]"
+  },
+  {
+    "uid": "pattern:topological-sort:pat-topo-fix-1",
+    "field": "hints",
+    "value": [
+      "A node is ready only when all its incoming dependencies are removed.",
+      "Processing one predecessor must not queue a node with other prerequisites left.",
+      "Queue a neighbor only when its remaining in-degree becomes zero.",
+      "After processing, compare the order length with the number of declared nodes.",
+      "Decrease indeg; enqueue on zero; return order if all nodes were processed, otherwise [].",
+      "The zero test enforces prerequisites; the final length test rejects cycles even when an acyclic component was processed."
+    ]
+  },
+  {
+    "uid": "pattern:union-find:pat-uf-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "The graph is FIXED and you need to count its connected components exactly once.",
+      "approaches": [
+        {
+          "id": "dfs-count",
+          "label": "One-pass DFS/BFS component count",
+          "requiredReasonIds": [
+            "static-single-pass"
+          ]
+        },
+        {
+          "id": "union-find",
+          "label": "Union-Find",
+          "requiredReasonIds": [
+            "union-static-edges"
+          ]
+        }
+      ],
+      "reasons": [
+        {
+          "id": "static-single-pass",
+          "text": "The graph does not change and you count once, so a single traversal launching a search per unvisited node is simplest — O(V+E)."
+        },
+        {
+          "id": "uf-dynamic",
+          "text": "When edges arrive incrementally or many connectivity queries are made, Union-Find's near-constant operations avoid re-traversing the whole graph."
+        },
+        {
+          "id": "shortest-path",
+          "text": "You need shortest weighted paths, so a heap is required.",
+          "contradictory": true
+        },
+        {
+          "id": "union-static-edges",
+          "text": "Start with V components, union every undirected edge and decrement the count on each successful merge. This is also valid for a one-time static count."
+        }
+      ],
+      "acceptableApproachIds": [
+        "dfs-count",
+        "union-find"
+      ],
+      "alternatives": [],
+      "modelExplanation": "A single DFS/BFS sweep is direct for static components. Union-Find also works: initialize V sets, union each edge and count surviving groups. Prefer DSU when connectivity updates or queries repeat."
+    }
+  },
+  {
+    "uid": "pattern:union-find:pat-uf-fix-1",
+    "field": "hints",
+    "value": [
+      "The host exposes a parent array whose entries form a forest.",
+      "Without balancing a chain may have n nodes; rank balancing alone would bound height logarithmically.",
+      "Shorten the chain during find by linking a visited node to its grandparent.",
+      "Use iterative path halving before advancing x.",
+      "while parent[x]!=x: parent[x]=parent[parent[x]]; x=parent[x].",
+      "The grandparent assignment performs path halving. The inverse-Ackermann amortized theorem additionally needs union by rank/size."
+    ]
+  },
+  {
+    "uid": "pattern:dijkstra:pat-dij-fix-1",
+    "field": "hints",
+    "value": [
+      "A shorter route can push a second candidate for a vertex.",
+      "The old larger candidate remains in heapq because there is no decrease-key removal.",
+      "Compare the popped distance with the recorded best distance.",
+      "Skip a candidate whose popped distance is larger before scanning its outgoing edges.",
+      "if d > dist[node]: continue; otherwise relax outgoing edges.",
+      "The guard prevents repeated obsolete expansions. With nonnegative edges the unguarded relaxation loop can still compute correct distances, but loses the intended work bound."
+    ]
+  },
+  {
+    "uid": "pattern:dijkstra:pat-dij-recognize-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Recognize: 'Find the minimum total travel time from a source to every city, given roads with positive times.' Which pattern? Choose the efficient standard default for unequal nonnegative edge weights.",
+      "approaches": [
+        {
+          "id": "dijkstra",
+          "label": "Dijkstra's algorithm",
+          "requiredReasonIds": [
+            "settle-closest"
+          ]
+        },
+        {
+          "id": "bfs",
+          "label": "Plain BFS",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "BFS counts edges, not weighted cost; with unequal positive weights fewest-edges is not cheapest."
+        },
+        {
+          "id": "bellman",
+          "label": "Bellman–Ford",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Bellman–Ford is also correct for nonnegative weights, but its O(V+V*E) bound is slower than the heap default requested here."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "settle-closest",
+          "text": "Weights are non-negative, so repeatedly settling the closest unvisited city and relaxing its roads via a min-heap is correct — O((V+E) log V)."
+        },
+        {
+          "id": "unweighted",
+          "text": "All roads take the same time, so counting edges equals counting cost.",
+          "contradictory": true
+        },
+        {
+          "id": "has-negative",
+          "text": "Some roads have negative time, so the closest-is-final rule breaks.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "dijkstra"
+      ],
+      "modelExplanation": "Dijkstra's algorithm: a min-heap by distance settles the closest city and relaxes its edges; non-negative weights guarantee correctness — O((V+E) log V)."
+    }
+  },
+  {
+    "uid": "pattern:trie-prefix:pat-trie-fix-1",
+    "field": "hints",
+    "value": [
+      "A query path may exist without a complete stored word ending there.",
+      "The dictionary needs a terminal marker separate from all character edges.",
+      "The unique end object cannot collide with a real character such as $.",
+      "After consuming every query character, require the end key in the final node.",
+      "Build character edges; mark node[end] for each inserted word; search the query path; return end in node.",
+      "Path existence proves only a prefix. The unique terminal key proves a complete word, including the empty word."
+    ]
+  },
+  {
+    "uid": "pattern:trie-prefix:pat-trie-fix-1",
+    "field": "tests",
+    "value": "assert search(['app'], 'app') is True, 'stored word found'\nassert search(['app'], 'ap') is False, 'a prefix that is not a stored word'\nassert search(['app'], 'apple') is False, 'path breaks'\nassert search(['app', 'application'], 'application') is True, 'longer stored word found (defeats len-based guess)'\nassert search(['app', 'application'], 'appl') is False, 'intermediate prefix is not a word'\nassert search([], 'x') is False\nprint('OK')\nassert search(['$a'],'$') is False\nassert search(['$a'],'$a') is True\nassert search(['','$'],'') is True\nassert search(['','$'],'$') is True\nassert search([], '') is False"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "uid": "lesson:rotated-array-search:rot-predict-1",
+    "field": "hints",
+    "value": [
+      "Distinct values let each iteration safely discard half.",
+      "Repeated values can make the sorted-half test ambiguous and the shown branch discard a target.",
+      "The shown code needs distinct input; a separate duplicate-aware version may need linear time."
+    ],
+    "location": "Authored exercise field in own lesson/pattern file; no existing shared override"
+  },
+  {
+    "uid": "lesson:bucket-sort:buck-predict-1",
+    "field": "hints",
+    "value": [
+      "Identify the actual inner sort: this code uses Python sorted.",
+      "Python sorted has O(b log b) worst-case work on b bucket values; creating k buckets adds O(k).",
+      "O(n log n + k) for this implementation: bucket creation costs O(k) and an arbitrary unsorted cluster in one bucket can require O(n log n). A separate version using insertion sort inside one bucket can take O(n² + k)."
+    ],
+    "location": "Authored exercise field in own lesson/pattern file; no existing shared override"
+  }
+]

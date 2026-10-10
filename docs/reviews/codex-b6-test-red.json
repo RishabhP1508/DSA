@@ -1,0 +1,371 @@
+{
+  "runtime": "bundled Pyodide 314.0.7 / CPython 3.14.2",
+  "results": [
+    {
+      "name": "analysis scope excludes demonstration inputs and printing",
+      "passed": false,
+      "error": "dp-base-cases\n+ actual - expected\n\n+ 'program'\n- 'function'\n"
+    },
+    {
+      "name": "factorial exact calls and prediction include initial exactly once",
+      "passed": false,
+      "error": "The input did not match the regular expression /5 calls/. Input:\n\n'fact(5) makes 6 calls with a maximum stack depth of 5. The O(n) time/space describes how those grow with n.'\n"
+    },
+    {
+      "name": "naive Fibonacci exact recurrence replaces doubling claim",
+      "passed": false,
+      "error": "The input did not match the regular expression /2.?F/. Input:\n\n'Because each non-base call makes two more calls, the number of calls grows like the Fibonacci numbers themselves — roughly φⁿ, which is O(2ⁿ). The counter shows fib(6) takes 25 calls; the count nearly doubles for each extra n. This blow-up comes entirely from re-solving the same subproblems.'\n"
+    },
+    {
+      "name": "immutable prefixes retained across stack are counted",
+      "passed": false,
+      "error": "Expected values to be strictly equal:\n\n'O(n)' !== 'O(n^2)'\n"
+    },
+    {
+      "name": "subset repeated-index experiment warns nontermination",
+      "passed": false,
+      "error": "The input did not match the regular expression /RecursionError|does not terminate/. Input:\n\n'Print path at each node to watch subsets grow and shrink as it backtracks. Change bt(i + 1, path) to bt(i, path) and see elements get reused (combinations with repetition). Count the results and confirm it equals 2**len(nums).'\n"
+    },
+    {
+      "name": "combinations loop prunes unfillable prefixes",
+      "passed": false,
+      "error": "The input did not match the regular expression /n - \\(k - len\\(path\\)\\) \\+ 2/. Input:\n\n'# Choose k numbers from 1..n, where ORDER DOES NOT MATTER.\\n' +\n  'def combine(n, k):\\n' +\n  '    res = []\\n' +\n  '    def bt(start, path):\\n' +\n  '        if len(path) == k:            # picked exactly k -> record it\\n' +\n  '            res.append(path[:])\\n' +\n  '            return\\n' +\n  '        for i in range(start, n + 1):\\n' +\n  '            path.append(i)            # CHOOSE i\\n' +\n  '            bt(i + 1, path)           # EXPLORE with i+1 (increasing, no reuse)\\n' +\n  '            path.pop()                # UN-CHOOSE\\n' +\n  '    bt(1, [])\\n' +\n  '    return res\\n' +\n  '\\n' +\n  'print(combine(4, 2))'\n"
+    },
+    {
+      "name": "permutation internal scans and failure description are correct",
+      "passed": false,
+      "error": "The input did not match the regular expression /scan.*n|n.*scan/i. Input:\n\n'Each complete permutation costs O(n) to copy into the results; there are n! of them. Per-node work is O(1) besides recursion.'\n"
+    },
+    {
+      "name": "stock retains constant space without a copied suffix",
+      "passed": false,
+      "error": "The input was expected to not match the regular expression /prices\\[1:\\]/. Input:\n\n'# Best profit buying once and selling later. State we carry forward:\\n' +\n  '# the lowest price seen so far, and the best profit achievable so far.\\n' +\n  'def max_profit(prices):\\n' +\n  '    min_price = prices[0]      # STATE 1: cheapest buy point up to now\\n' +\n  '    best = 0                   # STATE 2: best profit found so far\\n' +\n  '    for p in prices[1:]:\\n' +\n  '        best = max(best, p - min_price)   # transition: sell today?\\n' +\n  '        min_price = min(min_price, p)     # transition: update cheapest buy\\n' +\n  '    return best\\n' +\n  '\\n' +\n  'print(max_profit([7, 1, 5, 3, 6, 4]))   # buy at 1, sell at 6 -> 5'\n"
+    },
+    {
+      "name": "house robber uses an actual greedy counterexample",
+      "passed": false,
+      "error": "The input did not match the regular expression /4,\\s*5,\\s*4/. Input:\n\n'Greedy (always rob the richest available non-adjacent house) vs DP for [2,7,9,3,1] — which is correct, and what does each give?'\n"
+    },
+    {
+      "name": "N Queens includes scan overhead and correct diagonal direction",
+      "passed": false,
+      "error": "Expected values to be strictly equal:\n\n'O(N!)' !== 'O(N*N!)'\n"
+    },
+    {
+      "name": "DP state storage and enumeration are distinguished",
+      "passed": false,
+      "error": "The input did not match the regular expression /compression/. Input:\n\n'A DP\\'s **table shape** follows the number of independent quantities in its **state**. Fibonacci\\'s state is a single index, so it uses a **1D** table. When a subproblem is identified by **two** coordinates — a row and a column, or an item index and a remaining capacity — you need a **2D** table `dp[i][j]`. \"Unique paths\" is the archetype: count the ways to walk an m×n grid from the top-left to the bottom-right moving only **right or down**.\\n' +\n  '\\n' +\n  'The state is the cell `(i, j)`, and `dp[i][j]` = the number of distinct paths that reach it. There are only two ways into any interior cell: from **above** `(i-1, j)` or from the **left** `(i, j-1)`. So the transition is `dp[i][j] = dp[i-1][j] + dp[i][j-1]`. The **base cases** are the entire top row and left column, each all `1` (only one straight path along an edge). Filling row by row respects dependencies — both cells a transition needs are already computed — and the answer is the bottom-right cell. For a 3×3 grid there are **6** paths.\\n' +\n  '\\n' +\n  `This is **O(m·n)** time (fill every cell once) and **O(m·n)** space for the grid. A common optimization uses the same insight as Fibonacci's rolling variables: since each row depends only on the **previous row**, you can compress the 2D table to a **single 1D row** updated in place, cutting space to **O(n)**. Recognizing when a problem needs a second dimension — \"does my subproblem depend on two changing quantities?\" — is the core modeling skill; get the **state definition** right and the transition usually follows.`\n"
+    },
+    {
+      "name": "sample dp-base-cases",
+      "passed": true
+    },
+    {
+      "name": "sample dp-recursive-calls",
+      "passed": true
+    },
+    {
+      "name": "sample dp-backtracking",
+      "passed": true
+    },
+    {
+      "name": "sample dp-subsets",
+      "passed": true
+    },
+    {
+      "name": "sample dp-permutations",
+      "passed": true
+    },
+    {
+      "name": "sample dp-combinations",
+      "passed": true
+    },
+    {
+      "name": "sample dp-memoization",
+      "passed": true
+    },
+    {
+      "name": "sample dp-tabulation",
+      "passed": true
+    },
+    {
+      "name": "sample dp-1d-2d",
+      "passed": true
+    },
+    {
+      "name": "sample dp-knapsack",
+      "passed": true
+    },
+    {
+      "name": "sample dp-subsequences",
+      "passed": true
+    },
+    {
+      "name": "sample dp-state-transitions",
+      "passed": true
+    },
+    {
+      "name": "sample dp-climbing-stairs",
+      "passed": true
+    },
+    {
+      "name": "sample dp-house-robber",
+      "passed": true
+    },
+    {
+      "name": "sample dp-grid-paths",
+      "passed": true
+    },
+    {
+      "name": "sample dp-coin-change",
+      "passed": true
+    },
+    {
+      "name": "sample dp-lis",
+      "passed": true
+    },
+    {
+      "name": "sample dp-lcs",
+      "passed": true
+    },
+    {
+      "name": "sample dp-divide-and-conquer",
+      "passed": true
+    },
+    {
+      "name": "sample dp-n-queens",
+      "passed": true
+    },
+    {
+      "name": "sample backtracking",
+      "passed": true
+    },
+    {
+      "name": "sample dynamic-programming",
+      "passed": true
+    },
+    {
+      "name": "sample knapsack",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-base-cases:dpbc-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-base-cases:dpbc-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-recursive-calls:dprc-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-backtracking:dpbt-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-backtracking:dpbt-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-subsets:dpss-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-subsets:dpss-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-permutations:dpperm-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-permutations:dpperm-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-combinations:dpcomb-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-memoization:dpmemo-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-tabulation:dptab-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-1d-2d:dp12-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-knapsack:dpks-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-subsequences:dpsub-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-state-transitions:dpst-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-climbing-stairs:dpcs-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-house-robber:dphr-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-grid-paths:dpgp-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-grid-paths:dpgp-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-coin-change:dpcc-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-lis:dplis-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-lis:dplis-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-lcs:dplcs-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-divide-and-conquer:dpdc-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-n-queens:dpnq-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-n-queens:dpnq-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise backtracking:pat-bt-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dynamic-programming:pat-dp-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise knapsack:pat-ks-fix-1",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-base-cases",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-recursive-calls",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-backtracking",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-subsets",
+      "passed": true
+    },
+    {
+      "name": "boundary backtracking",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-permutations",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-combinations",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-memoization",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-tabulation",
+      "passed": true
+    },
+    {
+      "name": "boundary dynamic-programming",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-memoization",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-1d-2d",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-knapsack",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-subsequences",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-state-transitions",
+      "passed": false,
+      "error": "{\"type\":\"IndexError\",\"message\":\"list index out of range\",\"line\":4}\n+ actual - expected\n\n+ 'error'\n- 'completed'\n"
+    },
+    {
+      "name": "boundary dp-climbing-stairs",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-house-robber",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-grid-paths",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-coin-change",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-lis",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-lcs",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-divide-and-conquer",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-n-queens",
+      "passed": true
+    },
+    {
+      "name": "boundary knapsack",
+      "passed": true
+    }
+  ],
+  "passed": 76,
+  "total": 88
+}

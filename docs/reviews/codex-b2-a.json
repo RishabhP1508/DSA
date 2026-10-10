@@ -1,0 +1,175 @@
+[
+  {
+    "kind": "lesson",
+    "id": "array-traversal",
+    "hash": "e074694311042558",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Accumulation, empty sum, and value iteration agree; coding hints corrected to return the tested result instead of printing it."
+  },
+  {
+    "kind": "lesson",
+    "id": "two-pointers",
+    "hash": "62f086c53ee27b63",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Sortedness and movement conditions explicit; a middle self-swap does not undo reversal. Operation-only auxiliary-space scope excludes input construction/output."
+  },
+  {
+    "kind": "lesson",
+    "id": "prefix-sums",
+    "hash": "8d39720d4e7efcbc",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Exclusive prefix endpoints and query assumptions checked; exact working USACO reference replaces missing page. Prefix storage is O(n)."
+  },
+  {
+    "kind": "lesson",
+    "id": "sliding-window",
+    "hash": "617190ca5146555d",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Fixed width works with negative values. O(k) initialization, O(n-k) updates, and valid prefix-sum alternative taught; guards reject invalid widths. Follow-up: explicitly authored range endpoints and observed totals now render from immutable snapshots; seven rendered tests include two real fixed-window states and a real string state.",
+    "previousReviewedHash": "73ebd14aa95560ce"
+  },
+  {
+    "kind": "lesson",
+    "id": "kadane",
+    "hash": "a233d916247460a7",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Nonempty maximum-subarray recurrence checked against exhaustive signed-array oracle. Model uses indexed traversal, avoiding a hidden O(n) slice."
+  },
+  {
+    "kind": "lesson",
+    "id": "in-place-modification",
+    "hash": "ffc709f8e3ce96fb",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Read-before-write and write<=read invariant checked. The displayed equal-index assignment is safe, so the old question premise was corrected."
+  },
+  {
+    "kind": "lesson",
+    "id": "matrix-traversal",
+    "hash": "a18bdb8bfddf195f",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Rectangular traversal and row-major indexing checked; arbitrary empty/jagged rows require O(R+N), not unqualified O(R*C). Model hints return the result."
+  },
+  {
+    "kind": "lesson",
+    "id": "intervals",
+    "hash": "a1204be518ade3e7",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Closed overlap requires max(starts)<=min(ends). Empty-safe merging, touching/nested/zero-width cases checked. Adaptive sort best case distinguished from worst case."
+  },
+  {
+    "kind": "lesson",
+    "id": "string-frequency",
+    "hash": "6378ad9293f6eb22",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Expected hashing costs distinguished from collision worst case; empty and repeated-character counting checked. Function hints return dictionary."
+  },
+  {
+    "kind": "lesson",
+    "id": "string-two-pointers",
+    "hash": "2940595d02fe2042",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Palindrome end comparison, empty/singleton behavior, and exact character/case assumptions checked; no inferred normalization."
+  },
+  {
+    "kind": "lesson",
+    "id": "string-sliding-window",
+    "hash": "d901d2ce508ce111",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Last-seen left boundary never moves backward. Exhaustive binary-string oracle checks repeats and empty input. Hash assumptions stated. Follow-up: explicitly authored range endpoints and observed totals now render from immutable snapshots; seven rendered tests include two real fixed-window states and a real string state.",
+    "previousReviewedHash": "7171e5e78b2bfe19"
+  },
+  {
+    "kind": "lesson",
+    "id": "string-parsing",
+    "hash": "5363bf6fc5194bf7",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Integer conversion already accepts surrounding whitespace; split/strip effects and malformed/empty preconditions checked. Max parser returns a value."
+  },
+  {
+    "kind": "lesson",
+    "id": "palindromes",
+    "hash": "8395ca2ac78c8bfd",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Exact comparisons and empty case checked; longest-substring adaptation handles both odd and even centers. No false monotone-window optimization claimed."
+  },
+  {
+    "kind": "lesson",
+    "id": "anagrams",
+    "hash": "0eba2489bd20916a",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Sort copies need linear storage; adaptive best-case sort corrected. Frequency alternatives state alphabet/hash assumptions and normalization conditions."
+  },
+  {
+    "kind": "lesson",
+    "id": "substrings",
+    "hash": "f73d909defbe3956",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "There are quadratically many index pairs but materialized copying/storage is cubic. Cubic character-total formula derived; only suitable objectives admit window methods."
+  },
+  {
+    "kind": "lesson",
+    "id": "maps-sets",
+    "hash": "b144574b388e816f",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Hashability is not synonymous with immutability. Tuple members must be hashable; default mutable objects can be identity-hashable. Operation scope and ordering qualified."
+  },
+  {
+    "kind": "lesson",
+    "id": "hashing-frequency",
+    "hash": "d30d59dea192c2ea",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Sorted display adds k log k to expected counting cost. Counter tie order and empty most-common behavior checked; observed output preserved."
+  },
+  {
+    "kind": "lesson",
+    "id": "duplicate-detection",
+    "hash": "d7b5e75d70d57aed",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Value is not an array index; false pointer removed and actual SVG tested against runtime traces. Constant-space sorting alternative explicitly uses iterative heapsort."
+  },
+  {
+    "kind": "lesson",
+    "id": "loops",
+    "hash": "a25a71184fd4c0a1",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Re-read complete previously human-approved content after correcting count_evens pseudocode to return its result. Prior human sign-off is archived below; this revised hash receives a delegated review."
+  }
+]

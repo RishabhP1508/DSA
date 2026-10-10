@@ -1,5 +1,10 @@
 # R9 — Verification
 
+> **Historical Kiro verification.** Results below remain attributed to their
+> original commits. Current Windows Chrome/Edge, runner isolation, subject-review
+> and delivery verification is recorded in `docs/completion.md`; these older
+> counts and skipped-gate results are not the current acceptance report.
+
 **Re-confirmed on canonical `main`** = `30533a22bfa90a429a1c97fae4c17ae23c403af2`
 (R6 #18, R7 #19, R8 #20, R9 #21 all merged). The original audit was assembled
 pre-merge on `repair/r9-verification-handoff`; this revision re-ran the suites and

@@ -41,7 +41,7 @@ The other common form is the **fast/slow** or **same-direction** two pointers (e
     operations: "Initialise two indices; move them under a condition until they meet or cross.",
     uses: "Reversing, palindrome checks, pair-sum on sorted arrays, merging, in-place compaction.",
     tradeoffs: "Very cheap in time and space, but the converging form usually needs sorted or symmetric structure to be correct.",
-    commonMistakes: "Wrong loop condition (lo <= hi swaps the middle element back); forgetting to move a pointer (infinite loop); assuming it works on unsorted data for pair-sum.",
+    commonMistakes: "For reversal, lo <= hi makes one unnecessary self-swap on an odd-length array; it does not undo the reversal. Forgetting to move a pointer can cause an infinite loop. Pair-sum elimination needs sorted data, unlike reversal.",
     edgeCases: "Empty or single-element array: the loop does not run, which is correct (already reversed).",
   },
 
@@ -50,7 +50,7 @@ The other common form is the **fast/slow** or **same-direction** two pointers (e
   ],
 
   complexityExplanation: {
-    scope: "program",
+    scope: "operation",
     variables: [{ symbol: "n", meaning: "the number of elements in arr" }],
     costModel: "Each swap and each pointer move is O(1). One list index write is O(1).",
     time: {
@@ -62,7 +62,7 @@ The other common form is the **fast/slow** or **same-direction** two pointers (e
       bound: "O(1)",
       case: "worst",
       explanation: "Only two index variables (lo, hi) are used; the swap reuses the array itself. No storage grows with n — the reversal is in place.",
-      inputOutputNote: "The array is modified in place; it is the input, not extra space.",
+      inputOutputNote: "This bound covers the in-place algorithm, excluding creating the input and printing it. Python print may build a temporary text representation proportional to the array. The array is modified in place; it is the input, not extra space.",
     },
     derivation: [
       { lines: [5], description: "The loop runs about n/2 times as the pointers converge.", cost: "O(n)", dimension: "time" },
@@ -82,7 +82,7 @@ The other common form is the **fast/slow** or **same-direction** two pointers (e
     { line: 2, executable: true, explanation: "Create arr = [1, 2, 3, 4, 5]." },
     { line: 3, executable: true, explanation: "lo starts at the first index, 0." },
     { line: 4, executable: true, explanation: "hi starts at the last index, len(arr)-1 = 4." },
-    { line: 5, executable: true, explanation: "Loop while lo is strictly left of hi. Using < (not <=) avoids re-swapping the middle." },
+    { line: 5, executable: true, explanation: "Loop while lo is strictly left of hi. Using < avoids an unnecessary middle-element self-swap on an odd-length array." },
     { line: 6, executable: false, explanation: "Comment describing the swap-and-step." },
     { line: 7, executable: true, explanation: "Swap the elements at lo and hi in one statement." },
     { line: 8, executable: true, explanation: "Move lo one step right." },
@@ -152,13 +152,16 @@ The other common form is the **fast/slow** or **same-direction** two pointers (e
       verifiedClaims: ["Two pointers is a distinct pattern applied to sorted arrays / palindromes / pair sums"],
       accessDate: "2026-09-20",
     },
+
+    {"url":"https://docs.python.org/3.14/reference/simple_stmts.html#assignment-statements","title":"Python 3.14 — Assignment statements","section":"Assignment statements","verifiedClaims":["The right-hand-side expression is evaluated before assignment; assigning a swapped pair to the same list index preserves that element."],"topic":"two-pointers","purpose":"Delegated Codex review: reconcile learner-facing explanations with the demonstrated implementation.","accessDate":"2026-10-10"},
+    {"url":"https://usaco.guide/silver/two-pointers?lang=py","title":"USACO Guide — Two Pointers","section":"Two Pointers; Sum of Two Values","verifiedClaims":["Converging pointers and same-direction pointers are different forms; eliminating pair-sum candidates relies on sorted order."],"topic":"two-pointers","purpose":"Delegated Codex review: reconcile learner-facing explanations with the demonstrated implementation.","accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "7f8a0a3f14315a75",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "62f086c53ee27b63",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 2,
   },
 };
