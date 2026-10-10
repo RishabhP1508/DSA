@@ -1,0 +1,73 @@
+{
+  "date": "2026-10-10",
+  "reviewer": "/root/review_sequences_heaps",
+  "reviewMode": "User-authorized delegated Codex semantic review, not human review",
+  "runtime": "Pyodide 314.0.7 / CPython 3.14.2",
+  "lessons": [
+    "linked-list-traversal",
+    "linked-list-slow-fast",
+    "linked-list-cycle-detection",
+    "linked-list-reversal",
+    "linked-list-middle",
+    "linked-list-dummy-nodes",
+    "linked-list-merging",
+    "linked-list-pointer-manipulation",
+    "linked-list-variants",
+    "linked-list-deques",
+    "stack-queue-operations",
+    "monotonic-stack",
+    "parentheses-matching",
+    "expression-evaluation",
+    "bfs-queues",
+    "min-max-tracking",
+    "min-max-heaps",
+    "heap-sift",
+    "top-k",
+    "kth-largest",
+    "running-median",
+    "two-heap-pattern",
+    "merge-sorted-data"
+  ],
+  "patterns": [
+    "fast-slow-pointers",
+    "in-place-linkedlist-reversal",
+    "top-k-heap",
+    "two-heaps",
+    "k-way-merge",
+    "monotonic-stack"
+  ],
+  "packets": [
+    {
+      "path": "docs/reviews/codex-b4-a-linear-stacks.md",
+      "items": 15
+    },
+    {
+      "path": "docs/reviews/codex-b4-b-heaps-patterns.md",
+      "items": 14
+    }
+  ],
+  "liveSharedOverrideEntries": 36,
+  "liveOverridesEqualPatch": true,
+  "focusedRuntime": {
+    "checks": 118,
+    "failures": []
+  },
+  "renderRegression": {
+    "file": "src/visualizers/codex-b4-linear-heap.real.test.tsx",
+    "passed": 4
+  },
+  "sourceVisualsInspected": [
+    "Stanford prepend step2 retained next reference",
+    "Stanford doubly links and null endpoints",
+    "ODS Figure10.1 zero-based heap tree/array",
+    "Official Largest Rectangle in Histogram area10"
+  ],
+  "limits": [
+    "No full browser app playback/worker check in subagent; root integrates",
+    "HKOI PDF text read but browser visual blank; official diagram used",
+    "Evidence and coverage flags unchanged by subagent"
+  ],
+  "unresolvedFactualQuestions": [],
+  "frozenAfterFinalChecks": true,
+  "resolvedScopeQuestion": "Root confirmed IPO is an existing two-heap worked adaptation, not a separate required Notion topic."
+}

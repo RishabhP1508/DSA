@@ -152,7 +152,7 @@ Row/column pointers in the visualization highlight the current cell so you can s
     {"url":"https://docs.python.org/3.14/tutorial/controlflow.html#defining-functions","title":"Python defining functions","section":"Return statements","topic":"matrix-traversal","purpose":"Check the specific delegated-review correction against the source.","verifiedClaims":["Returning a value supplies it to the caller; printing writes output and does not replace return."],"accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "a18bdb8bfddf195f",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

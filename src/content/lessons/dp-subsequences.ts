@@ -7,17 +7,20 @@
 
 import type { LessonDefinition } from "../../core/types";
 
-const code = `# A SUBSEQUENCE keeps the original order but may skip elements
-# (it need NOT be contiguous, unlike a substring).
+const code = `# A subsequence preserves order while allowing skipped characters.
 def is_subsequence(s, t):
-    i = 0                       # pointer into s (the candidate subsequence)
-    for ch in t:                # scan t left to right
-        if i < len(s) and s[i] == ch:
-            i += 1              # matched s[i]; advance to the next needed char
-    return i == len(s)          # matched all of s in order?
+    if not s:
+        return True
+    i = 0
+    for j, ch in enumerate(t):
+        if s[i] == ch:
+            i += 1
+            if i == len(s):
+                return True
+    return False
 
-print(is_subsequence("ace", "abcde"))   # a..c..e appears in order -> True
-print(is_subsequence("aec", "abcde"))   # 'c' comes before 'e' in t -> False`;
+print(is_subsequence("ace", "abcde"))
+print(is_subsequence("aec", "abcde"))`;
 
 export const dpSubsequences: LessonDefinition = {
   id: "dp-subsequences",
@@ -40,91 +43,209 @@ Why is this in a DP unit? Because subsequence *structure* is the backbone of maj
   ],
 
   concepts: {
-    purpose:
-      "Define subsequences (vs substrings) and test membership in linear time — the foundation for LCS/LIS DP.",
-    operations:
-      "Scan t once with a pointer into s; advance on each match; success if the whole of s is consumed in order.",
-    uses:
-      "Subsequence membership, streaming/matching filters, and as the structural basis for LCS, LIS, and edit-distance DP.",
-    tradeoffs:
-      "Membership is a trivial O(|t|) greedy scan; only optimization over subsequences (longest/count/best) needs DP.",
-    commonMistakes:
-      "Confusing subsequence with substring (requiring contiguity); forgetting the i < len(s) guard (index error); resetting i on a mismatch (only advance on a match).",
-    edgeCases:
-      "Empty s is a subsequence of anything (returns True immediately). s longer than t can never match. Repeated characters are handled by the single forward pointer.",
-  },
+  "purpose": "Define subsequences (vs substrings) and test membership in linear time — the foundation for LCS/LIS DP.",
+  "operations": "Scan t once with a pointer into s; advance on each match; success if the whole of s is consumed in order.",
+  "uses": "Subsequence membership, streaming/matching filters, and as the structural basis for LCS, LIS, and edit-distance DP.",
+  "tradeoffs": "Earliest-match membership uses linear scanning and constant scalar storage. Optimizing or counting subsequences needs a separate algorithm; DP tables are one option, not universally necessary.",
+  "commonMistakes": "Confusing subsequence with substring; failing to stop after matching all of s and then indexing past its end; resetting the candidate index on a mismatch.",
+  "edgeCases": "Empty s returns True without scanning t. Nonempty s with empty t returns False. Repeated characters need separate ordered matches. Inputs are strings."
+},
 
   complexity: [
     { operation: "is-subsequence (two-pointer)", best: "O(1)", average: "O(|t|)", worst: "O(|t|)", space: "O(1)", note: "Best: s empty. One scan of t; two indices only." },
   ],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [
-      { symbol: "n", meaning: "the length of t (the text being scanned)" },
-      { symbol: "m", meaning: "the length of s (the candidate subsequence)" },
-    ],
-    costModel:
-      "Each character of t is examined once with O(1) work (a comparison and maybe a pointer bump).",
-    time: {
-      bound: "O(n)",
-      case: "worst",
-      explanation:
-        "The loop runs once per character of t, doing constant work each time. It never revisits characters, so the total time is proportional to |t| = n. (Best case O(1) when s is empty and we return immediately.)",
-      otherCases: [
-        { case: "best", bound: "O(1)", note: "Empty s: i already equals len(s), so it's a subsequence trivially." },
-      ],
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the length of t (the text being scanned)"
     },
-    space: {
-      bound: "O(1)",
-      case: "worst",
-      explanation:
-        "Only the pointer i and the loop variable are kept, regardless of string lengths. No table or extra structure is allocated.",
-      inputOutputNote: "The strings s and t are inputs; the boolean result is O(1).",
-    },
-    derivation: [
-      { lines: [4], description: "Initialise the pointer into s — O(1).", cost: "O(1)", dimension: "time" },
-      { lines: [5, 6, 7], description: "Scan every character of t once, advancing i on matches.", cost: "O(n)", dimension: "time" },
-      { lines: [4], description: "A single index variable — no growth with input size.", cost: "O(1)", dimension: "space" },
-    ],
-    assumptions: [
-      "Greedy earliest-match is safe: matching s[i] as early as possible in t never blocks a later match.",
-      "Character comparison is O(1).",
-      "We scan t left to right exactly once.",
-    ],
-    tradeoffs:
-      "Membership needs no DP — the O(|t|) scan settles it in constant space. Optimizing over subsequences (longest common/increasing, counting distinct) is where DP tables (O(n·m) or O(n²)) become necessary.",
-    counters: [
-      { label: "characters scanned", definition: "executions of the loop body (line 6)", countLines: [6] },
-      { label: "matches advanced", definition: "executions of the pointer-advance line (line 7)", countLines: [7] },
-    ],
-    fixedDataNote:
-      "The two calls scan 'abcde' (length 5) each and return True then False. The O(n) bound describes how the scan scales with |t|.",
+    {
+      "symbol": "m",
+      "meaning": "the length of s (the candidate subsequence)"
+    }
+  ],
+  "costModel": "Each character of t is examined once with O(1) work (a comparison and maybe a pointer bump).",
+  "time": {
+    "bound": "O(n+1)",
+    "case": "worst",
+    "explanation": "Each examined t character takes constant work, and no character is revisited. At most n are examined: O(n+1), or O(n) for growing positive lengths. Empty s returns immediately in O(1); a candidate completed early stops the scan.",
+    "otherCases": [
+      {
+        "case": "best",
+        "bound": "O(1)",
+        "note": "Empty s: i already equals len(s), so it's a subsequence trivially."
+      }
+    ]
   },
+  "space": {
+    "bound": "O(1)",
+    "case": "worst",
+    "explanation": "Only candidate index i, text index j, and the current character are retained. enumerate does not copy the text.",
+    "inputOutputNote": "The strings s and t are inputs; the boolean result is O(1)."
+  },
+  "derivation": [
+    {
+      "lines": [
+        3,
+        4,
+        5
+      ],
+      "description": "Handle empty candidate and initialize i.",
+      "cost": "O(1)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "description": "Examine at most n text characters, stopping once all are matched.",
+      "cost": "O(n+1)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        5,
+        6
+      ],
+      "description": "Constant number of scalar positions and current character.",
+      "cost": "O(1)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Greedy earliest-match is safe: matching s[i] as early as possible in t never blocks a later match.",
+    "Character comparison is O(1).",
+    "We scan t left to right exactly once.",
+    "Inputs meet the stated type/domain contract. Scalar arithmetic, comparisons and array indexing use a unit-cost model; Python arbitrary-precision bit costs are not included.",
+    "Best/average/worst table entries are asymptotic upper bounds for the specified variant; no input probability distribution or tight average-time claim is assumed unless stated."
+  ],
+  "tradeoffs": "Subsequence membership has a greedy earliest-match proof and needs no table. Optimization/counting variants need their own state and correctness proof; quadratic LIS DP is one option, and faster LIS algorithms also exist.",
+  "counters": [
+    {
+      "label": "characters examined",
+      "definition": "Entries to the match test, before it executes. Recorded line entries at 7 occur before the operation completes.",
+      "countLines": [
+        7
+      ]
+    },
+    {
+      "label": "matches advanced",
+      "definition": "Entries to the candidate-index increment. Recorded line entries at 8 occur before the operation completes.",
+      "countLines": [
+        8
+      ]
+    }
+  ],
+  "fixedDataNote": "The two calls scan 'abcde' (length 5) each and return True then False. The O(n) bound describes how the scan scales with |t|. Function analysis excludes demonstration input literals, imports, printing and tracer storage. A line event shows the next operation before it completes."
+},
 
   code,
 
   codeExplanations: [
-    { line: 1, executable: false, explanation: "Comment: subsequence keeps order, allows skips." },
-    { line: 2, executable: false, explanation: "Comment: contrast with contiguous substring." },
-    { line: 3, executable: true, explanation: "Define is_subsequence(s, t)." },
-    { line: 4, executable: true, explanation: "Pointer i marks the next character of s we still need." },
-    { line: 5, executable: true, explanation: "Scan t from left to right." },
-    { line: 6, executable: true, explanation: "If we still need characters and the current one matches s[i]..." },
-    { line: 7, executable: true, explanation: "...advance i to require the next character of s." },
-    { line: 8, executable: true, explanation: "s is a subsequence exactly when all of it was matched in order." },
-    { line: 9, executable: false, explanation: "Blank line." },
-    { line: 10, executable: true, explanation: "'ace' occurs in order within 'abcde' -> True." },
-    { line: 11, executable: true, explanation: "'aec' fails because 'c' precedes 'e' in 'abcde' -> False." },
-  ],
+  {
+    "line": 1,
+    "executable": false,
+    "explanation": "Comment: a subsequence preserves the original order."
+  },
+  {
+    "line": 2,
+    "executable": true,
+    "explanation": "Define the membership test for two strings."
+  },
+  {
+    "line": 3,
+    "executable": true,
+    "explanation": "Check the empty candidate before scanning t."
+  },
+  {
+    "line": 4,
+    "executable": true,
+    "explanation": "Every string contains the empty subsequence."
+  },
+  {
+    "line": 5,
+    "executable": true,
+    "explanation": "i is the next unmatched index in s."
+  },
+  {
+    "line": 6,
+    "executable": true,
+    "explanation": "Visit each character of t with its actual text index j."
+  },
+  {
+    "line": 7,
+    "executable": true,
+    "explanation": "Test whether this character matches the next needed s character."
+  },
+  {
+    "line": 8,
+    "executable": true,
+    "explanation": "Advance the candidate index after a match."
+  },
+  {
+    "line": 9,
+    "executable": true,
+    "explanation": "Test whether the match completed the candidate."
+  },
+  {
+    "line": 10,
+    "executable": true,
+    "explanation": "Return immediately once all candidate characters are matched."
+  },
+  {
+    "line": 11,
+    "executable": true,
+    "explanation": "The scan ended before all matches: return False."
+  },
+  {
+    "line": 12,
+    "executable": false,
+    "explanation": "Blank line."
+  },
+  {
+    "line": 13,
+    "executable": true,
+    "explanation": "Print True for ace in abcde."
+  },
+  {
+    "line": 14,
+    "executable": true,
+    "explanation": "Print False for aec in abcde."
+  }
+],
 
   bindings: [
-    {
-      variable: "t",
-      model: "string",
-      overlays: [{ role: "pointer", label: "i (into s)", source: "i" }],
-    },
-  ],
+  {
+    "variable": "s",
+    "model": "string",
+    "overlays": [
+      {
+        "role": "pointer",
+        "label": "i (next candidate)",
+        "source": "i"
+      }
+    ]
+  },
+  {
+    "variable": "t",
+    "model": "string",
+    "overlays": [
+      {
+        "role": "pointer",
+        "label": "j (text index)",
+        "source": "j"
+      }
+    ]
+  }
+],
 
   prediction: [
     {
@@ -180,41 +301,58 @@ Why is this in a DP unit? Because subsequence *structure* is the backbone of maj
     },
   ],
 
-  review: `A **subsequence** deletes elements **without reordering** and may be **non-contiguous** — unlike a **substring**, which is contiguous. Membership is a greedy **two-pointer** scan of t (advance into s on each match): **O(|t|)** time, **O(1)** space, safe because earliest matches never hurt. Subsequence structure underpins the DP lessons that follow (**LCS**, **LIS**, edit distance), where *optimizing* over subsequences needs tables. The example returns **True** for 'ace' and **False** for 'aec'.`,
+  review: "Subsequence deletion preserves order and permits gaps; a substring is contiguous. The greedy scan matches each needed character as early as possible, leaving the largest remaining text suffix for later matches. Empty s returns immediately; completion returns early. The candidate diagram uses i into s and the text diagram uses j into t. At most |t| characters are examined, with constant scalar storage.",
 
   expectedOutput: "True\nFalse\n",
 
   references: [
-    {
-      url: "https://leetcode.com/problems/is-subsequence/editorial/",
-      title: "Is Subsequence — LeetCode editorial",
-      section: "Two-pointer greedy scan",
-      topic: "dp/subsequences",
-      purpose: "Confirm the greedy two-pointer subsequence check runs in O(|t|) time and O(1) space, and its correctness.",
-      verifiedClaims: [
-        "Advancing a pointer into s on each match while scanning t decides subsequence membership in O(|t|).",
-        "Greedy earliest matching is correct for subsequence membership.",
-      ],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://en.wikipedia.org/wiki/Subsequence",
-      title: "Subsequence — Wikipedia",
-      section: "Definition; contrast with substring",
-      topic: "dp/subsequences",
-      purpose: "Cross-check the definition of a subsequence (order-preserving, not necessarily contiguous) versus a substring.",
-      verifiedClaims: [
-        "A subsequence preserves order and may omit elements; it need not be contiguous, unlike a substring.",
-      ],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://docs.python.org/3.14/library/stdtypes.html#numeric-types-int-float-complex",
+    "title": "Python 3.14 numeric types",
+    "section": "Numeric Types — int, float, complex",
+    "topic": "dp-recursion",
+    "purpose": "Verify the named claim and the convention used by this example.",
+    "verifiedClaims": [
+      "Python integers have unlimited precision; a fixed number of integer variables is not fixed byte storage."
+    ],
+    "conventions": [
+      "Complexity below counts scalar/cell operations; large-integer bit costs and output formatting are separate."
+    ],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://leetcode.com/problems/is-subsequence/description/",
+    "title": "LeetCode: Is Subsequence",
+    "section": "Problem definition, examples and constraints",
+    "topic": "dp-recursion",
+    "purpose": "Verify the named claim and the convention used by this example.",
+    "verifiedClaims": [
+      "A subsequence permits deletion without changing remaining order; empty strings are permitted."
+    ],
+    "conventions": [],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/28461a74f81101874a13d9679a40584d_MIT6_006S20_lec16.pdf",
+    "title": "MIT 6.006 lecture 16",
+    "section": "LIS and LCS state definitions",
+    "topic": "dp-recursion",
+    "purpose": "Verify the named claim and the convention used by this example.",
+    "verifiedClaims": [
+      "Subsequence optimization differs from checking one prescribed candidate."
+    ],
+    "conventions": [
+      "Membership uses greedy earliest matches; LIS/LCS need separate recurrences."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "da4d824566e64bab",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "a9d93f887df378a0",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 6,
   },
 };

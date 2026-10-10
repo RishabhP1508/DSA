@@ -1,0 +1,175 @@
+{
+  "reviewedAt": "2026-10-10",
+  "hashes": [
+    {
+      "kind": "lesson",
+      "id": "dp-base-cases",
+      "hash": "fd283b474bd68708"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-recursive-calls",
+      "hash": "cd3b176761578562"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-backtracking",
+      "hash": "73e310b733d34fff"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-subsets",
+      "hash": "c0d4723aa0315815"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-permutations",
+      "hash": "ecc9a873462f66b2"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-combinations",
+      "hash": "f00d2ca1a2ef2bc9"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-memoization",
+      "hash": "b1957733e9da47dd"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-tabulation",
+      "hash": "be88413378e189b9"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-1d-2d",
+      "hash": "65752bd6f13b687a"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-knapsack",
+      "hash": "92f80a92b6ddc9fe"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-subsequences",
+      "hash": "a9d93f887df378a0"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-state-transitions",
+      "hash": "52e41c4f20588a12"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-climbing-stairs",
+      "hash": "3bbd3beb135c5b15"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-house-robber",
+      "hash": "5dfc8f2248546969"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-grid-paths",
+      "hash": "4cd4e3652f3802d6"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-coin-change",
+      "hash": "d0c4ce9fe7fa8ca2"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-lis",
+      "hash": "44cd16b63e5d0caa"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-lcs",
+      "hash": "5fd89eac17d69daf"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-divide-and-conquer",
+      "hash": "5805ae7a93140f75"
+    },
+    {
+      "kind": "lesson",
+      "id": "dp-n-queens",
+      "hash": "c043d5ebfcb009f3"
+    },
+    {
+      "kind": "pattern",
+      "id": "backtracking",
+      "hash": "e982169a31af8808"
+    },
+    {
+      "kind": "pattern",
+      "id": "dynamic-programming",
+      "hash": "a804cf5eb195c8e5"
+    },
+    {
+      "kind": "pattern",
+      "id": "knapsack",
+      "hash": "7104d0599a0d5e38"
+    }
+  ],
+  "changedContentPaths": [
+    "src/content/lessons/dp-base-cases.ts",
+    "src/content/lessons/dp-recursive-calls.ts",
+    "src/content/lessons/dp-backtracking.ts",
+    "src/content/lessons/dp-subsets.ts",
+    "src/content/lessons/dp-permutations.ts",
+    "src/content/lessons/dp-combinations.ts",
+    "src/content/lessons/dp-memoization.ts",
+    "src/content/lessons/dp-tabulation.ts",
+    "src/content/lessons/dp-1d-2d.ts",
+    "src/content/lessons/dp-knapsack.ts",
+    "src/content/lessons/dp-subsequences.ts",
+    "src/content/lessons/dp-state-transitions.ts",
+    "src/content/lessons/dp-climbing-stairs.ts",
+    "src/content/lessons/dp-house-robber.ts",
+    "src/content/lessons/dp-grid-paths.ts",
+    "src/content/lessons/dp-coin-change.ts",
+    "src/content/lessons/dp-lis.ts",
+    "src/content/lessons/dp-lcs.ts",
+    "src/content/lessons/dp-divide-and-conquer.ts",
+    "src/content/lessons/dp-n-queens.ts",
+    "src/content/patterns/backtracking.ts",
+    "src/content/patterns/dynamic-programming.ts",
+    "src/content/patterns/knapsack.ts"
+  ],
+  "newFocusedTests": [
+    "docs/reviews/codex-b6-review.test.mjs",
+    "src/visualizers/codex-b6-dp-recursion.real.test.tsx"
+  ],
+  "packets": [
+    "docs/reviews/codex-b6-lessons.json",
+    "docs/reviews/codex-b6-patterns.json"
+  ],
+  "referenceAppendix": "docs/reviews/codex-b6-reference-appendix.md",
+  "python": {
+    "passed": 99,
+    "total": 99,
+    "runtime": "bundled Pyodide 314.0.7 / CPython 3.14.2"
+  },
+  "traceAndSSR": {
+    "passed": 10,
+    "total": 10,
+    "success": true
+  },
+  "pendingSharedFields": [],
+  "centralWorkRemaining": [
+    "Mirror actual references",
+    "Regenerate current evidence",
+    "Record delegated assessment on current hashes after integration checks",
+    "Aggregate browser/build/package verification owned by parent"
+  ],
+  "limitations": [
+    "Node/Pyodide and React SVG SSR do not prove browser worker/UI integration.",
+    "No shared registry/ledger/coverage/evidence edits or commits by delegated reviewer."
+  ]
+}

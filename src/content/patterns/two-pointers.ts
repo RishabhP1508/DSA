@@ -336,7 +336,7 @@ export const twoPointersPattern: PatternDefinition = {
   }
 ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "85dd9c69c2621a85",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

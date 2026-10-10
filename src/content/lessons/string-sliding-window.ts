@@ -190,7 +190,7 @@ Crucially, \`start\` only ever moves **forward**, and \`i\` moves forward once p
     {"url":"https://usaco.guide/silver/two-pointers","title":"USACO Two Pointers","section":"Sliding Window","topic":"string-sliding-window","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Monotone pointers bound total movement linearly."],"accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "d901d2ce508ce111",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

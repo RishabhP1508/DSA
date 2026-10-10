@@ -1,0 +1,173 @@
+# Codex B5 review: trees, tries, graphs and ranges
+
+Reviewed 2026-10-10 by the delegated Codex agent. This is an AI technical/content assessment, not a claim of human signoff.
+
+All 28 owned lessons and 8 owned patterns were read as effective curriculum objects, including shared exercise overrides. The review covered learner prose, vocabulary, concepts, every displayed Python line/explanation, actual visual bindings, predictions, experiments, review, complexity summaries and derivations, every effective exercise model/hint/recognition rule, and exact reference records. Explicit per-item assessments are recorded in two 18-item JSON packets; their hashes were computed after shared exercise integration and final binding edits. Machine checks did not generate those assessments.
+
+Research used exact primary algorithm implementations, original problem contracts, university notes and Python 3.14 documentation. Most sources preceded substantial fixes; independent Princeton and Stanford implementation checks completed the final audit. Source records identify actual sections, claims, conventions and 2026-10-10 access dates. Python documentation currently describes 3.14.x; actual execution was in the shipped Pyodide 314.0.7 / CPython 3.14.2. No source diagram or implementation was copied wholesale.
+
+Several Princeton chapter web pages returned 403; accessible author-maintained raw algorithm source and MIT/ODS references replaced them. A Stanford PDF screenshot request failed to fetch, so no screenshot inspection is claimed for it. The Stanford CS97SI slides were read but not used to justify a general minimum BIT or its displayed full-tree variant.
+
+The source/visual comparisons used the Runestone right-rotation diagram (including transferred middle subtree), ODS Figure 12.4 (its labels are queue discovery order, not distance values), and the operated USFCA trie demo after inserting APP and APPLE (shared character path with both endpoints terminal). Rendering checks consume actual recorded Python objects and static React SVG output. They do not establish browser-worker/UI correctness; the parent performs browser validation.
+
+## Focused execution evidence
+
+- 36/36 sample outputs and per-line explanation coverage checks pass on actual effective fields without pending-patch overlays.
+- 36 coding models pass; 180 starter/empty/authored faulty submissions are rejected. 42 recognition structures validate and every authored accepted approach/reason pair grades accepted.
+- 7 traced boundary regressions pass. Test-first probes initially exposed word-search empty/reserved-marker failures, invalid segment update, disconnected/empty Prim behavior, partial topological order, accepted negative Dijkstra edge and missing Bellman–Ford detection. Fenwick update0 hit the event limit; the original harness mistakenly treated a missing error as success, so success was corrected to require completed status. Its final guarded regression passes. No fabricated red-run JSON is supplied.
+- 11 independent oracle groups pass: direct sums for sizes 0..9/all valid ranges/point changes; 64 undirected graphs with Boolean closure, cycle count and exhaustive spanning-forest subsets; 64 weighted DAGs/all 4 sources against exhaustive simple paths; direction/source/hop cases; 496 word-grid cases and restoration; construction/BST/traversal/height boundaries; trie/empty/Unicode paths; prefix count versus word sets; LCA self/missing-target contracts; AVL identities/middle subtree/heights; rank/halving invariants. These larger oracle groups run actual bundled Python directly without tracing to avoid event-limit bias.
+- 4 focused real-trace SVG tests pass: every binding across 36 items, visible trie paths/terminals, actual range array storage/overlays, and directed weighted adjacency with 4 vertices/5 edges/weight labels. The weighted adjacency regression initially failed and exposed a shared renderer defect; the parent repaired it using explicit adjacency formats and destination-only nodes.
+
+Results are in codex-b5-verification-results.json, codex-b5-boundary-results.json and codex-b5-oracle-results.json. Exact repeatable commands: node --experimental-strip-types --import ./scripts/lib/ts-register.mjs docs/reviews/codex-b5-verify.mjs; the analogous boundary/oracle scripts; and node node_modules/vitest/vitest.mjs run src/visualizers/codex-b5-trees-graphs.real.test.tsx. On this Windows host invoke the installed C:\Program Files\nodejs\node.exe.
+
+No full concurrent check:all or browser suite was run by this agent. Ledger, evidence, shared reference-document and coverage regeneration are reserved for the parent. The 27 shared exercise edits are already integrated; final effective fields match the patch file. No unresolved factual gap remains in this owned scope. General recursion/runtime limits and alternate algorithm contracts are stated in the lessons.
+
+## Individual assessments
+
+### lesson:tree-dfs
+
+Preorder visit position, None base case and proper finite-tree precondition checked against Runestone and ODS. The sample visits [5,3,2,4,8,7,9]. Height counts path nodes here; O(n) time and O(h) frames exclude the returned order. Recursive depth is explicitly limited by Python. Real traced root and result bindings render, and traversal/height boundary probes agree.
+
+### lesson:tree-bfs
+
+FIFO order and the fixed level-size exercise agree with actual deque execution. Corrected the queue description: pending nodes may mix two adjacent levels, but remain O(w), excluding returned values. A proper tree needs no visited set. Removed a duplicated queue binding and clarified right-side-view wording. Independent BFS references, actual sample and rendered root/queue/output checked.
+
+### lesson:tree-traversals
+
+Read all three displayed traversal bodies and per-line explanations. Visit placement yields preorder, inorder and postorder; inorder is nondecreasing under a valid duplicate policy and strictly increasing only for distinct keys. The three result lists are output, with O(h) recursive working frames. Corrected the consulted Runestone section to6.8; all sample outputs and empty/order probes pass.
+
+### lesson:bst-operations
+
+Insertion actually sends equal keys right; corrected the code comment and taught invariant to left<node<=right. Iterative search uses O(1) working space, recursive insertion O(h); plain sorted insertion can form a chain. Random distinct-key and balanced-tree logarithmic claims are qualified. Python dictionaries preserve insertion order without a sorted-key index. Duplicate/missing-key probes, effective hints and recognition alternatives checked.
+
+### lesson:tree-height-depth
+
+Resolved ODS edge-count height versus this function’s node-count convention: None0, leaf1, root depth0. Review and assumptions now state the convention explicitly. The postorder combine visits every node and uses O(h) recursive frames. Actual balanced, skewed and empty constructions/height probes agree with the stated results; real tree binding renders.
+
+### lesson:lowest-common-ancestor
+
+BST split/equality descent is correct when keys are unique and both targets exist; it does not verify membership. Self-ancestor and p==q cases were executed. A missing-target counterexample demonstrates why the precondition matters. Removed an unqualified logarithmic average claim and made the counter count actual comparisons. O(h) descent/O(1) working storage match the code and the general-tree exercise is separately scoped.
+
+### lesson:tree-construction
+
+Strictly increasing midpoint construction and the upper-middle convention were checked against the original problem and BST references. Sizes0..9 reconstruct ordered, balanced trees. Python slices copy references: displayed time O(n log(n+1)), peak live auxiliary slices O(n), excluding the result tree. Index-bound O(n) building is explicitly a different variant; traversal reconstruction need not be midpoint-balanced.
+
+### lesson:trie-insertion
+
+Verified terminal flags, duplicate words, empty word and Unicode character paths. Dictionary setdefault eagerly creates its default node even if an existing child wins; this adds constant per-character work. Per-operation expected O(L) and O(1) working storage are distinct from at most N+1 retained nodes. USFCA APP/APPLE visual was operated and inspected; binding now resolves t.root and shows actual shared nodes/terminals.
+
+### lesson:prefix-search
+
+Empty prefix is a root path, while count_prefix reports zero when no words are stored. Counting visits S subtree nodes in expected O(P+S), with O(S) pending stack; copied suggestion strings add K output characters. Corrected prediction, hint/model explanation and hash-set alternatives. Counts match an independent word-set oracle. The actual t.root binding and shared terminal paths render.
+
+### lesson:word-search
+
+Fixed empty word/board handling, rectangular validation and a # marker collision by using a unique object. Every normal DFS return restores the board, including successful paths. Independent immutable visited-set oracle covered496 A/# grid-word cases and verified restoration each time. Shape-validation cost O(m) is included before the exponential search; single-word search is distinguished from trie-guided dictionary search. Effective model, hints and new boundaries pass.
+
+### lesson:avl-rotations
+
+Reviewed right-rotation pointer order, transferred middle subtree and old-root-before-new-root height updates. Inspected the Runestone Figure 4 right-rotation diagram and cross-checked the MIT balance invariant. Oracle verifies node identity, inorder preservation and cached heights with and without a middle subtree. The supplied z and left child must exist; this is one rotation, not a complete AVL update. Removed universal AVL-versus-red-black speed claims.
+
+### lesson:graph-representations
+
+Directed/undirected conventions, isolated vertices, parallel entries and weighted zero/no-edge distinction checked. This program builds both matrix and adjacency representations, so total storage/time includes V² and supplied E; matrix initialization alone does not erase the edge scan. Corrected the social-network degree sum to2E. Actual graph and matrix bindings render from recorded objects.
+
+### lesson:adjacency-lists
+
+The example is a directed weighted source-key defaultdict, with5 supplied edges and destination-only sink3. Missing-key lookup can add an empty list; isolated vertices cannot be inferred. Set explicit weighted-pairs binding format and directed arrows. Real trace rendering now includes4 vertices,5 edges and weight labels after the parent’s shared renderer fix. O(E) build and degree scans are distinguished from complete V+E representations.
+
+### lesson:graph-bfs
+
+Read the mark-on-enqueue implementation and effective exercises. Only the source-reachable subgraph is traversed; closed adjacency and expected set lookup are stated. Each reached vertex queues once, each adjacency entry scans once, undirected edges contribute two entries. Output order is excluded from O(V) seen/queue working storage. Directed/disconnected boundary probes and actual visited overlays pass.
+
+### lesson:graph-dfs
+
+Actual recursive order is [0,1,3,2], marking seen before descent. Correctness does not imply shortest distances. Recursive frames/seen use O(V), excluding input and returned order; the mark-on-pop iterative exercise may retain O(E) duplicate pending entries. Explained the mark-on-push alternative and recursion limit. Directed/disconnected probes, sample and rendered visited state agree.
+
+### lesson:connected-components
+
+Shared seen state partitions one undirected traversal sweep, including isolated vertices and n0. Internally built adjacency must count as auxiliary: corrected summaries/review/output note to O(V+E), plus O(V) stack/seen. An independent closure oracle verified all 64 simple4-vertex graphs. Mark-on-push keeps each vertex pending once; undirected adjacency entries are scanned once each. Static DSU is a valid alternative.
+
+### lesson:graph-cycle-detection
+
+Undirected parent exclusion is separate from directed recursion-stack detection; a visited vertex alone is insufficient for directed cycles. Includes all components and internally constructed O(V+E) adjacency storage. Independent cycle-count oracle checked all 64 simple4-vertex graphs, with self-loop and parallel-edge probes. Sample triangle/path results and real adjacency/seen bindings agree. Recursion-depth limits remain explicit.
+
+### lesson:topological-sort
+
+Kahn indegrees and zero-indegree queue were checked against VisuAlgo and Princeton source. Main example now raises when processed count<n; blocked descendants need not themselves lie on a cycle. Mixed acyclic/cyclic regression passes. The lesson count/prefix exercise intentionally has a different contract. Internal adjacency makes auxiliary O(V+E), excluding output order. All64 generated DAGs satisfy every edge’s ordering.
+
+### lesson:multi-source-bfs
+
+Seeding now deduplicates sources before traversal. Reading arbitrary k supplied entries still costs O(k); k<=V is valid only for distinct sources. Corrected prediction and scope to O(k+V+E), with returned distance array excluded. Directed distances from sources follow outgoing edges; distance-to-target problems require reversal. Empty/duplicate sources, disconnected vertices and direction probes pass.
+
+### lesson:shortest-paths-unweighted
+
+The result counts edges, returning0 for start==goal and−1 if unreachable. BFS discovery order minimizes hops; unequal finite nonnegative weights call for Dijkstra and negative weights need another method. Parent reconstruction is an optional extension, not implemented here. Corrected weighted-graph advice and effective hint. Directed/disconnected and endpoint probes agree with actual sample and bindings.
+
+### lesson:union-find
+
+Implementation uses iterative path halving and union by rank, matching independently read Princeton UF source. Rank is an upper bound after compression, not the current height. Initialization/retained arrays O(n), working pointers O(1), individual worst bound O(log(n+1)), and amortized α(n) are separately stated. Repeated-union, representative and rank-forest invariants pass. Actual parent-array binding is exposed.
+
+### lesson:dijkstra
+
+Finite nonnegative edges and valid source are now checked before running the lazy heap. O(E) duplicate candidates mean general time O(V+E log(E+1)) and heap storage O(E); indexed decrease-key bounds are separate. Stale skipping prevents repeated expansion but its omission is not automatically a wrong-distance defect on every input. Negative-edge regression and exhaustive simple-path comparison on64 weighted DAGs/all 4 sources pass.
+
+### lesson:bellman-ford
+
+Main code now performs the stated reachable-negative-cycle detection and returns None. Disconnected negative cycles do not invalidate this source’s distances. The V−1 argument concerns a simple shortest representative, not all walks; zero cycles can repeat. O(V+V*E) includes initialization and the edgeless case; the returned V distances are output. Negative DAG, reachable/unreachable cycle and exhaustive source oracles pass.
+
+### lesson:floyd-warshall
+
+Read phase invariant, parallel-edge minimum initialization and negative diagonal behavior against CP Algorithms and Princeton. k is outermost; affected pairs through a negative cycle lack finite shortest distances. Time is O(V³+E), with V² returned matrix and O(1) loop working storage. Dense repeated Dijkstra comparison names its heap/array variant. Exhaustive DAG/all-source and negative-DAG oracle comparisons pass; matrix renders.
+
+### lesson:prim
+
+The lazy candidate key is a crossing-edge weight, distinct from Dijkstra source distance. Negative weights and ties are valid; cut choice is safe for some consistent MST. n0 returns0, disconnected nonempty input raises instead of silently returning a component cost. O(V+E log(E+1)) lazy-heap bounds differ from indexed/dense variants. Independent exhaustive forest subsets check connected cases, negative edges and rejection of disconnected graphs.
+
+### lesson:kruskal
+
+Added actual rank balancing to existing path halving so the α(V) amortized claim has both required optimizations. Initialization, sorted-copy storage and adaptive-sort best case are included. Disconnected input deliberately returns minimum spanning forest cost; self-loops are skipped and parallel/negative edges are valid. Independent exhaustive forest subsets check all 64 undirected graphs. Counter counts body work rather than the final exhausted for-line event.
+
+### lesson:fenwick-tree
+
+One-based delta updates, prefix boundary0 and inclusive range endpoints are explicit. Guards prevent update0 looping and reject invalid bounds; adjacent reversed interval is empty. All ranges and point changes for sizes 0..9 match a direct sum oracle. Displayed build uses n updates, not the separate linear builder. Working/retained storage and specialized minimum variants are distinguished; bit.tree and index overlay render actual7-cell storage.
+
+### lesson:segment-tree
+
+Zero-based point assignments and half-open queries, including empty size/ranges and invalid indices, are tested for sizes 0..9 against direct sums. Compact2n storage has n leaves,n−1 parents,unused0; arbitrary n can wrap internal order, so not every parent is a contiguous input segment. One accumulator relies on commutative addition; ordered combines need two. Corrected query/refresh counters to body lines. Actual12-cell storage and boundaries render.
+
+### pattern:bfs-shortest-path
+
+Unweighted shortest-hop clues and first-discovery invariant match the walkthrough and exercise. Weighted recognition directs to Dijkstra only under nonnegative weights; negative edges need another algorithm. Distance dictionary is returned output, leaving queue working storage O(V). Effective model/hints and recognition choices were read after shared integration; coding model passes while starter,empty and3 authored faulty variants fail.
+
+### pattern:tree-bfs
+
+Level-size capture prevents newly enqueued children from joining the current group. Queue may contain two adjacent levels and remains O(w), excluding output groups. Depth-bucket DFS is now accepted for level averages; it is a valid alternative rather than an incorrect approach. Tree/path comparison points to tree-dfs where appropriate. All effective recognition rules and real queue walkthrough checked.
+
+### pattern:tree-dfs
+
+Backtracking append/pop and copying successful paths were read line by line. Time includes O(K) copied output entries: O(n+K), with O(h) current path/frames. BFS carrying path totals is a valid alternative for maximum root-to-leaf sums, and DFS depth buckets can group levels; recognition now accepts those reasons. Effective model/faulty checks pass and real recursive frame binding renders.
+
+### pattern:graph-dfs-components
+
+Undirected flood fill differs from strong directed components and shortest-hop tasks. Internal adjacency counts toward O(V+E) auxiliary storage; recursion limits and expected hashing are stated. Static DSU land-neighbor unions are now a valid islands approach; incremental connectivity maps to union-find. Oracle closure checks, effective model/hints, recognition grading and actual seen/count bindings all agree.
+
+### pattern:topological-sort
+
+Main Kahn walkthrough rejects cycles; practice returns [] for any cycle, including a disconnected acyclic component beside a cycle. Indegree zero means all predecessors completed, and blocked downstream vertices need not be cycle members. Internally built adjacency counts as auxiliary. Shortest unweighted routing maps to BFS rather than dependency sorting. Effective mixed-cycle tests, all accepted reasons and queue/indegree traces pass.
+
+### pattern:union-find
+
+Rank plus halving and amortized versus individual bounds checked with CP Algorithms and independent Princeton source. Initialization/retained arrays are separate from per-operation pointers. A static component count may validly use DSU, while DFS is the direct preferred alternative; deletion/general dynamic graph support is not promised. Fragment hint no longer attributes linear height to rank-balanced trees. Models, faulty variants and recognition rules pass.
+
+### pattern:dijkstra
+
+Walkthrough enforces source/nonnegative preconditions and uses lazy candidate skipping. Bounds count obsolete pops and O(E) heap entries; dense array and indexed-heap variants are distinguished. Bellman–Ford is correct but slower for the explicitly requested efficient nonnegative default; negative-edge scenario does not point to a nonexistent local pattern. Effective grader/hints, negative regression, DAG oracle and actual heap/distance bindings pass.
+
+### pattern:trie-prefix
+
+Explicit terminal flags distinguish prefix paths and words; empty prefix exists even before insertion. Exact-only hash membership is a valid simpler alternative, and prefix scanning is possible without an index. Exercise dictionary terminal key changed from $ to a unique object to avoid character collision; empty/$/Unicode tests pass. Expected O(L), O(1) working pointers and T+1 retained nodes are distinct. USFCA reference and actual t.root rendering checked.
+
+## Exact reference mirror
+
+The companion codex-b5-reference-mirror.json contains each item’s final exact URL/section/claim/convention/access-date records for integration into docs/references.md. The consulted-source catalog additionally records reusable source entries; a homepage is not used as a consulted algorithm reference.

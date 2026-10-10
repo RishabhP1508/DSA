@@ -5,13 +5,16 @@
 
 import type { LessonDefinition } from "../../core/types";
 
-const code = `# Heap sort: build a min-heap, then pop the smallest repeatedly.
+const code = `# Sort via a separate min-heap and repeated minimum extraction.
 import heapq
 
 def heap_sort(a):
-    h = a[:]                        # copy so we don't mutate the input
-    heapq.heapify(h)                # O(n) build a min-heap in place
-    return [heapq.heappop(h) for _ in range(len(h))]  # pop n times
+    h = a[:]
+    heapq.heapify(h)
+    out = []
+    while h:
+        out.append(heapq.heappop(h))
+    return out
 
 print(heap_sort([5, 1, 4, 2, 8, 3]))`;
 
@@ -35,61 +38,165 @@ Heap sort's classic advantage is space: an in-place array heap sorts with **O(1)
   ],
 
   concepts: {
-    purpose: "Sort in guaranteed O(n log n) by repeatedly extracting the heap's minimum.",
-    operations: "heapify the list (O(n)); heappop n times (O(log n) each) to get sorted order.",
-    uses: "Sorting with O(1) extra space (in-place variant); top-K and priority scheduling reuse the heap.",
-    tradeoffs: "Guaranteed O(n log n) and (in-place) O(1) space, but not stable and typically slower in practice than quicksort due to cache behavior.",
-    commonMistakes: "Assuming heapify is O(n log n) (it is O(n)); expecting stability; mutating the input when you meant to copy.",
-    edgeCases: "Empty/one element trivially sorted. Duplicates come out in some order (not stable).",
-  },
+  "purpose": "Sort in guaranteed O(n log n) by repeatedly extracting the heap's minimum.",
+  "operations": "heapify the list (O(n)); heappop n times (O(log n) each) to get sorted order.",
+  "uses": "Sorting with O(1) extra space (in-place variant); top-K and priority scheduling reuse the heap.",
+  "tradeoffs": "The shown copy-and-pop implementation uses O(n) auxiliary memory and does not guarantee stability. Classic array heapsort uses O(1) auxiliary memory; practical speed depends on the implementation and input.",
+  "commonMistakes": "Assuming heapify is O(n log n) (it is O(n)); expecting stability; mutating the input when you meant to copy.",
+  "edgeCases": "Empty/one element trivially sorted. Duplicates come out in some order (not stable)."
+},
 
   complexity: [
-    { operation: "Heap sort", best: "O(n log n)", average: "O(n log n)", worst: "O(n log n)", space: "O(1)", note: "heapify O(n) + n pops × O(log n). In-place variant is O(1) space." },
-  ],
+  {
+    "operation": "Heap sort",
+    "best": "O(n log n)",
+    "average": "O(n log n)",
+    "worst": "O(n log n)",
+    "space": "O(n)",
+    "note": "Shown copy-and-pop implementation: O(n) separate heap plus O(n) returned result. A classic array heapsort is a different O(1)-auxiliary variant."
+  }
+],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [{ symbol: "n", meaning: "the number of elements to sort" }],
-    costModel: "heapify is O(n). Each heappop restores the heap in O(log n). Reading n results.",
-    time: {
-      bound: "O(n log n)",
-      case: "worst",
-      explanation: "Building the heap with heapify is O(n) (a well-known result — cheaper than n separate inserts). Then we heappop n times, and each pop must sift the new root down through the tree in O(log n). The pops dominate: n × O(log n) = O(n log n). This bound holds for all inputs — there is no degenerate case like quicksort's.",
-    },
-    space: {
-      bound: "O(1)",
-      case: "worst",
-      explanation: "The classic in-place array heap sort sorts within the original array using only a few variables — O(1) auxiliary. (This heapq-based version copies the list and builds an output list, which is O(n); the O(1) claim refers to the in-place algorithm.)",
-      inputOutputNote: "This implementation's copy h and the output list are O(n); the in-place variant avoids them.",
-    },
-    derivation: [
-      { lines: [6], description: "heapify builds the heap in O(n).", cost: "O(n)", dimension: "time" },
-      { lines: [7], description: "n heappops, each O(log n) to re-settle the heap — the dominant cost.", cost: "O(n log n)", dimension: "time" },
-      { lines: [5], description: "In-place heap sort uses O(1); this copy-based form uses O(n).", cost: "O(1)", dimension: "space" },
-    ],
-    assumptions: ["Comparisons are O(1).", "heapify is O(n) and heappop is O(log n) (Python heapq).", "The O(1) space claim is for the in-place array algorithm."],
-    tradeoffs: "Merge sort is also O(n log n) and stable but uses O(n) space; quicksort is often faster but risks O(n²). Heap sort guarantees O(n log n) with O(1) space (in place) but is unstable and cache-unfriendly.",
-    counters: [
-      { label: "pops", definition: "iterations of the pop comprehension (line 7)", countLines: [7] },
-    ],
-    fixedDataNote: "This run heapifies 6 elements then pops 6 times. The O(n log n) bound generalises the pop cost to n.",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of elements to sort"
+    }
+  ],
+  "costModel": "heapify is O(n). Each heappop restores the heap in O(log n). Reading n results.",
+  "time": {
+    "bound": "O(n log n)",
+    "case": "worst",
+    "explanation": "Building the heap with heapify is O(n) (a well-known result — cheaper than n separate inserts). Then we heappop n times, and each pop must sift the new root down through the tree in O(log n). The pops dominate: n × O(log n) = O(n log n). This bound holds for all inputs — there is no degenerate case like quicksort's."
   },
+  "space": {
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "The copied heap h holds n references independently of the required output. It is O(n) auxiliary space even after excluding out. Classic in-place array heapsort can use O(1) auxiliary space but is not the code shown.",
+    "inputOutputNote": "The caller's list is input; out is required O(n) output; h is O(n) auxiliary storage."
+  },
+  "derivation": [
+    {
+      "lines": [
+        5,
+        6
+      ],
+      "description": "Copy and bottom-up heap construction both cost O(n).",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        8,
+        9
+      ],
+      "description": "n extractions at O(log n) each in the worst case; appends are amortized constant.",
+      "cost": "O(n log n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        5
+      ],
+      "description": "The separate copied heap is auxiliary to the input and result.",
+      "cost": "O(n)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Comparisons are O(1).",
+    "heapify is O(n) and heappop is O(log n) (Python heapq)."
+  ],
+  "tradeoffs": "Merge sort is stable with O(n) auxiliary memory. The shown heap-based sort also uses O(n) auxiliary memory and has O(n log n) worst-case time. Classic array heapsort can reduce auxiliary memory to O(1); deterministic quicksort can have O(n²) worst-case time.",
+  "counters": [
+    {
+      "label": "pops",
+      "definition": "executions of the explicit heappop/append line, one per removed element",
+      "countLines": [
+        9
+      ]
+    }
+  ],
+  "fixedDataNote": "This run heapifies 6 elements then pops 6 times. The O(n log n) bound generalises the pop cost to n. Function/query analysis excludes demonstration input literal creation and printing."
+},
 
   code,
 
   codeExplanations: [
-    { line: 1, executable: false, explanation: "Comment: build a heap, pop smallest repeatedly." },
-    { line: 2, executable: true, explanation: "Import heapq (standard library, in the bundled runtime)." },
-    { line: 3, executable: false, explanation: "Blank line." },
-    { line: 4, executable: true, explanation: "Define heap_sort(a)." },
-    { line: 5, executable: true, explanation: "Copy so the caller's list is not mutated." },
-    { line: 6, executable: true, explanation: "heapify turns the list into a min-heap in O(n)." },
-    { line: 7, executable: true, explanation: "Pop the minimum n times; the results come out sorted. Each pop is O(log n)." },
-    { line: 8, executable: false, explanation: "Blank line." },
-    { line: 9, executable: true, explanation: "Sort [5,1,4,2,8,3] → [1, 2, 3, 4, 5, 8]." },
-  ],
+  {
+    "line": 1,
+    "executable": false,
+    "explanation": "Comment: a separate heap is used; this is not the constant-space array variant."
+  },
+  {
+    "line": 2,
+    "executable": true,
+    "explanation": "Import heapq, whose unqualified functions use a min-heap."
+  },
+  {
+    "line": 3,
+    "executable": false,
+    "explanation": "Blank line."
+  },
+  {
+    "line": 4,
+    "executable": true,
+    "explanation": "Define the nonmutating heap-based sorting function."
+  },
+  {
+    "line": 5,
+    "executable": true,
+    "explanation": "Copy n references so extracting minima does not change the caller's list."
+  },
+  {
+    "line": 6,
+    "executable": true,
+    "explanation": "Build the min-heap in O(n) time."
+  },
+  {
+    "line": 7,
+    "executable": true,
+    "explanation": "Prepare the required sorted result."
+  },
+  {
+    "line": 8,
+    "executable": true,
+    "explanation": "Continue while values remain in the heap."
+  },
+  {
+    "line": 9,
+    "executable": true,
+    "explanation": "Remove the current minimum, repair the heap and append that minimum to out."
+  },
+  {
+    "line": 10,
+    "executable": true,
+    "explanation": "Return the ordered result after all values have been removed from h."
+  },
+  {
+    "line": 11,
+    "executable": false,
+    "explanation": "Blank line."
+  },
+  {
+    "line": 12,
+    "executable": true,
+    "explanation": "Print the sorted sample list."
+  }
+],
 
-  bindings: [{ variable: "h", model: "heap" }],
+  bindings: [
+  {
+    "variable": "h",
+    "model": "heap"
+  },
+  {
+    "variable": "out",
+    "model": "array"
+  }
+],
 
   prediction: [
     { atEventIndex: 0, prompt: "Heap sort is O(n log n). Which step is O(n) and which is O(n log n)?", answer: "heapify is O(n); the n heappops (O(log n) each) total O(n log n) and dominate.", explanation: "Building the heap is a linear-time operation, but extracting all n elements costs O(log n) per pop, so the extraction phase sets the overall O(n log n)." },
@@ -118,36 +225,44 @@ Heap sort's classic advantage is space: an in-place array heap sorts with **O(1)
     },
   ],
 
-  review: `**Heap sort** builds a heap (\`heapify\`, **O(n)**) then extracts the extreme n times (\`heappop\`, **O(log n)** each), giving guaranteed **O(n log n)** in all cases. The in-place array variant uses **O(1)** space but is **not stable**. Choose it when you need a worst-case guarantee with minimal memory; the heap itself reappears for top-K and priority queues.`,
+  review: "**Heap sort** builds a heap (`heapify`, **O(n)**) then extracts the extreme n times (`heappop`, **O(log n)** each), giving guaranteed **O(n log n)** in all cases. The in-place array variant uses **O(1)** space but is **not stable**. Choose it when you need a worst-case guarantee with minimal memory; the heap itself reappears for top-K and priority queues. The shown heapq copy-and-pop function uses O(n) auxiliary memory for h and O(n) returned output. Its explicit loop displays each pop; the constant-space claim applies only to the classic in-place array variant.",
 
   expectedOutput: "[1, 2, 3, 4, 5, 8]\n",
 
   references: [
-    {
-      url: "https://docs.python.org/3/library/heapq.html",
-      title: "heapq — Heap queue algorithm — Python documentation",
-      section: "heapify / heappop",
-      topic: "sorting/heap",
-      purpose: "Confirm heapify is O(n) and heappop is O(log n) on the bundled runtime, and the heap is a min-heap.",
-      verifiedClaims: ["heapq.heapify transforms a list into a heap in linear time", "heappop removes the smallest item in O(log n)"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://algs4.cs.princeton.edu/24pq/",
-      title: "Priority Queues — Algorithms, 4th Edition (Princeton)",
-      section: "Heapsort",
-      topic: "sorting/heap",
-      purpose: "Cross-check heap sort's O(n log n) guarantee and in-place O(1) space (unstable).",
-      verifiedClaims: ["Heapsort sorts in O(n log n) with O(1) extra space and is not stable"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://docs.python.org/3.14/library/heapq.html",
+    "title": "heap reference",
+    "section": "Heap invariant; heapify; heappop; max-heap functions",
+    "topic": "sorting/heap",
+    "purpose": "Check the specific claims and conventions used here.",
+    "verifiedClaims": [
+      "heapify is linear; min-heap heappop returns the smallest; Python 3.14 includes max-heap functions."
+    ],
+    "accessDate": "2026-10-10",
+    "conventions": [
+      "This app uses a separate 0-based min-heap."
+    ]
+  },
+  {
+    "url": "https://opendatastructures.org/ods-python/11_1_Comparison_Based_Sorti.html",
+    "title": "Open Data Structures: comparison-based sorting",
+    "section": "11.1.3 heap-sort",
+    "topic": "sorting/heap",
+    "purpose": "Check the specific claims and conventions used here.",
+    "verifiedClaims": [
+      "Classic in-place heapsort reuses the input array."
+    ],
+    "accessDate": "2026-10-10",
+    "conventions": []
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "078fea2effce0771",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "606b3a3dfb7bd69d",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 3,
   },
 };

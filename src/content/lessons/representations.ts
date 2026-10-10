@@ -251,7 +251,7 @@ Neither shape is "more correct" — they trade off differently. The adjacency ma
     },
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "13848cb935af1779",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

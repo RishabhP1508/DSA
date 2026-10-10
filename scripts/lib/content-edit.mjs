@@ -39,9 +39,17 @@ export function saveExerciseOverride(uid, field, value) {
   let source=fs.readFileSync(file,'utf8');
   const tree=ts.createSourceFile(file,source,ts.ScriptTarget.Latest,true);
   const edits=[];
+  const mapName = { recognition: 'EXERCISE_RECOGNITION', hints: 'EXERCISE_HINTS', tests: 'EXERCISE_TESTS', preludeCode: 'EXERCISE_PRELUDE' }[field];
+  if (!mapName) throw Error(`Unsupported exercise override field ${field}`);
   function visit(n) {
-    if(ts.isPropertyAssignment(n) && ts.isStringLiteral(n.name) && n.name.text===uid &&
-      (field==='recognition' ? ts.isObjectLiteralExpression(n.initializer) : field==='hints' && ts.isArrayLiteralExpression(n.initializer))) {
+    let parent = n.parent;
+    let belongs = false;
+    while (parent) {
+      if (ts.isVariableDeclaration(parent) && parent.name.getText(tree) === mapName) belongs = true;
+      if (ts.isCallExpression(parent) && parent.expression.getText(tree) === 'Object.assign' && parent.arguments[0]?.getText(tree) === mapName) belongs = true;
+      parent = parent.parent;
+    }
+    if(ts.isPropertyAssignment(n) && ts.isStringLiteral(n.name) && n.name.text===uid && belongs) {
       edits.push({start:n.initializer.getStart(tree),end:n.initializer.end,text:JSON.stringify(value,null,2)});
     }
     ts.forEachChild(n,visit);

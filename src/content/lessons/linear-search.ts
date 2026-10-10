@@ -23,11 +23,7 @@ export const linearSearch: LessonDefinition = {
   area: "Searching",
   prerequisites: ["array-traversal", "cases"],
 
-  explanation: `**Linear search** is the simplest way to find a value: walk through the array from the start and compare each element to the target. Return its index the moment you find it; if you reach the end without a match, the value is not there (return -1).
-
-Its great advantage is that it makes **no assumptions** — the array does not need to be sorted, and it works on any sequence you can iterate. Its cost is the trade: in the **worst case** (target absent, or last) you inspect all n elements, so it is **O(n)**. The **best case** is O(1) (match at the front). On average, for a present target at a random position, it checks about n/2 — still O(n).
-
-When the data is **sorted**, binary search does far better (O(log n)); when you search the same collection many times, a hash set gives expected O(1) lookups. Linear search is the right tool when the data is small, unsorted, or searched only once.`,
+  explanation: "**Linear search** is the simplest way to find a value: walk through the array from the start and compare each element to the target. Return its index the moment you find it; if you reach the end without a match, the value is not there (return -1).\n\nIts great advantage is that it needs **no ordering assumption** — the array does not need to be sorted, and it the scan shown uses a sequence with length and indexed access. Its cost is the trade: in the **worst case** (target absent, or last) you inspect all n elements, so it is **O(n)**. The **best case** is O(1) (match at the front). On average, for a present target at a random position, it checks about n/2 — still O(n).\n\nWhen the data is **sorted**, binary search does far better (O(log n)); when you search the same collection many times, a hash set gives expected O(1) lookups. Linear search is the right tool when the data is small, unsorted, or searched only once.",
 
   vocabulary: [
     { term: "Linear search", definition: "Checking each element in order until the target is found or the array ends." },
@@ -37,47 +33,93 @@ When the data is **sorted**, binary search does far better (O(log n)); when you 
   ],
 
   concepts: {
-    purpose: "Find a value in any sequence without needing it sorted.",
-    operations: "Scan left to right; compare; return the index on match, or -1 at the end.",
-    uses: "Small or unsorted data, one-off searches, searching linked structures.",
-    tradeoffs: "O(n) but assumption-free; beaten by binary search (sorted) and hash sets (many lookups).",
-    commonMistakes: "Using it repeatedly when a set/dict would give O(1); assuming it needs sorted data (it does not); returning True/False when the index is needed.",
-    edgeCases: "Empty array returns -1. Duplicate targets: returns the first match. Target at the end is the worst case.",
-  },
+  "purpose": "Find a value in any sequence without needing it sorted.",
+  "operations": "Scan left to right; compare; return the index on match, or -1 at the end.",
+  "uses": "Small or unsorted data, one-off searches, searching linked structures.",
+  "tradeoffs": "O(n) but requires no ordering; beaten by binary search (sorted) and hash sets (many lookups).",
+  "commonMistakes": "Using it repeatedly when a set/dict would give expected O(1); assuming it needs sorted data (it does not); returning True/False when the index is needed.",
+  "edgeCases": "Empty array returns -1. Duplicate targets: returns the first match. Target at the end is the worst case."
+},
 
   complexity: [
     { operation: "Linear search", best: "O(1)", average: "O(n)", worst: "O(n)", space: "O(1)", note: "Best: match at front. Worst: absent → scan all n." },
   ],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
-    costModel: "Each comparison and index read is O(1). The loop may exit early on a match.",
-    time: {
-      bound: "O(n)",
-      case: "worst",
-      explanation: "In the worst case the target is absent or last, so all n elements are compared before returning — O(n). The early return gives an O(1) best case, and an average of about n/2 comparisons for a present target, which is still O(n).",
-      otherCases: [
-        { case: "best", bound: "O(1)", note: "Target is the first element: one comparison." },
-        { case: "average", bound: "O(n)", note: "Present target at a random position: ~n/2 comparisons." },
-      ],
-    },
-    space: {
-      bound: "O(1)",
-      case: "worst",
-      explanation: "Only the loop index is used; no storage grows with n.",
-      inputOutputNote: "The array of n elements is the input, not auxiliary space.",
-    },
-    derivation: [
-      { lines: [3, 4], description: "Each element triggers one comparison; up to n in the worst case.", cost: "O(n)", dimension: "time" },
-      { lines: [5], description: "Early return on match — the O(1) best case.", cost: "O(1)", dimension: "time" },
-      { lines: [3], description: "One loop index; no growth with n.", cost: "O(1)", dimension: "space" },
-    ],
-    assumptions: ["Comparisons and index reads are constant time.", "Average case assumes the target is present at a uniformly random position."],
-    tradeoffs: "Binary search is O(log n) but requires sorted data; a hash set gives expected O(1) lookups but needs O(n) space to build. Linear search needs neither.",
-    counters: [{ label: "comparisons", definition: "executions of the equality test (line 4)", countLines: [4] }],
-    fixedDataNote: "The first call matches at index 2 (3 comparisons); the second scans all 4 then returns -1. The bounds generalise these counts to n.",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of elements in nums"
+    }
+  ],
+  "costModel": "Each comparison and index read is O(1). The loop may exit early on a match.",
+  "time": {
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "In the worst case the target is absent or last, so all n elements are compared before returning — O(n). The early return gives an O(1) best case, and an average of about n/2 comparisons for a present target, which is still O(n).",
+    "otherCases": [
+      {
+        "case": "best",
+        "bound": "O(1)",
+        "note": "Target is the first element: one comparison."
+      },
+      {
+        "case": "average",
+        "bound": "O(n)",
+        "note": "Present target at a random position: ~n/2 comparisons."
+      }
+    ]
   },
+  "space": {
+    "bound": "O(1)",
+    "case": "worst",
+    "explanation": "Only the loop index is used; no storage grows with n.",
+    "inputOutputNote": "The array of n elements is the input, not auxiliary space."
+  },
+  "derivation": [
+    {
+      "lines": [
+        3,
+        4
+      ],
+      "description": "Each element triggers one comparison; up to n in the worst case.",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        5
+      ],
+      "description": "Early return on match — the O(1) best case.",
+      "cost": "O(1)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        3
+      ],
+      "description": "One loop index; no growth with n.",
+      "cost": "O(1)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Comparisons and index reads are constant time.",
+    "Average case assumes the target is present at a uniformly random position."
+  ],
+  "tradeoffs": "Binary search is O(log n) but requires sorted data; a hash set gives expected O(1) lookups but needs O(n) space to build. Linear search needs neither.",
+  "counters": [
+    {
+      "label": "comparisons",
+      "definition": "executions of the equality test (line 4)",
+      "countLines": [
+        4
+      ]
+    }
+  ],
+  "fixedDataNote": "The first call matches at index 2 (3 comparisons); the second scans all 4 then returns -1. The bounds generalise these counts to n. Analysis excludes the demonstration calls, input literal construction and printing; it describes the named function or query on supplied input."
+},
 
   code,
 
@@ -114,53 +156,112 @@ When the data is **sorted**, binary search does far better (O(log n)); when you 
   ],
 
   exercises: [
-    {
-      id: "ls-complete-1",
-      kind: "complete-code",
-      prompt: "Complete a linear search that returns True/False for whether target is present.",
-      starterCode: "def contains(nums, target):\n    for x in nums:\n        # TODO: return True if x equals target\n        pass\n    return False",
-      expected: "def contains(nums, target):\n    for x in nums:\n        if x == target:\n            return True\n    return False",
-      hints: ["Compare each element to target.", "Return True on a match.", "if x == target: return True"],
-    },
-    {
-      id: "ls-choose-1",
-      kind: "choose-approach",
-      prompt: "You will search the same array thousands of times for different values. Is repeated linear search a good choice? What is better?",
-      expected: "No — repeated linear search is O(n) per query = O(n·q). Build a set once (O(n)) then query in expected O(1), giving O(n + q).",
-      hints: ["How many queries, and does the array change?", "Repeated O(n) scans add up.", "A set gives expected O(1) lookups after an O(n) build."],
-    },
-  ],
+  {
+    "id": "ls-complete-1",
+    "kind": "complete-code",
+    "prompt": "Complete a linear search that returns True/False for whether target is present.",
+    "starterCode": "def contains(nums, target):\n    for x in nums:\n        # TODO: return True if x equals target\n        pass\n    return False",
+    "expected": "def contains(nums, target):\n    for x in nums:\n        if x == target:\n            return True\n    return False",
+    "hints": [
+      "Goal: return True if target appears in nums, else False.",
+      "There is nothing to precompute for a single unsorted search; you just scan once.",
+      "Key insight: the moment you find a match you can stop and answer True.",
+      "Approach: loop each element, returning early on a match, and return False after the loop.",
+      "Pseudocode: for x in nums: if x == target: return True; return False.",
+      "Inside the loop write `if x == target: return True`, and `return False` at the end."
+    ],
+    "tests": "assert contains([1, 2, 3], 2) is True, 'present value found'\nassert contains([1, 2, 3], 9) is False, 'absent value not found'\nassert contains([], 1) is False, 'nothing is in an empty list'\nassert contains([5], 5) is True, 'singleton hit'\nprint('OK')"
+  },
+  {
+    "id": "ls-choose-1",
+    "kind": "choose-approach",
+    "prompt": "You will search the same array thousands of times for different values. Is repeated linear search a good choice? What is better? Assume immutable, hashable values and ordinary well-distributed hashes; compare worst-case scan costs with expected hash costs.",
+    "expected": "No — repeated linear search is O(n) per query = O(n·q). Build a set once (expected O(n)) then query in expected O(1), giving O(n + q).",
+    "hints": [
+      "Goal: decide if repeated linear search is right when you query the same array thousands of times for different values.",
+      "The costly pattern is rescanning the whole array per query — O(n) each, multiplied by many queries.",
+      "Key property: the array is fixed across queries, so you can preprocess it once and reuse the result.",
+      "Approach: build a set (hash index) once, then answer each membership query against it.",
+      "One expected O(n) build plus expected O(1) per query gives expected O(n+q), compared with O(n*q) worst-case repeated scans. For tiny data or few queries, constants and early matches may still favor scanning.",
+      "Answer: no — repeated linear search is O(n·q); build a set once (expected O(n)) and query in expected O(1), giving O(n + q)."
+    ],
+    "recognition": {
+      "scenario": "You will search the SAME array thousands of times, each query asking whether a different value is present. Repeated linear scans vs building an index first. Values are hashable, and hashing costs are expected under ordinary hashes.",
+      "approaches": [
+        {
+          "id": "build-set",
+          "label": "Build a set once, then query membership",
+          "requiredReasonIds": [
+            "amortize-queries"
+          ]
+        },
+        {
+          "id": "repeated-linear",
+          "label": "Linear-search the array on every query",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Repeated scans have O(n*q) worst-case work, while a set gives expected O(n+q) under the stated hashing model. This drill asks for the preprocessing strategy that improves the general many-query bound."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "amortize-queries",
+          "text": "The array is fixed, so a one-time expected O(n) set build lets each of the q queries run in expected O(1), giving O(n + q) overall instead of O(n·q)."
+        },
+        {
+          "id": "linear-is-faster-repeated",
+          "text": "Repeated linear search is faster than a set because it avoids the build cost each time.",
+          "contradictory": true
+        },
+        {
+          "id": "set-query-linear",
+          "text": "Membership in a set costs O(n) per query, no better than scanning.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "build-set"
+      ],
+      "modelExplanation": "No — repeated linear search is O(n) per query = O(n·q). Build a set once (expected O(n)) then query in expected O(1), giving O(n + q)."
+    }
+  }
+],
 
   review: `**Linear search** scans every element until it finds the target, returning its index or -1. It needs **no sorting** and works on any sequence, at **O(n)** time (best O(1), average ~n/2) and **O(1)** space. Prefer binary search for sorted data (O(log n)) or a hash set for many lookups (expected O(1)).`,
 
   expectedOutput: "2\n-1\n",
 
   references: [
-    {
-      url: "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheSequentialSearch.html",
-      title: "The Sequential Search — Problem Solving with Algorithms and DS using Python (Runestone)",
-      section: "Sequential search analysis",
-      topic: "searching/linear",
-      purpose: "Confirm the linear (sequential) search algorithm and its O(n) worst / O(1) best analysis.",
-      verifiedClaims: ["Sequential search is O(n) worst case and O(1) best case", "It requires no ordering of the data"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://www.w3schools.com/dsa/dsa_algo_linearsearch.php",
-      title: "Linear Search — W3Schools DSA",
-      section: "Linear search",
-      topic: "searching/linear",
-      purpose: "Beginner cross-check of the linear-search procedure and not-found convention.",
-      verifiedClaims: ["Linear search checks each element and returns its position or a not-found signal"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheSequentialSearch.html",
+    "title": "TheSequentialSearch",
+    "section": "Algorithm, analysis and visual example",
+    "topic": "searching/linear",
+    "purpose": "Check the specific claims and conventions used here.",
+    "verifiedClaims": [
+      "Sequential search needs no ordering; present uniform-position average is linear."
+    ],
+    "accessDate": "2026-10-10",
+    "conventions": []
+  },
+  {
+    "url": "https://cp-algorithms.com/num_methods/binary_search.html",
+    "title": "binary reference",
+    "section": "Search in sorted arrays",
+    "topic": "searching/linear",
+    "purpose": "Check the specific claims and conventions used here.",
+    "verifiedClaims": [
+      "Linear scan is O(n)."
+    ],
+    "accessDate": "2026-10-10",
+    "conventions": []
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "90eb44786059d473",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "a237de12b615c1cd",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 3,
   },
 };

@@ -1,0 +1,58 @@
+[
+  {
+    "id": "word-search",
+    "name": "empty and reserved-character paths",
+    "ok": true,
+    "status": "completed",
+    "error": null,
+    "limit": null
+  },
+  {
+    "id": "fenwick-tree",
+    "name": "index-zero update and empty range",
+    "ok": true,
+    "status": "completed",
+    "error": null,
+    "limit": null
+  },
+  {
+    "id": "segment-tree",
+    "name": "negative update and half-open bounds",
+    "ok": true,
+    "status": "completed",
+    "error": null,
+    "limit": null
+  },
+  {
+    "id": "prim",
+    "name": "empty graph and disconnected rejection",
+    "ok": true,
+    "status": "completed",
+    "error": null,
+    "limit": null
+  },
+  {
+    "id": "topological-sort",
+    "name": "mixed acyclic component plus cycle",
+    "ok": true,
+    "status": "completed",
+    "error": null,
+    "limit": null
+  },
+  {
+    "id": "dijkstra",
+    "name": "negative edge rejection",
+    "ok": true,
+    "status": "completed",
+    "error": null,
+    "limit": null
+  },
+  {
+    "id": "bellman-ford",
+    "name": "reachable versus disconnected negative cycle",
+    "ok": true,
+    "status": "completed",
+    "error": null,
+    "limit": null
+  }
+]

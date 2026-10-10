@@ -1,0 +1,424 @@
+[
+  {
+    "uid": "lesson:dp-recursive-calls:dprc-choose-1",
+    "field": "hints",
+    "value": [
+      "Identify exactly which subproblem state repeats.",
+      "Cache valid answers only when the state fully describes the problem.",
+      "Count distinct states and all transition work; caching does not promise linear or polynomial time by itself.",
+      "Fibonacci has n+1 index states and constant scalar work per state, so memoization or tabulation gives O(n)."
+    ]
+  },
+  {
+    "uid": "lesson:dp-recursive-calls:dprc-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "A recursive solution recomputes the same subproblems over and over, and you must speed it up.",
+      "approaches": [
+        {
+          "id": "memoize",
+          "label": "Memoize (cache) each subproblem's result",
+          "requiredReasonIds": [
+            "cache-overlapping"
+          ]
+        },
+        {
+          "id": "add-base-case",
+          "label": "Just add another base case",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A base case establishes direct answers; merely adding one does not generally eliminate repeated work. A mathematically justified alternative recurrence could change the analysis."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "cache-overlapping",
+          "text": "Fully specified overlapping states can be reused; total cost includes the nonrecursive work of each state. Fibonacci has O(n) states with O(1) scalar transitions."
+        },
+        {
+          "id": "no-overlap-to-cache",
+          "text": "The subproblems never repeat, so caching would never produce a hit.",
+          "contradictory": true
+        },
+        {
+          "id": "memo-slower",
+          "text": "Memoization makes the recursion asymptotically slower.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "memoize"
+      ],
+      "modelExplanation": "Memoization or bottom-up tabulation reuses answers to fully specified overlapping states. The cost is distinct states plus their transition work; for Fibonacci there are n+1 states and O(1) scalar work per state, giving O(n). Caching is not automatically linear for every recurrence."
+    }
+  },
+  {
+    "uid": "lesson:dp-permutations:dpperm-fix-1",
+    "field": "hints",
+    "value": [
+      "Goal: fix the permutation search so it stops producing missing full orderings.",
+      "The bug leaves used[i] set after backtracking, so element i stays unavailable and branches come up short.",
+      "Key insight: on backtrack, element i must be freed so sibling permutations can use it again.",
+      "Approach: mirror every used[i]=True with a used[i]=False after the recursive call.",
+      "Pseudocode: mark used[i]; append; recurse; pop; then clear used[i].",
+      "Add `used[i] = False` after popping so the element becomes available again."
+    ]
+  },
+  {
+    "uid": "lesson:dp-house-robber:dphr-choose-1",
+    "field": "hints",
+    "value": [
+      "The middle 5 blocks both endpoint houses.",
+      "Skipping 5 permits 4+4=8.",
+      "Use the best non-adjacent prefix totals: best(i)=max(best(i−1),best(i−2)+value(i)).",
+      "DP returns 8, while richest-first greedy returns 5."
+    ]
+  },
+  {
+    "uid": "lesson:dp-house-robber:dphr-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "For [4,5,4], richest-first greedy takes the middle house 5 and blocks its neighbors. Which method finds the maximum without adjacent robberies, and what does each method return?",
+      "approaches": [
+        {
+          "id": "dp",
+          "label": "Dynamic programming (max of rob-this + best-two-back, or skip)",
+          "requiredReasonIds": [
+            "dp-correct-nonadjacent"
+          ]
+        },
+        {
+          "id": "greedy-richest",
+          "label": "Greedily grab the richest available non-adjacent house",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Richest-first picks 5 and blocks both endpoints, giving 5; selecting both 4-valued endpoints gives the larger valid total 8."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "dp-correct-nonadjacent",
+          "text": "DP keeps, at each house, the best of skipping it or robbing it plus the best up to two houses back, correctly finding 8 (rob 2, 5, 1)."
+        },
+        {
+          "id": "greedy-optimal-here",
+          "text": "Greedily taking the richest house always yields the optimum for this problem.",
+          "contradictory": true
+        },
+        {
+          "id": "dp-gives-11",
+          "text": "DP returns 5 for [4,5,4].",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "dp"
+      ],
+      "modelExplanation": "Use take/skip dynamic programming. Greedy returns 5; the optimum takes the two endpoints for 4+4=8. The recurrence considers skipping each house or taking it plus the best two positions earlier."
+    }
+  },
+  {
+    "uid": "pattern:backtracking:pat-bt-recognize-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Generate ALL permutations of a list of distinct numbers.",
+      "approaches": [
+        {
+          "id": "backtracking",
+          "label": "Backtracking (choose / explore / un-choose)",
+          "requiredReasonIds": [
+            "enumerate-with-used"
+          ]
+        },
+        {
+          "id": "dp",
+          "label": "A DP count without enumeration",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A count alone does not return the requested arrangements. DP can guide a later traversal, but the traversal must still emit every permutation."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "enumerate-with-used",
+          "text": "You must produce every arrangement, filling positions one at a time and marking placed elements with a used-array to avoid reuse — all n! orderings."
+        },
+        {
+          "id": "count-only",
+          "text": "Only the number of permutations is needed, so a closed-form count suffices.",
+          "contradictory": true
+        },
+        {
+          "id": "overlapping-sub",
+          "text": "A cached scalar count alone returns all explicit permutations without generating them.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "backtracking"
+      ],
+      "modelExplanation": "Backtracking: build each permutation by choosing an unused element per position, recursing, then un-choosing — enumerating all n! orderings with O(n) auxiliary space."
+    }
+  },
+  {
+    "uid": "pattern:backtracking:pat-bt-choose-1",
+    "field": "hints",
+    "value": [
+      "Listing needs each explicit configuration, not only a scalar count.",
+      "Backtracking can emit every qualifying subset.",
+      "A DP feasibility table can prune or guide a later enumeration.",
+      "With bounded non-negative sums, counting DP uses (item index,sum) states and is pseudo-polynomial in the target."
+    ]
+  },
+  {
+    "uid": "pattern:backtracking:pat-bt-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Two problems: (a) 'list every subset that sums to a target'; (b) 'how MANY subsets sum to a target'. Same pattern? Assume distinct non-negative integer values and a bounded non-negative target.",
+      "approaches": [
+        {
+          "id": "backtracking",
+          "label": "Backtracking",
+          "requiredReasonIds": [
+            "must-enumerate"
+          ]
+        },
+        {
+          "id": "dp",
+          "label": "Subset-sum counts alone",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Counts alone answer (b), not the requested list in (a). DP can be combined with a reconstruction/enumeration traversal."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "must-enumerate",
+          "text": "Problem (a) demands each explicit subset, so you must enumerate configurations via choose/explore/un-choose."
+        },
+        {
+          "id": "count-suffices",
+          "text": "Only a count is required, so overlapping subproblems make DP ideal.",
+          "contradictory": true
+        },
+        {
+          "id": "greedy-works",
+          "text": "A greedy pass produces every qualifying subset directly.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "backtracking"
+      ],
+      "modelExplanation": "(a) Backtracking emits the explicit subsets; a DP feasibility table may guide that traversal. (b) Subset-sum count DP over item index and sum can avoid enumerating each subset, with pseudo-polynomial cost in the numeric target. Neither a scalar count nor feasibility alone returns every configuration."
+    }
+  },
+  {
+    "uid": "pattern:dynamic-programming:pat-dp-choose-1",
+    "field": "hints",
+    "value": [
+      "The output is a list of configurations, not only a count.",
+      "Backtracking traverses finite include/exclude decisions over array positions.",
+      "A DP table can guide reconstruction; it cannot eliminate output work.",
+      "Record qualifying leaves after all positions are decided. Returning as soon as sum reaches target can miss later zero/canceling selections."
+    ]
+  },
+  {
+    "uid": "pattern:dynamic-programming:pat-dp-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You must LIST every subset that sums to a target (not just count them).",
+      "approaches": [
+        {
+          "id": "backtracking",
+          "label": "Backtracking",
+          "requiredReasonIds": [
+            "enumerate-explicit"
+          ]
+        },
+        {
+          "id": "dp",
+          "label": "DP counts alone",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A scalar count alone does not return the subsets. DP augmented with a traversal can guide enumeration, but emitting the configurations remains necessary."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "enumerate-explicit",
+          "text": "Listing every subset means producing each explicit configuration, so you must enumerate via choose/explore/un-choose."
+        },
+        {
+          "id": "count-suffices",
+          "text": "Only the number of subsets is needed, so overlapping subproblems make DP ideal.",
+          "contradictory": true
+        },
+        {
+          "id": "greedy-lists",
+          "text": "A greedy scan can list all qualifying subsets directly.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "backtracking"
+      ],
+      "modelExplanation": "Backtracking directly lists the configurations. DP feasibility/count results alone do not emit them, but an augmented DP table can guide reconstruction/enumeration. Listing every answer still pays for the output. To support zero or negative values without losing subsets, finish the finite include/exclude decisions and record at a leaf whose sum equals the target."
+    }
+  },
+  {
+    "uid": "pattern:knapsack:pat-ks-recognize-1",
+    "field": "hints",
+    "value": [
+      "Goal: decide whether an array can be split into two subsets with equal sum.",
+      "Trying every partition is exponential; overlapping reachable-sum subproblems can be reused.",
+      "Key insight: it's subset-sum to total/2, with each number used at most once.",
+      "Approach: use a 1D 0/1-knapsack DP tracking which subset sums are reachable.",
+      "Pseudocode: if total is odd return False; target=total/2; dp[0]=True; for each num sweep capacity downward marking dp[s]|=dp[s-num].",
+      "Use 0/1 knapsack (subset-sum): target=total/2, iterate capacity downward, feasible iff dp[target] is True — O((n+1)(target+1))."
+    ]
+  },
+  {
+    "uid": "pattern:knapsack:pat-ks-recognize-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Recognize: 'Can an array be split into two subsets with equal sum?' Which pattern? Assume non-negative integer values; equal values are separate item positions.",
+      "approaches": [
+        {
+          "id": "knapsack-01",
+          "label": "0/1 knapsack (subset-sum DP)",
+          "requiredReasonIds": [
+            "reachable-half"
+          ]
+        },
+        {
+          "id": "greedy",
+          "label": "Greedy partition (sort and assign)",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Greedily balancing sums does not reliably decide exact equal partition; subset-sum needs DP over reachable sums."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "reachable-half",
+          "text": "Set target = total/2 and let dp[s] track reachable subset sums with each item used once (sweep capacity downward); feasible iff dp[target] is true — O((n+1)(target+1))."
+        },
+        {
+          "id": "fractional-ok",
+          "text": "Items can be split into fractions, so a greedy ratio choice is optimal.",
+          "contradictory": true
+        },
+        {
+          "id": "unlimited-reuse",
+          "text": "Each item may be reused unlimited times, so sweep capacity upward.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "knapsack-01"
+      ],
+      "modelExplanation": "0/1 knapsack (subset-sum): target = total/2; dp[s] tracks reachable sums with each item used once (downward capacity sweep). Feasible iff dp[target] is true."
+    }
+  },
+  {
+    "uid": "pattern:knapsack:pat-ks-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: find the fewest coins to make an amount where coins are reusable unlimited times.",
+      "The 0/1 downward sweep forbids reuse, so applying it here may report impossible or use too many coins.",
+      "Key insight: reusable items mean an item can contribute multiple times, changing the sweep direction.",
+      "Approach: use unbounded knapsack (coin change), iterating capacity upward.",
+      "Pseudocode: dp[0]=0; for each amount a upward: dp[a]=min(dp[a], dp[a-coin]+1) over coins.",
+      "No — that's UNBOUNDED knapsack: iterate capacity UPWARD (dp[a] from dp[a-coin]) since items repeat; the 0/1 downward form forbids reuse."
+    ]
+  },
+  {
+    "uid": "pattern:knapsack:pat-ks-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Fewest coins to make an amount, with coins reusable unlimited times. Same 0/1 knapsack recurrence?",
+      "approaches": [
+        {
+          "id": "unbounded",
+          "label": "Unbounded knapsack (coin change)",
+          "requiredReasonIds": [
+            "reuse-sweep-up"
+          ]
+        },
+        {
+          "id": "knapsack-01",
+          "label": "0/1 knapsack (downward sweep)",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "The 0/1 downward sweep forbids reuse and may report impossible or overestimate the minimum when coins repeat unlimited times."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "reuse-sweep-up",
+          "text": "Coins repeat, so iterate capacity UPWARD (dp[a] from dp[a−coin]) to allow reusing a coin within the same amount."
+        },
+        {
+          "id": "each-once",
+          "text": "Each coin may be used at most once, so sweep capacity downward.",
+          "contradictory": true
+        },
+        {
+          "id": "fractional-coins",
+          "text": "Coins can be split into fractions, so greedy ratio selection is optimal.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "unbounded"
+      ],
+      "modelExplanation": "No — reusable coins make it UNBOUNDED knapsack (coin change): iterate capacity upward so a coin can be reused. The 0/1 downward sweep forbids reuse and can give impossible or a nonminimal count."
+    }
+  },
+  {
+    "uid": "lesson:dp-1d-2d:dp12-choose-1",
+    "field": "hints",
+    "value": [
+      "Distinguish the state coordinates from the number of stored rows.",
+      "The full table has item-prefix and capacity axes.",
+      "A descending-capacity row can preserve previous-item dependencies while the outer loop supplies the item layer.",
+      "Natural full table: dp[i][j]. Valid compression: one row with correct update direction."
+    ]
+  },
+  {
+    "uid": "lesson:dp-1d-2d:dp12-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "For the state 'best result using the first i items with capacity at most j', describe the natural uncompressed table and explain whether one-row storage is also possible.",
+      "approaches": [
+        {
+          "id": "two-d",
+          "label": "Natural full table dp[i][j], with valid row compression",
+          "requiredReasonIds": [
+            "two-independent-dims"
+          ]
+        },
+        {
+          "id": "one-d",
+          "label": "Discard item layer with no update-order rule",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A one-row array can work when the outer loop and descending update preserve the item layer. Discarding that information without such a rule changes the recurrence."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "two-independent-dims",
+          "text": "The natural state has both item-prefix i and capacity j. Storage may be compressed if control flow preserves item layers and dependencies."
+        },
+        {
+          "id": "state-is-one-var",
+          "text": "The subproblem depends on only one varying quantity, so one dimension suffices.",
+          "contradictory": true
+        },
+        {
+          "id": "capacity-not-state",
+          "text": "Remaining capacity is not part of the state, so it need not index the table.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "two-d"
+      ],
+      "modelExplanation": "The natural state is (i,j), so a full table is dp[i][j]. One-row storage is also possible: the outer item loop supplies i implicitly, while descending j preserves previous-item states. A one-index table without that layer discipline would lose necessary state."
+    }
+  }
+]

@@ -18,6 +18,8 @@ class SegTree:
         for i in range(self.n - 1, 0, -1):      # build parents bottom-up
             self.tree[i] = self.tree[2 * i] + self.tree[2 * i + 1]
     def update(self, i, value):                 # set position i to value
+        if not 0 <= i < self.n:
+            raise IndexError("update index out of range")
         i += self.n
         self.tree[i] = value
         i //= 2
@@ -25,6 +27,8 @@ class SegTree:
             self.tree[i] = self.tree[2 * i] + self.tree[2 * i + 1]
             i //= 2
     def query(self, lo, hi):                    # sum of [lo, hi)  (half-open)
+        if not 0 <= lo <= hi <= self.n:
+            raise IndexError("query boundaries out of range")
         res = 0
         lo += self.n
         hi += self.n
@@ -51,133 +55,437 @@ export const segmentTree: LessonDefinition = {
   area: "Range queries",
   prerequisites: ["fenwick-tree", "tree-dfs"],
 
-  explanation: `A **segment tree** answers **range queries** (sum, min, max, gcd, …) with **point updates**, both in **O(log n)**, over an array whose values change. It is more general than a Fenwick tree: because each node stores the **combined value of a contiguous segment** rather than a prefix, it works for **non-invertible** aggregates like range-minimum or range-maximum, where the \`prefix(hi) − prefix(lo−1)\` trick would fail.
-
-This lesson uses the compact **iterative** layout. Allocate an array \`tree\` of size \`2n\`; the original elements become the **leaves** in the second half \`[n, 2n)\`, and each internal node \`i\` stores the combine of its two children \`tree[2i]\` and \`tree[2i+1]\`. Building bottom-up (fill leaves, then compute parents from \`n−1\` down to \`1\`) is **O(n)**. A **point update** sets a leaf and walks up refreshing each ancestor — **O(log n)** because the tree has that height. The **range query** is the elegant part: with a **half-open** interval \`[lo, hi)\`, push both indices to the leaf layer and climb; whenever \`lo\` is a **right child** (\`lo & 1\`) it isn't fully inside its parent's segment, so add \`tree[lo]\` and step past it, and symmetrically when \`hi\` is odd, include \`tree[hi−1]\`; then halve both. This visits only **O(log n)** nodes that exactly tile the range.
-
-In the example the range \`[0,4)\` sums to **10**, \`[1,5)\` to **12**, and after setting index 2 to 3 the range \`[1,5)\` becomes **16**. Segment trees use **O(n)** space. Compared to the Fenwick tree: the BIT is smaller and simpler and is the go-to for plain prefix/point **sums**; the segment tree is the tool when you need **min/max/gcd** or richer operations (and, with **lazy propagation** — beyond this lesson — even efficient *range* updates). Remember the interval convention here is **half-open**: \`query(lo, hi)\` covers indices \`lo\` through \`hi−1\`.`,
+  explanation: "A **segment tree** combines selected array blocks to answer dynamic range queries. This example uses addition and point assignment. Build n leaves at positions [n,2n), then compute parents bottom-up in O(n). Updating one leaf refreshes O(log(n+1)) ancestors. A half-open query [lo,hi) selects at most two blocks per level and climbs by halving both boundaries.\n\nThe compact 2n layout works for any n, including sizes that are not powers of two. For those sizes not every internal node corresponds to a contiguous interval in the original linear order: some nodes wrap around the leaf arrangement and are not used as whole query blocks. It is misleading to label every parent as an ordinary interval. Addition is commutative, so the example can use one accumulator even though selected right-side blocks are encountered in reverse order. A noncommutative associative operation needs ordered left/right accumulators (and careful layout interpretation); padding to a power of two provides a simpler interval picture.\n\nEmpty arrays allow query(0,0)=0 and no updates. Valid updates use 0<=i<n; queries require 0<=lo<=hi<=n. Invalid bounds raise IndexError. Negative values and repeated values are supported. The sample outputs 10, 12, then 16 after an assignment. Its complete build plus fixed operations is O(n); a method uses O(1) working storage beyond the retained O(n) tree. General minimum/maximum assignments work with a segment tree; specialized Fenwick minimum variants have additional restrictions.",
 
   vocabulary: [
-    { term: "Segment tree", definition: "A tree where each node stores an aggregate over a contiguous segment, giving O(log n) range queries and updates." },
-    { term: "Leaf layer", definition: "The bottom level [n, 2n) holding the original array elements." },
-    { term: "Combine function", definition: "How two children merge into a parent (sum here; could be min, max, gcd)." },
-    { term: "Point update", definition: "Setting one leaf and refreshing its ancestors up to the root." },
-    { term: "Half-open interval", definition: "query(lo, hi) covers indices lo..hi-1; hi is exclusive." },
-    { term: "Lazy propagation", definition: "An extension (not shown) enabling efficient range updates." },
-  ],
+  {
+    "term": "Segment tree",
+    "definition": "A structure combining array blocks for logarithmic dynamic range queries; a padded tree gives each node a contiguous interval."
+  },
+  {
+    "term": "Leaf layer",
+    "definition": "The bottom level [n, 2n) holding the original array elements."
+  },
+  {
+    "term": "Combine function",
+    "definition": "How two children merge into a parent (sum here; could be min, max, gcd)."
+  },
+  {
+    "term": "Point update",
+    "definition": "Setting one leaf and refreshing its ancestors up to the root."
+  },
+  {
+    "term": "Half-open interval",
+    "definition": "query(lo, hi) covers indices lo..hi-1; hi is exclusive."
+  },
+  {
+    "term": "Lazy propagation",
+    "definition": "An extension (not shown) enabling efficient range updates."
+  }
+],
 
   concepts: {
-    purpose:
-      "Answer range aggregate queries (including non-invertible ones like min/max) with point updates in O(log n).",
-    operations:
-      "Build bottom-up in O(n); update a leaf and refresh ancestors; query by climbing and adding boundary nodes that fall outside their parent segment.",
-    uses:
-      "Range sum/min/max/gcd with updates, competitive programming range problems, interval statistics; with lazy propagation, range updates.",
-    tradeoffs:
-      "More general than a Fenwick tree (handles non-invertible aggregates) but larger constant and more code; O(n) space either way.",
-    commonMistakes:
-      "Treating the interval as inclusive (it's half-open); wrong parent/child index math (2i, 2i+1, i//2); forgetting to refresh all ancestors on update; using a BIT when you actually need min/max.",
-    edgeCases:
-      "Empty range lo == hi returns 0. A single element is one leaf. query over the whole array climbs to the root's children.",
-  },
+  "purpose": "Answer range aggregate queries (including non-invertible ones like min/max) with point updates in O(log n).",
+  "operations": "Build bottom-up in O(n); update a leaf and refresh ancestors; query by climbing and adding boundary nodes that fall outside their parent segment.",
+  "uses": "Range sum/min/max/gcd with updates, competitive programming range problems, interval statistics; with lazy propagation, range updates.",
+  "tradeoffs": "More general than a Fenwick tree (handles non-invertible aggregates) but larger constant and more code; O(n) space either way.",
+  "commonMistakes": "Mixing inclusive and half-open bounds; accepting negative Python indices; confusing assignment with a delta; assuming every compact-layout node is a contiguous input interval; reusing one accumulator for a noncommutative combine.",
+  "edgeCases": "query(lo,lo) returns zero, including query(0,0) on an empty tree. Updating an empty tree or using negative/out-of-range indices raises IndexError. Non-power-of-two sizes work for sum."
+},
 
   complexity: [
-    { operation: "build", best: "O(n)", average: "O(n)", worst: "O(n)", space: "O(n)", note: "Fill n leaves, compute n-1 parents." },
-    { operation: "point update", best: "O(log n)", average: "O(log n)", worst: "O(log n)", note: "Refresh ancestors along one root path." },
-    { operation: "range query", best: "O(log n)", average: "O(log n)", worst: "O(log n)", note: "Visit O(log n) boundary nodes." },
-  ],
+  {
+    "operation": "build",
+    "best": "O(n)",
+    "worst": "O(n)",
+    "space": "O(n)",
+    "note": "One method beyond the retained tree uses O(1) working space; storage is 2n cells."
+  },
+  {
+    "operation": "point update",
+    "best": "O(1)",
+    "worst": "O(log(n+1))",
+    "note": "One method beyond the retained tree uses O(1) working space; storage is 2n cells."
+  },
+  {
+    "operation": "range query",
+    "best": "O(1)",
+    "worst": "O(log(n+1))",
+    "note": "One method beyond the retained tree uses O(1) working space; storage is 2n cells."
+  }
+],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [{ symbol: "n", meaning: "the number of elements (leaves) in the tree" }],
-    costModel:
-      "Each combine is O(1). Update and query move up the tree, halving the index each step, so they take a number of steps equal to the tree height.",
-    time: {
-      bound: "O(log n)",
-      case: "worst",
-      explanation:
-        "The tree has height ⌈log₂ n⌉. Update walks from a leaf to the root refreshing one node per level → O(log n). Query climbs both boundaries, doing O(1) work per level and adding at most two boundary nodes each level → O(log n). Building is O(n): n leaf writes plus n−1 parent combines.",
-    },
-    space: {
-      bound: "O(n)",
-      case: "worst",
-      explanation:
-        "The tree array holds 2n entries (n leaves + n internal in this layout), so auxiliary space is O(n). The iterative query/update use O(1) extra variables (no recursion stack).",
-      inputOutputNote: "The 2n-entry tree array IS the structure; each query returns an O(1) integer.",
-    },
-    derivation: [
-      { lines: [7, 8, 9, 10], description: "Build: n leaf writes plus n-1 parent combines → O(n).", cost: "O(n)", dimension: "time" },
-      { lines: [11, 12, 13, 14, 15, 16, 17], description: "Update refreshes one node per level up to the root.", cost: "O(log n)", dimension: "time" },
-      { lines: [18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], description: "Query climbs both boundaries, O(1) per level.", cost: "O(log n)", dimension: "time" },
-      { lines: [6], description: "A tree array of size 2n.", cost: "O(n)", dimension: "space" },
-    ],
-    assumptions: [
-      "The combine function is associative (sum here).",
-      "Intervals are half-open: query(lo, hi) covers lo..hi-1.",
-      "Index arithmetic uses the 2i / 2i+1 / i//2 layout.",
-    ],
-    tradeoffs:
-      "A Fenwick tree is smaller/faster for invertible aggregates like sums; the segment tree generalizes to min/max/gcd and (with lazy propagation) range updates, at a larger constant and more code. Both are O(log n) per op and O(n) space.",
-    counters: [
-      { label: "build combines", definition: "executions of the parent-build line (line 10)", countLines: [10] },
-      { label: "query climb steps", definition: "executions of the query loop body (line 22)", countLines: [22] },
-    ],
-    fixedDataNote:
-      "Here n = 6, so the tree has height 3 and each query/update touches at most ~3 levels. The O(log n) bound describes how that grows with n.",
+  "scope": "program",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of elements (leaves) in the tree"
+    }
+  ],
+  "costModel": "Each combine is O(1). Update and query move up the tree, halving the index each step, so they take a number of steps equal to the tree height.",
+  "time": {
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "Build n leaves and n−1 parent nodes, then perform a fixed number of logarithmic operations. For n>=1 the complete program is O(n); n=0 is constant."
   },
+  "space": {
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "The complete program constructs the 2n-cell tree as working storage. It has n leaves, n−1 used parent cells and unused index zero when n>=1. Each method adds O(1) local storage.",
+    "inputOutputNote": "The 2n-entry tree array IS the structure; each query returns an O(1) integer."
+  },
+  "derivation": [
+    {
+      "lines": [
+        7,
+        8,
+        9,
+        10
+      ],
+      "description": "Build: n leaf writes plus n-1 parent combines → O(n).",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        11,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "description": "Update refreshes one node per level up to the root.",
+      "cost": "O(log n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        20,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
+      ],
+      "description": "Query climbs both boundaries, O(1) per level.",
+      "cost": "O(log n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        6
+      ],
+      "description": "Allocate 2n cells: n leaves, n−1 parents and unused index zero for n>=1.",
+      "cost": "O(n)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Zero-based element indices and half-open query ranges.",
+    "The displayed single-accumulator combine is addition (associative and commutative), with identity zero.",
+    "Integer sums/index operations are treated as constant-cost bounded-width arithmetic.",
+    "For arbitrary n the compact parent layout can wrap; only selected query blocks must represent the requested interval."
+  ],
+  "tradeoffs": "A sum BIT uses a smaller retained array. Segment trees support general associative aggregates; this one-accumulator example uses commutative addition. Constant factors depend on implementation and workload. Lazy range updates are a separate extension.",
+  "counters": [
+    {
+      "label": "query rounds",
+      "definition": "executions of the left-boundary test at line 27",
+      "countLines": [
+        27
+      ]
+    },
+    {
+      "label": "parents refreshed",
+      "definition": "executions of the parent recomputation at line 18",
+      "countLines": [
+        18
+      ]
+    }
+  ],
+  "fixedDataNote": "Here n = 6, so the tree has height 3 and each query/update touches at most ~3 levels. The O(log n) bound describes how that grows with n.",
+  "references": [
+    {
+      "url": "https://codeforces.com/blog/entry/18051",
+      "title": "Al.Cash: Efficient and easy segment trees",
+      "section": "Single-element modifications; arbitrary sized array; non-commutative combiners",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Compact 2n layout supports arbitrary n.",
+        "Ordered operations require two query accumulators."
+      ],
+      "conventions": [
+        "App uses addition, one accumulator and half-open zero-based ranges."
+      ],
+      "accessDate": "2026-10-10"
+    },
+    {
+      "url": "https://cp-algorithms.com/data_structures/segment_tree.html",
+      "title": "CP Algorithms: segment trees",
+      "section": "Simplest sum tree; construction; update and query",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Build is linear; point update and query logarithmic."
+      ],
+      "conventions": [
+        "Source commonly uses recursive 4n storage; app uses iterative 2n."
+      ],
+      "accessDate": "2026-10-10"
+    }
+  ]
+},
 
   code,
 
   codeExplanations: [
-    { line: 1, executable: false, explanation: "Comment: range queries + point updates in O(log n)." },
-    { line: 2, executable: false, explanation: "Comment: iterative array layout." },
-    { line: 3, executable: true, explanation: "Define the SegTree class." },
-    { line: 4, executable: true, explanation: "Constructor takes the initial data." },
-    { line: 5, executable: true, explanation: "n = number of elements." },
-    { line: 6, executable: true, explanation: "Allocate a tree array of size 2n." },
-    { line: 7, executable: true, explanation: "Place each element as a leaf..." },
-    { line: 8, executable: true, explanation: "...in the second half [n, 2n)." },
-    { line: 9, executable: true, explanation: "Build internal nodes from n-1 down to 1..." },
-    { line: 10, executable: true, explanation: "...each parent is the combine (sum) of its two children." },
-    { line: 11, executable: true, explanation: "update(i, value): set position i." },
-    { line: 12, executable: true, explanation: "Map index i to its leaf position i + n." },
-    { line: 13, executable: true, explanation: "Store the new value at the leaf." },
-    { line: 14, executable: true, explanation: "Move to the parent." },
-    { line: 15, executable: true, explanation: "Walk up to the root refreshing ancestors." },
-    { line: 16, executable: true, explanation: "Recompute this node from its children." },
-    { line: 17, executable: true, explanation: "Continue to the parent." },
-    { line: 18, executable: true, explanation: "query(lo, hi): sum of the half-open range [lo, hi)." },
-    { line: 19, executable: true, explanation: "Result accumulator." },
-    { line: 20, executable: true, explanation: "Map lo to the leaf layer." },
-    { line: 21, executable: true, explanation: "Map hi to the leaf layer." },
-    { line: 22, executable: true, explanation: "Climb while the range is non-empty." },
-    { line: 23, executable: true, explanation: "If lo is a right child, it isn't fully covered by its parent..." },
-    { line: 24, executable: true, explanation: "...so add it to the result..." },
-    { line: 25, executable: true, explanation: "...and move lo past it." },
-    { line: 26, executable: true, explanation: "If hi is a right child, the node hi-1 is inside the range..." },
-    { line: 27, executable: true, explanation: "...step hi down..." },
-    { line: 28, executable: true, explanation: "...and add that node." },
-    { line: 29, executable: true, explanation: "Halve lo to move up a level." },
-    { line: 30, executable: true, explanation: "Halve hi to move up a level." },
-    { line: 31, executable: true, explanation: "Return the range sum." },
-    { line: 32, executable: false, explanation: "Blank line." },
-    { line: 33, executable: true, explanation: "Build a segment tree from the sample data." },
-    { line: 34, executable: true, explanation: "query(0,4) = 3+2-1+6 = 10." },
-    { line: 35, executable: true, explanation: "query(1,5) = 2-1+6+5 = 12." },
-    { line: 36, executable: true, explanation: "Set index 2 to 3." },
-    { line: 37, executable: true, explanation: "Now query(1,5) = 2+3+6+5 = 16." },
-  ],
+  {
+    "line": 1,
+    "executable": false,
+    "explanation": "Comment: range queries + point updates in O(log n)."
+  },
+  {
+    "line": 2,
+    "executable": false,
+    "explanation": "Comment: iterative array layout."
+  },
+  {
+    "line": 3,
+    "executable": true,
+    "explanation": "Define the SegTree class."
+  },
+  {
+    "line": 4,
+    "executable": true,
+    "explanation": "Constructor takes the initial data."
+  },
+  {
+    "line": 5,
+    "executable": true,
+    "explanation": "n = number of elements."
+  },
+  {
+    "line": 6,
+    "executable": true,
+    "explanation": "Allocate a tree array of size 2n."
+  },
+  {
+    "line": 7,
+    "executable": true,
+    "explanation": "Place each element as a leaf..."
+  },
+  {
+    "line": 8,
+    "executable": true,
+    "explanation": "...in the second half [n, 2n)."
+  },
+  {
+    "line": 9,
+    "executable": true,
+    "explanation": "Build internal nodes from n-1 down to 1..."
+  },
+  {
+    "line": 10,
+    "executable": true,
+    "explanation": "...each parent is the combine (sum) of its two children."
+  },
+  {
+    "line": 11,
+    "executable": true,
+    "explanation": "update(i, value): set position i."
+  },
+  {
+    "line": 12,
+    "explanation": "Point assignments require a valid zero-based element index.",
+    "executable": true
+  },
+  {
+    "line": 13,
+    "explanation": "Reject negative and past-end indices before they can corrupt internal nodes.",
+    "executable": true
+  },
+  {
+    "line": 14,
+    "executable": true,
+    "explanation": "Map index i to its leaf position i + n."
+  },
+  {
+    "line": 15,
+    "executable": true,
+    "explanation": "Store the new value at the leaf."
+  },
+  {
+    "line": 16,
+    "executable": true,
+    "explanation": "Move to the parent."
+  },
+  {
+    "line": 17,
+    "executable": true,
+    "explanation": "Walk up to the root refreshing ancestors."
+  },
+  {
+    "line": 18,
+    "executable": true,
+    "explanation": "Recompute this node from its children."
+  },
+  {
+    "line": 19,
+    "executable": true,
+    "explanation": "Continue to the parent."
+  },
+  {
+    "line": 20,
+    "executable": true,
+    "explanation": "query(lo, hi): sum of the half-open range [lo, hi)."
+  },
+  {
+    "line": 21,
+    "explanation": "Validate zero-based half-open query boundaries; equality gives an empty range.",
+    "executable": true
+  },
+  {
+    "line": 22,
+    "explanation": "Reject negative, reversed, and past-end boundaries.",
+    "executable": true
+  },
+  {
+    "line": 23,
+    "executable": true,
+    "explanation": "Result accumulator."
+  },
+  {
+    "line": 24,
+    "executable": true,
+    "explanation": "Map lo to the leaf layer."
+  },
+  {
+    "line": 25,
+    "executable": true,
+    "explanation": "Map hi to the leaf layer."
+  },
+  {
+    "line": 26,
+    "executable": true,
+    "explanation": "Climb while the range is non-empty."
+  },
+  {
+    "line": 27,
+    "executable": true,
+    "explanation": "If lo is a right child, it isn't fully covered by its parent..."
+  },
+  {
+    "line": 28,
+    "executable": true,
+    "explanation": "...so add it to the result..."
+  },
+  {
+    "line": 29,
+    "executable": true,
+    "explanation": "...and move lo past it."
+  },
+  {
+    "line": 30,
+    "executable": true,
+    "explanation": "If hi is a right child, the node hi-1 is inside the range..."
+  },
+  {
+    "line": 31,
+    "executable": true,
+    "explanation": "...step hi down..."
+  },
+  {
+    "line": 32,
+    "executable": true,
+    "explanation": "...and add that node."
+  },
+  {
+    "line": 33,
+    "executable": true,
+    "explanation": "Halve lo to move up a level."
+  },
+  {
+    "line": 34,
+    "executable": true,
+    "explanation": "Halve hi to move up a level."
+  },
+  {
+    "line": 35,
+    "executable": true,
+    "explanation": "Return the range sum."
+  },
+  {
+    "line": 36,
+    "executable": false,
+    "explanation": "Blank line."
+  },
+  {
+    "line": 37,
+    "executable": true,
+    "explanation": "Build a segment tree from the sample data."
+  },
+  {
+    "line": 38,
+    "executable": true,
+    "explanation": "query(0,4) = 3+2-1+6 = 10."
+  },
+  {
+    "line": 39,
+    "executable": true,
+    "explanation": "query(1,5) = 2-1+6+5 = 12."
+  },
+  {
+    "line": 40,
+    "executable": true,
+    "explanation": "Set index 2 to 3."
+  },
+  {
+    "line": 41,
+    "executable": true,
+    "explanation": "Now query(1,5) = 2+3+6+5 = 16."
+  }
+],
 
-  bindings: [{ variable: "st", model: "object" }],
+  bindings: [
+  {
+    "variable": "st",
+    "model": "array",
+    "path": "tree",
+    "overlays": [
+      {
+        "role": "boundary",
+        "source": "lo",
+        "label": "query left"
+      },
+      {
+        "role": "boundary",
+        "source": "hi",
+        "label": "query right"
+      }
+    ]
+  }
+],
 
+  bindingsRationale: "Display st.tree as the actual compact 2n storage, avoiding false contiguous-interval labels on wrapped internal nodes. Query overlays track the current half-open boundaries.",
   prediction: [
-    {
-      atEventIndex: 0,
-      prompt: "Why choose a segment tree over a Fenwick tree, given the BIT is simpler?",
-      answer: "Because the segment tree handles NON-invertible aggregates like range minimum/maximum/gcd, where the BIT's prefix(hi) - prefix(lo-1) trick doesn't work. It also extends (with lazy propagation) to efficient range updates. Use the BIT for plain prefix/point sums; use the segment tree for min/max/gcd or range updates.",
-      explanation: "The BIT relies on invertibility for range = difference of prefixes. Min/max have no inverse, so you need per-segment aggregates — exactly what a segment tree stores.",
-    },
-  ],
+  {
+    "atEventIndex": 0,
+    "prompt": "Why choose a segment tree over a Fenwick tree, given the BIT is simpler?",
+    "answer": "A segment tree stores aggregates that can be combined over selected ranges, including min/max/gcd without subtraction. The displayed sum BIT derives a range from two prefix sums; that subtraction needs an inverse. Specialized minimum BIT variants have extra restrictions, while range updates with lazy propagation are a separate segment-tree extension.",
+    "explanation": "This compact example implements point assignments and half-open sum queries. Supporting ordered noncommutative aggregates needs separate left/right accumulators; general lazy range updates require additional state and code."
+  }
+],
 
   experiments: [
     "Change the combine from + to min (and initialize appropriately) to get range-minimum queries.",
@@ -224,42 +532,47 @@ In the example the range \`[0,4)\` sums to **10**, \`[1,5)\` to **12**, and afte
     },
   ],
 
-  review: `A **segment tree** answers **range queries** (sum/min/max/gcd) with **point updates** in **O(log n)** and **O(n)** space, storing each node's aggregate over a contiguous **segment**. The iterative layout puts leaves in \`[n, 2n)\`, builds parents bottom-up in **O(n)**, updates by refreshing ancestors, and queries by climbing while adding boundary nodes that fall outside their parent's segment. Unlike a Fenwick tree it handles **non-invertible** aggregates. Intervals here are **half-open**. The example gives 10, 12, then 16.`,
+  review: "This compact sum segment tree stores leaves in [n,2n), builds parent sums in O(n), and supports point assignments and half-open queries in O(log(n+1)). Retained storage is 2n cells, with O(1) additional state per method. For non-power-of-two n some internal nodes wrap across the leaf order; selected query blocks still produce the requested sum. Noncommutative combines need two ordered accumulators. Empty query intervals return zero; invalid indices are rejected.",
 
   expectedOutput: "10\n12\n16\n",
 
   references: [
-    {
-      url: "https://cp-algorithms.com/data_structures/segment_tree.html",
-      title: "Segment Tree — CP-Algorithms",
-      section: "Iterative implementation; build, update, query complexity",
-      topic: "range/segment",
-      purpose: "Confirm the iterative 2n array layout, O(n) build, O(log n) update/query, and the boundary-node query logic.",
-      verifiedClaims: [
-        "A segment tree supports range queries and point updates in O(log n) with O(n) space.",
-        "The iterative layout stores leaves in [n, 2n) and each internal node as the combine of its children.",
-      ],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://en.wikipedia.org/wiki/Segment_tree",
-      title: "Segment tree — Wikipedia",
-      section: "Definition; comparison with Fenwick tree",
-      topic: "range/segment",
-      purpose: "Cross-check that segment trees handle general (including non-invertible) aggregates, unlike the sum-oriented Fenwick tree.",
-      verifiedClaims: [
-        "Segment trees answer range queries for aggregates such as sum, minimum, and maximum.",
-        "They are more general than Fenwick trees, which target invertible operations.",
-      ],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://codeforces.com/blog/entry/18051",
+    "title": "Al.Cash: Efficient and easy segment trees",
+    "section": "Single-element modifications; arbitrary sized array; non-commutative combiners",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Compact 2n layout supports arbitrary n.",
+      "Ordered operations require two query accumulators."
+    ],
+    "conventions": [
+      "App uses addition, one accumulator and half-open zero-based ranges."
+    ],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://cp-algorithms.com/data_structures/segment_tree.html",
+    "title": "CP Algorithms: segment trees",
+    "section": "Simplest sum tree; construction; update and query",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Build is linear; point update and query logarithmic."
+    ],
+    "conventions": [
+      "Source commonly uses recursive 4n storage; app uses iterative 2n."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "65a5bcd3682e0933",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "fa3d8511fc0b1ca8",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 5,
   },
 };

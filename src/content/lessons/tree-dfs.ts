@@ -60,33 +60,106 @@ DFS visits every node exactly once, so it is **O(n)** time. Its space is the **r
   ],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [
-      { symbol: "n", meaning: "the number of nodes in the tree" },
-      { symbol: "h", meaning: "the height of the tree (longest root-to-leaf path)" },
-    ],
-    costModel: "Each node is visited once with O(1) work; the recursion stack holds one frame per level of the current path.",
-    time: {
-      bound: "O(n)",
-      case: "worst",
-      explanation: "DFS calls itself once per node (plus O(n) None-base-case calls at the empty child slots), doing constant work at each — so it touches every node exactly once, giving O(n). This holds for any tree shape: you must visit all n nodes.",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of nodes in the tree"
     },
-    space: {
-      bound: "O(h)",
-      case: "worst",
-      explanation: "The only extra memory is the recursion stack, which is as deep as the current path — at most the tree's height h. For a balanced tree h ≈ log n (O(log n) space); for a degenerate, list-like tree h = n (O(n) space). This is why we express DFS space as O(h), not O(log n).",
-      inputOutputNote: "The tree of n nodes is the input; the output list of n values and the O(h) stack are the extra space.",
-    },
-    derivation: [
-      { lines: [12, 13], description: "Base case returns at empty slots — O(1) each.", cost: "O(n)", dimension: "time" },
-      { lines: [14, 15, 16], description: "Visit each node once and recurse into both children.", cost: "O(n)", dimension: "time" },
-      { lines: [15, 16], description: "The recursion stack is as deep as the height h.", cost: "O(h)", dimension: "space" },
-    ],
-    assumptions: ["Visiting a node (append) is O(1).", "Recursion depth reaches the tree height h."],
-    tradeoffs: "An explicit stack (iterative DFS) avoids Python's recursion limit but uses the same O(h) space; BFS uses O(width) space instead of O(h) and visits level by level.",
-    counters: [{ label: "nodes visited", definition: "executions of the visit line (line 14)", countLines: [14] }],
-    fixedDataNote: "This run visits 7 nodes with height 3 → [5,3,2,4,8,7,9]. The O(n) time / O(h) space bounds generalise to any tree.",
+    {
+      "symbol": "h",
+      "meaning": "the height of the tree (longest root-to-leaf path)"
+    }
+  ],
+  "costModel": "Each node is visited once with O(1) work; the recursion stack holds one frame per level of the current path.",
+  "time": {
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "DFS calls itself once per node (plus O(n) None-base-case calls at the empty child slots), doing constant work at each — so it touches every node exactly once, giving O(n). This holds for any tree shape: you must visit all n nodes."
   },
+  "space": {
+    "bound": "O(h)",
+    "case": "worst",
+    "explanation": "The only extra memory is the recursion stack, which is as deep as the current path — at most the tree's height h. For a balanced tree h ≈ log n (O(log n) space); for a degenerate, list-like tree h = n (O(n) space). This is why we express DFS space as O(h), not O(log n).",
+    "inputOutputNote": "The input tree and O(n) returned traversal list are excluded; active recursive frames use O(h) auxiliary storage."
+  },
+  "derivation": [
+    {
+      "lines": [
+        12,
+        13
+      ],
+      "description": "Base case returns at empty slots — O(1) each.",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        14,
+        15,
+        16
+      ],
+      "description": "Visit each node once and recurse into both children.",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        15,
+        16
+      ],
+      "description": "The recursion stack is as deep as the height h.",
+      "cost": "O(h)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Visiting a node (append) is O(1).",
+    "Recursion depth reaches the tree height h.",
+    "Input is a proper finite tree, not a graph with cycles/shared children. h counts nodes on the deepest root-to-leaf path; empty height is zero. Python recursion depth must fit the runtime limit."
+  ],
+  "tradeoffs": "An explicit stack (iterative DFS) avoids Python's recursion limit but uses the same O(h) space; BFS uses O(width) space instead of O(h) and visits level by level.",
+  "counters": [
+    {
+      "label": "nodes visited",
+      "definition": "executions of the visit line (line 14)",
+      "countLines": [
+        14
+      ]
+    }
+  ],
+  "fixedDataNote": "This run visits 7 nodes with height 3 → [5,3,2,4,8,7,9]. The O(n) time / O(h) space bounds generalise to any tree.",
+  "references": [
+    {
+      "url": "https://runestone.academy/ns/books/published/pythonds3/Trees/TreeTraversals.html",
+      "title": "Runestone: tree traversals",
+      "section": "6.8: preorder, inorder, postorder; recursive code listings",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Traversal visit order.",
+        "None is the recursion base case."
+      ],
+      "conventions": [],
+      "accessDate": "2026-10-10"
+    },
+    {
+      "url": "https://opendatastructures.org/ods-python/6_Binary_Trees.html",
+      "title": "Open Data Structures: binary trees",
+      "section": "Chapter 6 definitions and Figures 6.1–6.2",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Unique parents in a rooted tree.",
+        "Depth and height count edges."
+      ],
+      "conventions": [
+        "This app states when its height function counts nodes instead."
+      ],
+      "accessDate": "2026-10-10"
+    }
+  ]
+},
 
   code,
 
@@ -151,31 +224,41 @@ DFS visits every node exactly once, so it is **O(n)** time. Its space is the **r
   expectedOutput: "[5, 3, 2, 4, 8, 7, 9]\n",
 
   references: [
-    {
-      url: "https://runestone.academy/ns/books/published/pythonds3/Trees/index.html",
-      title: "Trees and Tree Algorithms — Problem Solving with Algorithms and DS using Python (Runestone)",
-      section: "Tree traversals / DFS",
-      topic: "trees/dfs",
-      purpose: "Confirm the recursive DFS structure (base case, visit, recurse) and its O(n) time.",
-      verifiedClaims: ["DFS visits each node once (O(n)) via recursion with a None base case"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://cp-algorithms.com/graph/depth-first-search.html",
-      title: "Depth First Search — CP-Algorithms",
-      section: "DFS complexity",
-      topic: "trees/dfs",
-      purpose: "Cross-check that DFS is O(n) time with O(h) recursion-stack space (O(V) in graph terms).",
-      verifiedClaims: ["DFS runs in O(n) time; recursion stack depth is bounded by the height/path length"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://runestone.academy/ns/books/published/pythonds3/Trees/TreeTraversals.html",
+    "title": "Runestone: tree traversals",
+    "section": "6.8: preorder, inorder, postorder; recursive code listings",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Traversal visit order.",
+      "None is the recursion base case."
+    ],
+    "conventions": [],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://opendatastructures.org/ods-python/6_Binary_Trees.html",
+    "title": "Open Data Structures: binary trees",
+    "section": "Chapter 6 definitions and Figures 6.1–6.2",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Unique parents in a rooted tree.",
+      "Depth and height count edges."
+    ],
+    "conventions": [
+      "This app states when its height function counts nodes instead."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "7b83cf3fe0411b5d",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "8c4bd50424c157e3",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 5,
   },
 };

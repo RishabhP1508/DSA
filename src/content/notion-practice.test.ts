@@ -110,9 +110,9 @@ describe("R5.6 Notion manifest — exact set", () => {
     expect(EXPORT.length).toBe(79);
   });
 
-  it("has 77 mapped and 2 unresolved occurrences (content-audit result)", () => {
-    expect(NOTION_PRACTICE.filter((r) => r.status === "mapped").length).toBe(77);
-    expect(NOTION_PRACTICE.filter((r) => r.status === "unresolved").length).toBe(2);
+  it("has all 79 mapped occurrences after dedicated FU-1/FU-2 teaching", () => {
+    expect(NOTION_PRACTICE.filter((r) => r.status === "mapped").length).toBe(79);
+    expect(NOTION_PRACTICE.filter((r) => r.status === "unresolved").length).toBe(0);
   });
 
   it("has exactly 75 unique canonical URLs", () => {
@@ -207,27 +207,21 @@ describe("R5.6 — previously-absent questions: present AND mapped to a techniqu
     });
   }
 
-  // The content audit found NO lesson teaches these techniques (only a
-  // prerequisite), so they are honestly UNRESOLVED with a concrete gap — NOT
-  // falsely mapped to the prerequisite.
-  const unresolvedFlagged: [string, RegExp][] = [
-    ["Task Scheduler", /cooldown|idle-slot/i],
-    ["Meeting Rooms II", /concurrent-overlap|room-count|min-heap of end/i],
-  ];
 
-  for (const [title, gapPattern] of unresolvedFlagged) {
-    it(`${title} → unresolved with a concrete content gap (not falsely mapped to a prerequisite)`, () => {
-      const rows = NOTION_PRACTICE.filter((r) => r.title === title);
-      expect(rows.length, `${title} not present`).toBeGreaterThan(0);
-      for (const r of rows) {
-        expect(r.status, `${title} must be unresolved after the content audit`).toBe("unresolved");
-        expect(r.mappedIds.length, `${title} unresolved: must not imply a mapped teaching item`).toBe(0);
-        expect(r.coverageIds.length, `${title} unresolved: must not surface on a coverage entry`).toBe(0);
-        expect(r.rationale, `${title} gap not described`).toMatch(gapPattern);
-        expect(r.rationale).toMatch(/prerequisite/i);
-      }
+  for (const [title, id, coverageId] of [['Task Scheduler','task-scheduler','heaps/task-scheduler'],['Meeting Rooms II','meeting-rooms-ii','sorting/meeting-rooms-ii']]) {
+    it(title+' maps to its complete dedicated lesson, not a prerequisite',()=>{
+      const row=NOTION_PRACTICE.find(r=>r.title===title)!;
+      expect(row.status).toBe('mapped');
+      expect(row.mappedIds).toEqual([id]);
+      expect(row.coverageIds).toEqual([coverageId]);
+      const lesson=lessons.find(l=>l.id===id)!;
+      expect(lesson).toBeDefined();
+      expect(lesson.bindings.length).toBeGreaterThan(0);
+      expect(lesson.exercises.some(e=>e.tests&&e.recognition===undefined)).toBe(true);
+      expect(row.rationale).toMatch(/dedicated lesson/);
     });
   }
+
 });
 
 describe("R5.6 — additional practice is separate and not labelled Notion", () => {

@@ -1,0 +1,287 @@
+{
+  "runtime": "bundled Pyodide / CPython 3.14.2",
+  "results": [
+    {
+      "name": "scope excludes demonstration literal construction for function analyses",
+      "passed": false,
+      "error": "linear-search"
+    },
+    {
+      "name": "shipping range includes initialization at R=0",
+      "passed": false,
+      "error": "The input did not match the regular expression /log\\s*\\(?R\\s*\\+\\s*2/. Input:\n\n'O(n log R)'\n"
+    },
+    {
+      "name": "rotated distinct implementation explicitly rejects duplicate guarantee in prose",
+      "passed": false,
+      "error": "The input did not match the regular expression /wrong|incorrect/. Input:\n\n'No rotation (fully sorted) still works. Target at the pivot boundaries. Duplicates can make it degrade toward O(n).'\n"
+    },
+    {
+      "name": "actual Python sorting variants use their own memory and time",
+      "passed": false,
+      "error": "Expected values to be strictly equal:\n\n'O(n)' !== 'O(n^2)'\n"
+    },
+    {
+      "name": "bounds exposes both boundary loops and validates presence",
+      "passed": false,
+      "error": "Expected values to be strictly equal:\n\n0 !== 2\n"
+    },
+    {
+      "name": "sample linear-search",
+      "passed": true
+    },
+    {
+      "name": "sample binary-search",
+      "passed": true
+    },
+    {
+      "name": "sample binary-search-answer",
+      "passed": true
+    },
+    {
+      "name": "sample rotated-array-search",
+      "passed": true
+    },
+    {
+      "name": "sample bounds",
+      "passed": true
+    },
+    {
+      "name": "sample matrix-search",
+      "passed": true
+    },
+    {
+      "name": "sample bubble-sort",
+      "passed": true
+    },
+    {
+      "name": "sample selection-sort",
+      "passed": true
+    },
+    {
+      "name": "sample insertion-sort",
+      "passed": true
+    },
+    {
+      "name": "sample merge-sort",
+      "passed": true
+    },
+    {
+      "name": "sample quick-sort",
+      "passed": true
+    },
+    {
+      "name": "sample counting-sort",
+      "passed": true
+    },
+    {
+      "name": "sample bucket-sort",
+      "passed": true
+    },
+    {
+      "name": "sample heap-sort",
+      "passed": true
+    },
+    {
+      "name": "sample radix-sort",
+      "passed": true
+    },
+    {
+      "name": "sample comparators",
+      "passed": true
+    },
+    {
+      "name": "sample interval-sorting",
+      "passed": true
+    },
+    {
+      "name": "sample binary-search-on-answer",
+      "passed": true
+    },
+    {
+      "name": "sample merge-intervals",
+      "passed": true
+    },
+    {
+      "name": "sample greedy-interval-scheduling",
+      "passed": true
+    },
+    {
+      "name": "sample modified-binary-search",
+      "passed": true
+    },
+    {
+      "name": "sample divide-and-conquer",
+      "passed": true
+    },
+    {
+      "name": "exercise linear-search:ls-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise binary-search:bs-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise binary-search-answer:bsa-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise bounds:bnd-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise matrix-search:ms-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise bubble-sort:bub-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise selection-sort:sel-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise insertion-sort:ins-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise merge-sort:mrg-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise counting-sort:cnt-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise radix-sort:rad-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise comparators:cmp-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise interval-sorting:isort-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise binary-search-on-answer:pat-bsa-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise merge-intervals:pat-mi-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise greedy-interval-scheduling:pat-gis-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise modified-binary-search:pat-mbs-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise divide-and-conquer:pat-dac-fix-1",
+      "passed": true
+    },
+    {
+      "name": "boundary linear-search",
+      "passed": true
+    },
+    {
+      "name": "boundary binary-search",
+      "passed": true
+    },
+    {
+      "name": "boundary rotated-array-search",
+      "passed": true
+    },
+    {
+      "name": "boundary modified-binary-search",
+      "passed": true
+    },
+    {
+      "name": "boundary binary-search-answer",
+      "passed": true
+    },
+    {
+      "name": "boundary binary-search-on-answer",
+      "passed": true
+    },
+    {
+      "name": "boundary binary-search-on-answer",
+      "passed": false,
+      "error": "{\"type\":\"AssertionError\",\"message\":\"\",\"line\":22}\n+ actual - expected\n\n+ 'error'\n- 'completed'\n"
+    },
+    {
+      "name": "boundary bounds",
+      "passed": false,
+      "error": "{\"type\":\"NameError\",\"message\":\"name 'lower_bound' is not defined\",\"line\":11}\n+ actual - expected\n\n+ 'error'\n- 'completed'\n"
+    },
+    {
+      "name": "boundary matrix-search",
+      "passed": true
+    },
+    {
+      "name": "boundary bubble-sort",
+      "passed": true
+    },
+    {
+      "name": "boundary selection-sort",
+      "passed": true
+    },
+    {
+      "name": "boundary insertion-sort",
+      "passed": true
+    },
+    {
+      "name": "boundary merge-sort",
+      "passed": true
+    },
+    {
+      "name": "boundary quick-sort",
+      "passed": true
+    },
+    {
+      "name": "boundary heap-sort",
+      "passed": true
+    },
+    {
+      "name": "boundary divide-and-conquer",
+      "passed": true
+    },
+    {
+      "name": "boundary counting-sort",
+      "passed": true
+    },
+    {
+      "name": "boundary radix-sort",
+      "passed": true
+    },
+    {
+      "name": "boundary bucket-sort",
+      "passed": true
+    },
+    {
+      "name": "boundary merge-intervals",
+      "passed": false,
+      "error": "{\"type\":\"IndexError\",\"message\":\"list index out of range\",\"line\":4}\n+ actual - expected\n\n+ 'error'\n- 'completed'\n"
+    },
+    {
+      "name": "boundary greedy-interval-scheduling",
+      "passed": true
+    }
+  ],
+  "failures": [
+    "scope excludes demonstration literal construction for function analyses: linear-search",
+    "shipping range includes initialization at R=0: The input did not match the regular expression /log\\s*\\(?R\\s*\\+\\s*2/. Input:\n\n'O(n log R)'\n",
+    "rotated distinct implementation explicitly rejects duplicate guarantee in prose: The input did not match the regular expression /wrong|incorrect/. Input:\n\n'No rotation (fully sorted) still works. Target at the pivot boundaries. Duplicates can make it degrade toward O(n).'\n",
+    "actual Python sorting variants use their own memory and time: Expected values to be strictly equal:\n\n'O(n)' !== 'O(n^2)'\n",
+    "bounds exposes both boundary loops and validates presence: Expected values to be strictly equal:\n\n0 !== 2\n",
+    "boundary binary-search-on-answer: {\"type\":\"AssertionError\",\"message\":\"\",\"line\":22}\n+ actual - expected\n\n+ 'error'\n- 'completed'\n",
+    "boundary bounds: {\"type\":\"NameError\",\"message\":\"name 'lower_bound' is not defined\",\"line\":11}\n+ actual - expected\n\n+ 'error'\n- 'completed'\n",
+    "boundary merge-intervals: {\"type\":\"IndexError\",\"message\":\"list index out of range\",\"line\":4}\n+ actual - expected\n\n+ 'error'\n- 'completed'\n"
+  ]
+}

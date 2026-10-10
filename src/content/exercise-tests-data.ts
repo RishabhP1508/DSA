@@ -244,7 +244,7 @@ export const EXERCISE_TESTS: Record<string, string> = {
   "lesson:floyd-warshall:fw-fix-1":
     "INF = float('inf')\nd = floyd_warshall([[0, 3, INF, 7], [8, 0, 2, INF], [5, INF, 0, 1], [2, INF, INF, 0]], 4)\nassert d[0] == [0, 3, 5, 6], f'row 0 all-pairs shortest, got {d[0]}'\nassert d[1] == [5, 0, 2, 3], f'row 1, got {d[1]}'\nassert d[2] == [3, 6, 0, 1], f'row 2, got {d[2]}'\nassert d[3] == [2, 5, 7, 0], f'row 3, got {d[3]}'\n# A different graph so a hard-coded matrix cannot pass.\nd2 = floyd_warshall([[0, 1, INF], [INF, 0, 1], [1, INF, 0]], 3)\nassert d2[0] == [0, 1, 2], f'triangle row 0, got {d2[0]}'\nassert d2[1] == [2, 0, 1], f'triangle row 1, got {d2[1]}'\nassert d2[2] == [1, 2, 0], f'triangle row 2, got {d2[2]}'\n# Single vertex.\nassert floyd_warshall([[0]], 1) == [[0]], 'single vertex matrix unchanged'\nprint('OK')",
   "lesson:prim:prim-fix-1":
-    "adj = {0: [(1, 1), (2, 4)], 1: [(0, 1), (2, 2), (3, 6)], 2: [(0, 4), (1, 2), (3, 3)], 3: [(1, 6), (2, 3)]}\nassert prim(adj, 4) == 6, f'MST weight is 1+2+3 = 6 (buggy revisits and overcounts), got {prim(adj, 4)}'\n# A different graph so a hard-coded total cannot pass.\nadj2 = {0: [(1, 10), (2, 1)], 1: [(0, 10), (2, 2)], 2: [(0, 1), (1, 2)]}\nassert prim(adj2, 3) == 3, f'MST weight is 1+2 = 3, got {prim(adj2, 3)}'\n# Single vertex: no edges, zero weight.\nassert prim({0: []}, 1) == 0, 'single vertex MST weight is 0'\nprint('OK')",
+    "adj = {0: [(1, 1), (2, 4)], 1: [(0, 1), (2, 2), (3, 6)], 2: [(0, 4), (1, 2), (3, 3)], 3: [(1, 6), (2, 3)]}\nassert prim(adj, 4) == 6, f'MST weight is 1+2+3 = 6 (buggy revisits and overcounts), got {prim(adj, 4)}'\n# A different graph so a hard-coded total cannot pass.\nadj2 = {0: [(1, 10), (2, 1)], 1: [(0, 10), (2, 2)], 2: [(0, 1), (1, 2)]}\nassert prim(adj2, 3) == 3, f'MST weight is 1+2 = 3, got {prim(adj2, 3)}'\n# Single vertex: no edges, zero weight.\nassert prim({0: []}, 1) == 0, 'single vertex MST weight is 0'\nprint('OK')\nassert prim({},0)==0\ntry:\n prim({0:[],1:[]},2)\nexcept ValueError:\n pass\nelse:\n raise AssertionError('no disconnected MST')\nassert prim({0:[(1,-3)],1:[(0,-3)]},2)==-3",
   "lesson:linked-list-traversal:ll-fix-1":
     "class Node:\n    def __init__(self, val, nxt=None):\n        self.val = val\n        self.next = nxt\ndef build(vals):\n    head = None\n    for v in reversed(vals):\n        head = Node(v, head)\n    return head\nassert collect(build([1, 2, 3])) == [1, 2, 3], f'values in order, got {collect(build([1, 2, 3]))}'\nassert collect(None) == [], 'empty list collects nothing'\nassert collect(build([7])) == [7], 'single node'\nassert collect(build([5, 4, 3, 2, 1])) == [5, 4, 3, 2, 1], 'longer list in order'\nprint('OK')",
   "lesson:linked-list-slow-fast:llsf-fix-1":
@@ -262,7 +262,7 @@ export const EXERCISE_TESTS: Record<string, string> = {
   "lesson:dp-permutations:dpperm-complete-1":
     "got = sorted(tuple(p) for p in permutations([1, 2, 3]))\nexpected = sorted([(1, 2, 3), (1, 3, 2), (2, 1, 3), (2, 3, 1), (3, 1, 2), (3, 2, 1)])\nassert got == expected, f'all 6 permutations, got {got}'\nassert all(len(p) == 3 for p in permutations([1, 2, 3])), 'each permutation uses all elements'\n# A different-size input so a hard-coded result cannot pass.\nassert sorted(tuple(p) for p in permutations([1, 2])) == [(1, 2), (2, 1)], 'two-element permutations'\nassert permutations([7]) == [[7]], 'singleton'\nassert permutations([]) == [[]], 'empty input -> the empty permutation'\nprint('OK')",
   "lesson:dp-permutations:dpperm-fix-1":
-    "# The buggy version never clears used[i] on backtrack, so after taking the\n# first element every deeper slot stays blocked and most orderings are lost.\ngot = sorted(tuple(p) for p in permutations([1, 2, 3]))\nexpected = sorted([(1, 2, 3), (1, 3, 2), (2, 1, 3), (2, 3, 1), (3, 1, 2), (3, 2, 1)])\nassert got == expected, f'all 6 permutations (buggy truncates), got {got}'\nassert sorted(tuple(p) for p in permutations([1, 2])) == [(1, 2), (2, 1)], 'two-element permutations'\nassert permutations([7]) == [[7]], 'singleton'\nassert permutations([]) == [[]], 'empty input -> the empty permutation'\nprint('OK')",
+    "# The buggy version never clears used[i] on backtrack, so after taking the\n# first element every deeper slot stays blocked and most orderings are lost.\ngot = sorted(tuple(p) for p in permutations([1, 2, 3]))\nexpected = sorted([(1, 2, 3), (1, 3, 2), (2, 1, 3), (2, 3, 1), (3, 1, 2), (3, 2, 1)])\nassert got == expected, f'all 6 permutations (buggy omits orderings), got {got}'\nassert sorted(tuple(p) for p in permutations([1, 2])) == [(1, 2), (2, 1)], 'two-element permutations'\nassert permutations([7]) == [[7]], 'singleton'\nassert permutations([]) == [[]], 'empty input -> the empty permutation'\nprint('OK')",
   "lesson:dp-knapsack:dpks-complete-1":
     "# weights [2,3], values [3,4], capacity 3: take item 2 (w3,v4) -> 4 beats item 1 (w2,v3).\nassert knapsack([2, 3], [3, 4], 3) == 4, f'best value at capacity 3 is 4, got {knapsack([2, 3], [3, 4], 3)}'\n# Larger capacity fits both items -> 3 + 4 = 7.\nassert knapsack([2, 3], [3, 4], 5) == 7, f'both items fit -> 7, got {knapsack([2, 3], [3, 4], 5)}'\n# Classic instance.\nassert knapsack([1, 3, 4, 5], [1, 4, 5, 7], 7) == 9, f'best is items w3+w4 -> 9, got {knapsack([1,3,4,5],[1,4,5,7],7)}'\n# Nothing fits.\nassert knapsack([5], [10], 3) == 0, 'item too heavy -> 0'\nassert knapsack([], [], 5) == 0, 'no items -> 0'\nprint('OK')",
   "lesson:dp-subsequences:dpsub-complete-1":
@@ -300,13 +300,13 @@ export const EXERCISE_TESTS: Record<string, string> = {
   "pattern:graph-dfs-components:pat-gdc-fix-1":
     "assert count_components(3, [[0, 1], [1, 2], [2, 0]]) == 1, 'cyclic triangle: one component, must not loop forever'\nassert count_components(5, [[0, 1], [2, 3]]) == 3, 'two edges + isolated 4'\nassert count_components(4, []) == 4, 'no edges: all isolated'\nassert count_components(1, []) == 1\nassert count_components(6, [[0, 1], [1, 2], [3, 4]]) == 3\nprint('OK')",
   "pattern:topological-sort:pat-topo-fix-1":
-    "o = topo_order({0: [2], 1: [2], 2: [3], 3: []}, {0: 0, 1: 0, 2: 2, 3: 1})\npos = {v: k for k, v in enumerate(o)}\nassert set(o) == {0, 1, 2, 3}, f'every node once, got {o}'\nassert pos[2] > pos[0] and pos[2] > pos[1], f'2 after its prerequisites, got {o}'\nassert pos[3] == 3, f'3 last, got {o}'\nassert topo_order({0: [1], 1: [2], 2: []}, {0: 0, 1: 1, 2: 1}) == [0, 1, 2], 'chain'\nassert topo_order({0: [1], 1: [0]}, {0: 1, 1: 1}) == [], 'a cycle emits no node'\nassert topo_order({0: []}, {0: 0}) == [0], 'single node'\nprint('OK')",
+    "o = topo_order({0: [2], 1: [2], 2: [3], 3: []}, {0: 0, 1: 0, 2: 2, 3: 1})\npos = {v: k for k, v in enumerate(o)}\nassert set(o) == {0, 1, 2, 3}, f'every node once, got {o}'\nassert pos[2] > pos[0] and pos[2] > pos[1], f'2 after its prerequisites, got {o}'\nassert pos[3] == 3, f'3 last, got {o}'\nassert topo_order({0: [1], 1: [2], 2: []}, {0: 0, 1: 1, 2: 1}) == [0, 1, 2], 'chain'\nassert topo_order({0: [1], 1: [0]}, {0: 1, 1: 1}) == [], 'a cycle emits no node'\nassert topo_order({0: []}, {0: 0}) == [0], 'single node'\nprint('OK')\nassert topo_order({0:[1],1:[],2:[3],3:[2]},{0:0,1:1,2:1,3:1})==[]\nassert topo_order({0:[1],1:[0,2],2:[]},{0:1,1:1,2:1})==[]\nassert topo_order({}, {})==[]",
   "pattern:union-find:pat-uf-fix-1":
     "# find(self, x) is a method fragment; call it on a host exposing `parent`.\nclass _UF:\n    def __init__(self, parent):\n        self.parent = parent\n# Chain 0<-1<-2<-3. find must return root 0 for every node.\nu = _UF([0, 0, 1, 2])\nassert find(u, 3) == 0, f'root of the chain is 0, got {find(u, 3)}'\nassert find(u, 0) == 0, 'root points to itself'\n# Path compression: after find(3) the deep node hops nearer the root.\nu2 = _UF([0, 0, 1, 2])\nfind(u2, 3)\nassert u2.parent[3] != 2, f'compression must shorten parent[3] (no-compression leaves it 2), got {u2.parent[3]}'\nprint('OK')",
   "pattern:dijkstra:pat-dij-fix-1":
     "# Shortest paths from 0 on a small weighted graph.\nassert dist == [0, 1, 2, 3], f'shortest distances from 0, got {dist}'\n# With the stale-skip each node expands its neighbours at most once; the buggy\n# version reprocesses stale pops and over-expands.\nassert _expand['n'] == 4, f'stale entries skipped (buggy over-expands), got {_expand[\"n\"]}'\nprint('OK')",
   "pattern:trie-prefix:pat-trie-fix-1":
-    "assert search(['app'], 'app') is True, 'stored word found'\nassert search(['app'], 'ap') is False, 'a prefix that is not a stored word'\nassert search(['app'], 'apple') is False, 'path breaks'\nassert search(['app', 'application'], 'application') is True, 'longer stored word found (defeats len-based guess)'\nassert search(['app', 'application'], 'appl') is False, 'intermediate prefix is not a word'\nassert search([], 'x') is False\nprint('OK')",
+    "assert search(['app'], 'app') is True, 'stored word found'\nassert search(['app'], 'ap') is False, 'a prefix that is not a stored word'\nassert search(['app'], 'apple') is False, 'path breaks'\nassert search(['app', 'application'], 'application') is True, 'longer stored word found (defeats len-based guess)'\nassert search(['app', 'application'], 'appl') is False, 'intermediate prefix is not a word'\nassert search([], 'x') is False\nprint('OK')\nassert search(['$a'],'$') is False\nassert search(['$a'],'$a') is True\nassert search(['','$'],'') is True\nassert search(['','$'],'$') is True\nassert search([], '') is False",
   "pattern:dynamic-programming:pat-dp-fix-1":
     "assert fib(0) == 0 and fib(1) == 1, 'base cases'\nassert fib(10) == 55, 'fib(10) == 55'\nassert fib(20) == 6765, 'fib(20) == 6765'\n# Memoization must make a large index return quickly (no exponential blow-up).\nassert fib(60) == 1548008755920, 'memoized fib(60) is exact and fast'\nprint('OK')",
   "pattern:knapsack:pat-ks-fix-1":
@@ -596,54 +596,141 @@ export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
       "No — BFS minimizes edge count, not weighted cost. With differing non-negative weights, Dijkstra's priority-queue search is the right pattern.",
   },
   "pattern:backtracking:pat-bt-recognize-1": {
-    scenario:
-      "Generate ALL permutations of a list of distinct numbers.",
-    approaches: [
-      { id: "backtracking", label: "Backtracking (choose / explore / un-choose)", requiredReasonIds: ["enumerate-with-used"] },
-      { id: "dp", label: "Dynamic programming", requiredReasonIds: [], rejectionFeedback: "DP counts or optimizes over overlapping subproblems; it does not enumerate every explicit arrangement." },
-    ],
-    reasons: [
-      { id: "enumerate-with-used", text: "You must produce every arrangement, filling positions one at a time and marking placed elements with a used-array to avoid reuse — all n! orderings." },
-      { id: "count-only", text: "Only the number of permutations is needed, so a closed-form count suffices.", contradictory: true },
-      { id: "overlapping-sub", text: "The permutations share overlapping subproblems that memoization can collapse.", contradictory: true },
-    ],
-    acceptableApproachIds: ["backtracking"],
-    modelExplanation:
-      "Backtracking: build each permutation by choosing an unused element per position, recursing, then un-choosing — enumerating all n! orderings with O(n) auxiliary space.",
-  },
+  "scenario": "Generate ALL permutations of a list of distinct numbers.",
+  "approaches": [
+    {
+      "id": "backtracking",
+      "label": "Backtracking (choose / explore / un-choose)",
+      "requiredReasonIds": [
+        "enumerate-with-used"
+      ]
+    },
+    {
+      "id": "dp",
+      "label": "A DP count without enumeration",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A count alone does not return the requested arrangements. DP can guide a later traversal, but the traversal must still emit every permutation."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "enumerate-with-used",
+      "text": "You must produce every arrangement, filling positions one at a time and marking placed elements with a used-array to avoid reuse — all n! orderings."
+    },
+    {
+      "id": "count-only",
+      "text": "Only the number of permutations is needed, so a closed-form count suffices.",
+      "contradictory": true
+    },
+    {
+      "id": "overlapping-sub",
+      "text": "A cached scalar count alone returns all explicit permutations without generating them.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "backtracking"
+  ],
+  "modelExplanation": "Backtracking: build each permutation by choosing an unused element per position, recursing, then un-choosing — enumerating all n! orderings with O(n) auxiliary space."
+},
   "pattern:backtracking:pat-bt-choose-1": {
-    scenario:
-      "Two problems: (a) LIST every subset that sums to a target; (b) count HOW MANY subsets sum to a target. This drill is about (a).",
-    approaches: [
-      { id: "backtracking", label: "Backtracking", requiredReasonIds: ["must-enumerate"] },
-      { id: "dp", label: "Dynamic programming (subset-sum count)", requiredReasonIds: [], rejectionFeedback: "DP is right for (b): counting. Problem (a) requires each explicit subset, which DP's counts do not produce." },
-    ],
-    reasons: [
-      { id: "must-enumerate", text: "Problem (a) demands each explicit subset, so you must enumerate configurations via choose/explore/un-choose." },
-      { id: "count-suffices", text: "Only a count is required, so overlapping subproblems make DP ideal.", contradictory: true },
-      { id: "greedy-works", text: "A greedy pass produces every qualifying subset directly.", contradictory: true },
-    ],
-    acceptableApproachIds: ["backtracking"],
-    modelExplanation:
-      "Listing every qualifying subset (a) needs backtracking to enumerate each configuration; only the counting variant (b) is a DP over overlapping subproblems.",
-  },
+  "scenario": "Two problems: (a) 'list every subset that sums to a target'; (b) 'how MANY subsets sum to a target'. Same pattern? Assume distinct non-negative integer values and a bounded non-negative target.",
+  "approaches": [
+    {
+      "id": "backtracking",
+      "label": "Backtracking",
+      "requiredReasonIds": [
+        "must-enumerate"
+      ]
+    },
+    {
+      "id": "dp",
+      "label": "Subset-sum counts alone",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Counts alone answer (b), not the requested list in (a). DP can be combined with a reconstruction/enumeration traversal."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "must-enumerate",
+      "text": "Problem (a) demands each explicit subset, so you must enumerate configurations via choose/explore/un-choose."
+    },
+    {
+      "id": "count-suffices",
+      "text": "Only a count is required, so overlapping subproblems make DP ideal.",
+      "contradictory": true
+    },
+    {
+      "id": "greedy-works",
+      "text": "A greedy pass produces every qualifying subset directly.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "backtracking"
+  ],
+  "modelExplanation": "(a) Backtracking emits the explicit subsets; a DP feasibility table may guide that traversal. (b) Subset-sum count DP over item index and sum can avoid enumerating each subset, with pseudo-polynomial cost in the numeric target. Neither a scalar count nor feasibility alone returns every configuration."
+},
   "pattern:binary-search-on-answer:pat-bsa-recognize-1": {
-    scenario:
-      "Split an array into m contiguous parts to MINIMIZE the largest part sum.",
-    approaches: [
-      { id: "bs-answer", label: "Binary search on the answer", requiredReasonIds: ["monotone-feasible"] },
-      { id: "array-bs", label: "Ordinary binary search on the array", requiredReasonIds: [], rejectionFeedback: "There is no target element to locate in the array; we search a range of candidate answers, not positions." },
-      { id: "dp", label: "Full DP over splits", requiredReasonIds: [], rejectionFeedback: "DP works but is heavier; the monotone feasibility test makes binary search on the answer far simpler." },
-    ],
-    reasons: [
-      { id: "monotone-feasible", text: "Feasibility ('can we split into ≤ m parts each ≤ candidate?') is monotone in the candidate cap, so binary-search the cap and greedily test — O(n log(sum))." },
-      { id: "sorted-array", text: "The array is sorted, so we can locate the answer by comparing to the midpoint element.", contradictory: true },
-      { id: "no-monotonicity", text: "There is no monotone property to exploit, so we must try every split.", contradictory: true },
-    ],
-    acceptableApproachIds: ["bs-answer"],
-    modelExplanation:
-      "Binary search on the answer: search the candidate 'largest allowed part sum'; a greedy feasibility check is monotone, giving O(n log(sum)).",
-  },
+  "scenario": "Split a nonempty array of positive integers into exactly m contiguous nonempty parts (1 <= m <= n) to minimize the largest part sum. Choose an approach and explain its test.",
+  "approaches": [
+    {
+      "id": "bs-answer",
+      "label": "Binary search on the answer",
+      "requiredReasonIds": [
+        "monotone-feasible"
+      ]
+    },
+    {
+      "id": "array-bs",
+      "label": "Ordinary binary search on the array",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "There is no target element to locate in the array; we search a range of candidate answers, not positions."
+    },
+    {
+      "id": "dp",
+      "label": "Full DP over splits",
+      "requiredReasonIds": [
+        "split-recurrence"
+      ],
+      "rejectionFeedback": "A DP can solve this problem too; the reason choices here compare the efficient monotone capacity approach to positional array search. DP trades more state/work for a general split recurrence."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "monotone-feasible",
+      "text": "Binary search candidate part-sum caps. A greedy pass tests whether at most m parts suffice; positive values let us split further to exactly m without increasing any sum. This test is monotone. O(n log(R + 2)) including max/sum setup, R=sum−max."
+    },
+    {
+      "id": "sorted-array",
+      "text": "The array is sorted, so we can locate the answer by comparing to the midpoint element.",
+      "contradictory": true
+    },
+    {
+      "id": "no-monotonicity",
+      "text": "There is no monotone property to exploit, so we must try every split.",
+      "contradictory": true
+    },
+    {
+      "id": "split-recurrence",
+      "text": "A split DP tries each possible previous cut and minimizes max(previous best, final segment sum); it uses more work but is a correct alternative."
+    }
+  ],
+  "acceptableApproachIds": [
+    "bs-answer"
+  ],
+  "modelExplanation": "Binary search candidate part-sum caps. A greedy pass tests whether at most m parts suffice; positive values let us split further to exactly m without increasing any sum. This test is monotone. O(n log(R + 2)) including max/sum setup, R=sum−max.",
+  "alternatives": [
+    {
+      "approachId": "dp",
+      "conditions": "Use a correct recurrence over all previous split points; accept the higher work and memory cost.",
+      "tradeoff": "Usually O(m n²) time and O(m n) space instead of a greedy predicate search.",
+      "requiredReasonIds": [
+        "split-recurrence"
+      ]
+    }
+  ]
+},
   "pattern:binary-search-on-answer:pat-bsa-choose-1": {
     scenario:
       "You must find the index of a specific value in a sorted array. Is this 'binary search on the answer'?",
@@ -661,40 +748,90 @@ export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
       "No — locating a value in a sorted array is ordinary binary search over positions. 'Binary search on the answer' searches candidate answers via a feasibility test, not array indices.",
   },
   "pattern:top-k-heap:pat-tk-recognize-1": {
-    scenario:
-      "From a huge stream of numbers you cannot store fully, report the 100 largest.",
-    approaches: [
-      { id: "min-heap-k", label: "Top-K with a size-100 min-heap", requiredReasonIds: ["stream-bounded"] },
-      { id: "full-sort", label: "Sort everything, take the top 100", requiredReasonIds: [], rejectionFeedback: "A full sort needs all n items in memory and is O(n log n); the stream cannot be stored fully." },
-    ],
-    reasons: [
-      { id: "stream-bounded", text: "A size-100 MIN-heap keeps only the 100 best seen: push each number, pop the smallest when size exceeds 100 — O(n log 100) time, O(100) space, stream-friendly." },
-      { id: "need-all-in-memory", text: "All n numbers fit in memory, so a full sort is fine.", contradictory: true },
-      { id: "max-heap-k", text: "Use a size-100 MAX-heap so the largest stays on top.", contradictory: true },
-    ],
-    acceptableApproachIds: ["min-heap-k"],
-    modelExplanation:
-      "Top-K with a size-k min-heap: hold only the k best, popping the smallest on overflow — O(n log k), O(k) space, and it works on an unbounded stream.",
-  },
+  "scenario": "From a huge stream of numbers you cannot store fully, report the 100 largest.",
+  "approaches": [
+    {
+      "id": "min-heap-k",
+      "label": "Top-K with a size-100 min-heap",
+      "requiredReasonIds": [
+        "stream-bounded"
+      ]
+    },
+    {
+      "id": "full-sort",
+      "label": "Sort everything, take the top 100",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A full sort needs all n items in memory and is O(n log n); the stream cannot be stored fully."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "stream-bounded",
+      "text": "A size-100 MIN-heap keeps only the 100 best seen: push each number, pop the smallest when size exceeds 100 — O(n log 100) time, O(100) space, stream-friendly."
+    },
+    {
+      "id": "need-all-in-memory",
+      "text": "All n numbers fit in memory, so a full sort is fine.",
+      "contradictory": true
+    },
+    {
+      "id": "max-heap-k",
+      "text": "Use a size-100 MAX-heap so the largest stays on top.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "min-heap-k"
+  ],
+  "modelExplanation": "Use a size-100 min-heap: push each arrival and pop the minimum when size exceeds 100. Retain at most 100 values between updates, with a temporary 101st entry. The scan is O(n) for fixed 100, bounded storage O(100); after 100 arrivals its root is the 100th largest. Sorting the final 100 values is a bounded additional step."
+},
   "pattern:top-k-heap:pat-tk-choose-1": {
-    scenario:
-      "You have all n numbers in memory and want just the single k-th largest.",
-    approaches: [
-      { id: "quickselect", label: "Quickselect", requiredReasonIds: ["single-order-stat"] },
-      { id: "min-heap-k", label: "Size-k min-heap", requiredReasonIds: [], rejectionFeedback: "The heap is O(n log k) and best when streaming or when you need ALL top-k; for a single in-memory order statistic quickselect is faster on average." },
-    ],
-    reasons: [
-      { id: "single-order-stat", text: "All data is in memory and only one order statistic is needed, so partitioning around a pivot finds it in expected O(n), O(1) extra space." },
-      { id: "heap-streamable", text: "A size-k heap holds only k items, so it works on a stream and yields all top-k, at O(n log k) rather than expected O(n)." },
-      { id: "need-all-topk", text: "We need every one of the top-k elements, not just the k-th.", contradictory: true },
-    ],
-    acceptableApproachIds: ["quickselect"],
-    alternatives: [
-      { approachId: "min-heap-k", conditions: "When the input is a stream or you need all top-k, not just the single k-th.", tradeoff: "O(n log k) versus quickselect's expected O(n), but predictable and streaming-capable.", requiredReasonIds: ["heap-streamable"] },
-    ],
-    modelExplanation:
-      "Quickselect finds a single k-th largest in expected O(n) with O(1) extra space when all data is in memory; a size-k heap is preferred for streams or when all top-k are needed.",
-  },
+  "scenario": "You have all n numbers in memory and want just the single k-th largest.",
+  "approaches": [
+    {
+      "id": "quickselect",
+      "label": "Quickselect",
+      "requiredReasonIds": [
+        "single-order-stat"
+      ]
+    },
+    {
+      "id": "min-heap-k",
+      "label": "Size-k min-heap",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "The heap is O(n log(k+1)) and best when streaming or when you need ALL top-k; for a single in-memory order statistic quickselect is an expected linear alternative with randomized pivots; k=1 heap scans are also linear."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "single-order-stat",
+      "text": "All data is in memory and only one order statistic is needed, so partitioning around a pivot finds it in expected O(n), O(1) extra space."
+    },
+    {
+      "id": "heap-streamable",
+      "text": "A size-k heap holds only k items, so it works on a stream and yields all top-k, at O(n log(k+1)) rather than expected O(n)."
+    },
+    {
+      "id": "need-all-topk",
+      "text": "We need every one of the top-k elements, not just the k-th.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "quickselect"
+  ],
+  "alternatives": [
+    {
+      "approachId": "min-heap-k",
+      "conditions": "Small k, streaming, or predictable scan work is preferred. A heap is also valid for a single rank in memory.",
+      "tradeoff": "O(n log(k+1)) versus quickselect's expected O(n), but predictable and streaming-capable.",
+      "requiredReasonIds": [
+        "heap-streamable"
+      ]
+    }
+  ],
+  "modelExplanation": "Randomized quickselect is a useful expected O(n) alternative for a single in-memory rank, with O(n²) worst case. Iterative in-place partitioning uses O(1) extra space. The heap remains valid and predictable, costs O(n log(k+1)), and also supports streaming. For k=1 both are linear."
+},
   "pattern:two-heaps:pat-th-recognize-1": {
     scenario:
       "Numbers arrive one at a time; after each arrival you must report the median of all numbers so far.",
@@ -729,73 +866,173 @@ export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
       "Top-K with a single size-10 min-heap: only one extreme is required, so the two-heap median machinery is unnecessary.",
   },
   "pattern:k-way-merge:pat-kwm-recognize-1": {
-    scenario:
-      "Merge k sorted linked lists into one sorted list efficiently.",
-    approaches: [
-      { id: "kway-heap", label: "K-way merge with a min-heap of the k heads", requiredReasonIds: ["heap-of-fronts"] },
-      { id: "concat-sort", label: "Concatenate all, then sort", requiredReasonIds: [], rejectionFeedback: "Throwing away the existing sortedness costs O(N log N); a heap of fronts exploits it for O(N log k)." },
-    ],
-    reasons: [
-      { id: "heap-of-fronts", text: "Keep the k current heads in a min-heap: pop the smallest, advance that list — O(N log k) time, O(k) space, using the per-list sortedness." },
-      { id: "unsorted-lists", text: "The lists are unsorted, so their order gives no advantage.", contradictory: true },
-      { id: "need-two-heaps", text: "This needs two opposing heaps to track a median boundary.", contradictory: true },
-    ],
-    acceptableApproachIds: ["kway-heap"],
-    modelExplanation:
-      "K-way merge: a min-heap of the k list fronts pops the global minimum each step and advances that list — O(N log k), O(k) space.",
-  },
+  "scenario": "Merge k sorted linked lists into one sorted list efficiently.",
+  "approaches": [
+    {
+      "id": "kway-heap",
+      "label": "K-way merge with a min-heap of the k heads",
+      "requiredReasonIds": [
+        "heap-of-fronts"
+      ]
+    },
+    {
+      "id": "concat-sort",
+      "label": "Concatenate all, then sort",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A heap of fronts directly reuses each sorted chain and supports bounded frontier storage. Concatenate-and-sort is a valid alternative when storing all nodes is allowed; its generic comparison bound is O(N log N), with adaptive sort able to exploit runs."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "heap-of-fronts",
+      "text": "Keep the k current heads in a min-heap: pop the smallest, advance that list — O(k + N log(k+1)) time, O(k) space, using the per-list sortedness."
+    },
+    {
+      "id": "unsorted-lists",
+      "text": "The lists are unsorted, so their order gives no advantage.",
+      "contradictory": true
+    },
+    {
+      "id": "need-two-heaps",
+      "text": "This needs two opposing heaps to track a median boundary.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "kway-heap"
+  ],
+  "modelExplanation": "K-way merge: retain one current head per sorted, acyclic, node-disjoint input. Heapify the fronts, pop the smallest and advance its list. O(k + N log(k+1)) time and O(k) heap storage, reusing nodes instead of materializing extra result nodes."
+},
   "pattern:k-way-merge:pat-kwm-choose-1": {
-    scenario:
-      "You must find the k-th smallest element across m sorted rows of a matrix.",
-    approaches: [
-      { id: "kway-heap", label: "K-way merge (heap of row fronts)", requiredReasonIds: ["pop-k-times"] },
-      { id: "bs-value", label: "Binary search on the value range", requiredReasonIds: ["value-monotone"] },
-      { id: "full-flatten-sort", label: "Flatten and sort all cells", requiredReasonIds: [], rejectionFeedback: "Sorting all cells wastes the per-row order; heap the fronts and pop k times instead." },
-    ],
-    reasons: [
-      { id: "pop-k-times", text: "Heap the m row fronts and pop k times: the k-th pop is the k-th smallest — O(k log m), leveraging each row's sorted order." },
-      { id: "value-monotone", text: "The count of cells ≤ a candidate value is monotone, so binary-searching the value range converges on the k-th smallest without popping k times." },
-      { id: "median-boundary", text: "We must maintain a balanced two-heap median boundary.", contradictory: true },
-    ],
-    acceptableApproachIds: ["kway-heap"],
-    alternatives: [
-      { approachId: "bs-value", conditions: "For very large matrices, binary-searching on the value range can beat popping k times.", tradeoff: "More complex to implement than the heap-of-fronts merge.", requiredReasonIds: ["value-monotone"] },
-    ],
-    modelExplanation:
-      "K-way merge fits: heap the m sorted row fronts and pop k times to reach the k-th smallest in O(k log m). (Binary-search-on-value is an alternative for large matrices.)",
-  },
+  "scenario": "You must find the k-th smallest element across m sorted rows of a matrix. K-way merge or something else? Rows contain finite integers, and 1<=k<=the total number of cells.",
+  "approaches": [
+    {
+      "id": "kway-heap",
+      "label": "K-way merge (heap of row fronts)",
+      "requiredReasonIds": [
+        "pop-k-times"
+      ]
+    },
+    {
+      "id": "bs-value",
+      "label": "Binary search on the value range",
+      "requiredReasonIds": [
+        "value-monotone"
+      ]
+    },
+    {
+      "id": "full-flatten-sort",
+      "label": "Flatten and sort all cells",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Sorting all cells wastes the per-row order; heap the fronts and pop k times instead."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "pop-k-times",
+      "text": "Heap the m row fronts and pop k times: the k-th pop is the k-th smallest — O(m + k log(m+1)), leveraging each row's sorted order."
+    },
+    {
+      "id": "value-monotone",
+      "text": "The count of cells ≤ a candidate value is monotone, so binary-searching the value range converges on the k-th smallest without popping k times."
+    },
+    {
+      "id": "median-boundary",
+      "text": "We must maintain a balanced two-heap median boundary.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "kway-heap"
+  ],
+  "alternatives": [
+    {
+      "approachId": "bs-value",
+      "conditions": "Rows contain finite integers, so a finite value range can be bisected. Count entries <=x by row binary search; compare its count cost and log(value-range size) rounds with m + k log(m+1).",
+      "tradeoff": "More complex to implement than the heap-of-fronts merge.",
+      "requiredReasonIds": [
+        "value-monotone"
+      ]
+    }
+  ],
+  "modelExplanation": "Heapify up to m row fronts in O(m), then pop k times and insert successors: O(m + k log(m+1)). Value-range binary search is another option for finite integer values, using the monotone count of cells <=x; per-row binary searches count these cells. Compare setup, k, row widths, and value-range size."
+},
   "pattern:monotonic-stack:pat-ms-recognize-1": {
-    scenario:
-      "For each day, how many days until a warmer temperature? Which pattern applies and what does the stack hold?",
-    approaches: [
-      { id: "mono-stack", label: "Monotonic (decreasing) stack of indices", requiredReasonIds: ["pop-on-warmer"] },
-      { id: "brute", label: "For each day scan forward for a warmer day", requiredReasonIds: [], rejectionFeedback: "The nested forward scan is O(n^2); a monotonic stack answers all days in O(n) total." },
-    ],
-    reasons: [
-      { id: "pop-on-warmer", text: "Keep a decreasing stack of day INDICES awaiting a warmer day; when a warmer day arrives, pop the cooler days and record the index gap — O(n) total." },
-      { id: "window-expires", text: "Elements expire from the front as a fixed window slides, so a deque is required.", contradictory: true },
-      { id: "needs-sorting", text: "The temperatures must be sorted first.", contradictory: true },
-    ],
-    acceptableApproachIds: ["mono-stack"],
-    modelExplanation:
-      "A monotonic decreasing stack of indices: each warmer day pops the cooler days waiting below it and records the wait, giving O(n) total work.",
-  },
+  "scenario": "For each day, how many days until a warmer temperature? Which pattern applies and what does the stack hold?",
+  "approaches": [
+    {
+      "id": "mono-stack",
+      "label": "Monotonic (non-increasing) stack of indices",
+      "requiredReasonIds": [
+        "pop-on-warmer"
+      ]
+    },
+    {
+      "id": "brute",
+      "label": "For each day scan forward for a warmer day",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "The nested forward scan is O(n^2); a monotonic stack answers all days in O(n) total."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "pop-on-warmer",
+      "text": "Keep a non-increasing stack of day INDICES awaiting a warmer day; when a warmer day arrives, pop the cooler days and record the index gap — O(n) total."
+    },
+    {
+      "id": "window-expires",
+      "text": "Elements expire from the front as a fixed window slides, so a deque is required.",
+      "contradictory": true
+    },
+    {
+      "id": "needs-sorting",
+      "text": "The temperatures must be sorted first.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "mono-stack"
+  ],
+  "modelExplanation": "A monotonic non-increasing stack of indices: each warmer day pops the cooler days waiting below it and records the wait, giving O(n) total work."
+},
   "pattern:monotonic-stack:pat-ms-choose-1": {
-    scenario:
-      "You need the MAXIMUM of every sliding window of size k as the window moves.",
-    approaches: [
-      { id: "mono-deque", label: "Monotonic (decreasing) deque", requiredReasonIds: ["expire-front"] },
-      { id: "mono-stack", label: "Plain monotonic stack", requiredReasonIds: [], rejectionFeedback: "Elements expire from the FRONT as the window slides, which a stack (LIFO, one end) cannot remove — you need a deque." },
-    ],
-    reasons: [
-      { id: "expire-front", text: "As the window slides, the oldest element leaves from the front and dominated elements leave from the back, so a double-ended queue maintains the max in O(n)." },
-      { id: "no-expiry", text: "Nothing ever leaves from the front, so a one-ended stack is enough.", contradictory: true },
-      { id: "needs-heap", text: "Only a heap can report the window maximum.", contradictory: true },
-    ],
-    acceptableApproachIds: ["mono-deque"],
-    modelExplanation:
-      "Not a plain stack — window elements expire from the front, so use a monotonic decreasing DEQUE, popping the front when it leaves the window: O(n).",
-  },
+  "scenario": "You need the MAXIMUM of every sliding window of size k as the window moves.",
+  "approaches": [
+    {
+      "id": "mono-deque",
+      "label": "Monotonic (non-increasing) deque",
+      "requiredReasonIds": [
+        "expire-front"
+      ]
+    },
+    {
+      "id": "mono-stack",
+      "label": "Plain monotonic stack",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Elements expire from the FRONT as the window slides, which a stack (LIFO, one end) cannot remove — you need a deque."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "expire-front",
+      "text": "As the window slides, the oldest element leaves from the front and dominated elements leave from the back, so a double-ended queue maintains the max in O(n)."
+    },
+    {
+      "id": "no-expiry",
+      "text": "Nothing ever leaves from the front, so a one-ended stack is enough.",
+      "contradictory": true
+    },
+    {
+      "id": "needs-heap",
+      "text": "Only a heap can report the window maximum.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "mono-deque"
+  ],
+  "modelExplanation": "Not a plain stack — window elements expire from the front, so use a monotonic non-increasing DEQUE, popping the front when it leaves the window: O(n)."
+},
   "pattern:merge-intervals:pat-mi-recognize-1": {
     scenario:
       "Given a list of meeting time ranges, combine any that overlap into consolidated blocks.",
@@ -814,38 +1051,87 @@ export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
       "Merge intervals: sort by start and sweep once, extending the current block on overlap — O(n log n) dominated by the sort.",
   },
   "pattern:merge-intervals:pat-mi-choose-1": {
-    scenario:
-      "Find the maximum number of non-overlapping meetings you can attend. Is that merge intervals?",
-    approaches: [
-      { id: "greedy-schedule", label: "Greedy interval scheduling (sort by end)", requiredReasonIds: ["earliest-finish"] },
-      { id: "merge-intervals", label: "Merge intervals (sort by start)", requiredReasonIds: [], rejectionFeedback: "Merging combines overlaps into blocks; here we must SELECT the most non-overlapping meetings, which is a different objective." },
-    ],
-    reasons: [
-      { id: "earliest-finish", text: "Sort by END time and greedily take each meeting starting at/after the last chosen one's end; earliest-finish is provably optimal for maximizing the count." },
-      { id: "combine-overlaps", text: "The goal is to fuse overlapping ranges into consolidated blocks.", contradictory: true },
-      { id: "sort-by-start", text: "Sorting by start time is what makes this greedy choice optimal.", contradictory: true },
-    ],
-    acceptableApproachIds: ["greedy-schedule"],
-    modelExplanation:
-      "No — maximizing non-overlapping meetings is greedy interval scheduling: sort by end time and pick each compatible meeting. Merging is a different task.",
-  },
+  "scenario": "'Find the maximum number of non-overlapping meetings you can attend.' Is that merge intervals? If not, what? Treat meetings as half-open [start,end) with start < end, so touching endpoints are compatible.",
+  "approaches": [
+    {
+      "id": "greedy-schedule",
+      "label": "Greedy interval scheduling (sort by end)",
+      "requiredReasonIds": [
+        "earliest-finish"
+      ]
+    },
+    {
+      "id": "merge-intervals",
+      "label": "Merge intervals (sort by start)",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Merging combines overlaps into blocks; here we must SELECT the most non-overlapping meetings, which is a different objective."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "earliest-finish",
+      "text": "Sort by END time and greedily take each meeting starting at/after the last chosen one's end; earliest-finish is provably optimal for maximizing the count."
+    },
+    {
+      "id": "combine-overlaps",
+      "text": "The goal is to fuse overlapping ranges into consolidated blocks.",
+      "contradictory": true
+    },
+    {
+      "id": "sort-by-start",
+      "text": "Sorting by start time is what makes this greedy choice optimal.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "greedy-schedule"
+  ],
+  "modelExplanation": "No — maximizing non-overlapping meetings is greedy interval scheduling: sort by end time and pick each compatible meeting. Merging is a different task."
+},
   "pattern:greedy-interval-scheduling:pat-gis-recognize-1": {
-    scenario:
-      "Given meeting time ranges, attend the MAXIMUM number without overlaps. Which pattern and sort key?",
-    approaches: [
-      { id: "greedy-end", label: "Greedy interval scheduling, sort by END", requiredReasonIds: ["earliest-finish-optimal"] },
-      { id: "greedy-start", label: "Greedy, sort by start", requiredReasonIds: [], rejectionFeedback: "Sorting by start can pick a long early meeting that blocks many later ones; earliest-finish is the provably optimal key." },
-      { id: "merge-intervals", label: "Merge intervals", requiredReasonIds: [], rejectionFeedback: "Merging fuses overlaps; it does not select a maximum non-overlapping set." },
-    ],
-    reasons: [
-      { id: "earliest-finish-optimal", text: "Sort by finish time and greedily take each meeting that starts at/after the last chosen end; finishing earliest leaves the most room, which is provably optimal — O(n log n)." },
-      { id: "sort-by-duration", text: "Sorting by shortest duration first is what guarantees optimality.", contradictory: true },
-      { id: "need-dp", text: "Only DP can solve this; no greedy rule is optimal.", contradictory: true },
-    ],
-    acceptableApproachIds: ["greedy-end"],
-    modelExplanation:
-      "Greedy interval scheduling: sort by end time and pick each meeting compatible with the last chosen one — earliest-finish is optimal, O(n log n).",
-  },
+  "scenario": "Recognize: 'Given meeting time ranges, attend the MAXIMUM number without overlaps.' Which pattern and sort key? Meetings are half-open [start,end) with start < end; touching endpoints are compatible.",
+  "approaches": [
+    {
+      "id": "greedy-end",
+      "label": "Greedy interval scheduling, sort by END",
+      "requiredReasonIds": [
+        "earliest-finish-optimal"
+      ]
+    },
+    {
+      "id": "greedy-start",
+      "label": "Greedy, sort by start",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Sorting by start can pick a long early meeting that blocks many later ones; earliest-finish is the provably optimal key."
+    },
+    {
+      "id": "merge-intervals",
+      "label": "Merge intervals",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Merging fuses overlaps; it does not select a maximum non-overlapping set."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "earliest-finish-optimal",
+      "text": "Sort by finish time and greedily take each meeting that starts at/after the last chosen end; finishing earliest leaves the most room, which is provably optimal — O(n log n)."
+    },
+    {
+      "id": "sort-by-duration",
+      "text": "Sorting by shortest duration first is what guarantees optimality.",
+      "contradictory": true
+    },
+    {
+      "id": "need-dp",
+      "text": "Only DP can solve this; no greedy rule is optimal.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "greedy-end"
+  ],
+  "modelExplanation": "Greedy interval scheduling: sort by end time and pick each meeting compatible with the last chosen one — earliest-finish is optimal, O(n log n)."
+},
   "pattern:greedy-interval-scheduling:pat-gis-choose-1": {
     scenario:
       "Each meeting has a VALUE and you want the maximum total value of non-overlapping meetings.",
@@ -967,85 +1253,223 @@ export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
       "Yes — it is in-place reversal applied per k-group: relink each full group, splice groups together, and leave a short final group as-is. Still O(n) time, O(1) space.",
   },
   "pattern:tree-bfs:pat-tbfs-recognize-1": {
-    scenario:
-      "Return the average value of the nodes on each level of a binary tree.",
-    approaches: [
-      { id: "tree-bfs", label: "Tree BFS (level order with a queue)", requiredReasonIds: ["per-level-snapshot"] },
-      { id: "tree-dfs", label: "Tree DFS", requiredReasonIds: [], rejectionFeedback: "DFS descends paths and does not group nodes by level without extra depth bookkeeping; BFS is the natural per-level fit." },
-    ],
-    reasons: [
-      { id: "per-level-snapshot", text: "Process the tree level by level: snapshot the queue length each iteration to isolate one level and average its values — O(n)." },
-      { id: "path-sum-needed", text: "The task needs a running path sum down each root-to-leaf route.", contradictory: true },
-      { id: "must-sort-values", text: "Node values must be sorted before averaging.", contradictory: true },
-    ],
-    acceptableApproachIds: ["tree-bfs"],
-    modelExplanation:
-      "Tree BFS: use a queue and snapshot its size each round to process exactly one level, averaging that level's values — O(n).",
-  },
+  "scenario": "Return the average value of the nodes on each level of a binary tree.",
+  "approaches": [
+    {
+      "id": "tree-bfs",
+      "label": "Tree BFS (level order with a queue)",
+      "requiredReasonIds": [
+        "per-level-snapshot"
+      ]
+    },
+    {
+      "id": "tree-dfs",
+      "label": "Tree DFS",
+      "requiredReasonIds": [
+        "depth-buckets"
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "id": "per-level-snapshot",
+      "text": "Process the tree level by level: snapshot the queue length each iteration to isolate one level and average its values — O(n)."
+    },
+    {
+      "id": "path-sum-needed",
+      "text": "The task needs a running path sum down each root-to-leaf route.",
+      "contradictory": true
+    },
+    {
+      "id": "must-sort-values",
+      "text": "Node values must be sorted before averaging.",
+      "contradictory": true
+    },
+    {
+      "id": "depth-buckets",
+      "text": "Carry each node’s depth in DFS and update a sum/count bucket for that depth. This also computes level averages in O(n)."
+    }
+  ],
+  "acceptableApproachIds": [
+    "tree-bfs",
+    "tree-dfs"
+  ],
+  "modelExplanation": "BFS with a queue-size snapshot is direct; DFS carrying depth into sum/count buckets is also a valid O(n) solution.",
+  "alternatives": []
+},
   "pattern:tree-bfs:pat-tbfs-choose-1": {
-    scenario:
-      "Find the maximum root-to-leaf path sum. Tree BFS or Tree DFS?",
-    approaches: [
-      { id: "tree-dfs", label: "Tree DFS", requiredReasonIds: ["carry-path-sum"] },
-      { id: "tree-bfs", label: "Tree BFS", requiredReasonIds: [], rejectionFeedback: "BFS processes by level and does not naturally carry a running sum along a single root-to-leaf path." },
-    ],
-    reasons: [
-      { id: "carry-path-sum", text: "A path problem needs to carry a running sum down each root-to-leaf route, which recursion (DFS) does naturally — O(n)." },
-      { id: "per-level-work", text: "The work is defined per level, so a breadth-first queue is the fit.", contradictory: true },
-      { id: "need-heap", text: "You must keep a heap of partial sums to solve it.", contradictory: true },
-    ],
-    acceptableApproachIds: ["tree-dfs"],
-    modelExplanation:
-      "Tree DFS: recursion carries the running sum along each root-to-leaf path, exactly what a path-sum problem needs; BFS does not carry path context.",
-  },
+  "scenario": "Find the maximum root-to-leaf path sum. Tree BFS or Tree DFS?",
+  "approaches": [
+    {
+      "id": "tree-dfs",
+      "label": "Tree DFS",
+      "requiredReasonIds": [
+        "carry-path-sum"
+      ]
+    },
+    {
+      "id": "tree-bfs",
+      "label": "Tree BFS",
+      "requiredReasonIds": [
+        "queue-running-total"
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "id": "carry-path-sum",
+      "text": "A path problem needs to carry a running sum down each root-to-leaf route, which recursion (DFS) does naturally — O(n)."
+    },
+    {
+      "id": "per-level-work",
+      "text": "The work is defined per level, so a breadth-first queue is the fit.",
+      "contradictory": true
+    },
+    {
+      "id": "need-heap",
+      "text": "You must keep a heap of partial sums to solve it.",
+      "contradictory": true
+    },
+    {
+      "id": "queue-running-total",
+      "text": "Queue pairs (node, running total), update the maximum at leaves, and pass the extended total to children. This also visits each node once."
+    }
+  ],
+  "acceptableApproachIds": [
+    "tree-dfs",
+    "tree-bfs"
+  ],
+  "modelExplanation": "DFS carries path totals with O(h) frames; BFS carrying (node,total) is also correct, using O(w) frontier storage. Both take O(n) time.",
+  "alternatives": []
+},
   "pattern:tree-dfs:pat-tdfs-recognize-1": {
-    scenario:
-      "Find all root-to-leaf paths whose values sum to a target.",
-    approaches: [
-      { id: "tree-dfs", label: "Tree DFS with backtracking", requiredReasonIds: ["recurse-path-backtrack"] },
-      { id: "tree-bfs", label: "Tree BFS", requiredReasonIds: [], rejectionFeedback: "Level-order processing does not carry the current path and running sum needed to record qualifying routes." },
-    ],
-    reasons: [
-      { id: "recurse-path-backtrack", text: "Recurse carrying the path and running sum; at a leaf record a copy when the sum matches, and backtrack on the way up — O(n) time, O(h) space." },
-      { id: "level-grouping", text: "The task groups nodes by depth, so a queue-based level sweep fits.", contradictory: true },
-      { id: "sorted-required", text: "The tree must be a BST and sorted for this to work.", contradictory: true },
-    ],
-    acceptableApproachIds: ["tree-dfs"],
-    modelExplanation:
-      "Tree DFS: descend carrying the path and running sum, record a copy at a matching leaf, and backtrack — O(n) time, O(h) space.",
-  },
+  "scenario": "Find all root-to-leaf paths whose values sum to a target.",
+  "approaches": [
+    {
+      "id": "tree-dfs",
+      "label": "Tree DFS with backtracking",
+      "requiredReasonIds": [
+        "recurse-path-backtrack"
+      ]
+    },
+    {
+      "id": "tree-bfs",
+      "label": "Tree BFS",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Level-order processing does not carry the current path and running sum needed to record qualifying routes."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "recurse-path-backtrack",
+      "text": "Tree DFS carrying a shared path and running total, copying matching leaf paths and backtracking: O(n+K) time, O(h) auxiliary space, plus O(K) output values."
+    },
+    {
+      "id": "level-grouping",
+      "text": "The task groups nodes by depth, so a queue-based level sweep fits.",
+      "contradictory": true
+    },
+    {
+      "id": "sorted-required",
+      "text": "The tree must be a BST and sorted for this to work.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "tree-dfs"
+  ],
+  "modelExplanation": "Tree DFS carrying a shared path and running total, copying matching leaf paths and backtracking: O(n+K) time, O(h) auxiliary space, plus O(K) output values."
+},
   "pattern:tree-dfs:pat-tdfs-choose-1": {
-    scenario:
-      "Return the values of the tree grouped by level. Tree DFS or Tree BFS?",
-    approaches: [
-      { id: "tree-bfs", label: "Tree BFS", requiredReasonIds: ["breadth-first-levels"] },
-      { id: "tree-dfs", label: "Tree DFS", requiredReasonIds: [], rejectionFeedback: "DFS descends paths and does not group by level without carrying explicit depth bookkeeping; BFS is the direct fit." },
-    ],
-    reasons: [
-      { id: "breadth-first-levels", text: "Grouping by level is breadth-first work: a queue processes one full level at a time — O(n)." },
-      { id: "path-context-needed", text: "The task needs a running path sum, so recursion is natural.", contradictory: true },
-      { id: "needs-two-heaps", text: "Two heaps are needed to balance the levels.", contradictory: true },
-    ],
-    acceptableApproachIds: ["tree-bfs"],
-    modelExplanation:
-      "Tree BFS: level grouping is breadth-first and uses a queue; DFS would need extra depth bookkeeping to group by level.",
-  },
+  "scenario": "Return the values of the tree grouped by level. Tree DFS or Tree BFS?",
+  "approaches": [
+    {
+      "id": "tree-bfs",
+      "label": "Tree BFS",
+      "requiredReasonIds": [
+        "breadth-first-levels"
+      ]
+    },
+    {
+      "id": "tree-dfs",
+      "label": "Tree DFS",
+      "requiredReasonIds": [
+        "dfs-depth-groups"
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "id": "breadth-first-levels",
+      "text": "Grouping by level is breadth-first work: a queue processes one full level at a time — O(n)."
+    },
+    {
+      "id": "path-context-needed",
+      "text": "The task needs a running path sum, so recursion is natural.",
+      "contradictory": true
+    },
+    {
+      "id": "needs-two-heaps",
+      "text": "Two heaps are needed to balance the levels.",
+      "contradictory": true
+    },
+    {
+      "id": "dfs-depth-groups",
+      "text": "Carry the depth in DFS and append each node to the bucket for that depth, visiting left before right to preserve per-level left-to-right order."
+    }
+  ],
+  "acceptableApproachIds": [
+    "tree-bfs",
+    "tree-dfs"
+  ],
+  "modelExplanation": "BFS queue-size rounds group levels directly. DFS with depth buckets also works in O(n), visiting left before right for the usual level order.",
+  "alternatives": []
+},
   "pattern:graph-dfs-components:pat-gdc-recognize-1": {
-    scenario:
-      "Count the number of islands in a grid of land and water cells.",
-    approaches: [
-      { id: "flood-fill", label: "Graph DFS / connected components (flood fill)", requiredReasonIds: ["one-dfs-per-component"] },
-      { id: "union-find-static", label: "Union-Find", requiredReasonIds: [], rejectionFeedback: "Union-Find works but is overkill for a one-time static count; a flood-fill DFS/BFS is simpler at O(V+E)." },
-    ],
-    reasons: [
-      { id: "one-dfs-per-component", text: "Treat land cells as nodes connected to adjacent land; launch a DFS from each unvisited land cell and count one component per launch — O(V+E)." },
-      { id: "dynamic-edges", text: "Edges arrive incrementally, so a near-constant incremental union is required.", contradictory: true },
-      { id: "weighted-shortest", text: "You need the shortest weighted path, so Dijkstra applies.", contradictory: true },
-    ],
-    acceptableApproachIds: ["flood-fill"],
-    modelExplanation:
-      "Graph DFS / connected components: flood-fill from each unvisited land cell, counting one island per launch — O(V+E) over the grid.",
-  },
+  "scenario": "Count the number of islands in a grid of land and water cells.",
+  "approaches": [
+    {
+      "id": "flood-fill",
+      "label": "Graph DFS / connected components (flood fill)",
+      "requiredReasonIds": [
+        "one-dfs-per-component"
+      ]
+    },
+    {
+      "id": "union-find-static",
+      "label": "Union-Find",
+      "requiredReasonIds": [
+        "union-land-neighbors"
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "id": "one-dfs-per-component",
+      "text": "Treat land cells as nodes connected to adjacent land; launch a DFS from each unvisited land cell and count one component per launch — O(V+E)."
+    },
+    {
+      "id": "dynamic-edges",
+      "text": "Edges arrive incrementally, so a near-constant incremental union is required.",
+      "contradictory": true
+    },
+    {
+      "id": "weighted-shortest",
+      "text": "You need the shortest weighted path, so Dijkstra applies.",
+      "contradictory": true
+    },
+    {
+      "id": "union-land-neighbors",
+      "text": "Create a set for each land cell, union side-adjacent land cells, then count distinct land roots. This also counts static islands."
+    }
+  ],
+  "acceptableApproachIds": [
+    "flood-fill",
+    "union-find-static"
+  ],
+  "modelExplanation": "Flood-fill DFS/BFS is a direct O(V+E) static solution. Union-Find over land cells is also correct, with O(V+E*α(V)) amortized processing and extra DSU state.",
+  "alternatives": []
+},
   "pattern:graph-dfs-components:pat-gdc-choose-1": {
     scenario:
       "Edges are added one at a time and after each you must answer 'are X and Y connected?'.",
@@ -1111,41 +1535,93 @@ export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
       "Union-Find: union each edge's endpoints, and a same-root find before uniting marks the redundant edge — near-O(1) per op with path compression and union by rank.",
   },
   "pattern:union-find:pat-uf-choose-1": {
-    scenario:
-      "The graph is FIXED and you need to count its connected components exactly once.",
-    approaches: [
-      { id: "dfs-count", label: "One-pass DFS/BFS component count", requiredReasonIds: ["static-single-pass"] },
-      { id: "union-find", label: "Union-Find", requiredReasonIds: [], rejectionFeedback: "Union-Find is not wrong, but for a one-time static count a single DFS/BFS sweep is simpler at O(V+E)." },
-    ],
-    reasons: [
-      { id: "static-single-pass", text: "The graph does not change and you count once, so a single traversal launching a search per unvisited node is simplest — O(V+E)." },
-      { id: "uf-dynamic", text: "When edges arrive incrementally or many connectivity queries are made, Union-Find's near-constant operations avoid re-traversing the whole graph." },
-      { id: "shortest-path", text: "You need shortest weighted paths, so a heap is required.", contradictory: true },
-    ],
-    acceptableApproachIds: ["dfs-count"],
-    alternatives: [
-      { approachId: "union-find", conditions: "When edges are dynamic or you make many connectivity queries.", tradeoff: "More machinery than a one-pass traversal for a single static count.", requiredReasonIds: ["uf-dynamic"] },
-    ],
-    modelExplanation:
-      "For a one-time static count, a single DFS/BFS sweep (O(V+E)) is simplest. Union-Find shines when edges are dynamic or many queries are made.",
-  },
+  "scenario": "The graph is FIXED and you need to count its connected components exactly once.",
+  "approaches": [
+    {
+      "id": "dfs-count",
+      "label": "One-pass DFS/BFS component count",
+      "requiredReasonIds": [
+        "static-single-pass"
+      ]
+    },
+    {
+      "id": "union-find",
+      "label": "Union-Find",
+      "requiredReasonIds": [
+        "union-static-edges"
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "id": "static-single-pass",
+      "text": "The graph does not change and you count once, so a single traversal launching a search per unvisited node is simplest — O(V+E)."
+    },
+    {
+      "id": "uf-dynamic",
+      "text": "When edges arrive incrementally or many connectivity queries are made, Union-Find's near-constant operations avoid re-traversing the whole graph."
+    },
+    {
+      "id": "shortest-path",
+      "text": "You need shortest weighted paths, so a heap is required.",
+      "contradictory": true
+    },
+    {
+      "id": "union-static-edges",
+      "text": "Start with V components, union every undirected edge and decrement the count on each successful merge. This is also valid for a one-time static count."
+    }
+  ],
+  "acceptableApproachIds": [
+    "dfs-count",
+    "union-find"
+  ],
+  "alternatives": [],
+  "modelExplanation": "A single DFS/BFS sweep is direct for static components. Union-Find also works: initialize V sets, union each edge and count surviving groups. Prefer DSU when connectivity updates or queries repeat."
+},
   "pattern:dijkstra:pat-dij-recognize-1": {
-    scenario:
-      "Find the minimum total travel time from a source to every city, given roads with positive times.",
-    approaches: [
-      { id: "dijkstra", label: "Dijkstra's algorithm", requiredReasonIds: ["settle-closest"] },
-      { id: "bfs", label: "Plain BFS", requiredReasonIds: [], rejectionFeedback: "BFS counts edges, not weighted cost; with unequal positive weights fewest-edges is not cheapest." },
-      { id: "bellman", label: "Bellman–Ford", requiredReasonIds: [], rejectionFeedback: "Bellman–Ford is for negative edges; with all-positive weights Dijkstra is faster." },
-    ],
-    reasons: [
-      { id: "settle-closest", text: "Weights are non-negative, so repeatedly settling the closest unvisited city and relaxing its roads via a min-heap is correct — O((V+E) log V)." },
-      { id: "unweighted", text: "All roads take the same time, so counting edges equals counting cost.", contradictory: true },
-      { id: "has-negative", text: "Some roads have negative time, so the closest-is-final rule breaks.", contradictory: true },
-    ],
-    acceptableApproachIds: ["dijkstra"],
-    modelExplanation:
-      "Dijkstra's algorithm: a min-heap by distance settles the closest city and relaxes its edges; non-negative weights guarantee correctness — O((V+E) log V).",
-  },
+  "scenario": "Recognize: 'Find the minimum total travel time from a source to every city, given roads with positive times.' Which pattern? Choose the efficient standard default for unequal nonnegative edge weights.",
+  "approaches": [
+    {
+      "id": "dijkstra",
+      "label": "Dijkstra's algorithm",
+      "requiredReasonIds": [
+        "settle-closest"
+      ]
+    },
+    {
+      "id": "bfs",
+      "label": "Plain BFS",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "BFS counts edges, not weighted cost; with unequal positive weights fewest-edges is not cheapest."
+    },
+    {
+      "id": "bellman",
+      "label": "Bellman–Ford",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Bellman–Ford is also correct for nonnegative weights, but its O(V+V*E) bound is slower than the heap default requested here."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "settle-closest",
+      "text": "Weights are non-negative, so repeatedly settling the closest unvisited city and relaxing its roads via a min-heap is correct — O((V+E) log V)."
+    },
+    {
+      "id": "unweighted",
+      "text": "All roads take the same time, so counting edges equals counting cost.",
+      "contradictory": true
+    },
+    {
+      "id": "has-negative",
+      "text": "Some roads have negative time, so the closest-is-final rule breaks.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "dijkstra"
+  ],
+  "modelExplanation": "Dijkstra's algorithm: a min-heap by distance settles the closest city and relaxes its edges; non-negative weights guarantee correctness — O((V+E) log V)."
+},
   "pattern:dijkstra:pat-dij-choose-1": {
     scenario:
       "Some edges have NEGATIVE weights (e.g. currency arbitrage). Dijkstra or Bellman–Ford?",
@@ -1195,38 +1671,87 @@ export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
       "Hash set: exact membership is O(L) average and simplest. A trie only earns its overhead when prefix queries are required.",
   },
   "pattern:modified-binary-search:pat-mbs-recognize-1": {
-    scenario:
-      "A sorted array was rotated at an unknown pivot; find the index of a target in O(log n).",
-    approaches: [
-      { id: "mod-bs", label: "Modified binary search", requiredReasonIds: ["one-half-sorted"] },
-      { id: "linear", label: "Linear scan", requiredReasonIds: [], rejectionFeedback: "A scan is O(n); the array is still 'sorted in halves', which a modified binary search exploits for O(log n)." },
-      { id: "bs-answer", label: "Binary search on the answer", requiredReasonIds: [], rejectionFeedback: "There is no candidate-answer range with a feasibility test; you are searching within a transformed sorted array." },
-    ],
-    reasons: [
-      { id: "one-half-sorted", text: "At each midpoint one half is still sorted; test whether the target lies within that sorted half and keep it, else keep the other — O(log n), O(1) space." },
-      { id: "fully-sorted", text: "The array is fully sorted, so plain binary search applies directly.", contradictory: true },
-      { id: "candidate-range", text: "You search an abstract range of candidate answers with a feasibility test.", contradictory: true },
-    ],
-    acceptableApproachIds: ["mod-bs"],
-    modelExplanation:
-      "Modified binary search: at each midpoint one half is sorted; decide whether the target lies there to discard the other half — O(log n).",
-  },
+  "scenario": "A sorted array of DISTINCT values was rotated at an unknown pivot; find a target index in O(log n). Choose an approach.",
+  "approaches": [
+    {
+      "id": "mod-bs",
+      "label": "Modified binary search",
+      "requiredReasonIds": [
+        "one-half-sorted"
+      ]
+    },
+    {
+      "id": "linear",
+      "label": "Linear scan",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A scan is O(n); the array is still 'sorted in halves', which a modified binary search exploits for O(log n)."
+    },
+    {
+      "id": "bs-answer",
+      "label": "Binary search on the answer",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "There is no candidate-answer range with a feasibility test; you are searching within a transformed sorted array."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "one-half-sorted",
+      "text": "At each midpoint one half is still sorted; test whether the target lies within that sorted half and keep it, else keep the other — O(log n), O(1) space."
+    },
+    {
+      "id": "fully-sorted",
+      "text": "The array is fully sorted, so plain binary search applies directly.",
+      "contradictory": true
+    },
+    {
+      "id": "candidate-range",
+      "text": "You search an abstract range of candidate answers with a feasibility test.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "mod-bs"
+  ],
+  "modelExplanation": "Modified binary search: at each midpoint one half is sorted; decide whether the target lies there to discard the other half — O(log n)."
+},
   "pattern:modified-binary-search:pat-mbs-choose-1": {
-    scenario:
-      "Find the minimum ship capacity so all packages ship within D days. Is that modified binary search on a rotated array?",
-    approaches: [
-      { id: "bs-answer", label: "Binary search on the answer", requiredReasonIds: ["candidate-capacity"] },
-      { id: "mod-bs", label: "Modified binary search on a transformed array", requiredReasonIds: [], rejectionFeedback: "There is no rotated/transformed array to search; you search a range of candidate capacities via a feasibility test." },
-    ],
-    reasons: [
-      { id: "candidate-capacity", text: "Binary-search the candidate capacity: feasibility ('can we ship within D days at this capacity?') is monotone, so search the answer range." },
-      { id: "rotated-array", text: "You are searching within a rotated sorted array by index.", contradictory: true },
-      { id: "no-monotone", text: "Feasibility is not monotone in capacity, so binary search cannot apply.", contradictory: true },
-    ],
-    acceptableApproachIds: ["bs-answer"],
-    modelExplanation:
-      "No — this is binary search on the ANSWER: search candidate capacities using a monotone feasibility test. Modified binary search refers to searching a transformed sorted array.",
-  },
+  "scenario": "'Find the minimum ship capacity so all packages ship within D days.' Is that modified binary search on a rotated array? Assume positive integer package weights, preserved order and D >= 1.",
+  "approaches": [
+    {
+      "id": "bs-answer",
+      "label": "Binary search on the answer",
+      "requiredReasonIds": [
+        "candidate-capacity"
+      ]
+    },
+    {
+      "id": "mod-bs",
+      "label": "Modified binary search on a transformed array",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "There is no rotated/transformed array to search; you search a range of candidate capacities via a feasibility test."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "candidate-capacity",
+      "text": "Binary-search the candidate capacity: feasibility ('can we ship within D days at this capacity?') is monotone, so search the answer range."
+    },
+    {
+      "id": "rotated-array",
+      "text": "You are searching within a rotated sorted array by index.",
+      "contradictory": true
+    },
+    {
+      "id": "no-monotone",
+      "text": "Feasibility is not monotone in capacity, so binary search cannot apply.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "bs-answer"
+  ],
+  "modelExplanation": "No — this is binary search on the ANSWER: search candidate capacities using a monotone feasibility test. Modified binary search refers to searching a transformed sorted array."
+},
   "pattern:bitwise-xor:pat-xor-recognize-1": {
     scenario:
       "Every number appears exactly twice except one; find that one using O(1) extra space.",
@@ -1314,53 +1839,119 @@ export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
       "Dynamic programming: ways(k) = ways(k−1) + ways(k−2) has overlapping subproblems, so memoization/tabulation gives O(n) instead of exponential recursion.",
   },
   "pattern:dynamic-programming:pat-dp-choose-1": {
-    scenario:
-      "You must LIST every subset that sums to a target (not just count them).",
-    approaches: [
-      { id: "backtracking", label: "Backtracking", requiredReasonIds: ["enumerate-explicit"] },
-      { id: "dp", label: "Dynamic programming", requiredReasonIds: [], rejectionFeedback: "DP counts or optimizes over overlapping subproblems; producing every explicit subset requires enumeration, not a count." },
-    ],
-    reasons: [
-      { id: "enumerate-explicit", text: "Listing every subset means producing each explicit configuration, so you must enumerate via choose/explore/un-choose." },
-      { id: "count-suffices", text: "Only the number of subsets is needed, so overlapping subproblems make DP ideal.", contradictory: true },
-      { id: "greedy-lists", text: "A greedy scan can list all qualifying subsets directly.", contradictory: true },
-    ],
-    acceptableApproachIds: ["backtracking"],
-    modelExplanation:
-      "Backtracking: enumerating every explicit qualifying subset requires generating configurations. DP is for counting/optimizing, not listing every combination.",
-  },
+  "scenario": "You must LIST every subset that sums to a target (not just count them).",
+  "approaches": [
+    {
+      "id": "backtracking",
+      "label": "Backtracking",
+      "requiredReasonIds": [
+        "enumerate-explicit"
+      ]
+    },
+    {
+      "id": "dp",
+      "label": "DP counts alone",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A scalar count alone does not return the subsets. DP augmented with a traversal can guide enumeration, but emitting the configurations remains necessary."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "enumerate-explicit",
+      "text": "Listing every subset means producing each explicit configuration, so you must enumerate via choose/explore/un-choose."
+    },
+    {
+      "id": "count-suffices",
+      "text": "Only the number of subsets is needed, so overlapping subproblems make DP ideal.",
+      "contradictory": true
+    },
+    {
+      "id": "greedy-lists",
+      "text": "A greedy scan can list all qualifying subsets directly.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "backtracking"
+  ],
+  "modelExplanation": "Backtracking directly lists the configurations. DP feasibility/count results alone do not emit them, but an augmented DP table can guide reconstruction/enumeration. Listing every answer still pays for the output. To support zero or negative values without losing subsets, finish the finite include/exclude decisions and record at a leaf whose sum equals the target."
+},
   "pattern:knapsack:pat-ks-recognize-1": {
-    scenario:
-      "Can an array be split into two subsets with equal sum?",
-    approaches: [
-      { id: "knapsack-01", label: "0/1 knapsack (subset-sum DP)", requiredReasonIds: ["reachable-half"] },
-      { id: "greedy", label: "Greedy partition (sort and assign)", requiredReasonIds: [], rejectionFeedback: "Greedily balancing sums does not reliably decide exact equal partition; subset-sum needs DP over reachable sums." },
-    ],
-    reasons: [
-      { id: "reachable-half", text: "Set target = total/2 and let dp[s] track reachable subset sums with each item used once (sweep capacity downward); feasible iff dp[target] is true — O(n·target)." },
-      { id: "fractional-ok", text: "Items can be split into fractions, so a greedy ratio choice is optimal.", contradictory: true },
-      { id: "unlimited-reuse", text: "Each item may be reused unlimited times, so sweep capacity upward.", contradictory: true },
-    ],
-    acceptableApproachIds: ["knapsack-01"],
-    modelExplanation:
-      "0/1 knapsack (subset-sum): target = total/2; dp[s] tracks reachable sums with each item used once (downward capacity sweep). Feasible iff dp[target] is true.",
-  },
+  "scenario": "Recognize: 'Can an array be split into two subsets with equal sum?' Which pattern? Assume non-negative integer values; equal values are separate item positions.",
+  "approaches": [
+    {
+      "id": "knapsack-01",
+      "label": "0/1 knapsack (subset-sum DP)",
+      "requiredReasonIds": [
+        "reachable-half"
+      ]
+    },
+    {
+      "id": "greedy",
+      "label": "Greedy partition (sort and assign)",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Greedily balancing sums does not reliably decide exact equal partition; subset-sum needs DP over reachable sums."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "reachable-half",
+      "text": "Set target = total/2 and let dp[s] track reachable subset sums with each item used once (sweep capacity downward); feasible iff dp[target] is true — O((n+1)(target+1))."
+    },
+    {
+      "id": "fractional-ok",
+      "text": "Items can be split into fractions, so a greedy ratio choice is optimal.",
+      "contradictory": true
+    },
+    {
+      "id": "unlimited-reuse",
+      "text": "Each item may be reused unlimited times, so sweep capacity upward.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "knapsack-01"
+  ],
+  "modelExplanation": "0/1 knapsack (subset-sum): target = total/2; dp[s] tracks reachable sums with each item used once (downward capacity sweep). Feasible iff dp[target] is true."
+},
   "pattern:knapsack:pat-ks-choose-1": {
-    scenario:
-      "Fewest coins to make an amount, with coins reusable unlimited times. Same 0/1 knapsack recurrence?",
-    approaches: [
-      { id: "unbounded", label: "Unbounded knapsack (coin change)", requiredReasonIds: ["reuse-sweep-up"] },
-      { id: "knapsack-01", label: "0/1 knapsack (downward sweep)", requiredReasonIds: [], rejectionFeedback: "The 0/1 downward sweep forbids reuse and would undercount when coins repeat unlimited times." },
-    ],
-    reasons: [
-      { id: "reuse-sweep-up", text: "Coins repeat, so iterate capacity UPWARD (dp[a] from dp[a−coin]) to allow reusing a coin within the same amount." },
-      { id: "each-once", text: "Each coin may be used at most once, so sweep capacity downward.", contradictory: true },
-      { id: "fractional-coins", text: "Coins can be split into fractions, so greedy ratio selection is optimal.", contradictory: true },
-    ],
-    acceptableApproachIds: ["unbounded"],
-    modelExplanation:
-      "No — reusable coins make it UNBOUNDED knapsack (coin change): iterate capacity upward so a coin can be reused. The 0/1 downward sweep forbids reuse and undercounts.",
-  },
+  "scenario": "Fewest coins to make an amount, with coins reusable unlimited times. Same 0/1 knapsack recurrence?",
+  "approaches": [
+    {
+      "id": "unbounded",
+      "label": "Unbounded knapsack (coin change)",
+      "requiredReasonIds": [
+        "reuse-sweep-up"
+      ]
+    },
+    {
+      "id": "knapsack-01",
+      "label": "0/1 knapsack (downward sweep)",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "The 0/1 downward sweep forbids reuse and may report impossible or overestimate the minimum when coins repeat unlimited times."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "reuse-sweep-up",
+      "text": "Coins repeat, so iterate capacity UPWARD (dp[a] from dp[a−coin]) to allow reusing a coin within the same amount."
+    },
+    {
+      "id": "each-once",
+      "text": "Each coin may be used at most once, so sweep capacity downward.",
+      "contradictory": true
+    },
+    {
+      "id": "fractional-coins",
+      "text": "Coins can be split into fractions, so greedy ratio selection is optimal.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "unbounded"
+  ],
+  "modelExplanation": "No — reusable coins make it UNBOUNDED knapsack (coin change): iterate capacity upward so a coin can be reused. The 0/1 downward sweep forbids reuse and can give impossible or a nonminimal count."
+},
   "pattern:divide-and-conquer:pat-dac-recognize-1": {
     scenario:
       "Sort an array in guaranteed O(n log n) time, stably.",
@@ -1465,75 +2056,185 @@ export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
       "Kadane solves (c), the max any-length contiguous sum. (a) is a fixed-size window; (b) is prefix sums + a hash map — same 'subarray' wording, different patterns.",
   },
   "lesson:binary-search:bs-choose-1": {
-    scenario:
-      "You will search a currently-unsorted collection 100,000 times for different values. Compare linear each time, sort-then-binary-search, or build a set. For pure membership, which is usually best?",
-    approaches: [
-      { id: "build-set", label: "Build a hash set once, then query", requiredReasonIds: ["set-expected-o1"] },
-      { id: "sort-then-bs", label: "Sort once, then binary-search each query", requiredReasonIds: ["sorted-ordered-queries"] },
-      { id: "linear-each", label: "Linear search each time", requiredReasonIds: [], rejectionFeedback: "Linear each query is O(n·q); with many queries that is far slower than an expected-O(1) set lookup." },
-    ],
-    reasons: [
-      { id: "set-expected-o1", text: "For pure membership over many queries, an O(n) set build then expected-O(1) lookups gives O(n + q) — the best of the three." },
-      { id: "sorted-ordered-queries", text: "Sorting once (O(n log n)) then binary-searching (O(q log n)) also answers ORDERED queries like floor/ceil and ranges that a set cannot." },
-      { id: "need-linear-scan", text: "You must scan linearly because the values cannot be hashed.", contradictory: true },
-    ],
-    acceptableApproachIds: ["build-set"],
-    alternatives: [
-      { approachId: "sort-then-bs", conditions: "When you also need ORDERED queries such as floor/ceil or ranges, not just membership.", tradeoff: "O(n log n) build + O(q log n) queries — slower than a set for pure membership, but supports order.", requiredReasonIds: ["sorted-ordered-queries"] },
-    ],
-    modelExplanation:
-      "For pure membership across many queries, build a set once (O(n)) then query in expected O(1) → O(n + q). Sort-then-binary-search also works and additionally supports ordered queries like bounds.",
-  },
+  "scenario": "You will search a currently-unsorted collection 100,000 times for different values. Compare linear each time, sort-then-binary-search, or build a set. For pure membership, which is usually best? Assume hashable comparable values and ordinary hashing.",
+  "approaches": [
+    {
+      "id": "build-set",
+      "label": "Build a hash set once, then query",
+      "requiredReasonIds": [
+        "set-expected-o1"
+      ]
+    },
+    {
+      "id": "sort-then-bs",
+      "label": "Sort once, then binary-search each query",
+      "requiredReasonIds": [
+        "sorted-ordered-queries"
+      ]
+    },
+    {
+      "id": "linear-each",
+      "label": "Linear search each time",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Repeated scans have O(n*q) worst-case work; a set gives expected O(n+q) under the stated hashing model."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "set-expected-o1",
+      "text": "For pure membership over many queries, an expected O(n) set build then expected-O(1) lookups gives O(n + q) — the best of the three."
+    },
+    {
+      "id": "sorted-ordered-queries",
+      "text": "Sorting once (O(n log n)) then binary-searching (O(q log n)) also answers ORDERED queries like floor/ceil and ranges that a set cannot."
+    },
+    {
+      "id": "need-linear-scan",
+      "text": "You must scan linearly because the values cannot be hashed.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "build-set"
+  ],
+  "alternatives": [
+    {
+      "approachId": "sort-then-bs",
+      "conditions": "When you also need ORDERED queries such as floor/ceil or ranges, not just membership.",
+      "tradeoff": "O(n log n) worst-case sorting plus O(q log n) queries, a higher general bound than expected hash membership, with support for ordered queries.",
+      "requiredReasonIds": [
+        "sorted-ordered-queries"
+      ]
+    }
+  ],
+  "modelExplanation": "For pure membership across many queries, build a set once (expected O(n)) then query in expected O(1) → O(n + q). Sort-then-binary-search also works and additionally supports ordered queries like bounds."
+},
   "lesson:binary-search-answer:bsa-choose-1": {
-    scenario:
-      "Which fits 'binary search on the answer': (a) sum of exactly k elements, (b) minimize the largest part-sum when splitting an array into m parts, (c) find an element in a sorted array? This drill is about (b).",
-    approaches: [
-      { id: "bs-answer", label: "Binary search on the answer", requiredReasonIds: ["monotone-feasibility"] },
-      { id: "fixed-window", label: "Fixed-size sliding window", requiredReasonIds: [], rejectionFeedback: "That is the tool for (a): a fixed width k, not a search over candidate answers." },
-      { id: "array-bs", label: "Ordinary array binary search", requiredReasonIds: [], rejectionFeedback: "That is the tool for (c): locating an element in a sorted array by position." },
-    ],
-    reasons: [
-      { id: "monotone-feasibility", text: "Minimizing the maximum part-sum has a monotone feasibility check — a larger allowed max is always feasible — so binary-search the candidate cap." },
-      { id: "fixed-k-window", text: "The problem pins a fixed count k of elements to sum.", contradictory: true },
-      { id: "locate-in-sorted", text: "We are locating a known element in an already-sorted array.", contradictory: true },
-    ],
-    acceptableApproachIds: ["bs-answer"],
-    modelExplanation:
-      "(b) fits binary search on the answer: the feasibility of a candidate max part-sum is monotone. (a) is a sliding window; (c) is ordinary array binary search.",
-  },
+  "scenario": "Which scenario admits a monotone capacity search? (a) the maximum sum of a contiguous window of exactly k elements, (b) split a nonempty array of positive integers into exactly m contiguous nonempty parts, 1 <= m <= n, minimizing the largest part sum, (c) locate a target in a sorted array.",
+  "approaches": [
+    {
+      "id": "bs-answer",
+      "label": "Binary search on the answer",
+      "requiredReasonIds": [
+        "monotone-feasibility"
+      ]
+    },
+    {
+      "id": "fixed-window",
+      "label": "Fixed-size sliding window",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "That is the tool for (a): a fixed width k, not a search over candidate answers."
+    },
+    {
+      "id": "array-bs",
+      "label": "Ordinary array binary search",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "That is the tool for (c): locating an element in a sorted array by position."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "monotone-feasibility",
+      "text": "For positive integers and 1 <= m <= n, greedy packing tests at-most-m feasibility; extra splits reach exactly m without raising a part sum, and increasing the cap preserves feasibility."
+    },
+    {
+      "id": "fixed-k-window",
+      "text": "The problem pins a fixed count k of elements to sum.",
+      "contradictory": true
+    },
+    {
+      "id": "locate-in-sorted",
+      "text": "We are locating a known element in an already-sorted array.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "bs-answer"
+  ],
+  "modelExplanation": "(b): greedily test whether a candidate cap permits at most m parts. With positive values and m <= n, further splits can produce exactly m parts without increasing the largest sum. Feasibility stays true when the cap increases. (a) admits a fixed-width sliding window; (c) uses ordinary array binary search."
+},
   "lesson:rotated-array-search:rot-choose-1": {
-    scenario:
-      "Why can't plain binary search be used directly on [4,5,6,7,0,1,2], and what single extra step fixes it?",
-    approaches: [
-      { id: "which-half-sorted", label: "Detect which half of mid is sorted, then decide", requiredReasonIds: ["identify-sorted-half"] },
-      { id: "plain-bs", label: "Plain binary search comparing nums[mid] to target", requiredReasonIds: [], rejectionFeedback: "The array is not fully sorted, so nums[mid] vs target alone cannot tell which half to discard." },
-      { id: "linear", label: "Linear scan", requiredReasonIds: [], rejectionFeedback: "A scan is O(n) and throws away the fact that each half is still sorted, which permits O(log n)." },
-    ],
-    reasons: [
-      { id: "identify-sorted-half", text: "First determine which half of mid is sorted (e.g. nums[lo] ≤ nums[mid]); then check whether the target lies in that half's range to decide which side to keep — still O(log n)." },
-      { id: "fully-sorted", text: "The array is fully sorted, so plain binary search works unchanged.", contradictory: true },
-      { id: "no-order", text: "The array has no usable order, so only a linear scan can work.", contradictory: true },
-    ],
-    acceptableApproachIds: ["which-half-sorted"],
-    modelExplanation:
-      "Because the array isn't fully sorted, nums[mid] vs target alone can't pick a half. Identify which half of mid IS sorted, then decide using that half's range — O(log n).",
-  },
+  "scenario": "Why can't plain binary search be used directly on [4,5,6,7,0,1,2], and what single extra step fixes it?",
+  "approaches": [
+    {
+      "id": "which-half-sorted",
+      "label": "Detect which half of mid is sorted, then decide",
+      "requiredReasonIds": [
+        "identify-sorted-half"
+      ]
+    },
+    {
+      "id": "plain-bs",
+      "label": "Plain binary search comparing nums[mid] to target",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "The array is not fully sorted, so nums[mid] vs target alone cannot tell which half to discard."
+    },
+    {
+      "id": "linear",
+      "label": "Linear scan",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A linear scan correctly finds the target but costs O(n). This drill asks for the change that keeps binary search logarithmic on distinct values; the sorted-half range test supplies that change."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "identify-sorted-half",
+      "text": "First determine which half of mid is sorted (e.g. nums[lo] ≤ nums[mid]); then check whether the target lies in that half's range to decide which side to keep — still O(log n)."
+    },
+    {
+      "id": "fully-sorted",
+      "text": "The array is fully sorted, so plain binary search works unchanged.",
+      "contradictory": true
+    },
+    {
+      "id": "no-order",
+      "text": "The array has no usable order, so only a linear scan can work.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "which-half-sorted"
+  ],
+  "modelExplanation": "Because the array isn't fully sorted, nums[mid] vs target alone can't pick a half. Identify which half of mid IS sorted, then decide using that half's range — O(log n)."
+},
   "lesson:monotonic-stack:mono-choose-1": {
-    scenario:
-      "For each day, how many days until a warmer temperature? Which structure gives O(n), and what does it hold?",
-    approaches: [
-      { id: "mono-stack", label: "Monotonic (decreasing) stack of indices", requiredReasonIds: ["pop-on-warmer-day"] },
-      { id: "brute", label: "For each day scan forward for a warmer day", requiredReasonIds: [], rejectionFeedback: "The nested forward scan is O(n^2); a monotonic stack answers all days in O(n)." },
-    ],
-    reasons: [
-      { id: "pop-on-warmer-day", text: "Keep a decreasing stack of day indices awaiting a warmer day; when a warmer day arrives, pop the waiting days and record the index gap — O(n) total." },
-      { id: "window-expiry", text: "Elements expire from the front of a fixed-size window, so a deque is required.", contradictory: true },
-      { id: "sort-temps", text: "The temperatures must be sorted before processing.", contradictory: true },
-    ],
-    acceptableApproachIds: ["mono-stack"],
-    modelExplanation:
-      "A monotonic decreasing stack of indices: each warmer day pops the cooler days waiting below and records the wait, giving O(n) total.",
-  },
+  "scenario": "For each day, how many days until a warmer temperature? Which structure gives O(n), and what does it hold?",
+  "approaches": [
+    {
+      "id": "mono-stack",
+      "label": "Monotonic (non-increasing) stack of indices",
+      "requiredReasonIds": [
+        "pop-on-warmer-day"
+      ]
+    },
+    {
+      "id": "brute",
+      "label": "For each day scan forward for a warmer day",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "The nested forward scan is O(n^2); a monotonic stack answers all days in O(n)."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "pop-on-warmer-day",
+      "text": "Keep a non-increasing stack of day indices awaiting a warmer day; when a warmer day arrives, pop the waiting days and record the index gap — O(n) total."
+    },
+    {
+      "id": "window-expiry",
+      "text": "Elements expire from the front of a fixed-size window, so a deque is required.",
+      "contradictory": true
+    },
+    {
+      "id": "sort-temps",
+      "text": "The temperatures must be sorted before processing.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "mono-stack"
+  ],
+  "modelExplanation": "A monotonic non-increasing stack of indices: each warmer day pops the cooler days waiting below and records the wait, giving O(n) total."
+},
   "lesson:prefix-sums-map:psm-choose-1": {
     scenario:
       "Three problems: (a) max sum of exactly k consecutive, (b) count subarrays summing to k WITH negatives, (c) max-sum any-length subarray. Which needs prefix sums + a map? This drill is about (b).",
@@ -1552,56 +2253,128 @@ export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
       "(b) needs prefix sums + a map: it counts arbitrary-length target-sum subarrays and handles negatives. (a) is a fixed-size window; (c) is Kadane.",
   },
   "lesson:top-k:topk-choose-1": {
-    scenario:
-      "You need the 10 largest of 10 million numbers arriving as a stream. Full sort or a size-k heap?",
-    approaches: [
-      { id: "size-k-heap", label: "Size-k (min-)heap", requiredReasonIds: ["bounded-stream-heap"] },
-      { id: "full-sort", label: "Sort everything, take the top 10", requiredReasonIds: [], rejectionFeedback: "A full sort is O(n log n) and needs all n in memory — impossible for a 10-million-element stream." },
-    ],
-    reasons: [
-      { id: "bounded-stream-heap", text: "A size-k min-heap holds only the k best seen: push each number, pop the smallest on overflow — O(n log k) time, O(k) space, stream-friendly." },
-      { id: "all-in-memory", text: "The whole input fits in memory, so a full sort is fine.", contradictory: true },
-      { id: "need-median-boundary", text: "You need the boundary between the lower and upper halves, so two heaps are required.", contradictory: true },
-    ],
-    acceptableApproachIds: ["size-k-heap"],
-    modelExplanation:
-      "A size-k min-heap: O(n log k) time, O(k) space, and it works on a stream. A full sort is O(n log n) and needs all n in memory — far worse.",
-  },
+  "scenario": "You need the 10 largest of 10 million numbers under a memory limit that prevents storing all of them arriving as a stream. Full sort or a size-k heap?",
+  "approaches": [
+    {
+      "id": "size-k-heap",
+      "label": "Size-k (min-)heap",
+      "requiredReasonIds": [
+        "bounded-stream-heap"
+      ]
+    },
+    {
+      "id": "full-sort",
+      "label": "Sort everything, take the top 10",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "The specified memory limit prevents storing all n stream values. A size-k heap retains only the needed candidates."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "bounded-stream-heap",
+      "text": "A size-k min-heap holds only the k best seen: push each number, pop the smallest on overflow — O(n log(k+1)) time, O(k) space, stream-friendly."
+    },
+    {
+      "id": "all-in-memory",
+      "text": "The whole input fits in memory, so a full sort is fine.",
+      "contradictory": true
+    },
+    {
+      "id": "need-median-boundary",
+      "text": "You need the boundary between the lower and upper halves, so two heaps are required.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "size-k-heap"
+  ],
+  "modelExplanation": "A size-k min-heap: O(n log(k+1)) time, O(k) space, and it works on a stream. A full sort is O(n log n) and needs all n in memory — far worse."
+},
   "lesson:kth-largest:kth-choose-1": {
-    scenario:
-      "Kth largest in a fixed in-memory array with no streaming. Heap (O(n log k)) or quickselect (expected O(n))? What's the risk with quickselect?",
-    approaches: [
-      { id: "quickselect", label: "Quickselect", requiredReasonIds: ["partition-expected-linear"] },
-      { id: "size-k-heap", label: "Size-k heap", requiredReasonIds: [], rejectionFeedback: "The heap is O(n log k) and best for streams or when you need all top-k; for a single in-memory order statistic quickselect is faster on average." },
-    ],
-    reasons: [
-      { id: "partition-expected-linear", text: "All data is in memory and only one order statistic is needed, so partitioning around a pivot finds the k-th largest in expected O(n), O(1) extra space — though bad pivots risk O(n²), mitigated by random/median pivots." },
-      { id: "heap-predictable", text: "A size-k heap gives predictable O(n log k) with no O(n²) worst case, and works on a stream or when all top-k are needed." },
-      { id: "need-all-k", text: "You need all top-k elements, not just the k-th.", contradictory: true },
-    ],
-    acceptableApproachIds: ["quickselect"],
-    alternatives: [
-      { approachId: "size-k-heap", conditions: "When the input streams or you need all top-k, or you want predictable worst-case behavior.", tradeoff: "O(n log k) versus quickselect's expected O(n), but avoids quickselect's O(n²) worst case.", requiredReasonIds: ["heap-predictable"] },
-    ],
-    modelExplanation:
-      "Quickselect is faster on average (expected O(n), O(1) extra space) but risks O(n²) with bad pivots (mitigate with random/median pivots). The heap is O(n log k), predictable, and streaming-capable.",
-  },
+  "scenario": "Kth largest in a fixed in-memory array with no streaming. Heap (O(n log(k+1))) or quickselect (expected O(n))? What's the risk with quickselect?",
+  "approaches": [
+    {
+      "id": "quickselect",
+      "label": "Quickselect",
+      "requiredReasonIds": [
+        "partition-expected-linear"
+      ]
+    },
+    {
+      "id": "size-k-heap",
+      "label": "Size-k heap",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A heap remains valid here; choose it when predictable scan work is the desired tradeoff, or k is small."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "partition-expected-linear",
+      "text": "Randomized partitioning gives expected O(n), worst O(n²); iterative in-place partitioning uses O(1) extra storage. It need not beat a heap for every k (both are linear for k=1)."
+    },
+    {
+      "id": "heap-predictable",
+      "text": "The heap gives O(n log(k+1)) scan time and O(k) storage for valid ranks, with no selection pivot risk."
+    },
+    {
+      "id": "need-all-k",
+      "text": "You need all top-k elements, not just the k-th.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "quickselect"
+  ],
+  "alternatives": [
+    {
+      "approachId": "size-k-heap",
+      "conditions": "Predictable work or small k is preferred, even when the input is in memory; a stream also makes the heap suitable.",
+      "tradeoff": "O(n log(k+1)) versus randomized selection expected O(n) and quadratic worst case.",
+      "requiredReasonIds": [
+        "heap-predictable"
+      ]
+    }
+  ],
+  "modelExplanation": "Randomized quickselect offers expected O(n) with an iterative in-place O(1)-space implementation, but can take O(n²). A size-k heap costs O(n log(k+1)) and handles streams. For k=1 both are linear; speed also depends on constants. Median-of-three does not ensure linear worst case; median-of-medians is a separate deterministic linear method."
+},
   "lesson:running-median:med-choose-1": {
-    scenario:
-      "You must report the median after every insertion in a stream of a million numbers. Two heaps or re-sort each time?",
-    approaches: [
-      { id: "two-heaps", label: "Two heaps (balanced halves)", requiredReasonIds: ["log-insert-const-query"] },
-      { id: "resort", label: "Re-sort on every query", requiredReasonIds: [], rejectionFeedback: "Re-sorting is O(n log n) per query → O(n² log n) overall — hopeless for a million insertions." },
-    ],
-    reasons: [
-      { id: "log-insert-const-query", text: "A low-half max-heap and high-half min-heap kept balanced give O(log n) per insert and O(1) per median → O(n log n) total." },
-      { id: "single-report", text: "The median is reported only once at the end, so a single sort suffices.", contradictory: true },
-      { id: "one-extreme-only", text: "Only one extreme value is ever needed, so a single heap works.", contradictory: true },
-    ],
-    acceptableApproachIds: ["two-heaps"],
-    modelExplanation:
-      "Two heaps: O(log n) per insert and O(1) per median → O(n log n) total, versus re-sorting's O(n² log n). The two-heap approach is vastly better.",
-  },
+  "scenario": "You must report the median after every insertion in a stream of a million numbers. Two heaps or re-sort each time?",
+  "approaches": [
+    {
+      "id": "two-heaps",
+      "label": "Two heaps (balanced halves)",
+      "requiredReasonIds": [
+        "log-insert-const-query"
+      ]
+    },
+    {
+      "id": "resort",
+      "label": "Re-sort on every query",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Re-sorting is O(n log n) per query → general upper bound O(n² log n) overall — hopeless for a million insertions."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "log-insert-const-query",
+      "text": "A low-half max-heap and high-half min-heap kept balanced give O(log n) per insert and O(1) per median → O(n log n) total."
+    },
+    {
+      "id": "single-report",
+      "text": "The median is reported only once at the end, so a single sort suffices.",
+      "contradictory": true
+    },
+    {
+      "id": "one-extreme-only",
+      "text": "Only one extreme value is ever needed, so a single heap works.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "two-heaps"
+  ],
+  "modelExplanation": "Two heaps preserve order and size invariants: O(log(n+1)) amortized per insert and O(1) per median, O(n log(n+1)) total. Rebuilding order after every insertion is unnecessary; generic re-sort analysis gives O(n² log n) total, while adaptive Python sorting can exploit prior order and still scan each growing prefix."
+},
   "lesson:two-heap-pattern:twoheap-choose-1": {
     scenario:
       "Which fit the two-heap pattern: (a) find the kth largest, (b) running median of a stream, (c) merge k sorted lists? This drill is about identifying (b).",
@@ -1717,21 +2490,43 @@ export const EXERCISE_RECOGNITION: Record<string, RecognitionGrading> = {
       "Tabulation is iterative, so there's no recursion stack and no depth-limit risk; memoized recursion could hit RecursionError for very large inputs.",
   },
   "lesson:dp-coin-change:dpcc-choose-1": {
-    scenario:
-      "For coins [1,3,4], amount 6: what does greedy give vs DP, and which should you trust?",
-    approaches: [
-      { id: "dp", label: "Dynamic programming", requiredReasonIds: ["non-canonical-needs-dp"] },
-      { id: "greedy", label: "Greedy (always take the largest coin)", requiredReasonIds: [], rejectionFeedback: "Greedy gives 4+1+1 = 3 coins here, but DP finds 3+3 = 2; this coin system is non-canonical, so greedy is not optimal." },
-    ],
-    reasons: [
-      { id: "non-canonical-needs-dp", text: "For [1,3,4] amount 6, greedy yields 3 coins (4+1+1) while DP yields 2 (3+3); the coin system is non-canonical, so only DP over subamounts guarantees the minimum." },
-      { id: "greedy-canonical", text: "This coin system is canonical, so the largest-coin-first greedy is always optimal.", contradictory: true },
-      { id: "coins-unique-use", text: "Each coin may be used at most once, so it is a 0/1 subset problem.", contradictory: true },
-    ],
-    acceptableApproachIds: ["dp"],
-    modelExplanation:
-      "Trust DP: greedy gives 4+1+1 = 3 coins, but DP gives 3+3 = 2. Greedy is not optimal for this non-canonical coin system.",
-  },
+  "scenario": "For coins [1,3,4], amount 6: what does greedy give vs DP, and which should you trust?",
+  "approaches": [
+    {
+      "id": "dp",
+      "label": "Dynamic programming",
+      "requiredReasonIds": [
+        "non-canonical-needs-dp"
+      ]
+    },
+    {
+      "id": "greedy",
+      "label": "Greedy (always take the largest coin)",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Greedy gives 4+1+1 = 3 coins here, but DP finds 3+3 = 2; this coin system is non-canonical, so greedy is not optimal."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "non-canonical-needs-dp",
+      "text": "For [1,3,4], amount6, greedy gives three coins and DP gives two. The counterexample rejects a general greedy guarantee; the valid amount recurrence finds the exact optimum."
+    },
+    {
+      "id": "greedy-canonical",
+      "text": "This coin system is canonical, so the largest-coin-first greedy is always optimal.",
+      "contradictory": true
+    },
+    {
+      "id": "coins-unique-use",
+      "text": "Each coin may be used at most once, so it is a 0/1 subset problem.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "dp"
+  ],
+  "modelExplanation": "Trust DP: greedy gives 4+1+1 = 3 coins, but DP gives 3+3 = 2. Greedy is not optimal for this non-canonical coin system."
+},
 };
 
 /**
@@ -2061,29 +2856,29 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Use `lo = mid + 1` and `hi = mid - 1` so the search interval always shrinks.",
   ],
   "lesson:binary-search:bs-choose-1": [
-    "Goal: pick the best structure for 100,000 membership searches over a currently unsorted collection.",
-    "Linear search repeats an O(n) scan per query; the cost adds up to O(n\u00b7q).",
-    "Key insight: preprocessing once \u2014 sorting or hashing \u2014 makes each later query cheap.",
-    "Approach: weigh a set (expected O(1) membership) against sort-then-binary-search (ordered queries).",
-    "Pseudocode: build set once \u2192 O(n)+O(q); or sort once \u2192 O(n log n) + O(q log n) queries.",
-    "For plain membership choose the set (O(n) build + expected O(1) per query); use sorted + binary search when you also need order-based queries like bounds.",
-  ],
+  "Goal: pick the best structure for 100,000 membership searches over a currently unsorted collection.",
+  "Linear search repeats an O(n) scan per query; the cost adds up to O(n·q).",
+  "Key insight: preprocessing once — sorting or hashing — makes each later query cheap.",
+  "Approach: weigh a set (expected O(1) membership) against sort-then-binary-search (ordered queries).",
+  "Pseudocode: build set once → expected O(n + q); or sort once → O(n log n) + O(q log n) queries.",
+  "For plain membership choose the set (expected O(n) build + expected O(1) per query); use sorted + binary search when you also need order-based queries like bounds."
+],
   "lesson:binary-search-answer:bsa-choose-1": [
-    "Goal: identify which problem fits 'binary search on the answer.'",
-    "The naive cost is testing every candidate value; a monotone feasibility test lets you halve the search space.",
-    "Key insight: minimising the largest part-sum has a monotone check \u2014 allowing a larger max is always at least as feasible.",
-    "Approach: binary-search the answer value, using the feasibility test to move the bounds.",
-    "Pseudocode: search over possible max-sums; if a candidate is feasible, try smaller, else larger.",
-    "Answer: (b) minimising the maximum part-sum fits; (a) is a sliding window and (c) is ordinary array binary search.",
-  ],
+  "Goal: identify which problem fits 'binary search on the answer.'",
+  "The naive cost is testing every candidate value; a monotone feasibility test lets you halve the search space.",
+  "Positive values let a greedy capacity test count the fewest required parts. If at most m parts fit, they can be split to exactly m when m <= n.",
+  "Approach: binary-search the answer value, using the feasibility test to move the bounds.",
+  "Pseudocode: search over possible max-sums; if a candidate is feasible, try smaller, else larger.",
+  "(b): greedily test whether a candidate cap permits at most m parts. With positive values and m <= n, further splits can produce exactly m parts without increasing the largest sum. Feasibility stays true when the cap increases. (a) admits a fixed-width sliding window; (c) uses ordinary array binary search."
+],
   "lesson:binary-search-answer:bsa-fix-1": [
-    "Goal: binary-search the smallest feasible capacity and converge instead of looping forever.",
-    "The infinite loop comes from an update that fails to advance when lo and mid coincide.",
-    "Key insight: when mid is infeasible it cannot be the answer, so the lower bound must move strictly past it.",
-    "Approach: shrink toward the smallest feasible value with lo/hi that always make progress.",
-    "Pseudocode: while lo<hi: mid=(lo+hi)//2; if feasible hi=mid; else lo=mid+1.",
-    "Use `lo = mid + 1` in the infeasible branch so the interval always shrinks.",
-  ],
+  "Goal: binary-search the smallest feasible capacity and converge instead of looping forever. hi is assumed feasible.",
+  "The infinite loop comes from an update that fails to advance when lo and mid coincide.",
+  "Key insight: when mid is infeasible it cannot be the answer, so the lower bound must move strictly past it.",
+  "Approach: shrink toward the smallest feasible value with lo/hi that always make progress.",
+  "Pseudocode: while lo<hi: mid=(lo+hi)//2; if feasible hi=mid; else lo=mid+1.",
+  "Use `lo = mid + 1` in the infeasible branch so the interval always shrinks."
+],
   "lesson:rotated-array-search:rot-choose-1": [
     "Goal: explain why plain binary search fails on a rotated array like [4,5,6,7,0,1,2] and the one fix.",
     "The cost of a linear scan is O(n); you still want O(log n), but the usual comparison is ambiguous here.",
@@ -2181,13 +2976,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Write `if not stack: return None` then `return stack.pop()`.",
   ],
   "lesson:monotonic-stack:mono-choose-1": [
-    "Goal: choose the O(n) structure for 'how many days until a warmer temperature' per day.",
-    "Comparing every later day is O(n^2); you want each day resolved once.",
-    "Key insight: this is a next-greater-element variant, where earlier unresolved days wait for a warmer day.",
-    "Approach: keep a decreasing monotonic stack of indices awaiting resolution.",
-    "Pseudocode: for each day, pop stacked days colder than today and record the index gap, then push today.",
-    "Use a decreasing monotonic stack of indices; when a warmer day arrives, pop and record the day gap for O(n) total.",
-  ],
+  "Goal: choose the O(n) structure for 'how many days until a warmer temperature' per day.",
+  "Comparing every later day is O(n^2); you want each day resolved once.",
+  "Key insight: this is a next-greater-element variant, where earlier unresolved days wait for a warmer day.",
+  "Approach: keep a non-increasing monotonic stack of indices awaiting resolution.",
+  "Pseudocode: for each day, pop stacked days colder than today and record the index gap, then push today.",
+  "Use a non-increasing monotonic stack of indices; when a warmer day arrives, pop and record the day gap for O(n) total."
+],
   "lesson:monotonic-stack:mono-fix-1": [
     "Goal: fix the monotonic stack so it stores indices, enabling day-gap computation.",
     "Storing values loses positional information, so gaps between days can't be computed.",
@@ -2221,13 +3016,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Inside the neighbour loop do `visited.add(nb); q.append(nb)` guarded by `if nb not in visited`.",
   ],
   "lesson:min-max-tracking:min-complete-1": [
-    "Goal: implement push so a parallel mins stack always holds the running minimum.",
-    "Rescanning the stack for the minimum is O(n); tracking it per push is O(1).",
-    "Key insight: the new minimum is x compared against the previous top of the mins stack.",
-    "Approach: on push, compute min(x, current min) and push it too, handling the empty case.",
-    "Pseudocode: push x; m = x if mins empty else min(x, mins[-1]); push m onto mins.",
-    "Write `m = x if not self.mins else min(x, self.mins[-1])` then `self.mins.append(m)`.",
-  ],
+  "Goal: implement push so a parallel mins stack always holds the running minimum.",
+  "Rescanning the stack for the minimum is O(n); tracking it per push is O(1).",
+  "Key insight: the new minimum is x compared against the previous top of the mins stack.",
+  "Approach: on push, compute min(x, current min) and push it too, handling the empty case.",
+  "Pseudocode: push x; m = x if mins empty else min(x, mins[-1]); push m onto mins.",
+  "Write `m = x if not self.mins else min(x, self.mins[-1])` then `self.mins.append(m)`. List updates are amortized O(1), while a get_min root read is worst-case O(1)."
+],
   "lesson:maps-sets:ms-complete-1": [
     "Goal: return the number of distinct values in a list.",
     "Manually deduplicating with loops is unnecessary work.",
@@ -2341,13 +3136,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Write `return heapq.nsmallest(k, nums)`.",
   ],
   "lesson:top-k:topk-choose-1": [
-    "Goal: choose between a full sort and a size-k heap for the 10 largest of a 10-million-number stream.",
-    "A full sort needs all n in memory and O(n log n) time, which a stream may not allow.",
-    "Key insight: keeping only k elements bounds both memory and per-element cost when k is tiny.",
-    "Approach: maintain a size-k min-heap, evicting the smallest when it overflows.",
-    "Pseudocode: for each x: push x; if heap size > k: pop the smallest; the heap holds the k largest.",
-    "Use a size-k min-heap: O(n log k) time and O(k) space, and it works on a stream.",
-  ],
+  "Goal: choose between a full sort and a size-k heap for the 10 largest of a 10-million-number stream.",
+  "A full sort needs all n in memory and O(n log n) time, which a stream may not allow.",
+  "Key insight: keeping only k elements bounds both memory and per-element cost when k is tiny.",
+  "Approach: maintain a size-k min-heap, evicting the smallest when it overflows.",
+  "Pseudocode: for each x: push x; if heap size > k: pop the smallest; the heap holds the k largest.",
+  "Use a size-k min-heap: O(n log(k+1)) time and O(k) space, and it works on a stream."
+],
   "lesson:top-k:topk-fix-1": [
     "Goal: fix the heap so it keeps the k largest values, not the k smallest.",
     "Negating values turns heappop into removing the largest, which discards the wrong element.",
@@ -2357,13 +3152,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Push `x` (not `-x`) so `heappop` removes the smallest and the k largest remain.",
   ],
   "lesson:kth-largest:kth-choose-1": [
-    "Goal: choose between a heap and quickselect for the kth largest in a fixed in-memory array.",
-    "A heap costs O(n log k); quickselect can be cheaper on average but has a worst case.",
-    "Key insight: quickselect averages O(n) and O(1) extra space but degrades to O(n^2) with poor pivots.",
-    "Approach: prefer quickselect for speed, mitigating pivots; prefer the heap for predictability or streaming.",
-    "Pseudocode: quickselect partitions around a (random) pivot to locate the kth order statistic.",
-    "Quickselect is faster on average (expected O(n)) but risks O(n^2) without random/median pivots; the heap is a predictable O(n log k).",
-  ],
+  "Understand: only one rank is requested, and the entire array is available.",
+  "Sorting determines every rank even though only one is needed.",
+  "Partitioning can discard the side containing no requested rank.",
+  "Randomized quickselect offers expected O(n); a heap offers predictable scan work and streaming.",
+  "Pseudocode: partition; keep only the side containing rank k; repeat iteratively in place.",
+  "Solution: randomized quickselect is expected O(n), worst O(n²); a size-k heap is O(n log(k+1)). O(1) selection space needs iterative in-place partitioning. Neither bound promises that quickselect is faster for every k or input."
+],
   "lesson:kth-largest:kth-complete-1": [
     "Goal: return the kth smallest value using a size-k max-heap simulated by negation.",
     "Sorting is O(n log n); a size-k heap keeps only k elements.",
@@ -2373,29 +3168,29 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Do `heapq.heappush(h, -x)`, pop when `len(h) > k`, and `return -h[0]`.",
   ],
   "lesson:running-median:med-choose-1": [
-    "Goal: choose between two heaps and re-sorting for the median after every insertion in a million-number stream.",
-    "Re-sorting per query is O(n log n) each time, so O(n^2 log n) overall.",
-    "Key insight: keeping the two halves as heaps exposes the median at the roots in O(1).",
-    "Approach: maintain a low-half max-heap and high-half min-heap, balanced by size.",
-    "Pseudocode: insert into the correct heap, rebalance sizes, read the median from the roots.",
-    "Two heaps give O(log n) insert and O(1) median \u2192 O(n log n) total, far better than re-sorting's O(n^2 log n).",
-  ],
+  "Goal: choose between two heaps and re-sorting for the median after every insertion in a million-number stream.",
+  "Repeated sorting recomputes order; general bounds total O(n² log n), while Python can exploit the previously sorted prefix and still needs growing-prefix work.",
+  "Key insight: keeping the two halves as heaps exposes the median at the roots in O(1).",
+  "Approach: maintain a low-half max-heap and high-half min-heap, balanced by size.",
+  "Pseudocode: insert into the correct heap, rebalance sizes, read the median from the roots.",
+  "Two heaps give O(log n) insert and O(1) median → O(n log n) total, far better than re-sorting's O(n^2 log n)."
+],
   "lesson:running-median:med-fix-1": [
-    "Goal: fix add() so the two heaps stay balanced and the median stays correct.",
-    "Skipping rebalancing lets the high half outgrow the low half, corrupting the median.",
-    "Key insight: after pushing into small then shifting its max to large, large may exceed small by more than one.",
-    "Approach: restore the size invariant by moving large's min back when it grows too big.",
-    "Pseudocode: push -x to small; push -pop(small) to large; if len(large) > len(small): push -pop(large) back to small.",
-    "Add `if len(self.large) > len(self.small): heapq.heappush(self.small, -heapq.heappop(self.large))`.",
-  ],
+  "Understand: small must have the same size as large or one extra.",
+  "After routing through large, large can be one entry bigger than small.",
+  "That already violates the chosen lower-extra invariant.",
+  "If len(large)>len(small), move large's minimum back to small.",
+  "Pseudocode: if len(self.large)>len(self.small): heappush(self.small, -heappop(self.large)).",
+  "Solution: restore the lower-extra size rule after the ordered cross-move. Also retain every lower value <= every upper value."
+],
   "lesson:merge-sorted-data:merge-complete-1": [
-    "Goal: merge two sorted lists into one sorted list using heapq.merge.",
-    "Concatenating then sorting is O(n log n); merging pre-sorted inputs is linear.",
-    "Key insight: heapq.merge lazily interleaves already-sorted iterables in order.",
-    "Approach: call heapq.merge on both lists and materialise it.",
-    "Pseudocode: return list(heapq.merge(a, b)).",
-    "Write `return list(heapq.merge(a, b))`.",
-  ],
+  "Goal: merge two sorted lists into one sorted list using heapq.merge.",
+  "Concatenating then sorting is the generic O(n log n) comparison upper bound (adaptive sorting can exploit existing runs); merging pre-sorted inputs is linear.",
+  "Key insight: heapq.merge lazily interleaves already-sorted iterables in order.",
+  "Approach: call heapq.merge on both lists and materialise it.",
+  "Pseudocode: return list(heapq.merge(a, b)).",
+  "Write `return list(heapq.merge(a, b))`."
+],
   "lesson:two-heap-pattern:twoheap-choose-1": [
     "Goal: identify which problem fits the two-heap pattern.",
     "The trap is that all involve heaps; only one needs a moving partition between halves.",
@@ -2437,13 +3232,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Write `inorder(n.left, out); out.append(n.val); inorder(n.right, out)`.",
   ],
   "lesson:bst-operations:bst-complete-1": [
-    "Goal: search a BST iteratively, returning True/False for whether val is present.",
-    "Scanning every node is O(n); the BST ordering lets you discard half each step.",
-    "Key insight: smaller values live in the left subtree and larger-or-equal in the right.",
-    "Approach: walk down, going left or right by comparing val to the current node.",
-    "Pseudocode: while root: if val == root.val return True; go left if val < root.val else right; return False.",
-    "Write `root = root.left if val < root.val else root.right` inside the loop.",
-  ],
+  "Compare the target with the current node.",
+  "A valid BST lets you discard a whole subtree, though it may contain very few nodes.",
+  "Equality succeeds; a smaller value follows left and a larger value follows right.",
+  "Continue iteratively until equality or a missing child.",
+  "while root: compare; return True on equality; choose the matching child; return False when absent.",
+  "The model walks one root-to-leaf path in O(h) time and O(1) working space."
+],
   "lesson:tree-height-depth:height-complete-1": [
     "Goal: compute a tree's height recursively (empty tree height 0).",
     "Recursion combines child results; there is no shared state to track.",
@@ -2597,13 +3392,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Answer: (a) BFS O(V+E); (b) Dijkstra O((V+E) log V); (c) Bellman\u2013Ford O(V\u00b7E), which also detects negative cycles.",
   ],
   "lesson:dijkstra:dij-fix-1": [
-    "Goal: fix Dijkstra so it skips stale heap entries and avoids redundant/incorrect work.",
-    "A vertex can sit in the heap multiple times with different distances, so outdated entries get processed.",
-    "Key insight: an entry whose popped distance exceeds the recorded best is stale and should be ignored.",
-    "Approach: after popping, compare the popped distance to dist[node] and continue if worse.",
-    "Pseudocode: pop (d, node); if d > dist[node]: continue; else relax neighbours.",
-    "Add `if d > dist[node]: continue` right after popping.",
-  ],
+  "A shorter route can push a second candidate for a vertex.",
+  "The old larger candidate remains in heapq because there is no decrease-key removal.",
+  "Compare the popped distance with the recorded best distance.",
+  "Skip a candidate whose popped distance is larger before scanning its outgoing edges.",
+  "if d > dist[node]: continue; otherwise relax outgoing edges.",
+  "The guard prevents repeated obsolete expansions. With nonnegative edges the unguarded relaxation loop can still compute correct distances, but loses the intended work bound."
+],
   "lesson:bellman-ford:bf-choose-1": [
     "Goal: choose between Dijkstra and Bellman\u2013Ford for a graph with some negative edges but no negative cycle.",
     "Dijkstra's greedy choice is invalid with negative edges, so it can return wrong distances.",
@@ -2645,13 +3440,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Inside the loop write `count += 1` then `current = current.next`.",
   ],
   "lesson:linked-list-traversal:ll-fix-1": [
-    "Goal: fix the traversal so it prints each value and then terminates.",
-    "Nothing advances the pointer, so the while loop never reaches None.",
-    "Key insight: the loop ends only when the pointer moves toward the tail and becomes None.",
-    "Approach: step the pointer to its successor each iteration.",
-    "Pseudocode: current=head; while current: print current.val; current=current.next.",
-    "Add `current = current.next` inside the loop.",
-  ],
+  "Understand: collect(head) returns a Python list of values; it does not print them.",
+  "Repeated work: visit each reachable node once and keep the growing result.",
+  "Property: a node with next=None still has a value to collect.",
+  "Approach: loop while current is not None.",
+  "Pseudocode: append current.val; advance current=current.next; return out after the loop.",
+  "Solution: use while current is not None, append its value, advance, and return out. Empty input returns []."
+],
   "lesson:linked-list-slow-fast:llsf-complete-1": [
     "Goal: use slow/fast pointers so slow ends on the middle node.",
     "A two-pass count-then-walk works, but one pass with two speeds is enough.",
@@ -2661,13 +3456,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Inside the loop write `slow = slow.next` and `fast = fast.next.next`.",
   ],
   "lesson:linked-list-slow-fast:llsf-fix-1": [
-    "Goal: fix the loop so even-length lists don't crash on a None.next access.",
-    "Reading fast.next.next when fast.next is None raises the AttributeError.",
-    "Key insight: stepping fast twice requires both fast and fast.next to exist first.",
-    "Approach: strengthen the while condition to check both before advancing.",
-    "Pseudocode: while fast is not None and fast.next is not None: step slow once, fast twice.",
-    "Use `while fast is not None and fast.next is not None:` as the condition.",
-  ],
+  "Understand: test a singleton and a three-node list.",
+  "Failure: on the final odd-length iteration fast exists but fast.next is None.",
+  "Property: reading fast.next.next requires both intermediate nodes to exist.",
+  "Approach: short-circuit with fast is not None and fast.next is not None.",
+  "Pseudocode: while both exist, advance slow once and fast twice.",
+  "Solution: while fast is not None and fast.next is not None: slow=slow.next; fast=fast.next.next. Even lengths already exit when fast becomes None."
+],
   "lesson:linked-list-cycle-detection:llcd-complete-1": [
     "Goal: return True exactly when the linked list contains a cycle.",
     "A seen set costs O(n) space; slow/fast pointers detect cycles in O(1) space.",
@@ -2741,21 +3536,21 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Fix the advance to `prev = first`, since first is now the back of the swapped pair.",
   ],
   "lesson:linked-list-variants:llv-complete-1": [
-    "Goal: append a node to a doubly linked list so both the forward and backward links are set.",
-    "A singly linked append sets only next; here skipping the prev link leaves the list broken for backward walks.",
-    "Key insight: a doubly linked node needs two links — the old tail's next AND the new node's prev.",
-    "Approach: set both directions, then move the tail pointer to the new node.",
-    "Pseudocode: old tail's next = node; node's prev = old tail; tail = node.",
-    "Write `tail.next = node; node.prev = tail; tail = node` so both links are wired.",
-  ],
+  "Understand: append returns the new tail reference.",
+  "Use a fresh detached node; an existing tail must have next=None.",
+  "Both forward and backward links must agree.",
+  "If tail is None, return node. Otherwise link both neighbours.",
+  "Pseudocode: tail.next=node; node.prev=tail; return node.",
+  "Solution: return the fresh node after attaching both links; the caller must also keep/update head for an initially empty list."
+],
   "lesson:linked-list-deques:lldq-complete-1": [
-    "Goal: use a deque as a FIFO queue — enqueue 1, 2, 3 then dequeue the first one (1).",
-    "A plain list's pop(0) is O(n); a deque removes from the front in O(1), which is the point of using it.",
-    "Key insight: FIFO means the first item added is the first removed, so remove from the left end.",
-    "Approach: append at the right to enqueue and popleft to dequeue the front.",
-    "Pseudocode: q=deque(); append 1,2,3; first = popleft(); print first.",
-    "Use `first = q.popleft()` to remove the front (1), since append adds at the right.",
-  ],
+  "Understand: return (first removed value, remaining values as a list).",
+  "FIFO removes from the left; append inserts at the right.",
+  "deque.popleft avoids shifting a list.",
+  "Create q=deque(values), then first=q.popleft().",
+  "Pseudocode: return first, list(q).",
+  "Solution: first=q.popleft(); return first, list(q). This exercise assumes nonempty values. The list(q) result costs O(n), even though the removal itself is O(1)."
+],
   "lesson:dp-base-cases:dpbc-complete-1": [
     "Goal: recursively sum 1..n, and here the base case is what stops the recursion at n == 0.",
     "Without a base case the calls recurse below zero forever; the base case is the fixed anchor of the recurrence.",
@@ -2821,13 +3616,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Write `used[i]=True; path.append(nums[i]); bt(...); path.pop(); used[i]=False` around the recursion.",
   ],
   "lesson:dp-permutations:dpperm-fix-1": [
-    "Goal: fix the permutation search so it stops producing truncated results.",
-    "The bug leaves used[i] set after backtracking, so element i stays unavailable and branches come up short.",
-    "Key insight: on backtrack, element i must be freed so sibling permutations can use it again.",
-    "Approach: mirror every used[i]=True with a used[i]=False after the recursive call.",
-    "Pseudocode: mark used[i]; append; recurse; pop; then clear used[i].",
-    "Add `used[i] = False` after popping so the element becomes available again.",
-  ],
+  "Goal: fix the permutation search so it stops producing missing full orderings.",
+  "The bug leaves used[i] set after backtracking, so element i stays unavailable and branches come up short.",
+  "Key insight: on backtrack, element i must be freed so sibling permutations can use it again.",
+  "Approach: mirror every used[i]=True with a used[i]=False after the recursive call.",
+  "Pseudocode: mark used[i]; append; recurse; pop; then clear used[i].",
+  "Add `used[i] = False` after popping so the element becomes available again."
+],
   "lesson:dp-combinations:dpcomb-complete-1": [
     "Goal: generate all k-sized combinations from 1..n with a size check plus choose/explore/un-choose.",
     "Enumerating all permutations and deduping wastes work; forcing increasing picks avoids duplicate combinations.",
@@ -3045,13 +3840,12 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Use backtracking with a used-array: choose (mark used + append), explore, then un-choose to produce all n! orderings.",
   ],
   "pattern:backtracking:pat-bt-choose-1": [
-    "Goal: decide the pattern for (a) listing every subset that sums to a target vs (b) counting how many do.",
-    "Both explore subsets, but one needs each explicit configuration while the other reuses overlapping subproblems.",
-    "Key insight: enumerating requires generating each subset, whereas counting only needs an aggregate over subproblems.",
-    "Approach: use backtracking for enumeration and dynamic programming for the count.",
-    "Pseudocode: (a) backtrack recording each qualifying subset; (b) DP over reachable sums accumulating counts.",
-    "(a) is backtracking (produce each subset); (b) is usually DP (subset-sum count) since it only needs a count.",
-  ],
+  "Compare the requested outputs: explicit subsets in (a), but a single count in (b).",
+  "Listing must emit every qualifying configuration. A scalar count cannot supply the list.",
+  "Finite include/exclude choices over the item positions can enumerate the subsets.",
+  "Use backtracking for explicit output; bounded non-negative counting can use DP over item index and sum. A feasibility table may guide enumeration.",
+  "Enumeration pseudocode: decide include or exclude for the next position, explore both, and copy the chosen positions at a qualifying leaf. Counting DP instead combines counts from the two choices and is pseudo-polynomial in the numeric target."
+],
   "pattern:backtracking:pat-bt-fix-1": [
     "Goal: fix the subset search so results aren't all empty from an aliasing bug.",
     "The bug records the same mutable list each time, so every result aliases one list that ends empty.",
@@ -3061,13 +3855,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Record a snapshot with `res.append(path[:])` so results don't alias the shared list.",
   ],
   "pattern:binary-search-on-answer:pat-bsa-recognize-1": [
-    "Goal: split an array into m contiguous parts to minimize the largest part sum.",
-    "Trying every split is exponential; the answer's monotonicity lets you search the value directly.",
-    "Key insight: feasibility ('can we split into ≤ m parts each ≤ candidate?') is monotone in the candidate cap.",
-    "Approach: binary search on the answer, testing each candidate largest-sum with a greedy pass.",
-    "Pseudocode: lo=max element, hi=total; while lo<hi: mid=(lo+hi)//2; if feasible(mid) hi=mid else lo=mid+1; return lo.",
-    "Binary-search the candidate 'largest allowed sum' and test feasibility greedily — O(n log(sum)) since it's monotone.",
-  ],
+  "Split a nonempty array of positive integers into exactly m contiguous nonempty parts (1 <= m <= n) to minimize the largest part sum. Choose an approach and explain its test.",
+  "Trying every split is exponential; the answer's monotonicity lets you search the value directly.",
+  "For positive values, greedy packing finds the minimum required number of parts. At most m can be split to exactly m because m <= n.",
+  "Approach: binary search on the answer, testing each candidate largest-sum with a greedy pass.",
+  "Pseudocode: lo=max element, hi=total; while lo<hi: mid=(lo+hi)//2; if feasible(mid) hi=mid else lo=mid+1; return lo.",
+  "Binary search candidate part-sum caps. A greedy pass tests whether at most m parts suffice; positive values let us split further to exactly m without increasing any sum. This test is monotone. O(n log(R + 2)) including max/sum setup, R=sum−max."
+],
   "pattern:binary-search-on-answer:pat-bsa-choose-1": [
     "Goal: decide whether locating a value's index in a sorted array is 'binary search on the answer'.",
     "Both use halving, but one searches array positions while the other searches candidate answers.",
@@ -3085,13 +3879,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Use a Top-K min-heap of size 100: push each number and pop the smallest when it exceeds 100 — O(n log 100), O(100) space.",
   ],
   "pattern:top-k-heap:pat-tk-choose-1": [
-    "Goal: find just the single k-th largest element when all n numbers are in memory.",
-    "A heap gives all top-k in O(n log k), but you only need one order statistic, not the whole set.",
-    "Key insight: partitioning around a pivot can locate the k-th largest in O(n) average without a heap.",
-    "Approach: use quickselect since everything is in memory and you need one value.",
-    "Pseudocode: partition around a pivot; recurse only into the side containing the k-th position.",
-    "Use quickselect — O(n) average for a single order statistic; the heap (O(n log k)) is better for streams or all top-k.",
-  ],
+  "Goal: find just the single k-th largest element when all n numbers are in memory.",
+  "A heap gives all top-k in O(n log(k+1)), but you only need one order statistic, not the whole set.",
+  "Key insight: partitioning around a pivot can locate the k-th largest in O(n) average without a heap.",
+  "Approach: use quickselect since everything is in memory and you need one value.",
+  "Pseudocode: partition around a pivot; recurse only into the side containing the k-th position.",
+  "Randomized quickselect is a useful expected O(n) alternative for a single in-memory rank, with O(n²) worst case. Iterative in-place partitioning uses O(1) extra space. The heap remains valid and predictable, costs O(n log(k+1)), and also supports streaming. For k=1 both are linear."
+],
   "pattern:two-heaps:pat-th-recognize-1": [
     "Goal: report the running median after each number arrives in a stream.",
     "Re-sorting after every insertion is O(n log n) each time; the median can be maintained far more cheaply.",
@@ -3109,61 +3903,61 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Use Top-K with one size-10 min-heap; two balanced heaps are for medians and would be overkill here.",
   ],
   "pattern:two-heaps:pat-th-fix-1": [
-    "Goal: fix the lower half so it truly behaves as a max-heap for the running-median structure.",
-    "The bug relies on heapq for a max-heap, but heapq only provides a min-heap.",
-    "Key insight: negating values turns heapq's min-heap into a working max-heap.",
-    "Approach: push negated values into the lower half and negate again when moving items across.",
-    "Pseudocode: push -num into small; then move -(pop from small) into large to rebalance.",
-    "Write `heapq.heappush(self.small, -num)` and `heapq.heappush(self.large, -heapq.heappop(self.small))` to simulate a max-heap.",
-  ],
+  "Understand: small stores negative lower-half values; large stores actual upper-half values.",
+  "Popping small obtains the negative of its current maximum.",
+  "Undo that sign before inserting into large.",
+  "Route the lower boundary value to the upper heap; this fragment does not promise size rebalancing.",
+  "Pseudocode: heappush(small,-num); heappush(large,-heappop(small)).",
+  "Solution: use heapq.heappush(large, -heapq.heappop(small)). These parameters are small and large, not self fields. Python 3.14 native max heaps are available, but this exercise specifically uses portable negation."
+],
   "pattern:k-way-merge:pat-kwm-recognize-1": [
-    "Goal: merge k sorted linked lists into one sorted list efficiently.",
-    "Concatenating then sorting ignores that the inputs are already sorted, costing O(N log N).",
-    "Key insight: the next output node is always the smallest among the k current list heads.",
-    "Approach: use a k-way merge with a min-heap holding the current head of each list.",
-    "Pseudocode: push all heads; pop the smallest, append it, and push that list's next; repeat until empty.",
-    "Use a k-way merge with a size-k min-heap: pop the smallest head and advance that list — O(N log k), O(k) space.",
-  ],
+  "Goal: merge k sorted linked lists into one sorted list efficiently.",
+  "Concatenating then sorting ignores that the inputs are already sorted, costing O(N log N).",
+  "Key insight: the next output node is always the smallest among the k current list heads.",
+  "Approach: use a k-way merge with a min-heap holding the current head of each list.",
+  "Pseudocode: push all heads; pop the smallest, append it, and push that list's next; repeat until empty.",
+  "Use a k-way merge with a size-k min-heap: pop the smallest head and advance that list — O(k + N log(k+1)), O(k) space."
+],
   "pattern:k-way-merge:pat-kwm-choose-1": [
-    "Goal: find the k-th smallest element across m sorted rows of a matrix.",
-    "Flattening and sorting discards the row ordering and is more work than needed.",
-    "Key insight: the k-th smallest is reached by popping the smallest current front exactly k times.",
-    "Approach: use a k-way merge with a heap of the row fronts.",
-    "Pseudocode: push each row's first element; pop the smallest k times, pushing the next element from that row each pop.",
-    "K-way merge fits: heap the row fronts and pop k times — O(k log m); binary-search-on-value is an alternative for large matrices.",
-  ],
+  "Goal: find the k-th smallest element across m sorted rows of a matrix.",
+  "Flattening and sorting discards the row ordering and is more work than needed.",
+  "Key insight: the k-th smallest is reached by popping the smallest current front exactly k times.",
+  "Approach: use a k-way merge with a heap of the row fronts.",
+  "Pseudocode: collect each nonempty row's first element and heapify the fronts; pop the smallest k times, pushing the next element from that row each pop.",
+  "K-way merge fits: heap the row fronts and pop k times — O(m + k log(m+1)); binary-search-on-value is an alternative for large matrices."
+],
   "pattern:k-way-merge:pat-kwm-fix-1": [
-    "Goal: fix the heap so it doesn't crash when two fronts have equal values.",
-    "The bug lets the heap compare the lists themselves as a tiebreaker, which is ambiguous or invalid.",
-    "Key insight: pushing a unique index alongside the value gives a well-defined tiebreak, avoiding list comparison.",
-    "Approach: store tuples of (value, list_index, position) so ties resolve on the index.",
-    "Pseudocode: push (lst[0], i, 0) for each list; pop (val, i, j) and push (lists[i][j+1], i, j+1).",
-    "Push `(lst[0], i, 0)` — the (value, list_index, position) tuple — so equal values break the tie on the index.",
-  ],
+  "Understand: each front needs its source index and element position.",
+  "Tied (value, numeric_list) entries compare lists lexicographically and may inspect many elements.",
+  "A unique source index breaks equal-value ties cheaply; element position locates the successor.",
+  "Store (value, source_index, position) for each front.",
+  "Pseudocode: heappush(heap,(row[0],i,0)); pop into value,i,j; push row[j+1] if it exists.",
+  "Solution: tuple metadata identifies the source and successor. Equal numeric lists can compare without TypeError; tied unordered payloads in a different heap can raise TypeError, so do not assume every tuple tie crashes."
+],
   "pattern:monotonic-stack:pat-ms-recognize-1": [
-    "Goal: for each day, find how many days until a warmer temperature.",
-    "Scanning forward from every day is O(n^2); a stack reuses unresolved days instead of rescanning.",
-    "Key insight: it's a 'next greater' problem, and you need distances, so the stack should hold indices.",
-    "Approach: use a monotonic decreasing stack of indices, resolving days when a warmer one arrives.",
-    "Pseudocode: for each i: while stack top is cooler than today, pop and record i minus its index; push i.",
-    "Use a decreasing monotonic stack storing indices; a warmer day pops cooler ones and records the index gap — O(n).",
-  ],
+  "Goal: for each day, find how many days until a warmer temperature.",
+  "Scanning forward from every day is O(n^2); a stack reuses unresolved days instead of rescanning.",
+  "Key insight: it's a 'next greater' problem, and you need distances, so the stack should hold indices.",
+  "Approach: use a monotonic non-increasing stack of indices, resolving days when a warmer one arrives.",
+  "Pseudocode: for each i: while stack top is cooler than today, pop and record i minus its index; push i.",
+  "Use a non-increasing monotonic stack storing indices; a warmer day pops cooler ones and records the index gap — O(n)."
+],
   "pattern:monotonic-stack:pat-ms-choose-1": [
-    "Goal: find the maximum of every sliding window of size k as it moves.",
-    "A monotonic stack can't handle elements expiring from the front as the window advances.",
-    "Key insight: the window drops old elements from the front, which a stack's single working end can't do.",
-    "Approach: use a monotonic decreasing deque, evicting the front when it leaves the window.",
-    "Pseudocode: for each i: pop smaller values from the back; append i; pop the front if it's out of the window; record the front's value.",
-    "Use a monotonic (decreasing) deque, popping the front when it leaves the window — O(n), not a plain stack.",
-  ],
+  "Goal: find the maximum of every sliding window of size k as it moves.",
+  "A monotonic stack can't handle elements expiring from the front as the window advances.",
+  "Key insight: the window drops old elements from the front, which a stack's single working end can't do.",
+  "Approach: use a monotonic non-increasing deque, evicting the front when it leaves the window.",
+  "Pseudocode: for each i: pop smaller values from the back; append i; pop the front if it's out of the window; record the front's value.",
+  "Use a monotonic (non-increasing) deque, popping the front when it leaves the window — O(n), not a plain stack."
+],
   "pattern:monotonic-stack:pat-ms-fix-1": [
-    "Goal: fix 'next greater' so answers aren't left unresolved by the wrong comparison.",
-    "The bug uses the wrong inequality, so smaller stacked elements never get resolved by a larger arrival.",
-    "Key insight: an arriving x should resolve stacked elements that are SMALLER than it, keeping the stack decreasing.",
-    "Approach: pop while the stacked value is less than x, assigning x as their next greater.",
-    "Pseudocode: for i,x: while stack and nums[stack[-1]] < x: res[stack.pop()] = x; push i.",
-    "Use `while stack and nums[stack[-1]] < x` (compare with < , not >) so smaller elements resolve to x.",
-  ],
+  "Goal: fix 'next greater' so answers aren't left unresolved by the wrong comparison.",
+  "The bug uses the wrong inequality, so smaller stacked elements never get resolved by a larger arrival.",
+  "Key insight: an arriving x should resolve stacked elements that are SMALLER than it, keeping the stack non-increasing.",
+  "Approach: pop while the stacked value is less than x, assigning x as their next greater.",
+  "Pseudocode: for i,x: while stack and nums[stack[-1]] < x: res[stack.pop()] = x; push i.",
+  "Use `while stack and nums[stack[-1]] < x` (compare with < , not >) so smaller elements resolve to x."
+],
   "pattern:merge-intervals:pat-mi-recognize-1": [
     "Goal: combine any overlapping meeting-time ranges into consolidated blocks.",
     "Comparing every pair of intervals is O(n^2); sorting first lets a single sweep handle overlaps.",
@@ -3173,13 +3967,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Use merge intervals: sort by start and extend the last block whenever next.start ≤ last.end — O(n log n).",
   ],
   "pattern:merge-intervals:pat-mi-choose-1": [
-    "Goal: find the maximum number of non-overlapping meetings you can attend.",
-    "This looks like merging, but you're selecting a maximal set, not combining overlaps.",
-    "Key insight: choosing the earliest-finishing compatible meeting leaves the most room for the rest.",
-    "Approach: use greedy interval scheduling, sorting by END time.",
-    "Pseudocode: sort by end; track last end; count each meeting whose start ≥ last end and update last end.",
-    "No — that's greedy interval scheduling: sort by end and greedily pick each meeting starting after the last chosen ends.",
-  ],
+  "Goal: find the maximum number of non-overlapping meetings you can attend.",
+  "This looks like merging, but you're selecting a maximum-size set, not combining overlaps.",
+  "Key insight: choosing the earliest-finishing compatible meeting leaves the most room for the rest.",
+  "Approach: use greedy interval scheduling, sorting by END time.",
+  "Pseudocode: sort by end; track last end; count each meeting whose start ≥ last end and update last end.",
+  "No — that's greedy interval scheduling: sort by end and greedily pick each meeting starting at or after the last chosen ends."
+],
   "pattern:merge-intervals:pat-mi-fix-1": [
     "Goal: fix the merge so it stops missing overlaps caused by sorting on the wrong key.",
     "The bug sorts by the wrong field, so an overlapping interval can land out of the sweep's reach.",
@@ -3277,29 +4071,29 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Use tree BFS: snapshot len(queue) each iteration to process one level, averaging that level's values — O(n).",
   ],
   "pattern:tree-bfs:pat-tbfs-choose-1": [
-    "Goal: find the maximum root-to-leaf path sum.",
-    "BFS by level doesn't carry the running sum along a specific path, so it doesn't fit here.",
-    "Key insight: path problems require carrying accumulated state down each root-to-leaf path.",
-    "Approach: use tree DFS, which recursion carries path context down naturally.",
-    "Pseudocode: recurse carrying current sum; at a leaf update the best; return the max over children.",
-    "Use Tree DFS: recursion carries a running sum down each path, which BFS's level processing can't do.",
-  ],
+  "The task compares totals at leaves, not level totals.",
+  "A traversal must preserve the sum along each node’s root path.",
+  "DFS can pass the running sum as an argument; BFS can queue it alongside the node.",
+  "Use DFS for a natural O(h)-frame implementation or BFS with (node,total) pairs.",
+  "At each node add its value; at leaves compare with the best; otherwise propagate the total to children.",
+  "Both traversals take O(n); their frontier storage differs: O(h) for DFS and O(w) for BFS."
+],
   "pattern:tree-bfs:pat-tbfs-fix-1": [
-    "Goal: fix level-order so nodes are grouped by level instead of merged into one list.",
-    "The bug processes the whole queue at once, so it never separates one level from the next.",
-    "Key insight: you must process exactly one level per outer iteration, which means capturing the level's size first.",
-    "Approach: read len(queue) before the inner loop so each iteration handles just that level.",
-    "Pseudocode: while q: level=[]; for _ in range(len(q)): pop node, add its value, enqueue children; append level.",
-    "Wrap the body in `for _ in range(len(q))` after snapshotting the count so each level is grouped correctly.",
-  ],
+  "Siblings should appear in the same output group.",
+  "The starter removes one node per outer round and therefore creates one group per node.",
+  "At a round’s beginning the queue contains exactly the next whole level.",
+  "Save its size before adding children, then remove that many nodes.",
+  "while q: level=[]; for _ in range(len(q)): remove node, record value, append children; append level.",
+  "range(len(q)) evaluates its length once, isolating the current level even while children are appended."
+],
   "pattern:tree-dfs:pat-tdfs-recognize-1": [
-    "Goal: find all root-to-leaf paths whose values sum to a target.",
-    "You need per-path state, so processing by level would lose which nodes belong to a path.",
-    "Key insight: recursion can carry the current path and running sum down each branch, checking the target at leaves.",
-    "Approach: use tree DFS, recording a copy of the path when a leaf's sum matches.",
-    "Pseudocode: recurse carrying path and sum; at a leaf, if sum==target record path[:]; backtrack (pop) on return.",
-    "Use Tree DFS carrying the path and running sum; at a matching leaf record a copy and backtrack — O(n) time, O(h) space.",
-  ],
+  "Record complete root-to-leaf paths whose totals match.",
+  "Rebuilding ancestors repeatedly repeats work; copying saved paths still costs output size.",
+  "Maintain one current path and running total during DFS.",
+  "At a matching leaf save a copy, then undo the path append before returning.",
+  "append; add value; if matching leaf: record path[:]; recurse as needed; pop.",
+  "Traversal costs O(n) and copied output K costs O(K): O(n+K) time with O(h) working path/frames."
+],
   "pattern:tree-dfs:pat-tdfs-choose-1": [
     "Goal: return the values of the tree grouped by level.",
     "DFS descends paths and would need extra depth bookkeeping to reconstruct levels.",
@@ -3357,13 +4151,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Use BFS — it's a fewest-edges shortest-path problem; topological sort is about ordering, not distance.",
   ],
   "pattern:topological-sort:pat-topo-fix-1": [
-    "Goal: fix Kahn's algorithm so neighbors are enqueued only after all their prerequisites clear.",
-    "The bug enqueues neighbors too early, before their remaining prerequisites are done.",
-    "Key insight: a node is ready exactly when its in-degree hits 0, not on the first decrement.",
-    "Approach: decrement each neighbor's in-degree and enqueue only when it reaches 0.",
-    "Pseudocode: pop node, output it; for each neighbor: indeg[nb]-=1; if indeg[nb]==0 enqueue nb.",
-    "Guard the enqueue with `if indeg[nb] == 0` so a node is queued only when all its prerequisites are done.",
-  ],
+  "A node is ready only when all its incoming dependencies are removed.",
+  "Processing one predecessor must not queue a node with other prerequisites left.",
+  "Queue a neighbor only when its remaining in-degree becomes zero.",
+  "After processing, compare the order length with the number of declared nodes.",
+  "Decrease indeg; enqueue on zero; return order if all nodes were processed, otherwise [].",
+  "The zero test enforces prerequisites; the final length test rejects cycles even when an acyclic component was processed."
+],
   "pattern:union-find:pat-uf-recognize-1": [
     "Goal: as edges arrive, report when one first connects two already-connected nodes (a redundant edge).",
     "Re-checking connectivity from scratch per edge is slow; a structure that remembers merges is far cheaper.",
@@ -3381,13 +4175,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Either works, but DFS/BFS is simpler for a one-time static count (O(V+E)); Union-Find shines for dynamic edges or many queries.",
   ],
   "pattern:union-find:pat-uf-fix-1": [
-    "Goal: fix find so it doesn't degrade to O(n) on long parent chains.",
-    "The bug has no path compression, so repeated finds walk long chains and slow to O(n).",
-    "Key insight: flattening the path as you walk up keeps future finds near-constant.",
-    "Approach: add path compression by pointing each node at its grandparent during find.",
-    "Pseudocode: while parent[x]!=x: set parent[x]=parent[parent[x]]; x=parent[x]; return x.",
-    "Add `self.parent[x] = self.parent[self.parent[x]]` inside the loop to compress the path (grandparent pointer).",
-  ],
+  "The host exposes a parent array whose entries form a forest.",
+  "Without balancing a chain may have n nodes; rank balancing alone would bound height logarithmically.",
+  "Shorten the chain during find by linking a visited node to its grandparent.",
+  "Use iterative path halving before advancing x.",
+  "while parent[x]!=x: parent[x]=parent[parent[x]]; x=parent[x].",
+  "The grandparent assignment performs path halving. The inverse-Ackermann amortized theorem additionally needs union by rank/size."
+],
   "pattern:dijkstra:pat-dij-recognize-1": [
     "Goal: find the minimum total travel time from a source to every city over roads with positive times.",
     "BFS counts hops, not weighted cost, so it can't answer cheapest-total on weighted edges.",
@@ -3405,13 +4199,13 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Use Bellman–Ford: it handles negative edges and detects negative cycles (O(V·E)); Dijkstra can't.",
   ],
   "pattern:dijkstra:pat-dij-fix-1": [
-    "Goal: fix Dijkstra so it doesn't reprocess stale heap entries.",
-    "The bug processes every popped entry, but a node can sit in the heap with an outdated larger distance.",
-    "Key insight: if a popped distance is worse than the recorded distance, that entry is stale and must be skipped.",
-    "Approach: compare the popped distance to dist[node] and skip when it's larger.",
-    "Pseudocode: pop (d, node); if d > dist[node] continue; else relax neighbors and push improved distances.",
-    "Add `if d > dist[node]: continue` right after popping so each node is settled only once.",
-  ],
+  "A shorter route can push a second candidate for a vertex.",
+  "The old larger candidate remains in heapq because there is no decrease-key removal.",
+  "Compare the popped distance with the recorded best distance.",
+  "Skip a candidate whose popped distance is larger before scanning its outgoing edges.",
+  "if d > dist[node]: continue; otherwise relax outgoing edges.",
+  "The guard prevents repeated obsolete expansions. With nonnegative edges the unguarded relaxation loop can still compute correct distances, but loses the intended work bound."
+],
   "pattern:trie-prefix:pat-trie-recognize-1": [
     "Goal: build autocomplete that tells whether any stored word starts with a given prefix, over thousands of words.",
     "Scanning all words per prefix query is O(dictionary size) each time — wasteful for many queries.",
@@ -3429,29 +4223,29 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Use a hash set — exact membership is O(L) average and far simpler; a trie's edge is prefix queries you don't need.",
   ],
   "pattern:trie-prefix:pat-trie-fix-1": [
-    "Goal: fix trie search so a mere prefix isn't reported as a stored word.",
-    "The bug returns True whenever the path exists, even if no word ended at that node.",
-    "Key insight: reaching the end of the character path isn't the same as a word having been stored there.",
-    "Approach: mark word endings with an is_end flag and check it at the final node.",
-    "Pseudocode: walk each character; if any is missing return False; at the end return node.is_end.",
-    "Return `node.is_end` at the end so only nodes marked as stored words count as a match.",
-  ],
+  "A query path may exist without a complete stored word ending there.",
+  "The dictionary needs a terminal marker separate from all character edges.",
+  "The unique end object cannot collide with a real character such as $.",
+  "After consuming every query character, require the end key in the final node.",
+  "Build character edges; mark node[end] for each inserted word; search the query path; return end in node.",
+  "Path existence proves only a prefix. The unique terminal key proves a complete word, including the empty word."
+],
   "pattern:modified-binary-search:pat-mbs-recognize-1": [
-    "Goal: find a target's index in a sorted array that was rotated at an unknown pivot, in O(log n).",
-    "A linear scan is O(n); the array's structure still allows halving despite the rotation.",
-    "Key insight: at any midpoint one half is still fully sorted, so you can test which half could hold the target.",
-    "Approach: use a modified binary search that identifies the sorted half each step.",
-    "Pseudocode: while lo<=hi: mid; if the target lies within the sorted half keep it, else search the other half.",
-    "Use modified binary search: at each mid, keep the sorted half if the target lies in it, else the other — O(log n), O(1) space.",
-  ],
+  "Find the target in a rotated array of distinct values using O(log n) time.",
+  "A linear scan is O(n); the array's structure still allows halving despite the rotation.",
+  "Key insight: at any midpoint one half is still fully sorted, so you can test which half could hold the target.",
+  "Approach: use a modified binary search that identifies the sorted half each step.",
+  "Pseudocode: while lo<=hi: mid; if the target lies within the sorted half keep it, else search the other half.",
+  "Use modified binary search: at each mid, keep the sorted half if the target lies in it, else the other — O(log n), O(1) space."
+],
   "pattern:modified-binary-search:pat-mbs-choose-1": [
-    "Goal: find the minimum ship capacity so all packages ship within D days.",
-    "This isn't searching a rotated array; you're searching a range of candidate capacities.",
-    "Key insight: feasibility ('does this capacity finish within D days?') is monotone in the capacity value.",
-    "Approach: use binary search on the answer with a feasibility test, not a positional array search.",
-    "Pseudocode: lo=max weight, hi=sum; while lo<hi: mid; if feasible(mid) hi=mid else lo=mid+1; return lo.",
-    "No — that's binary search on the ANSWER (search candidate capacities via feasibility); modified binary search targets a transformed sorted array.",
-  ],
+  "Goal: find the minimum ship capacity so all packages ship within D days. The package weights are positive and D >= 1.",
+  "This isn't searching a rotated array; you're searching a range of candidate capacities.",
+  "Key insight: feasibility ('does this capacity finish within D days?') is monotone in the capacity value.",
+  "Approach: use binary search on the answer with a feasibility test, not a positional array search.",
+  "Pseudocode: lo=max weight, hi=sum; while lo<hi: mid; if feasible(mid) hi=mid else lo=mid+1; return lo.",
+  "No — that's binary search on the ANSWER (search candidate capacities via feasibility); modified binary search targets a transformed sorted array."
+],
   "pattern:bitwise-xor:pat-xor-recognize-1": [
     "Goal: find the single number that appears once while every other appears twice, in O(1) space.",
     "A hashmap of counts costs O(n) space, which the O(1) constraint forbids.",
@@ -3477,13 +4271,12 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Use DP: state = ways to reach step k, transition ways(k)=ways(k-1)+ways(k-2), memoized or tabulated for O(n).",
   ],
   "pattern:dynamic-programming:pat-dp-choose-1": [
-    "Goal: LIST every subset that sums to a target, not just count them.",
-    "DP counts or optimizes over overlapping subproblems but doesn't produce every explicit configuration.",
-    "Key insight: listing all subsets is enumeration, which requires generating each one.",
-    "Approach: use backtracking to build and record each qualifying subset.",
-    "Pseudocode: backtrack over elements, tracking the running sum; when it hits the target, record the current subset.",
-    "Use backtracking — you need each explicit subset; DP is for counting/optimizing, not enumerating every combination.",
-  ],
+  "The requested output is every subset, not only the number of subsets.",
+  "Duplicate values represent different positions; each position has a finite include/exclude decision.",
+  "A DP count alone does not emit configurations. A DP table can guide reconstruction, but cannot remove output work.",
+  "Use backtracking to traverse the configurations; finish all position decisions before testing a leaf when zero or negative values are allowed.",
+  "Pseudocode: at position i, explore excluding it and including it; restore the path afterward. At i == len(values), emit a copy only if the sum equals the target. Do not return early merely because a partial sum equals the target."
+],
   "pattern:dynamic-programming:pat-dp-fix-1": [
     "Goal: make the exponential Fibonacci recursion efficient by caching results.",
     "The bug recomputes the same subproblems across branches, giving O(2^n) work.",
@@ -3493,21 +4286,21 @@ export const EXERCISE_HINTS: Record<string, string[]> = {
     "Add `@lru_cache(maxsize=None)` above fib to cache by argument, turning O(2^n) into O(n).",
   ],
   "pattern:knapsack:pat-ks-recognize-1": [
-    "Goal: decide whether an array can be split into two subsets with equal sum.",
-    "Trying every partition is exponential; overlapping reachable-sum subproblems can be reused.",
-    "Key insight: it's subset-sum to total/2, with each number used at most once.",
-    "Approach: use a 1D 0/1-knapsack DP tracking which subset sums are reachable.",
-    "Pseudocode: if total is odd return False; target=total/2; dp[0]=True; for each num sweep capacity downward marking dp[s]|=dp[s-num].",
-    "Use 0/1 knapsack (subset-sum): target=total/2, iterate capacity downward, feasible iff dp[target] is True — O(n·target).",
-  ],
+  "Goal: decide whether an array can be split into two subsets with equal sum.",
+  "Trying every partition is exponential; overlapping reachable-sum subproblems can be reused.",
+  "Key insight: it's subset-sum to total/2, with each number used at most once.",
+  "Approach: use a 1D 0/1-knapsack DP tracking which subset sums are reachable.",
+  "Pseudocode: if total is odd return False; target=total/2; dp[0]=True; for each num sweep capacity downward marking dp[s]|=dp[s-num].",
+  "Use 0/1 knapsack (subset-sum): target=total/2, iterate capacity downward, feasible iff dp[target] is True — O((n+1)(target+1))."
+],
   "pattern:knapsack:pat-ks-choose-1": [
-    "Goal: find the fewest coins to make an amount where coins are reusable unlimited times.",
-    "The 0/1 downward sweep forbids reuse, so applying it here would undercount coin usage.",
-    "Key insight: reusable items mean an item can contribute multiple times, changing the sweep direction.",
-    "Approach: use unbounded knapsack (coin change), iterating capacity upward.",
-    "Pseudocode: dp[0]=0; for each amount a upward: dp[a]=min(dp[a], dp[a-coin]+1) over coins.",
-    "No — that's UNBOUNDED knapsack: iterate capacity UPWARD (dp[a] from dp[a-coin]) since items repeat; the 0/1 downward form forbids reuse.",
-  ],
+  "Goal: find the fewest coins to make an amount where coins are reusable unlimited times.",
+  "The 0/1 downward sweep forbids reuse, so applying it here may report impossible or use too many coins.",
+  "Key insight: reusable items mean an item can contribute multiple times, changing the sweep direction.",
+  "Approach: use unbounded knapsack (coin change), iterating capacity upward.",
+  "Pseudocode: dp[0]=0; for each amount a upward: dp[a]=min(dp[a], dp[a-coin]+1) over coins.",
+  "No — that's UNBOUNDED knapsack: iterate capacity UPWARD (dp[a] from dp[a-coin]) since items repeat; the 0/1 downward form forbids reuse."
+],
   "pattern:knapsack:pat-ks-fix-1": [
     "Goal: fix the subset-sum so it stops accidentally reusing an item.",
     "The bug sweeps capacity upward, letting the same item be counted again within one pass.",
@@ -3546,7 +4339,7 @@ Object.assign(EXERCISE_TESTS, {
   "lesson:string-sliding-window:ssw-fix-1":
     "assert length_of_longest_unique('abcabcbb') == 3, 'abc'\nassert length_of_longest_unique('bbbbb') == 1\nassert length_of_longest_unique('pwwkew') == 3, 'wke'\nassert length_of_longest_unique('') == 0\n# 'abba': the guard must stop start jumping back for the first 'a' (seen outside window)\nassert length_of_longest_unique('abba') == 2, 'abba -> ab/ba length 2 (needs the >= start guard)'\nprint('OK')",
   "lesson:word-search:ws-fix-1":
-    "assert exist([list('ABCE'), list('SFCS'), list('ADEE')], 'ABCCED') is True\nassert exist([list('ABCE'), list('SFCS'), list('ADEE')], 'SEE') is True\nassert exist([list('ABCE'), list('SFCS'), list('ADEE')], 'ABCB') is False, 'cannot reuse a cell'\n# Missing-restore bug: a dead-end path marks cells '#'; without restoring them a\n# later correct path cannot reuse those cells. On this board 'AAB' is reachable\n# ONLY if cells are restored after each failed branch (no-restore returns False).\nassert exist([['C','A','A'],['A','A','A'],['B','C','D']], 'AAB') is True, 'needs cells restored after a dead-end path'\nassert exist([['A','A'],['A','A']], 'AAAAA') is False, 'only 4 cells, no reuse'\nassert exist([['A']], 'A') is True\nassert exist([['A']], 'B') is False\nprint('OK')",
+    "assert exist([list('ABCE'), list('SFCS'), list('ADEE')], 'ABCCED') is True\nassert exist([list('ABCE'), list('SFCS'), list('ADEE')], 'SEE') is True\nassert exist([list('ABCE'), list('SFCS'), list('ADEE')], 'ABCB') is False, 'cannot reuse a cell'\n# Missing-restore bug: a dead-end path marks cells '#'; without restoring them a\n# later correct path cannot reuse those cells. On this board 'AAB' is reachable\n# ONLY if cells are restored after each failed branch (no-restore returns False).\nassert exist([['C','A','A'],['A','A','A'],['B','C','D']], 'AAB') is True, 'needs cells restored after a dead-end path'\nassert exist([['A','A'],['A','A']], 'AAAAA') is False, 'only 4 cells, no reuse'\nassert exist([['A']], 'A') is True\nassert exist([['A']], 'B') is False\nprint('OK')\nassert exist([], '') is True\nassert exist([], 'A') is False\nassert exist([[]], 'A') is False\nb=[['#','A']]\nassert exist(b,'#A#') is False\nassert b==[['#','A']]\nassert exist(b,'#A') is True\nassert b==[['#','A']]\ntry:\n exist([['A'],[]],'A')\nexcept ValueError:\n pass\nelse:\n raise AssertionError('reject ragged rows')",
   "lesson:linked-list-merging:llm-fix-1":
     "class Node:\n    def __init__(self, val, nxt=None):\n        self.val = val; self.next = nxt\ndef build(vals):\n    head = None\n    for v in reversed(vals):\n        head = Node(v, head)\n    return head\ndef to_list(h):\n    out = []\n    while h: out.append(h.val); h = h.next\n    return out\nassert to_list(merge(build([1,3,5]), build([2,4,6]))) == [1,2,3,4,5,6]\n# leftover tail must be attached: second list much longer\nassert to_list(merge(build([1]), build([2,3,4,5]))) == [1,2,3,4,5], 'longer list tail must be kept'\nassert to_list(merge(None, build([1,2]))) == [1,2]\nassert to_list(merge(build([1,2]), None)) == [1,2]\nassert to_list(merge(None, None)) == []\n# Stability (distinguishes <= from <): on equal vals take the LEFT node first.\nla, lb = Node(1), Node(1)\nla.src = 'L'; lb.src = 'R'\nmerged = merge(la, lb)\nassert getattr(merged, 'src', None) == 'L', 'on a tie the left node comes first (needs <=)'\nprint('OK')",
   "lesson:dp-tabulation:dptab-complete-1":
@@ -3572,7 +4365,7 @@ Object.assign(EXERCISE_TESTS, {
   "lesson:kmp:kmp-complete-1":
     "assert kmp_search('abxabcabcaby', 'abcaby') == [6]\nassert kmp_search('aaaaa', 'aa') == [0,1,2,3], 'overlapping matches'\nassert kmp_search('abcabcabc', 'abc') == [0,3,6]\nassert kmp_search('abc', 'xyz') == []\nassert kmp_search('abc', 'abcd') == [], 'pattern longer than text'\nprint('OK')",
   "lesson:kruskal:kru-fix-1":
-    "# MST total weight; unsorted edges must still yield the minimum.\nassert kruskal(4, [(0,1,10),(0,2,6),(0,3,5),(1,3,15),(2,3,4)]) == 19, 'MST edges 2-3(4),0-3(5),0-1(10)'\nassert kruskal(2, [(0,1,7)]) == 7\nassert kruskal(3, [(0,1,1),(1,2,2),(0,2,3)]) == 3, 'take 1 and 2, skip the cycle edge 3'\nassert kruskal(1, []) == 0\nprint('OK')",
+    "# MST total weight; unsorted edges must still yield the minimum.\nassert kruskal(4, [(0,1,10),(0,2,6),(0,3,5),(1,3,15),(2,3,4)]) == 19, 'MST edges 2-3(4),0-3(5),0-1(10)'\nassert kruskal(2, [(0,1,7)]) == 7\nassert kruskal(3, [(0,1,1),(1,2,2),(0,2,3)]) == 3, 'take 1 and 2, skip the cycle edge 3'\nassert kruskal(1, []) == 0\nprint('OK')\nassert kruskal(0,[])==0\nassert kruskal(4,[(0,1,-3),(2,3,2)])==-1\nassert kruskal(2,[(0,0,-9),(0,1,7),(0,1,-2)])==-2",
   "pattern:prefix-sums-hashmap:pat-ps-fix-1":
     "assert count_subarrays([1,1,1], 2) == 2\nassert count_subarrays([1,2,3], 3) == 2, '[1,2] and [3]'\n# subarray starting at index 0 must count (needs seen[0]=1):\nassert count_subarrays([3,1,2], 3) == 2, '[3] and [1,2]'\nassert count_subarrays([1,-1,0], 0) == 3\nassert count_subarrays([], 0) == 0\nprint('OK')",
   "pattern:two-pointers:pat-tp-fix-1":
@@ -3629,13 +4422,13 @@ Object.assign(EXERCISE_HINTS, {
     "Fix: add the guard `and seen[ch] >= start` to the if.",
   ],
   "lesson:word-search:ws-fix-1": [
-    "Goal: exist(board, word) = can word be spelled along adjacent cells without reuse.",
-    "Repeated work is DFS from each cell; mark a cell visited so one path can't reuse it.",
-    "Key property: after a branch fails, the cell must become available again for OTHER paths.",
-    "Approach: backtracking — mark on entry, recurse, then UNMARK on exit.",
-    "Pseudocode: tmp=board[r][c]; board[r][c]='#'; found=dfs(neighbours); board[r][c]=tmp; return found.",
-    "Fix: restore board[r][c] = tmp before returning.",
-  ],
+  "The word is matched along one path and each cell may occur once in that path.",
+  "A failed start must leave the board unchanged for another start.",
+  "Save the original character before replacing it with the unique marker.",
+  "Compute the branch result, restore the saved character, then return the result.",
+  "tmp = board[r][c]; board[r][c] = marker; found = explore(); board[r][c] = tmp; return found.",
+  "Restoring before returning preserves the board on both successful and failed searches."
+],
   "lesson:kruskal:kru-fix-1": [
     "Goal: kruskal(n, edges) returns the total weight of a Minimum Spanning Tree.",
     "The cost is choosing edges in the wrong order; the greedy needs them cheapest-first.",
@@ -3773,13 +4566,13 @@ Object.assign(EXERCISE_HINTS, {
     "Fix: change the loop to `while fast and fast.next:`.",
   ],
   "pattern:binary-search-on-answer:pat-bsa-fix-1": [
-    "Goal: least_capacity(weights, days) = smallest capacity to ship all weights within days.",
-    "Binary-search the ANSWER; a feasibility test can_ship(cap) checks a candidate.",
-    "Key property: mid itself may be the smallest feasible capacity, so it must stay in range.",
-    "Approach: on feasible, shrink the UPPER bound to mid (not mid-1); on infeasible, lo=mid+1.",
-    "Pseudocode: if can_ship(mid): hi=mid else lo=mid+1; return lo.",
-    "Fix: set hi = mid (not hi = mid - 1) in the feasible branch.",
-  ],
+  "Goal: least_capacity(weights, days) = smallest capacity to ship all weights within days. Input weights are positive and days >= 1.",
+  "Binary-search the ANSWER; a feasibility test can_ship(cap) checks a candidate.",
+  "Key property: mid itself may be the smallest feasible capacity, so it must stay in range.",
+  "Approach: on feasible, shrink the UPPER bound to mid (not mid-1); on infeasible, lo=mid+1.",
+  "Pseudocode: if can_ship(mid): hi=mid else lo=mid+1; return lo.",
+  "Fix: set hi = mid (not hi = mid - 1) in the feasible branch."
+],
   "pattern:top-k-heap:pat-tk-fix-1": [
     "Goal: k_largest(nums, k) = the k largest values, descending.",
     "Python's heapq is a MIN-heap; the smallest sits at the root (index 0).",
@@ -3789,13 +4582,13 @@ Object.assign(EXERCISE_HINTS, {
     "Fix: push x (not -x) and return sorted(heap, reverse=True).",
   ],
   "pattern:greedy-interval-scheduling:pat-gis-fix-1": [
-    "Goal: max_non_overlapping(intervals) = most mutually non-overlapping intervals.",
-    "Sorting by start can pick a long interval that blocks several shorter ones.",
-    "Key property: the optimal greedy always takes the interval that FINISHES earliest.",
-    "Approach: sort by end time, then greedily take an interval whose start >= last end.",
-    "Pseudocode: sort by x[1]; for start,end: if start>=last_end: count+=1; last_end=end.",
-    "Fix: sort with key=lambda x: x[1] (end time).",
-  ],
+  "Return the maximum count, not the intervals themselves; meetings have start < end and touching endpoints are compatible.",
+  "Sorting by start can pick a long interval that blocks several shorter ones.",
+  "Key property: the optimal greedy always takes the interval that FINISHES earliest.",
+  "Approach: sort by end time, then greedily take an interval whose start >= last end.",
+  "Pseudocode: sort by x[1]; for start,end: if start>=last_end: count+=1; last_end=end.",
+  "Fix: sort with key=lambda x: x[1] (end time)."
+],
   "pattern:in-place-linkedlist-reversal:pat-iplr-fix-1": [
     "Goal: reverse(head) = the head of the reversed list.",
     "The loop flips each node's next pointer, advancing prev and curr.",
@@ -4147,37 +4940,81 @@ Object.assign(EXERCISE_RECOGNITION, {
       "No — enumeration is O(n^2)+ substrings. Use a variable-size sliding window: O(n) time, O(k) space.",
   },
   "lesson:linear-search:ls-choose-1": {
-    scenario:
-      "You will search the SAME array thousands of times, each query asking whether a different value is present. Repeated linear scans vs building an index first.",
-    approaches: [
-      { id: "build-set", label: "Build a set once, then query membership", requiredReasonIds: ["amortize-queries"] },
-      { id: "repeated-linear", label: "Linear-search the array on every query", requiredReasonIds: [], rejectionFeedback: "Each scan is O(n), so q queries cost O(n·q) — far too slow when q is large and the array is fixed." },
-    ],
-    reasons: [
-      { id: "amortize-queries", text: "The array is fixed, so a one-time O(n) set build lets each of the q queries run in expected O(1), giving O(n + q) overall instead of O(n·q)." },
-      { id: "linear-is-faster-repeated", text: "Repeated linear search is faster than a set because it avoids the build cost each time.", contradictory: true },
-      { id: "set-query-linear", text: "Membership in a set costs O(n) per query, no better than scanning.", contradictory: true },
-    ],
-    acceptableApproachIds: ["build-set"],
-    modelExplanation:
-      "Repeated linear search is O(n) per query = O(n·q). Build a set once (O(n)) then query in expected O(1), giving O(n + q).",
-  },
+  "scenario": "You will search the SAME array thousands of times, each query asking whether a different value is present. Repeated linear scans vs building an index first. Values are hashable, and hashing costs are expected under ordinary hashes.",
+  "approaches": [
+    {
+      "id": "build-set",
+      "label": "Build a set once, then query membership",
+      "requiredReasonIds": [
+        "amortize-queries"
+      ]
+    },
+    {
+      "id": "repeated-linear",
+      "label": "Linear-search the array on every query",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Repeated scans have O(n*q) worst-case work, while a set gives expected O(n+q) under the stated hashing model. This drill asks for the preprocessing strategy that improves the general many-query bound."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "amortize-queries",
+      "text": "The array is fixed, so a one-time expected O(n) set build lets each of the q queries run in expected O(1), giving O(n + q) overall instead of O(n·q)."
+    },
+    {
+      "id": "linear-is-faster-repeated",
+      "text": "Repeated linear search is faster than a set because it avoids the build cost each time.",
+      "contradictory": true
+    },
+    {
+      "id": "set-query-linear",
+      "text": "Membership in a set costs O(n) per query, no better than scanning.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "build-set"
+  ],
+  "modelExplanation": "No — repeated linear search is O(n) per query = O(n·q). Build a set once (expected O(n)) then query in expected O(1), giving O(n + q)."
+},
   "lesson:bounds:bnd-choose-1": {
-    scenario:
-      "In a sorted array with duplicate values, you need the index of the FIRST occurrence of a target. You must pick between bisect_left and bisect_right.",
-    approaches: [
-      { id: "bisect-left", label: "Use bisect_left", requiredReasonIds: ["leftmost-insertion"] },
-      { id: "bisect-right", label: "Use bisect_right", requiredReasonIds: [], rejectionFeedback: "bisect_right returns the index just past the LAST occurrence, so it points to the wrong end of a run of duplicates." },
-    ],
-    reasons: [
-      { id: "leftmost-insertion", text: "bisect_left returns the leftmost position where the target appears (or would be inserted), which is exactly the first occurrence's index." },
-      { id: "right-gives-first", text: "bisect_right returns the index of the first occurrence of the target.", contradictory: true },
-      { id: "duplicates-break-bisect", text: "Neither bisect function works when the array contains duplicates.", contradictory: true },
-    ],
-    acceptableApproachIds: ["bisect-left"],
-    modelExplanation:
-      "bisect_left — it returns the leftmost index where the target appears (or would be inserted); bisect_right points past the last occurrence.",
-  },
+  "scenario": "You need the index of the FIRST occurrence of a value in a sorted array with duplicates. bisect_left or bisect_right? The target might be absent: explain how to check presence after locating the boundary.",
+  "approaches": [
+    {
+      "id": "bisect-left",
+      "label": "Use bisect_left",
+      "requiredReasonIds": [
+        "leftmost-insertion"
+      ]
+    },
+    {
+      "id": "bisect-right",
+      "label": "Use bisect_right",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "bisect_right returns the index just past the LAST occurrence, so it points to the wrong end of a run of duplicates."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "leftmost-insertion",
+      "text": "bisect_left gives the leftmost insertion point; checking i < len(nums) and nums[i] == target verifies it is an actual first occurrence."
+    },
+    {
+      "id": "right-gives-first",
+      "text": "bisect_right returns the index of the first occurrence of the target.",
+      "contradictory": true
+    },
+    {
+      "id": "duplicates-break-bisect",
+      "text": "Neither bisect function works when the array contains duplicates.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "bisect-left"
+  ],
+  "modelExplanation": "Use bisect_left to get i, then check i < len(nums) and nums[i] == target. If that fails, the target is absent; otherwise i is its first occurrence. bisect_right points past the equal run."
+},
 });
 
 
@@ -4199,54 +5036,125 @@ Object.assign(EXERCISE_RECOGNITION, {
       "Flattening isn't globally sorted, so cell binary search is invalid. Use the staircase walk from the top-right (or bottom-left): move left on too-big, down on too-small — O(m+n).",
   },
   "lesson:bubble-sort:bub-choose-1": {
-    scenario:
-      "You must sort n = 1,000,000 elements. You must decide whether bubble sort is acceptable, and if not, what to use.",
-    approaches: [
-      { id: "nlogn-sort", label: "Use an O(n log n) sort (Python's sorted/Timsort)", requiredReasonIds: ["quadratic-too-slow"] },
-      { id: "bubble", label: "Use bubble sort", requiredReasonIds: [], rejectionFeedback: "Bubble sort is O(n²); for n = 10^6 that's ~10^12 operations — far too slow to finish in reasonable time." },
-    ],
-    reasons: [
-      { id: "quadratic-too-slow", text: "O(n²) on a million elements is ~10^12 operations, whereas an O(n log n) sort is ~2×10^7 — many orders of magnitude faster." },
-      { id: "bubble-is-nlogn", text: "Bubble sort runs in O(n log n), so it scales fine to a million elements.", contradictory: true },
-      { id: "quadratic-fine", text: "10^12 operations completes essentially instantly, so quadratic is acceptable.", contradictory: true },
-    ],
-    acceptableApproachIds: ["nlogn-sort"],
-    modelExplanation:
-      "No — O(n²) would be ~10^12 operations. Use an O(n log n) sort (Python's sorted/Timsort), which is ~2×10^7 operations.",
-  },
+  "scenario": "You must sort n = 1,000,000 elements. You must decide whether bubble sort is acceptable, and if not, what to use.",
+  "approaches": [
+    {
+      "id": "nlogn-sort",
+      "label": "Use an O(n log n) sort (Python's sorted/Timsort)",
+      "requiredReasonIds": [
+        "quadratic-too-slow"
+      ]
+    },
+    {
+      "id": "bubble",
+      "label": "Use bubble sort",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "The shown basic bubble sort makes 499,999,500,000 adjacent comparisons at n=1,000,000. A worst-case O(n log n) comparison sort has a much smaller growth scale; this count does not predict elapsed seconds."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "quadratic-too-slow",
+      "text": "Bubble makes about 5×10^11 comparisons; n log2(n) is about 2×10^7 as a theoretical scale for a logarithmic-depth sort, not a measured operation count."
+    },
+    {
+      "id": "bubble-is-nlogn",
+      "text": "Bubble sort runs in O(n log n), so it scales fine to a million elements.",
+      "contradictory": true
+    },
+    {
+      "id": "quadratic-fine",
+      "text": "10^12 operations completes essentially instantly, so quadratic is acceptable.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "nlogn-sort"
+  ],
+  "modelExplanation": "Use a worst-case O(n log n) sort such as Python sorted. Basic bubble makes n(n-1)/2 comparisons: 499,999,500,000 at n=1,000,000. n log2(n) is about 20,000,000 as a growth-scale comparison, not an exact count or measured run time."
+},
   "lesson:selection-sort:sel-choose-1": {
-    scenario:
-      "Writes to your storage medium are very expensive but reads are cheap. Among the O(n²) sorts, you must pick the one that minimizes writes.",
-    approaches: [
-      { id: "selection", label: "Selection sort", requiredReasonIds: ["at-most-n-writes"] },
-      { id: "bubble", label: "Bubble sort", requiredReasonIds: [], rejectionFeedback: "Bubble sort performs O(n²) adjacent swaps in the worst case — far more writes than selection sort's n." },
-      { id: "insertion", label: "Insertion sort", requiredReasonIds: [], rejectionFeedback: "Insertion sort shifts elements to make room, which can be O(n²) writes — more than selection sort's at-most-n swaps." },
-    ],
-    reasons: [
-      { id: "at-most-n-writes", text: "Selection sort does at most n swaps — one per position as it places the correct element — so it writes O(n) times even though it reads O(n²) times." },
-      { id: "selection-many-writes", text: "Selection sort performs O(n²) writes, more than the other quadratic sorts.", contradictory: true },
-      { id: "all-same-writes", text: "All O(n²) sorts perform the same number of writes.", contradictory: true },
-    ],
-    acceptableApproachIds: ["selection"],
-    modelExplanation:
-      "Selection sort — it performs at most n swaps (writes), one per position, whereas bubble/insertion may perform O(n²) writes.",
-  },
+  "scenario": "Writes are expensive and reads are cheap. Among the basic in-place bubble, selection and insertion sorts taught here, which has the smallest worst-case growth in list writes?",
+  "approaches": [
+    {
+      "id": "selection",
+      "label": "Selection sort",
+      "requiredReasonIds": [
+        "at-most-n-writes"
+      ]
+    },
+    {
+      "id": "bubble",
+      "label": "Bubble sort",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Basic bubble sort can make O(n²) swaps and writes; selection makes O(n) placement writes."
+    },
+    {
+      "id": "insertion",
+      "label": "Insertion sort",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Insertion sort can make O(n²) shifts and writes; selection makes O(n) placement writes."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "at-most-n-writes",
+      "text": "One placement swap per position means two list writes per swap and O(n) writes total, including self-swaps here; bubble/insertion can write O(n²) times."
+    },
+    {
+      "id": "selection-many-writes",
+      "text": "Selection sort performs O(n²) writes, more than the other quadratic sorts.",
+      "contradictory": true
+    },
+    {
+      "id": "all-same-writes",
+      "text": "All O(n²) sorts perform the same number of writes.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "selection"
+  ],
+  "modelExplanation": "Selection sort uses at most n placement swaps (two list writes per swap, including self-swaps in this version), so O(n) writes. Basic bubble/insertion can make O(n²) writes in their worst cases. The returned-copy walkthrough adds O(n) copy writes; the in-place exercise avoids that copy."
+},
   "lesson:insertion-sort:ins-choose-1": {
-    scenario:
-      "You must sort many small chunks that are each already nearly sorted. You must choose the best quadratic sort for this.",
-    approaches: [
-      { id: "insertion", label: "Insertion sort", requiredReasonIds: ["adaptive-nearly-sorted"] },
-      { id: "selection", label: "Selection sort", requiredReasonIds: [], rejectionFeedback: "Selection sort always scans the full remaining array regardless of order, so it is O(n²) even on nearly-sorted input — it is not adaptive." },
-    ],
-    reasons: [
-      { id: "adaptive-nearly-sorted", text: "Insertion sort is adaptive: each element only shifts past the few out-of-place neighbours, so nearly-sorted input runs in near O(n), and it is stable — exactly why hybrid sorts use it for small runs." },
-      { id: "selection-adaptive", text: "Selection sort speeds up to O(n) on nearly-sorted input.", contradictory: true },
-      { id: "insertion-not-stable", text: "Insertion sort is unstable, so it reorders equal elements.", contradictory: true },
-    ],
-    acceptableApproachIds: ["insertion"],
-    modelExplanation:
-      "Insertion sort — it is adaptive (near O(n) on nearly-sorted input) and stable, which is why hybrid sorts use it for small runs.",
-  },
+  "scenario": "You must sort many small chunks that are already nearly sorted. Which quadratic sort is best and why? Here nearly sorted means the inversion count I is O(n).",
+  "approaches": [
+    {
+      "id": "insertion",
+      "label": "Insertion sort",
+      "requiredReasonIds": [
+        "adaptive-nearly-sorted"
+      ]
+    },
+    {
+      "id": "selection",
+      "label": "Selection sort",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Selection sort always scans the full remaining array regardless of order, so it is O(n²) even on nearly-sorted input — it is not adaptive."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "adaptive-nearly-sorted",
+      "text": "Insertion sort takes O(n + I); with I = O(n), this is O(n). Its strict > shift test keeps equal values stable. This makes it a useful method for small runs."
+    },
+    {
+      "id": "selection-adaptive",
+      "text": "Selection sort speeds up to O(n) on nearly-sorted input.",
+      "contradictory": true
+    },
+    {
+      "id": "insertion-not-stable",
+      "text": "Insertion sort is unstable, so it reorders equal elements.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "insertion"
+  ],
+  "modelExplanation": "Insertion sort takes O(n + I); with I = O(n), this is O(n). Its strict > shift test keeps equal values stable. This makes it a useful method for small runs."
+},
   "lesson:merge-sort:mrg-choose-1": {
     scenario:
       "You must sort 100 GB of data that does not fit in memory. You must choose a sorting approach suited to data on disk.",
@@ -4280,37 +5188,81 @@ Object.assign(EXERCISE_RECOGNITION, {
       "Merge sort — it guarantees O(n log n) worst case and is stable. Quicksort risks O(n²) on crafted input and its in-place form is not stable.",
   },
   "lesson:counting-sort:cnt-choose-1": {
-    scenario:
-      "You must sort 1,000,000 exam scores, each an integer from 0 to 100. Counting sort or an O(n log n) comparison sort?",
-    approaches: [
-      { id: "counting-sort", label: "Counting sort", requiredReasonIds: ["small-range-linear"] },
-      { id: "comparison-sort", label: "An O(n log n) comparison sort", requiredReasonIds: [], rejectionFeedback: "It works, but with the tiny fixed range 0–100 counting sort is O(n), faster than the O(n log n) comparison bound here." },
-    ],
-    reasons: [
-      { id: "small-range-linear", text: "The value range hi = 100 is tiny and fixed, so counting sort is O(n + hi) ≈ O(n) — linear and faster than O(n log n)." },
-      { id: "range-is-huge", text: "The score range is enormous, so counting sort's counts array would be impractical.", contradictory: true },
-      { id: "counting-needs-comparisons", text: "Counting sort still makes O(n log n) comparisons internally.", contradictory: true },
-    ],
-    acceptableApproachIds: ["counting-sort"],
-    modelExplanation:
-      "Counting sort: hi = 100 is tiny, so it's O(n + hi) ≈ O(n) — linear and faster than O(n log n) here.",
-  },
+  "scenario": "You must sort 1,000,000 exam scores, each an integer from 0 to 100. Counting sort or an O(n log n) comparison sort?",
+  "approaches": [
+    {
+      "id": "counting-sort",
+      "label": "Counting sort",
+      "requiredReasonIds": [
+        "small-range-linear"
+      ]
+    },
+    {
+      "id": "comparison-sort",
+      "label": "An O(n log n) comparison sort",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A comparison sort is correct; counting has a better general bound for this tiny range. This drill asks which method exploits the bounded integer keys."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "small-range-linear",
+      "text": "The fixed 101-value range makes counting cost O(n + 101), avoiding the general comparison-sort worst-case n log n factor."
+    },
+    {
+      "id": "range-is-huge",
+      "text": "The score range is enormous, so counting sort's counts array would be impractical.",
+      "contradictory": true
+    },
+    {
+      "id": "counting-needs-comparisons",
+      "text": "Counting sort still makes O(n log n) comparisons internally.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "counting-sort"
+  ],
+  "modelExplanation": "Counting sort uses O(n + 101) time for keys in 0..100 and is a strong fit. This avoids the worst-case n log n comparison bound. Exact speed depends on the implementation and data; Python sorting can adapt to ordered runs."
+},
   "lesson:bucket-sort:buck-choose-1": {
-    scenario:
-      "You have a million floats UNIFORMLY distributed in [0, 1). You consider bucket sort versus an O(n log n) comparison sort.",
-    approaches: [
-      { id: "bucket-sort", label: "Bucket sort", requiredReasonIds: ["uniform-small-buckets"] },
-      { id: "comparison-sort", label: "An O(n log n) comparison sort", requiredReasonIds: [], rejectionFeedback: "It is a fine general choice, but it cannot beat the O(n log n) comparison bound, whereas bucket sort exploits the uniform distribution to reach expected O(n)." },
-    ],
-    reasons: [
-      { id: "uniform-small-buckets", text: "A uniform distribution spreads items evenly, so each bucket stays small and sorting them is cheap, giving expected O(n) — below the comparison-sort bound." },
-      { id: "distribution-irrelevant", text: "Bucket sort's speed does not depend on how the data is distributed.", contradictory: true },
-      { id: "comparison-beats-linear", text: "A comparison sort can run in O(n) on this data, so bucket sort offers no advantage.", contradictory: true },
-    ],
-    acceptableApproachIds: ["bucket-sort"],
-    modelExplanation:
-      "Uniform distribution keeps each bucket small, so bucket sort runs in expected O(n) — faster than the O(n log n) comparison bound for this well-distributed data.",
-  },
+  "scenario": "You have a million floats uniformly distributed in [0, 1). Why might bucket sort beat an O(n log n) comparison sort here? Use k proportional to n and an integer index floor(x*k) for this float variant; assume independent uniform samples.",
+  "approaches": [
+    {
+      "id": "bucket-sort",
+      "label": "Bucket sort",
+      "requiredReasonIds": [
+        "uniform-small-buckets"
+      ]
+    },
+    {
+      "id": "comparison-sort",
+      "label": "An O(n log n) comparison sort",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A comparison sort is correct and robust; this drill highlights the better expected bound available under the explicit random-input and bucket-count assumptions."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "uniform-small-buckets",
+      "text": "With k=Θ(n) and independent uniform samples, expected bucket occupancy is constant and the total sort can be expected O(n). For floats use an integer index floor(x*k); the shown integer mapping must be adapted. Fixed k=5 does not justify this bound."
+    },
+    {
+      "id": "distribution-irrelevant",
+      "text": "Bucket sort's speed does not depend on how the data is distributed.",
+      "contradictory": true
+    },
+    {
+      "id": "comparison-beats-linear",
+      "text": "Uniform data guarantees an O(n) worst-case comparison sort on arbitrary inputs.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "bucket-sort"
+  ],
+  "modelExplanation": "With k=Θ(n) and independent uniform samples, expected bucket occupancy is constant and the total sort can be expected O(n). For floats use an integer index floor(x*k); the shown integer mapping must be adapted. Fixed k=5 does not justify this bound."
+},
   "lesson:heap-sort:hs-choose-1": {
     scenario:
       "You need a guaranteed O(n log n) sort using O(1) extra space, and stability is NOT required. Heap sort or merge sort?",
@@ -4328,54 +5280,141 @@ Object.assign(EXERCISE_RECOGNITION, {
       "Heap sort (in-place): O(n log n) guaranteed and O(1) auxiliary space. Merge sort is also O(n log n) but needs O(n) space.",
   },
   "lesson:radix-sort:rad-choose-1": {
-    scenario:
-      "You must sort a million integers ranging up to 1,000,000,000. Counting sort or radix sort?",
-    approaches: [
-      { id: "radix-sort", label: "Radix sort", requiredReasonIds: ["digit-passes-avoid-range"] },
-      { id: "counting-sort", label: "Plain counting sort over the value range", requiredReasonIds: [], rejectionFeedback: "A single counting sort would need an O(hi)=O(10^9) counts array for the billion-wide range — wasteful in time and memory." },
-    ],
-    reasons: [
-      { id: "digit-passes-avoid-range", text: "Radix sort processes ~10 digits with a small base, so it is O(d·(n+b)) ≈ O(n), avoiding the huge O(10^9) counts array that the raw range would require." },
-      { id: "range-is-small", text: "The value range is small, so a single counting-sort pass is cheap.", contradictory: true },
-      { id: "radix-needs-comparisons", text: "Radix sort relies on O(n log n) comparisons like a comparison sort.", contradictory: true },
-    ],
-    acceptableApproachIds: ["radix-sort"],
-    modelExplanation:
-      "Radix sort — counting sort would need an O(hi)=O(10^9) counts array (wasteful). Radix processes ~10 digits: O(d·(n+b)) ≈ O(n), avoiding the huge-range blowup.",
-  },
+  "scenario": "You must sort a million nonnegative integers ranging up to 1,000,000,000. Counting sort or radix sort, and why?",
+  "approaches": [
+    {
+      "id": "radix-sort",
+      "label": "Radix sort",
+      "requiredReasonIds": [
+        "digit-passes-avoid-range"
+      ]
+    },
+    {
+      "id": "counting-sort",
+      "label": "Plain counting sort over the value range",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A single counting sort would need an O(hi)=O(10^9) counts array for the billion-wide range — wasteful in time and memory."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "digit-passes-avoid-range",
+      "text": "Radix sort processes ~10 digits with a small base, so it is O(d·(n+b)) ≈ O(n), avoiding the huge O(10^9) counts array that the raw range would require."
+    },
+    {
+      "id": "range-is-small",
+      "text": "The value range is small, so a single counting-sort pass is cheap.",
+      "contradictory": true
+    },
+    {
+      "id": "radix-needs-comparisons",
+      "text": "Radix sort relies on O(n log n) comparisons like a comparison sort.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "radix-sort"
+  ],
+  "modelExplanation": "Radix sort — counting sort would need an O(hi)=O(10^9) counts array (wasteful). Radix processes ~10 digits: O(d·(n+b)) ≈ O(n), avoiding the huge-range blowup."
+},
   "lesson:comparators:cmp-choose-1": {
-    scenario:
-      "You want to sort records by field A ascending and field B descending at the same time. You must pick a clean Python approach.",
-    approaches: [
-      { id: "tuple-key", label: "A tuple key that negates the descending field, e.g. key=lambda x: (x.a, -x.b)", requiredReasonIds: ["key-computed-once"] },
-      { id: "cmp-function", label: "A cmp_to_key comparator function", requiredReasonIds: [], rejectionFeedback: "cmp_to_key invokes the comparator O(n log n) times and is noticeably slower than a key computed once per element." },
-    ],
-    reasons: [
-      { id: "key-computed-once", text: "A key function is computed once per element and sorting then compares the resulting tuples lexicographically; negating the descending field flips just that field's order." },
-      { id: "cmp-faster", text: "A cmp_to_key comparator is faster because it compares elements directly.", contradictory: true },
-      { id: "cannot-mix-directions", text: "Python's sort cannot mix ascending and descending fields in one pass.", contradictory: true },
-    ],
-    acceptableApproachIds: ["tuple-key"],
-    modelExplanation:
-      "Use a tuple key that negates the descending field, e.g. key=lambda x: (x.a, -x.b). The key is computed once per element; cmp_to_key calls a comparator O(n log n) times and is slower.",
-  },
+  "scenario": "Sort records by A ascending and numeric B descending. Give a key and explain why a computed key is useful; also describe an option when B is a string.",
+  "approaches": [
+    {
+      "id": "tuple-key",
+      "label": "A tuple key that negates the descending field, e.g. key=lambda x: (x.a, -x.b)",
+      "requiredReasonIds": [
+        "key-computed-once"
+      ]
+    },
+    {
+      "id": "cmp-function",
+      "label": "A cmp_to_key comparator function",
+      "requiredReasonIds": [
+        "consistent-comparator"
+      ],
+      "rejectionFeedback": "A consistent comparator is correct, though this simple numeric ordering usually needs less Python callback work with a key."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "key-computed-once",
+      "text": "For numeric B, a tuple (A,-B) expresses both directions, and the key is computed once per element."
+    },
+    {
+      "id": "cmp-faster",
+      "text": "A cmp_to_key comparator is faster because it compares elements directly.",
+      "contradictory": true
+    },
+    {
+      "id": "cannot-mix-directions",
+      "text": "Python's sort cannot mix ascending and descending fields in one pass.",
+      "contradictory": true
+    },
+    {
+      "id": "consistent-comparator",
+      "text": "A comparator that consistently compares A ascending then B descending expresses the same order; cmp_to_key permits it, with repeated callback cost."
+    }
+  ],
+  "acceptableApproachIds": [
+    "tuple-key"
+  ],
+  "modelExplanation": "For numeric B, key=lambda x: (x.a, -x.b). Each key is computed once. For strings or arbitrary comparable B, stable-sort by B descending, then stable-sort by A ascending; the last pass preserves B order on A ties. cmp_to_key is also valid if its comparator defines a consistent order, but may call Python comparison code many times.",
+  "alternatives": [
+    {
+      "approachId": "cmp-function",
+      "conditions": "The comparator must define a consistent ordering matching A ascending then B descending.",
+      "tradeoff": "Usually more Python callbacks than computing a key once.",
+      "requiredReasonIds": [
+        "consistent-comparator"
+      ]
+    }
+  ]
+},
   "lesson:interval-sorting:isort-choose-1": {
-    scenario:
-      "You need to MERGE overlapping intervals. You must decide whether to sort by start or by end, and what sorting enables.",
-    approaches: [
-      { id: "sort-by-start", label: "Sort by start, then sweep left to right", requiredReasonIds: ["start-order-enables-sweep"] },
-      { id: "sort-by-end", label: "Sort by end", requiredReasonIds: [], rejectionFeedback: "Sorting by end is the tool for interval scheduling (max non-overlapping), not for merging; for merging you want intervals grouped by where they begin." },
-      { id: "no-sort", label: "Compare every pair of intervals", requiredReasonIds: [], rejectionFeedback: "Pairwise comparison is O(n²); sorting first turns the merge into a single O(n) sweep." },
-    ],
-    reasons: [
-      { id: "start-order-enables-sweep", text: "After sorting by start, any interval that overlaps the last kept one starts before that one ends, so a single left-to-right sweep merges them — O(n log n) sort + O(n) sweep." },
-      { id: "end-order-for-merging", text: "Sorting by end time is what makes interval merging work.", contradictory: true },
-      { id: "merging-needs-no-sort", text: "Merging overlapping intervals requires no sorting at all.", contradictory: true },
-    ],
-    acceptableApproachIds: ["sort-by-start"],
-    modelExplanation:
-      "Sort by START, then a single left-to-right sweep merges each interval into the last kept one when they overlap — turning an O(n²) pairwise check into O(n log n) sort + O(n) sweep.",
-  },
+  "scenario": "You need to MERGE overlapping intervals. Sort by start or by end? What does sorting buy you? Use the taught forward sweep, which only extends the END of the last output block.",
+  "approaches": [
+    {
+      "id": "sort-by-start",
+      "label": "Sort by start, then sweep left to right",
+      "requiredReasonIds": [
+        "start-order-enables-sweep"
+      ]
+    },
+    {
+      "id": "sort-by-end",
+      "label": "Sort by end",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "End order alone is wrong for this forward sweep that only extends ends. An adapted reverse sweep that extends starts would be a valid different merge algorithm."
+    },
+    {
+      "id": "no-sort",
+      "label": "Compare every pair of intervals",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Pairwise comparison is O(n²); sorting first turns the merge into a single O(n) sweep."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "start-order-enables-sweep",
+      "text": "After sorting by start, any interval that overlaps the last kept one starts before that one ends, so a single left-to-right sweep merges them — O(n log n) sort + O(n) sweep."
+    },
+    {
+      "id": "end-order-for-merging",
+      "text": "Sorting by end time is what makes interval merging work.",
+      "contradictory": true
+    },
+    {
+      "id": "merging-needs-no-sort",
+      "text": "Merging overlapping intervals requires no sorting at all.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "sort-by-start"
+  ],
+  "modelExplanation": "Sort by START, then a single left-to-right sweep merges each interval into the last kept one when they overlap — turning an O(n²) pairwise check into O(n log n) sort + O(n) sweep."
+},
   "lesson:stack-queue-operations:sq-choose-1": {
     scenario:
       "You need FIFO processing of tasks with millions of enqueue and dequeue operations. You must choose between a list and a collections.deque.",
@@ -4441,21 +5480,55 @@ Object.assign(EXERCISE_RECOGNITION, {
       "BFS — it visits nodes in increasing distance order, so the first time it reaches the target is the shortest path. O(V + E). DFS does not visit in distance order.",
   },
   "lesson:min-max-tracking:min-choose-1": {
-    scenario:
-      "You need the maximum within every sliding window of size k over an array, in O(n) total. You must decide whether a min/max stack suffices or something else is required.",
-    approaches: [
-      { id: "monotonic-deque", label: "A monotonic double-ended queue (deque)", requiredReasonIds: ["drop-both-ends"] },
-      { id: "minmax-stack", label: "A plain min/max stack", requiredReasonIds: [], rejectionFeedback: "A stack only grows/shrinks at one end, so it cannot evict elements that fall out of the window's FRONT; you need to remove from both ends." },
-    ],
-    reasons: [
-      { id: "drop-both-ends", text: "A monotonic deque drops out-of-window elements from the front and dominated elements from the back, so each element is pushed and popped once — O(n) total for sliding-window maximum." },
-      { id: "stack-handles-window", text: "A single-ended stack can evict elements leaving the window front, so it is enough.", contradictory: true },
-      { id: "needs-sorting", text: "You must sort each window to find its maximum.", contradictory: true },
-    ],
-    acceptableApproachIds: ["monotonic-deque"],
-    modelExplanation:
-      "You need a monotonic DEQUE (double-ended), not a plain stack: it drops out-of-window and dominated elements from both ends, giving O(n) total for sliding-window maximum.",
-  },
+  "scenario": "You need the maximum within every sliding window of size k over an array, in O(n) total. You must decide whether a min/max stack suffices or something else is required.",
+  "approaches": [
+    {
+      "id": "monotonic-deque",
+      "label": "A monotonic double-ended queue (deque)",
+      "requiredReasonIds": [
+        "drop-both-ends"
+      ]
+    },
+    {
+      "id": "minmax-stack",
+      "label": "A plain min/max stack",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A stack only grows/shrinks at one end, so it cannot evict elements that fall out of the window's FRONT; you need to remove from both ends."
+    },
+    {
+      "id": "two-max-stacks",
+      "label": "Queue built from two max stacks",
+      "requiredReasonIds": [
+        "transfer-once"
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "id": "drop-both-ends",
+      "text": "A monotonic deque drops out-of-window elements from the front and dominated elements from the back, so each element is pushed and popped once — O(n) total for sliding-window maximum."
+    },
+    {
+      "id": "stack-handles-window",
+      "text": "A single-ended stack can evict elements leaving the window front, so it is enough.",
+      "contradictory": true
+    },
+    {
+      "id": "needs-sorting",
+      "text": "You must sort each window to find its maximum.",
+      "contradictory": true
+    },
+    {
+      "id": "transfer-once",
+      "text": "Transfer only when the output stack is empty; each item moves once and compare both stack maxima. This gives O(n) total for all windows."
+    }
+  ],
+  "acceptableApproachIds": [
+    "monotonic-deque",
+    "two-max-stacks"
+  ],
+  "modelExplanation": "A single max stack is insufficient for FIFO expiry. Use a monotonic deque, or a queue implemented with two max stacks and occasional transfers. Either gives O(n) total for fixed-size window maxima."
+},
   "lesson:maps-sets:ms-choose-1": {
     scenario:
       "You must check membership against a FIXED collection millions of times. You compare a list, a sorted list with binary search, and a set.",
@@ -4705,22 +5778,49 @@ Object.assign(EXERCISE_RECOGNITION, {
       "(a) inorder — sorted BST output; (b) preorder — node before children; (c) postorder — free children before the parent so no reference is lost.",
   },
   "lesson:bst-operations:bst-choose-1": {
-    scenario:
-      "You need ordered operations (range queries, floor/ceil) AND guaranteed fast lookup on data that keeps changing.",
-    approaches: [
-      { id: "balanced-bst", label: "A self-balancing BST (AVL / red-black)", requiredReasonIds: ["balanced-ordered-and-fast"] },
-      { id: "plain-bst", label: "A plain (unbalanced) BST", requiredReasonIds: [], rejectionFeedback: "A plain BST supports ordered queries but can degrade to an O(n)-height chain on bad insert orders, losing the guaranteed fast lookup." },
-      { id: "hash-map", label: "A hash map", requiredReasonIds: [], rejectionFeedback: "A hash map gives expected O(1) lookup but stores no order, so it cannot answer range or floor/ceil queries." },
-    ],
-    reasons: [
-      { id: "balanced-ordered-and-fast", text: "A balanced BST keeps height O(log n), guaranteeing O(log n) search/insert/delete while its in-order structure answers range and floor/ceil queries." },
-      { id: "hashmap-does-ranges", text: "A hash map answers range and floor/ceil queries efficiently.", contradictory: true },
-      { id: "plain-bst-always-logn", text: "A plain BST always has O(log n) height regardless of insertion order.", contradictory: true },
-    ],
-    acceptableApproachIds: ["balanced-bst"],
-    modelExplanation:
-      "A balanced BST (AVL/red-black) gives guaranteed O(log n) search/insert/delete AND ordered queries. A plain BST risks O(n) if unbalanced; a hash map is expected O(1) but supports no order/range queries.",
-  },
+  "scenario": "You need ordered operations (range queries, floor/ceil) AND guaranteed fast lookup on data that keeps changing.",
+  "approaches": [
+    {
+      "id": "balanced-bst",
+      "label": "A self-balancing BST (AVL / red-black)",
+      "requiredReasonIds": [
+        "balanced-ordered-and-fast"
+      ]
+    },
+    {
+      "id": "plain-bst",
+      "label": "A plain (unbalanced) BST",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A plain BST supports ordered queries but can degrade to an O(n)-height chain on bad insert orders, losing the guaranteed fast lookup."
+    },
+    {
+      "id": "hash-map",
+      "label": "A hash map",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A dict maintains insertion order, not sorted-key order. Without another index, range/floor/ceiling queries require scanning keys."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "balanced-ordered-and-fast",
+      "text": "A balanced BST keeps height O(log n), guaranteeing O(log n) search/insert/delete while its in-order structure answers range and floor/ceil queries."
+    },
+    {
+      "id": "hashmap-does-ranges",
+      "text": "A hash map answers range and floor/ceil queries efficiently.",
+      "contradictory": true
+    },
+    {
+      "id": "plain-bst-always-logn",
+      "text": "A plain BST always has O(log n) height regardless of insertion order.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "balanced-bst"
+  ],
+  "modelExplanation": "A balanced BST (AVL/red-black) gives guaranteed O(log n) search/insert/delete AND ordered queries. A plain BST risks O(n) if unbalanced; a hash map is expected O(1) but supports no order/range queries."
+},
   "lesson:lowest-common-ancestor:lca-choose-1": {
     scenario:
       "You must find the lowest common ancestor of two nodes in a plain binary tree that has NO BST ordering.",
@@ -4770,37 +5870,81 @@ Object.assign(EXERCISE_RECOGNITION, {
       "For exact membership alone, a hash set is simpler and lower-overhead. The trie's advantage is prefix queries — enumerating or counting words that start with a prefix — which a hash set cannot do efficiently.",
   },
   "lesson:prefix-search:prefix-choose-1": {
-    scenario:
-      "You are building autocomplete over a large dictionary and must support fast prefix lookups and suggestion listing.",
-    approaches: [
-      { id: "trie", label: "A trie", requiredReasonIds: ["trie-prefix-queries"] },
-      { id: "hash-set", label: "A hash set of words", requiredReasonIds: [], rejectionFeedback: "A hash set only answers exact membership; it cannot efficiently find all words sharing a prefix, which is exactly what autocomplete needs." },
-    ],
-    reasons: [
-      { id: "trie-prefix-queries", text: "A trie reaches a prefix node in O(P) and then walks its subtree to collect matches in O(P + S) — prefix queries a hash set cannot do." },
-      { id: "set-prefix-cheap", text: "A hash set finds all words with a given prefix in O(P) just like a trie.", contradictory: true },
-      { id: "trie-exact-faster", text: "The reason to pick a trie is that exact membership is faster than a hash set.", contradictory: true },
-    ],
-    acceptableApproachIds: ["trie"],
-    modelExplanation:
-      "A trie supports prefix queries a hash set can't. Checking a prefix exists is O(P); listing suggestions is O(P + S) — reaching the prefix node then walking its subtree to collect the matching words.",
-  },
+  "scenario": "You need to list all stored words matching a prefix for repeated autocomplete queries. Which structure provides a prefix index, and what is the cost including copied suggestion characters?",
+  "approaches": [
+    {
+      "id": "trie",
+      "label": "A trie",
+      "requiredReasonIds": [
+        "trie-prefix-queries"
+      ]
+    },
+    {
+      "id": "hash-set",
+      "label": "A hash set of words",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A hash set only answers exact membership; it cannot efficiently find all words sharing a prefix, which is exactly what autocomplete needs."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "trie-prefix-queries",
+      "text": "A trie supplies a prefix index: reach the prefix, visit S subtree nodes and copy K output characters in expected O(P+S+K)."
+    },
+    {
+      "id": "set-prefix-cheap",
+      "text": "A hash set finds all words with a given prefix in O(P) just like a trie.",
+      "contradictory": true
+    },
+    {
+      "id": "trie-exact-faster",
+      "text": "The reason to pick a trie is that exact membership is faster than a hash set.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "trie"
+  ],
+  "modelExplanation": "A trie reaches the prefix in expected O(P) and walks S subtree nodes. Copying K output characters gives O(P+S+K) for full enumeration; a hash set must scan its stored words."
+},
   "lesson:word-search:ws-choose-1": {
-    scenario:
-      "You must search a character grid for MANY words at once, deciding whether to search each word separately or share work across them.",
-    approaches: [
-      { id: "trie-guided-dfs", label: "Build a trie of all words and run one trie-guided DFS", requiredReasonIds: ["shared-prefix-once"] },
-      { id: "repeated-single-dfs", label: "Run a separate single-word DFS for each word", requiredReasonIds: [], rejectionFeedback: "Searching each word independently re-explores the same grid paths once per word (O(m·n·3^L) each), wasting the work shared by common prefixes." },
-    ],
-    reasons: [
-      { id: "shared-prefix-once", text: "A trie lets one DFS follow all words simultaneously, so a prefix shared by many words is explored just once instead of per word." },
-      { id: "words-no-shared-prefixes", text: "The words share no prefixes, so a trie saves nothing over separate searches.", contradictory: true },
-      { id: "trie-slower-per-word", text: "A trie-guided DFS is slower than repeating single-word DFS because the trie adds overhead.", contradictory: true },
-    ],
-    acceptableApproachIds: ["trie-guided-dfs"],
-    modelExplanation:
-      "Build a trie of all the words and run one DFS (Word Search II): walk the grid guided by the trie so shared prefixes are explored once, instead of paying O(m·n·3^L) separately per word.",
-  },
+  "scenario": "You must search a character grid for MANY words at once, deciding whether to search each word separately or share work across them.",
+  "approaches": [
+    {
+      "id": "trie-guided-dfs",
+      "label": "Build a trie of all words and run one trie-guided DFS",
+      "requiredReasonIds": [
+        "shared-prefix-once"
+      ]
+    },
+    {
+      "id": "repeated-single-dfs",
+      "label": "Run a separate single-word DFS for each word",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Searching each word independently re-explores the same grid paths once per word (O(m·n·3^L) each), wasting the work shared by common prefixes."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "shared-prefix-once",
+      "text": "A trie shares comparisons among words along each grid path, pruning a path when no dictionary prefix can continue; different grid paths can still repeat a prefix."
+    },
+    {
+      "id": "words-no-shared-prefixes",
+      "text": "The words share no prefixes, so a trie saves nothing over separate searches.",
+      "contradictory": true
+    },
+    {
+      "id": "trie-slower-per-word",
+      "text": "A trie-guided DFS is slower than repeating single-word DFS because the trie adds overhead.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "trie-guided-dfs"
+  ],
+  "modelExplanation": "Build a trie of all the words and run one DFS (Word Search II): walk the grid guided by the trie so shared prefixes are explored once, instead of paying O(m·n·3^L) separately per word."
+},
   "lesson:avl-rotations:avl-choose-1": {
     scenario:
       "You will insert 1, 2, 3, ..., n in increasing order and need the resulting structure to still give fast search.",
@@ -4946,21 +6090,43 @@ Object.assign(EXERCISE_RECOGNITION, {
       "Dijkstra — edges have different weights, so 'fewest edges' isn't 'lowest cost.' BFS only works for equal-weight graphs. Dijkstra (non-negative weights) uses a heap for O((V+E) log V).",
   },
   "lesson:floyd-warshall:fw-choose-1": {
-    scenario:
-      "You need shortest distances between ALL pairs of vertices in a small, dense graph (V ≈ 200, edges ≈ V²).",
-    approaches: [
-      { id: "floyd-warshall", label: "Floyd–Warshall", requiredReasonIds: ["fw-dense-allpairs"] },
-      { id: "dijkstra-each-source", label: "Run Dijkstra from every source", requiredReasonIds: [], rejectionFeedback: "On a dense graph Dijkstra-from-every-source is ~O(V·(V+E) log V) ≈ O(V³ log V) — the extra log factor and heap bookkeeping make it slower and more complex than Floyd–Warshall here." },
-    ],
-    reasons: [
-      { id: "fw-dense-allpairs", text: "Floyd–Warshall is O(V³) with tiny triple-loop code, and on a dense graph that beats the O(V³ log V) of Dijkstra-from-every-source while being far simpler." },
-      { id: "fw-slower-dense", text: "Floyd–Warshall is asymptotically slower than Dijkstra-from-every-source on dense graphs.", contradictory: true },
-      { id: "fw-single-source", text: "Floyd–Warshall only computes paths from a single source.", contradictory: true },
-    ],
-    acceptableApproachIds: ["floyd-warshall"],
-    modelExplanation:
-      "Floyd–Warshall: O(V³) with tiny code; on a dense graph, Dijkstra from every source is ~O(V³ log V). Floyd–Warshall avoids the log factor and is simpler for all-pairs on dense/small graphs.",
-  },
+  "scenario": "You need shortest distances between ALL pairs of vertices in a small, dense graph (V ≈ 200, edges ≈ V²).",
+  "approaches": [
+    {
+      "id": "floyd-warshall",
+      "label": "Floyd–Warshall",
+      "requiredReasonIds": [
+        "fw-dense-allpairs"
+      ]
+    },
+    {
+      "id": "dijkstra-each-source",
+      "label": "Binary-heap Dijkstra from every vertex",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "For dense input the binary-heap upper bound adds a logarithmic factor; Floyd–Warshall is a simple cubic all-pairs choice. Array-based dense Dijkstra is also cubic, so this comparison is specific to the heap variant."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "fw-dense-allpairs",
+      "text": "Floyd–Warshall is O(V³) with tiny triple-loop code, and on a dense graph that beats the O(V³ log V) of Dijkstra-from-every-source while being far simpler."
+    },
+    {
+      "id": "fw-slower-dense",
+      "text": "Floyd–Warshall is asymptotically slower than Dijkstra-from-every-source on dense graphs.",
+      "contradictory": true
+    },
+    {
+      "id": "fw-single-source",
+      "text": "Floyd–Warshall only computes paths from a single source.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "floyd-warshall"
+  ],
+  "modelExplanation": "Floyd–Warshall: O(V³) with tiny code; on a dense graph, Dijkstra from every source is ~O(V³ log V). Floyd–Warshall avoids the log factor and is simpler for all-pairs on dense/small graphs."
+},
   "lesson:prim:prim-choose-1": {
     scenario:
       "Both Prim and Dijkstra use a min-heap. You must say how Prim differs and what it produces.",
@@ -5010,37 +6176,81 @@ Object.assign(EXERCISE_RECOGNITION, {
       "Floyd's algorithm: O(n) time like the set method but O(1) space, so it fits tight memory. The visited set is O(n) space, which may be too much at scale.",
   },
   "lesson:linked-list-middle:llmid-choose-1": {
-    scenario:
-      "Nodes arrive from a stream you can read only once, and you must report the middle node.",
-    approaches: [
-      { id: "slow-fast", label: "Slow/fast pointers in a single pass", requiredReasonIds: ["one-pass-middle"] },
-      { id: "count-then-walk", label: "Count the length, then walk to length/2", requiredReasonIds: [], rejectionFeedback: "Counting first and then walking requires a SECOND pass over the data, which a one-read stream does not permit." },
-    ],
-    reasons: [
-      { id: "one-pass-middle", text: "Advancing fast by two and slow by one lands slow at the middle when fast reaches the end — one pass, no length known in advance." },
-      { id: "need-length-first", text: "You must know the length before you can find the middle, so a counting pass is unavoidable.", contradictory: true },
-      { id: "stream-allows-rereads", text: "A read-once stream can be traversed twice, so count-then-walk is fine.", contradictory: true },
-    ],
-    acceptableApproachIds: ["slow-fast"],
-    modelExplanation:
-      "Slow/fast finds the middle in a single pass without knowing the length. Count-then-walk needs a second pass over the same data, which a one-read stream doesn't allow.",
-  },
+  "scenario": "A retained singly linked list has unknown length; find its second middle without a separate counting pass. O(1) auxiliary space is required.",
+  "approaches": [
+    {
+      "id": "slow-fast",
+      "label": "Slow/fast pointers in a single pass",
+      "requiredReasonIds": [
+        "one-pass-middle"
+      ]
+    },
+    {
+      "id": "count-then-walk",
+      "label": "Count the length, then walk to length/2",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Counting then walking is a valid O(1)-space baseline, but adds the separate counting pass excluded by this scenario."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "one-pass-middle",
+      "text": "Advancing fast by two and slow by one lands slow at the middle when fast reaches the end — one pass, no length known in advance."
+    },
+    {
+      "id": "need-length-first",
+      "text": "You must know the length before you can find the middle, so a counting pass is unavoidable.",
+      "contradictory": true
+    },
+    {
+      "id": "extra-pass-allowed",
+      "text": "The scenario allows a separate counting pass.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "slow-fast"
+  ],
+  "modelExplanation": "Slow/fast pointers: both start at head, slow advances one link and fast two while both fast and fast.next exist. This uses one traversal and O(1) auxiliary space. Counting then walking also uses O(1) space but needs a separate pass."
+},
   "lesson:linked-list-variants:llv-choose-1": {
-    scenario:
-      "Match a list variant to each need: (a) browser history with back/forward, (b) a fixed-size ring buffer overwriting the oldest, (c) a memory-tight forward-only queue.",
-    approaches: [
-      { id: "doubly-circular-singly", label: "Doubly for (a), circular for (b), singly for (c)", requiredReasonIds: ["variant-matches-need"] },
-      { id: "singly-everywhere", label: "Use a singly linked list for all three", requiredReasonIds: [], rejectionFeedback: "A singly linked list cannot move backward (needed for history) and has no wrap-around end (needed for a ring buffer), so it fits only the forward-only queue." },
-    ],
-    reasons: [
-      { id: "variant-matches-need", text: "A doubly list moves both directions and deletes a known node in O(1) (history); a circular list wraps with no None end (ring buffer); a singly list is the leanest for forward-only traversal (queue)." },
-      { id: "singly-does-all", text: "A singly linked list supports backward movement and wrap-around, so it covers all three needs.", contradictory: true },
-      { id: "circular-cant-wrap", text: "A circular list cannot cycle back to the start, so it is unsuited to a ring buffer.", contradictory: true },
-    ],
-    acceptableApproachIds: ["doubly-circular-singly"],
-    modelExplanation:
-      "(a) doubly — move both directions and delete a given node in O(1). (b) circular — cycle through slots with no None end. (c) singly — least memory, forward-only is enough.",
-  },
+  "scenario": "Match a list variant to each need: (a) browser history with back/forward, (b) a fixed-size ring buffer overwriting the oldest, (c) a memory-tight forward-only queue.",
+  "approaches": [
+    {
+      "id": "doubly-circular-singly",
+      "label": "Doubly for (a), circular for (b), singly for (c)",
+      "requiredReasonIds": [
+        "variant-matches-need"
+      ]
+    },
+    {
+      "id": "singly-everywhere",
+      "label": "Use a singly linked list for all three",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A singly linked structure has no direct backward link; finding a predecessor requires a forward search. It can be circular: wrap-around is an independent choice, not something singly linking prevents."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "variant-matches-need",
+      "text": "A doubly list moves both directions and deletes a known node in O(1) (history); a circular list wraps with no None end (ring buffer); a singly list is the leanest for forward-only traversal (queue)."
+    },
+    {
+      "id": "singly-does-all",
+      "text": "A singly linked list gives direct O(1) movement to both predecessor and successor.",
+      "contradictory": true
+    },
+    {
+      "id": "circular-cant-wrap",
+      "text": "A circular list cannot cycle back to the start, so it is unsuited to a ring buffer.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "doubly-circular-singly"
+  ],
+  "modelExplanation": "(a) doubly — move both directions and delete given a node in O(1). (b) circular — cycle through slots with no None end. (c) singly — least memory, forward-only is enough. Circular can also be singly or doubly linked."
+},
   "lesson:linked-list-deques:lldq-choose-1": {
     scenario:
       "You need a fixed-size buffer of the last 100 sensor readings that automatically drops the oldest as new ones arrive.",
@@ -5058,21 +6268,43 @@ Object.assign(EXERCISE_RECOGNITION, {
       "deque(maxlen=100): appending past capacity discards from the opposite end, giving an automatic fixed-size ring buffer in O(1).",
   },
   "lesson:dp-recursive-calls:dprc-choose-1": {
-    scenario:
-      "A recursive solution recomputes the same subproblems over and over, and you must speed it up.",
-    approaches: [
-      { id: "memoize", label: "Memoize (cache) each subproblem's result", requiredReasonIds: ["cache-overlapping"] },
-      { id: "add-base-case", label: "Just add another base case", requiredReasonIds: [], rejectionFeedback: "Adding a base case changes where recursion stops; it does not stop the SAME subproblem being recomputed on different branches, so the exponential blowup remains." },
-    ],
-    reasons: [
-      { id: "cache-overlapping", text: "The subproblems overlap, so caching each one computes it once and reuses it, collapsing exponential repeated work to the number of distinct subproblems." },
-      { id: "no-overlap-to-cache", text: "The subproblems never repeat, so caching would never produce a hit.", contradictory: true },
-      { id: "memo-slower", text: "Memoization makes the recursion asymptotically slower.", contradictory: true },
-    ],
-    acceptableApproachIds: ["memoize"],
-    modelExplanation:
-      "Memoization (or bottom-up tabulation): cache each subproblem's answer so it's computed once, turning exponential repeated work into linear work.",
-  },
+  "scenario": "A recursive solution recomputes the same subproblems over and over, and you must speed it up.",
+  "approaches": [
+    {
+      "id": "memoize",
+      "label": "Memoize (cache) each subproblem's result",
+      "requiredReasonIds": [
+        "cache-overlapping"
+      ]
+    },
+    {
+      "id": "add-base-case",
+      "label": "Just add another base case",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A base case establishes direct answers; merely adding one does not generally eliminate repeated work. A mathematically justified alternative recurrence could change the analysis."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "cache-overlapping",
+      "text": "Fully specified overlapping states can be reused; total cost includes the nonrecursive work of each state. Fibonacci has O(n) states with O(1) scalar transitions."
+    },
+    {
+      "id": "no-overlap-to-cache",
+      "text": "The subproblems never repeat, so caching would never produce a hit.",
+      "contradictory": true
+    },
+    {
+      "id": "memo-slower",
+      "text": "Memoization makes the recursion asymptotically slower.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "memoize"
+  ],
+  "modelExplanation": "Memoization or bottom-up tabulation reuses answers to fully specified overlapping states. The cost is distinct states plus their transition work; for Fibonacci there are n+1 states and O(1) scalar work per state, giving O(n). Caching is not automatically linear for every recurrence."
+},
   "lesson:dp-combinations:dpcomb-choose-1": {
     scenario:
       "Distinguish seating 3 people in a row (order matters) from picking a 3-person team (order irrelevant): which is permutations and which is combinations.",
@@ -5107,21 +6339,43 @@ Object.assign(EXERCISE_RECOGNITION, {
       "Two changes: recurse with the SAME index so candidates reuse, and drive by a remaining target (record at remaining==0, prune at remaining<0). It relies on candidates being strictly positive (termination/overshoot) and distinct (each multiset once). Results: [[2,2,3],[7]].",
   },
   "lesson:dp-1d-2d:dp12-choose-1": {
-    scenario:
-      "A subproblem is 'best result using the first i items with j units of capacity left'. You must decide whether the DP table is 1D or 2D.",
-    approaches: [
-      { id: "two-d", label: "2D DP table dp[i][j]", requiredReasonIds: ["two-independent-dims"] },
-      { id: "one-d", label: "1D DP table indexed by one variable", requiredReasonIds: [], rejectionFeedback: "A single index cannot capture both the item position i and the remaining capacity j independently, so a 1D table loses state the recurrence needs." },
-    ],
-    reasons: [
-      { id: "two-independent-dims", text: "The state has two independent quantities — item index i and remaining capacity j — so it is naturally dp[i][j], exactly the 0/1 knapsack shape." },
-      { id: "state-is-one-var", text: "The subproblem depends on only one varying quantity, so one dimension suffices.", contradictory: true },
-      { id: "capacity-not-state", text: "Remaining capacity is not part of the state, so it need not index the table.", contradictory: true },
-    ],
-    acceptableApproachIds: ["two-d"],
-    modelExplanation:
-      "2D: the state has two independent quantities (item index i and remaining capacity j), so the table is dp[i][j]. That's exactly the 0/1 knapsack shape.",
-  },
+  "scenario": "For the state 'best result using the first i items with capacity at most j', describe the natural uncompressed table and explain whether one-row storage is also possible.",
+  "approaches": [
+    {
+      "id": "two-d",
+      "label": "Natural full table dp[i][j], with valid row compression",
+      "requiredReasonIds": [
+        "two-independent-dims"
+      ]
+    },
+    {
+      "id": "one-d",
+      "label": "Discard item layer with no update-order rule",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "A one-row array can work when the outer loop and descending update preserve the item layer. Discarding that information without such a rule changes the recurrence."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "two-independent-dims",
+      "text": "The natural state has both item-prefix i and capacity j. Storage may be compressed if control flow preserves item layers and dependencies."
+    },
+    {
+      "id": "state-is-one-var",
+      "text": "The subproblem depends on only one varying quantity, so one dimension suffices.",
+      "contradictory": true
+    },
+    {
+      "id": "capacity-not-state",
+      "text": "Remaining capacity is not part of the state, so it need not index the table.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "two-d"
+  ],
+  "modelExplanation": "The natural state is (i,j), so a full table is dp[i][j]. One-row storage is also possible: the outer item loop supplies i implicitly, while descending j preserves previous-item states. A one-index table without that layer discipline would lose necessary state."
+},
   "lesson:dp-knapsack:dpks-choose-1": {
     scenario:
       "Items may be split into any fraction and you want maximum value under a weight limit.",
@@ -5188,21 +6442,43 @@ Object.assign(EXERCISE_RECOGNITION, {
       "Rolling-variable bottom-up: O(n) time, O(1) space, no recursion limit. Naive recursion is exponential; memoized recursion is O(n) time but uses O(n) cache and stack.",
   },
   "lesson:dp-house-robber:dphr-choose-1": {
-    scenario:
-      "For houses [2,7,9,3,1] where adjacent houses can't both be robbed, you must choose between a naive greedy and DP.",
-    approaches: [
-      { id: "dp", label: "Dynamic programming (max of rob-this + best-two-back, or skip)", requiredReasonIds: ["dp-correct-nonadjacent"] },
-      { id: "greedy-richest", label: "Greedily grab the richest available non-adjacent house", requiredReasonIds: [], rejectionFeedback: "Grabbing 9 first forces skipping its neighbours and tops out at 11 (9+2 or 9+1), below the DP optimum of 12 — greedy is not reliable here." },
-    ],
-    reasons: [
-      { id: "dp-correct-nonadjacent", text: "DP keeps, at each house, the best of skipping it or robbing it plus the best up to two houses back, correctly finding 12 (rob 2, 9, 1)." },
-      { id: "greedy-optimal-here", text: "Greedily taking the richest house always yields the optimum for this problem.", contradictory: true },
-      { id: "dp-gives-11", text: "DP returns 11 for [2,7,9,3,1].", contradictory: true },
-    ],
-    acceptableApproachIds: ["dp"],
-    modelExplanation:
-      "DP is correct: 12 (rob 2, 9, 1). A naive greedy grabbing 9 first ends at 11, worse than 12. Greedy is not reliable here; use DP.",
-  },
+  "scenario": "For [4,5,4], richest-first greedy takes the middle house 5 and blocks its neighbors. Which method finds the maximum without adjacent robberies, and what does each method return?",
+  "approaches": [
+    {
+      "id": "dp",
+      "label": "Dynamic programming (max of rob-this + best-two-back, or skip)",
+      "requiredReasonIds": [
+        "dp-correct-nonadjacent"
+      ]
+    },
+    {
+      "id": "greedy-richest",
+      "label": "Greedily grab the richest available non-adjacent house",
+      "requiredReasonIds": [],
+      "rejectionFeedback": "Richest-first picks 5 and blocks both endpoints, giving 5; selecting both 4-valued endpoints gives the larger valid total 8."
+    }
+  ],
+  "reasons": [
+    {
+      "id": "dp-correct-nonadjacent",
+      "text": "Take/skip prefix DP compares skipping the current house with taking it plus the best two positions earlier; for [4,5,4], the endpoints give 8."
+    },
+    {
+      "id": "greedy-optimal-here",
+      "text": "Greedily taking the richest house always yields the optimum for this problem.",
+      "contradictory": true
+    },
+    {
+      "id": "dp-gives-11",
+      "text": "DP returns 5 for [4,5,4], so selecting both endpoints cannot improve it.",
+      "contradictory": true
+    }
+  ],
+  "acceptableApproachIds": [
+    "dp"
+  ],
+  "modelExplanation": "Use take/skip dynamic programming. Greedy returns 5; the optimum takes the two endpoints for 4+4=8. The recurrence considers skipping each house or taking it plus the best two positions earlier."
+},
   "lesson:dp-lcs:dplcs-choose-1": {
     scenario:
       "You must find the longest run of characters common to two strings that is CONTIGUOUS in both.",
@@ -5431,53 +6707,53 @@ Object.assign(EXERCISE_HINTS, {
     "Answer: don't enumerate (O(n^2)+ substrings) — use a variable-size sliding window: O(n) time, O(k) space.",
   ],
   "lesson:linear-search:ls-choose-1": [
-    "Goal: decide if repeated linear search is right when you query the same array thousands of times for different values.",
-    "The costly pattern is rescanning the whole array per query — O(n) each, multiplied by many queries.",
-    "Key property: the array is fixed across queries, so you can preprocess it once and reuse the result.",
-    "Approach: build a set (hash index) once, then answer each membership query against it.",
-    "Reasoning: one O(n) build plus expected O(1) per query gives O(n + q), far better than O(n·q) for repeated scans; linear search only wins for a single one-off query.",
-    "Answer: no — repeated linear search is O(n·q); build a set once (O(n)) and query in expected O(1), giving O(n + q).",
-  ],
+  "Goal: decide if repeated linear search is right when you query the same array thousands of times for different values.",
+  "The costly pattern is rescanning the whole array per query — O(n) each, multiplied by many queries.",
+  "Key property: the array is fixed across queries, so you can preprocess it once and reuse the result.",
+  "Approach: build a set (hash index) once, then answer each membership query against it.",
+  "One expected O(n) build plus expected O(1) per query gives expected O(n+q), compared with O(n*q) worst-case repeated scans. For tiny data or few queries, constants and early matches may still favor scanning.",
+  "Answer: no — repeated linear search is O(n·q); build a set once (expected O(n)) and query in expected O(1), giving O(n + q)."
+],
   "lesson:bounds:bnd-choose-1": [
-    "Goal: find the index of the FIRST occurrence of a value in a sorted array with duplicates — bisect_left or bisect_right.",
-    "The error is bisect_right, which lands past the last duplicate rather than at the first.",
-    "Key property: the first occurrence is the leftmost position where the target could sit among equal values.",
-    "Approach: use bisect_left to get that leftmost boundary.",
-    "Reasoning: bisect_left returns the first index ≥ target (the start of the run of equals), while bisect_right returns the index just after the last equal element.",
-    "Answer: bisect_left — it returns the leftmost index where the target appears, whereas bisect_right points past the last occurrence.",
-  ],
+  "Goal: find the index of the FIRST occurrence of a value in a sorted array with duplicates — bisect_left or bisect_right.",
+  "The error is bisect_right, which lands past the last duplicate rather than at the first.",
+  "Key property: the first occurrence is the leftmost position where the target could sit among equal values.",
+  "Approach: use bisect_left to get that leftmost boundary.",
+  "bisect_left finds the first index with value >= target, or len(nums). Check i < len(nums) and nums[i] == target before reporting an occurrence.",
+  "Use bisect_left to get i, then check i < len(nums) and nums[i] == target. If that fails, the target is absent; otherwise i is its first occurrence. bisect_right points past the equal run."
+],
   "lesson:matrix-search:ms-choose-1": [
-    "Goal: search a matrix sorted within each row and column but NOT globally, deciding if you can binary-search the flattened cells.",
-    "The costly misstep is flattening and binary-searching: row-major order isn't globally sorted here, so binary search is simply invalid.",
-    "Key property: although not globally sorted, from the top-right corner every value is the max of its row and the min of its column — giving a monotone decision at each step.",
-    "Approach: walk a staircase from the top-right (or bottom-left) corner.",
-    "Reasoning: moving left on too-big and down on too-small eliminates a row or column each step for O(m+n); flattened binary search would compare against unsorted order and miss the target.",
-    "Answer: no — flattening isn't globally sorted, so use the O(m+n) staircase from a corner: left on too-big, down on too-small.",
-  ],
+  "Goal: search a matrix sorted within each row and column but NOT globally, deciding if you can binary-search the flattened cells.",
+  "The costly misstep is flattening and binary-searching: row-major order isn't globally sorted here, so binary search is simply invalid.",
+  "At the top-right of the remaining submatrix, values to the left are no larger and values below are no smaller. A too-big value removes its remaining column; a too-small value removes its remaining row.",
+  "Approach: walk a staircase from the top-right (or bottom-left) corner.",
+  "Reasoning: moving left on too-big and down on too-small eliminates a row or column each step for O(m+n); flattened binary search would compare against unsorted order and miss the target.",
+  "Answer: no — flattening isn't globally sorted, so use the O(m+n) staircase from a corner: left on too-big, down on too-small."
+],
   "lesson:bubble-sort:bub-choose-1": [
-    "Goal: decide whether bubble sort is acceptable for n = 1,000,000 elements, and if not, what to use.",
-    "The costly reality is bubble sort's O(n²): for a million elements that is about 10^12 operations.",
-    "Key property: n is large enough that the quadratic-versus-log-linear gap is the difference between seconds and hours.",
-    "Approach: use an O(n log n) comparison sort such as Python's built-in sorted (Timsort).",
-    "Reasoning: O(n log n) is roughly 2×10^7 operations here, tens of thousands of times fewer than O(n²); bubble sort is only tolerable for tiny or nearly-sorted inputs.",
-    "Answer: no — O(n²) is ~10^12 ops; use an O(n log n) sort (sorted/Timsort), ~2×10^7 ops.",
-  ],
+  "Goal: decide whether bubble sort is acceptable for n = 1,000,000 elements, and if not, what to use.",
+  "Basic bubble makes n(n-1)/2 comparisons, around 5×10^11 for a million elements.",
+  "The operation-count growth gap is large; Big-O alone does not predict seconds or hours.",
+  "Approach: use an O(n log n) comparison sort such as Python's built-in sorted (Timsort).",
+  "A worst-case n log n comparison bound scales much better; n log2(n) ≈ 2×10^7 is a growth scale, not a promised exact count.",
+  "Use a worst-case O(n log n) sort such as Python sorted. Basic bubble makes n(n-1)/2 comparisons: 499,999,500,000 at n=1,000,000. n log2(n) is about 20,000,000 as a growth-scale comparison, not an exact count or measured run time."
+],
   "lesson:selection-sort:sel-choose-1": [
-    "Goal: among the O(n²) sorts, pick the one that minimizes writes when writes to storage are expensive but reads are cheap.",
-    "The costly choice is bubble or insertion sort, which can perform O(n²) writes as they shuffle elements.",
-    "Key property: the cost model weights writes far above reads/comparisons, so write count is what matters.",
-    "Approach: choose selection sort, which commits one element to its final place per position.",
-    "Reasoning: selection sort does at most n swaps regardless of input, whereas bubble/insertion move elements repeatedly; it reads a lot but writes little, matching this cost model.",
-    "Answer: selection sort — at most n swaps (writes), one per position, versus O(n²) writes for bubble/insertion.",
-  ],
+  "Compare the worst-case list writes of the basic in-place bubble, selection and insertion algorithms.",
+  "The costly choice is bubble or insertion sort, which can perform O(n²) writes as they shuffle elements.",
+  "Key property: the cost model weights writes far above reads/comparisons, so write count is what matters.",
+  "Approach: choose selection sort, which commits one element to its final place per position.",
+  "Reasoning: selection sort does at most n swaps regardless of input, whereas bubble/insertion move elements repeatedly; it reads a lot but writes little, matching this cost model.",
+  "Selection sort uses at most n placement swaps (two list writes per swap, including self-swaps in this version), so O(n) writes. Basic bubble/insertion can make O(n²) writes in their worst cases. The returned-copy walkthrough adds O(n) copy writes; the in-place exercise avoids that copy."
+],
   "lesson:insertion-sort:ins-choose-1": [
-    "Goal: choose the best quadratic sort for many small chunks that are each already nearly sorted.",
-    "The missed opportunity is using a non-adaptive quadratic sort that pays full O(n²) even when the data is almost ordered.",
-    "Key property: the input is nearly sorted, so most elements are already close to their final positions.",
-    "Approach: use insertion sort, whose work scales with how far elements must move.",
-    "Reasoning: insertion sort is adaptive (near O(n) on nearly-sorted data) and stable, which is exactly why hybrid sorts like Timsort use it for small runs; selection sort wouldn't benefit from the near-order.",
-    "Answer: insertion sort — adaptive (near O(n) on nearly-sorted input) and stable, which is why hybrids use it for small runs.",
-  ],
+  "Goal: choose the best quadratic sort for many small chunks that are each already nearly sorted.",
+  "The missed opportunity is using a non-adaptive quadratic sort that pays full O(n²) even when the data is almost ordered.",
+  "The chunks have only O(n) inversions; insertion sort makes one shift for each inversion.",
+  "Approach: use insertion sort, whose work scales with how far elements must move.",
+  "Insertion sort takes O(n + I); with I = O(n), this is O(n). Its strict > shift test keeps equal values stable. This makes it a useful method for small runs.",
+  "Insertion sort takes O(n + I); with I = O(n), this is O(n). Its strict > shift test keeps equal values stable. This makes it a useful method for small runs."
+],
   "lesson:merge-sort:mrg-choose-1": [
     "Goal: choose a sorting approach for 100 GB of data that does not fit in memory.",
     "The costly assumption is any in-memory sort — the data simply cannot all be loaded at once.",
@@ -5495,21 +6771,21 @@ Object.assign(EXERCISE_HINTS, {
     "Answer: merge sort — guaranteed O(n log n) worst case and stable, while quicksort risks O(n²) and its in-place form isn't stable.",
   ],
   "lesson:counting-sort:cnt-choose-1": [
-    "Goal: choose between counting sort and an O(n log n) comparison sort for 1,000,000 exam scores each in 0–100, and give the complexity.",
-    "The suboptimal default is a comparison sort, which pays an O(n log n) factor even though the key range is tiny.",
-    "Key property: every value lies in a small fixed range (0–100), so the max value hi is tiny relative to n.",
-    "Approach: use counting sort over the 0–100 range.",
-    "Reasoning: counting sort runs in O(n + hi); with hi = 100 that is effectively O(n), beating O(n log n); it would be wasteful only if the value range were huge.",
-    "Answer: counting sort — hi = 100 is tiny, so O(n + hi) ≈ O(n), faster than O(n log n) here.",
-  ],
+  "Goal: choose between counting sort and an O(n log n) comparison sort for 1,000,000 exam scores each in 0–100, and give the complexity.",
+  "A general comparison sort has O(n log n) worst-case work. The fixed small integer range supports O(n+101) counting; adaptive sorting may also exploit ordered runs.",
+  "Key property: every value lies in a small fixed range (0–100), so the max value hi is tiny relative to n.",
+  "Approach: use counting sort over the 0–100 range.",
+  "A 101-entry key range gives O(n + 101) work. This improves the worst-case general comparison bound; it does not promise a measured speedup for every input.",
+  "Counting sort uses O(n + 101) time for keys in 0..100 and is a strong fit. This avoids the worst-case n log n comparison bound. Exact speed depends on the implementation and data; Python sorting can adapt to ordered runs."
+],
   "lesson:bucket-sort:buck-choose-1": [
-    "Goal: judge why bucket sort might beat an O(n log n) comparison sort for a million floats uniformly distributed in [0, 1).",
-    "The default comparison sort pays O(n log n) even though the data's distribution could be exploited.",
-    "Key property: the values are UNIFORMLY distributed, so spreading them into equal-width buckets leaves each bucket with only a few items.",
-    "Approach: distribute into buckets by value, sort each small bucket, and concatenate.",
-    "Reasoning: uniform spread keeps bucket sizes small, so total work is expected O(n); skewed data would overfill a bucket and lose this edge, where a comparison sort would be safer.",
-    "Answer: bucket sort — uniform distribution keeps buckets small, giving expected O(n) and beating the O(n log n) comparison bound.",
-  ],
+  "Goal: judge why bucket sort might beat an O(n log n) comparison sort for a million floats uniformly distributed in [0, 1).",
+  "A general comparison sort has O(n log n) worst-case work; this explicit independent uniform input model and k proportional to n support a lower expected bucket-sort bound.",
+  "Uniform independent samples and k proportional to n give constant expected occupancy per bucket.",
+  "Use k=Θ(n) equal-width float buckets and an integer floor(x*k) index, then sort and concatenate.",
+  "With k=Θ(n) and independent uniform samples, expected bucket occupancy is constant and the total sort can be expected O(n). For floats use an integer index floor(x*k); the shown integer mapping must be adapted. Fixed k=5 does not justify this bound.",
+  "With k=Θ(n) and independent uniform samples, expected bucket occupancy is constant and the total sort can be expected O(n). For floats use an integer index floor(x*k); the shown integer mapping must be adapted. Fixed k=5 does not justify this bound."
+],
   "lesson:heap-sort:hs-choose-1": [
     "Goal: choose a guaranteed O(n log n) sort with O(1) extra space where stability is NOT required — heap sort or merge sort.",
     "The costly aspect of merge sort here is its O(n) auxiliary buffer, which the memory budget forbids.",
@@ -5527,29 +6803,29 @@ Object.assign(EXERCISE_HINTS, {
     "Answer: radix sort — counting sort's O(hi)=O(10^9) array is wasteful, while radix's O(d·(n+b)) ≈ O(n) avoids the huge-range blowup.",
   ],
   "lesson:comparators:cmp-choose-1": [
-    "Goal: sort records by field A ascending and field B descending at once, choosing the clean Python approach.",
-    "The slow route is a cmp-style comparator, which Python invokes O(n log n) times during the sort.",
-    "Key property: both orderings can be captured in a single composite key if you flip the descending field's sign.",
-    "Approach: pass a tuple key that negates the descending field, e.g. key=lambda x: (x.a, -x.b).",
-    "Reasoning: a key is computed once per element and then compared with fast tuple ordering, while cmp_to_key re-runs a Python comparator on every comparison and is slower.",
-    "Answer: use key=lambda x: (x.a, -x.b) — computed once per element, versus a slow cmp function called O(n log n) times.",
-  ],
+  "Sort records by A ascending and numeric B descending. Give a key and explain why a computed key is useful; also describe an option when B is a string.",
+  "A cmp_to_key wrapper may invoke Python comparison code O(n log n) times in the worst case, while a key function is computed once per item. Actual speed depends on callback work and input.",
+  "Negation reverses an ordered numeric key; strings cannot be negated. Stability supports a general two-pass method.",
+  "Approach: pass a tuple key that negates the descending field, e.g. key=lambda x: (x.a, -x.b).",
+  "For numeric B, key=lambda x: (x.a, -x.b). Each key is computed once. For strings or arbitrary comparable B, stable-sort by B descending, then stable-sort by A ascending; the last pass preserves B order on A ties. cmp_to_key is also valid if its comparator defines a consistent order, but may call Python comparison code many times.",
+  "For numeric B, key=lambda x: (x.a, -x.b). Each key is computed once. For strings or arbitrary comparable B, stable-sort by B descending, then stable-sort by A ascending; the last pass preserves B order on A ties. cmp_to_key is also valid if its comparator defines a consistent order, but may call Python comparison code many times."
+],
   "lesson:interval-sorting:isort-choose-1": [
-    "Goal: to MERGE overlapping intervals, decide whether to sort by start or by end, and what sorting enables.",
-    "The costly baseline is comparing every pair of intervals, which is O(n²).",
-    "Key property: sorting by start makes all intervals that could overlap a given one appear contiguously, right after it.",
-    "Approach: sort by start, then sweep once, merging each interval into the last kept one when they overlap.",
-    "Reasoning: a start-sorted order lets a single left-to-right pass decide each merge in O(n); sorting by end doesn't line up overlaps for a merge sweep the same way.",
-    "Answer: sort by START, then a single sweep merges overlaps — turning an O(n²) pairwise check into O(n log n) sort + O(n) sweep.",
-  ],
+  "Goal: to MERGE overlapping intervals, decide whether to sort by start or by end, and what sorting enables.",
+  "The costly baseline is comparing every pair of intervals, which is O(n²).",
+  "In start order, each interval either overlaps the last merged block or starts after it; earlier separated blocks cannot be affected.",
+  "Approach: sort by start, then sweep once, merging each interval into the last kept one when they overlap.",
+  "The forward sweep only extends an end, so it requires start order. Sorting by end alone can lose earlier starts; an adapted reverse sweep is a separate valid algorithm.",
+  "Answer: sort by START, then a single sweep merges overlaps — turning an O(n²) pairwise check into O(n log n) sort + O(n) sweep."
+],
   "lesson:stack-queue-operations:sq-choose-1": [
-    "Goal: choose a structure for FIFO processing with millions of enqueues and dequeues — a list or a collections.deque.",
-    "The costly choice is a list, because removing from the front with pop(0) shifts every remaining element.",
-    "Key property: FIFO removes from the front, and only a deque supports O(1) removal there.",
-    "Approach: use a deque, appending to enqueue and popleft to dequeue.",
-    "Reasoning: deque gives O(1) at both ends, so millions of operations stay linear overall; a list's pop(0) is O(n), making the total O(n²).",
-    "Answer: deque — append and popleft are O(1), whereas list.pop(0) is O(n) and far too slow at scale.",
-  ],
+  "Goal: choose a structure for FIFO processing with millions of enqueues and dequeues — a list or a collections.deque.",
+  "The costly choice is a list, because removing from the front with pop(0) shifts every remaining element.",
+  "Property: deque.popleft removes without shifting remaining elements; list.pop(0) shifts them.",
+  "Approach: use a deque, appending to enqueue and popleft to dequeue.",
+  "Reasoning: deque end operations make m FIFO operations O(m). Growing a list queue to m items and draining it via pop(0) costs O(m²); bounded occupancy can have a smaller total.",
+  "Answer: deque — append and popleft are O(1), whereas list.pop(0) is O(n) and far too slow at scale."
+],
   "lesson:parentheses-matching:paren-choose-1": [
     "Goal: explain why a single integer counter fails to validate '([)]' while a stack succeeds.",
     "The counter's flaw is that it only tallies open-minus-close, so it can balance numerically yet be mis-nested.",
@@ -5575,13 +6851,13 @@ Object.assign(EXERCISE_HINTS, {
     "Answer: BFS — it visits nodes in increasing distance, so the first arrival at the target is the shortest path; O(V+E), unlike DFS.",
   ],
   "lesson:min-max-tracking:min-choose-1": [
-    "Goal: compute the maximum of every size-k sliding window over an array in O(n) total, deciding if a min/max stack is enough.",
-    "The limitation of a plain stack is that it can't drop elements that have slid out of the window's left edge.",
-    "Key property: you must discard both out-of-window elements (from the front) and dominated smaller elements (from the back), i.e. work at both ends.",
-    "Approach: use a monotonic DEQUE that keeps indices in decreasing value order.",
-    "Reasoning: the deque pops the front when it leaves the window and pops the back while new values dominate, so each index is pushed and popped once for O(n); a one-ended stack can't evict stale front elements.",
-    "Answer: a monotonic DEQUE (not a plain stack) — it drops out-of-window and dominated elements from both ends, giving O(n) for sliding-window maximum.",
-  ],
+  "Understand: windows expire the oldest value and insert the newest.",
+  "A single stack cannot remove its oldest value cheaply.",
+  "Keep candidates in a monotonic deque, or combine two max stacks into a queue.",
+  "Deque: expire indices at the front, remove dominated values at the back.",
+  "Pseudocode: maintain decreasing candidates; alternatively transfer between max stacks only when the output side empties.",
+  "Solution: either method costs O(n) total; each index is removed at most once from the deque, or each queue item transfers at most once between max stacks."
+],
   "lesson:maps-sets:ms-choose-1": [
     "Goal: choose a structure for millions of membership checks against a FIXED collection — list, sorted list + binary search, or set.",
     "The costly options are a plain list (O(n) per check) and even a sorted list (O(log n) per check), repeated millions of times.",
@@ -5671,13 +6947,13 @@ Object.assign(EXERCISE_HINTS, {
     "Answer: sift DOWN, comparing with the SMALLER of the two in-range children (2i+1, 2i+2) and swapping while larger — sifting up is wrong since the root has no parent.",
   ],
   "lesson:merge-sorted-data:merge-choose-1": [
-    "Goal: merge 1000 sorted files too large to fit in memory into one sorted stream — concatenate-and-sort or heap-based k-way merge.",
-    "The costly route is concatenate-and-sort: it needs all N items in memory and re-sorts data that is already sorted.",
-    "Key property: each file is already sorted, so the global next element is always one of the k current front elements.",
-    "Approach: run a heap-based k-way merge, keeping one front element per file in a min-heap.",
-    "Reasoning: the heap holds only k=1000 items (O(k) space) and emits output lazily in O(N log k), while concatenate-and-sort needs O(N) memory and O(N log N) time.",
-    "Answer: heap-based k-way merge — O(k) space and O(N log k) streaming, versus concatenate-and-sort's O(N) memory and O(N log N).",
-  ],
+  "Goal: merge 1000 sorted files too large to fit in memory into one sorted stream — concatenate-and-sort or heap-based k-way merge.",
+  "The costly route is concatenate-and-sort: it needs all N items in memory and re-sorts data that is already sorted.",
+  "Key property: each file is already sorted, so the global next element is always one of the k current front elements.",
+  "Approach: run a heap-based k-way merge, keeping one front element per file in a min-heap.",
+  "Reasoning: the heap holds only k=1000 items (O(k) space) and emits output lazily in O(k + N log(k+1)), while concatenate-and-sort needs O(N) memory and O(N log N) time.",
+  "Answer: heap-based k-way merge — O(k) space and O(k + N log(k+1)) streaming, versus concatenate-and-sort's O(N) memory and O(N log N)."
+],
   "lesson:tree-bfs:bfs-choose-1": [
     "Goal: report the rightmost node value at each depth of a binary tree (the 'right side view'), choosing BFS or DFS.",
     "The clumsy framing is a plain DFS with no notion of levels, which doesn't naturally group nodes by depth.",
@@ -5727,13 +7003,13 @@ Object.assign(EXERCISE_HINTS, {
     "Answer: for exact membership alone use a hash set (simpler, lower overhead); the trie's advantage is prefix queries a set can't serve efficiently.",
   ],
   "lesson:prefix-search:prefix-choose-1": [
-    "Goal: for autocomplete over a large dictionary, justify a trie over a hash set and give the cost of a prefix check vs listing 10 suggestions.",
-    "The hash set's limitation is that it keys whole words and can't walk forward from a prefix.",
-    "Key property: autocomplete is a PREFIX operation, and a trie stores words along shared-prefix paths.",
-    "Approach: use a trie, descending P characters to the prefix node and then walking its subtree for suggestions.",
-    "Reasoning: checking a prefix exists is O(P) to reach the node, and listing matches is O(P + S) to collect the subtree words; a hash set offers neither efficiently.",
-    "Answer: a trie supports prefix queries a hash set can't — a prefix check is O(P), and listing suggestions is O(P + S) (reach the node, then walk its subtree).",
-  ],
+  "Find the node representing the prefix.",
+  "Repeated scans of all stored words repeat prefix comparisons.",
+  "A trie shares those comparisons on one path.",
+  "Walk the matching subtree and collect terminal paths.",
+  "Use a shared character buffer; copy it only for terminal output strings.",
+  "Reaching the prefix costs expected O(P), traversal O(S), and copied output O(K), for O(P+S+K)."
+],
   "lesson:word-search:ws-choose-1": [
     "Goal: search a grid for MANY words at once, deciding between repeated single-word DFS and a trie-guided DFS.",
     "The costly repetition is a separate DFS per word, re-exploring shared prefixes over and over at O(m·n·3^L) each.",
@@ -5847,13 +7123,13 @@ Object.assign(EXERCISE_HINTS, {
     "Answer: Floyd's two pointers — O(n) time like the set but O(1) space, so it fits tight memory where the O(n)-space visited set may not.",
   ],
   "lesson:linked-list-middle:llmid-choose-1": [
-    "Goal: report the middle node when nodes arrive from a stream you can read only ONCE.",
-    "The costly approach is count-then-walk, which requires a second pass the one-read stream won't permit.",
-    "Key property: the data can be consumed only once, so the method must finish in a single pass without knowing the length upfront.",
-    "Approach: use slow/fast pointers — advance slow one step and fast two steps.",
-    "Reasoning: when fast reaches the end, slow sits at the middle, all in one pass; counting first then walking needs to revisit the data, impossible on a one-read stream.",
-    "Answer: slow/fast — it finds the middle in a single pass without knowing the length, unlike count-then-walk which needs a second pass.",
-  ],
+  "Understand: nodes and next links stay available throughout the walk.",
+  "Baseline: count the length, then start another walk to index n//2.",
+  "Property: a pointer moving twice as fast reaches the end when the other reaches the middle.",
+  "Approach: slow and fast start at head.",
+  "Pseudocode: while fast and fast.next exist, slow=slow.next; fast=fast.next.next.",
+  "Solution: return slow (None for empty input; the second middle for even length). A consumable iterator does not support two independent node cursors."
+],
   "lesson:linked-list-variants:llv-choose-1": [
     "Goal: match a list variant to each need — (a) browser history with back/forward, (b) fixed-size ring buffer overwriting oldest, (c) memory-tight forward-only queue.",
     "The error is one variant for all; each need stresses a different capability (bidirectional moves, wraparound, or minimal memory).",
@@ -5871,13 +7147,12 @@ Object.assign(EXERCISE_HINTS, {
     "Answer: deque(maxlen=100) — appending past capacity discards from the opposite end, an automatic O(1) fixed-size ring buffer.",
   ],
   "lesson:dp-recursive-calls:dprc-choose-1": [
-    "Goal: speed up a recursion that recomputes identical subproblems many times — pick the right technique.",
-    "The costly symptom is exponential blowup from re-solving the same subproblem again and again.",
-    "Key property: the recursion has overlapping subproblems — the same arguments recur across the call tree.",
-    "Approach: cache subproblem answers via memoization, or build them bottom-up with tabulation.",
-    "Reasoning: caching ensures each distinct subproblem is computed once and reused in O(1), collapsing exponential repeated work to linear in the number of subproblems.",
-    "Answer: memoization (or bottom-up tabulation) — cache each subproblem's answer so it's computed once, turning exponential repeated work into linear.",
-  ],
+  "Draw the calls for a small Fibonacci input. Which index is solved more than once?",
+  "Repeated calls redo work even though the fully specified subproblem has the same answer.",
+  "A reusable state must contain every input that affects its answer. Count distinct states and their transition work.",
+  "Consider memoization or bottom-up tabulation to reuse overlapping answers; caching alone does not promise linear time.",
+  "Memoization pseudocode: return a cached answer if present; otherwise solve dependencies, store the result, and return it. Fibonacci has n+1 states and constant scalar transition work per state."
+],
   "lesson:dp-combinations:dpcomb-choose-1": [
     "Goal: classify seating 3 people in a row (order matters) versus picking a 3-person team (order irrelevant) as permutations or combinations.",
     "The error is treating both as the same count; whether order matters changes the formula entirely.",
@@ -5895,13 +7170,12 @@ Object.assign(EXERCISE_HINTS, {
     "Answer: recurse with the SAME index (reuse) and drive by a remaining target (record at 0, prune below 0), giving [[2,2,3],[7]] — valid only because candidates are strictly positive and distinct.",
   ],
   "lesson:dp-1d-2d:dp12-choose-1": [
-    "Goal: decide whether a subproblem 'best using the first i items with j capacity left' is 1D or 2D DP.",
-    "The error is collapsing it to 1D and losing track of one of the two varying quantities.",
-    "Key property: the state varies along TWO independent axes — item index i and remaining capacity j.",
-    "Approach: index the DP table by both, as dp[i][j].",
-    "Reasoning: because i and j vary independently, a single dimension can't capture every reachable state; this two-axis state is exactly the 0/1 knapsack shape.",
-    "Answer: 2D — the state has two independent quantities (item index i and remaining capacity j), so the table is dp[i][j], the 0/1 knapsack shape.",
-  ],
+  "Compare two subproblems with equal capacity but different available item prefixes. Could their answers differ?",
+  "The full state needs both item-prefix i and capacity j; state coordinates and stored rows are different ideas.",
+  "A compressed row must read answers from the previous item layer rather than reuse the current item twice.",
+  "Start with dp[i][j]. One-row storage can also work when the outer item loop and update direction preserve those dependencies.",
+  "For positive item weights, one-row pseudocode is: for each item, visit capacities from largest down to its weight; update from the smaller-capacity previous-layer entry. This retains the 0/1 choice rule."
+],
   "lesson:dp-knapsack:dpks-choose-1": [
     "Goal: maximize value under a weight limit when items can be split into ANY fraction — DP knapsack or greedy.",
     "The costly over-engineering is a DP knapsack table, which exists to handle the all-or-nothing item interaction.",
@@ -5935,13 +7209,12 @@ Object.assign(EXERCISE_HINTS, {
     "Answer: rolling-variable bottom-up — O(n) time, O(1) space, no recursion limit; naive recursion is exponential and memoized recursion costs O(n) cache and stack.",
   ],
   "lesson:dp-house-robber:dphr-choose-1": [
-    "Goal: for houses [2,7,9,3,1] with no two adjacent robbed, choose between a naive greedy and DP, and give each result.",
-    "The costly trap is greedy: grabbing the richest house first can block a better combination.",
-    "Key property: the optimal choice at each house depends on the best of the two prior subproblems, not on a locally richest pick.",
-    "Approach: use DP where dp[i] = max(dp[i-1], dp[i-2] + house[i]).",
-    "Reasoning: DP yields 12 (rob 2, 9, 1), while a greedy grabbing 9 first ends at 11; the adjacency constraint makes locally greedy choices unreliable, so DP is required.",
-    "Answer: DP is correct — 12 (rob 2, 9, 1); the naive greedy grabbing 9 first ends at 11, so greedy is unreliable here.",
-  ],
+  "List the valid non-adjacent selections from [4,5,4], including the choice of both endpoints.",
+  "Picking the middle 5 blocks both 4-valued neighbors; a locally richest choice can lose a better pair.",
+  "For each prefix, either skip its last house or take it and use the best prefix ending two positions earlier.",
+  "Use take/skip dynamic programming so both valid possibilities contribute to the decision.",
+  "Pseudocode: new_best = max(best_one_back, best_two_back + current_value); shift the saved prefix totals. The endpoint pair totals 8, whereas richest-first picks 5."
+],
   "lesson:dp-lcs:dplcs-choose-1": [
     "Goal: find the longest run of characters common to two strings that is CONTIGUOUS in both — is that LCS or something else?",
     "The error is applying LCS, which permits gaps and so overcounts for a contiguity requirement.",
@@ -5982,4 +7255,182 @@ Object.assign(EXERCISE_HINTS, {
     "Reasoning: KMP guarantees O(n + m) regardless of input because it never rescans text, whereas naive scanning's worst case is exploitable by adversarial inputs.",
     "Answer: KMP — guaranteed O(n + m) even on adversarial inputs where naive scanning degrades to O(n·m), because KMP never rescans the text.",
   ],
+});
+
+// Complete FU-1/FU-2 contracts and local practice.
+Object.assign(EXERCISE_RECOGNITION, {
+  "lesson:task-scheduler:scheduler-recognize-1": {
+    "scenario": "A single CPU must execute every task in a finite A-Z list. All tasks are initially available, each takes one slot, order may change, and equal labels need the same nonnegative integer cooldown. Return an actual minimum-length timeline, including idle slots. Choose an approach and a reason that address this output.",
+    "approaches": [
+      {
+        "id": "ready-heap",
+        "label": "Largest remaining eligible count, with a release queue and output slots",
+        "requiredReasonIds": [
+          "priority-and-release"
+        ]
+      },
+      {
+        "id": "scan-counts",
+        "label": "Scan all label counts and next-release times for the best eligible label each slot",
+        "requiredReasonIds": [
+          "small-alphabet"
+        ]
+      },
+      {
+        "id": "duration-only",
+        "label": "Use only the maximum-frequency duration formula",
+        "requiredReasonIds": [],
+        "rejectionFeedback": "The formula gives a minimum duration, but this request also needs the task/idle label at each slot. Add a construction algorithm."
+      },
+      {
+        "id": "input-order",
+        "label": "Keep the supplied task order and wait whenever the next task is cooling",
+        "requiredReasonIds": [],
+        "rejectionFeedback": "Order may change. For A,A,B with cooldown 1, preserving order gives A,idle,A,B, while A,B,A finishes in three slots."
+      }
+    ],
+    "reasons": [
+      {
+        "id": "priority-and-release",
+        "text": "The heap chooses among eligible labels by remaining work; the queue prevents a repeated label from returning before t+c+1."
+      },
+      {
+        "id": "small-alphabet",
+        "text": "There are at most 26 labels, so an explicit scan can choose the same largest-remaining eligible priority and record each slot."
+      },
+      {
+        "id": "number-is-enough",
+        "text": "The required output is only the duration, so no arrangement needs to be constructed.",
+        "contradictory": true
+      },
+      {
+        "id": "too-early",
+        "text": "After a label at t, the same label is always legal again at t+c.",
+        "contradictory": true
+      }
+    ],
+    "acceptableApproachIds": [
+      "ready-heap"
+    ],
+    "alternatives": [
+      {
+        "approachId": "scan-counts",
+        "conditions": "The same largest-remaining eligible rule is used and each chosen label receives release time t+c+1.",
+        "tradeoff": "A scan costs O(K) per output slot rather than heap operations around task executions. It is a reasonable O(N+T) choice for the fixed 26-label alphabet.",
+        "requiredReasonIds": [
+          "small-alphabet"
+        ]
+      }
+    ],
+    "reflectionPrompt": "Why does A,A,B with cooldown 1 distinguish the supplied order from a legal optimal reordering?",
+    "modelExplanation": "Both accepted approaches separate eligibility from remaining work and produce the actual timeline. A,B,A uses the B slot to satisfy A’s cooldown. A frequency formula alone can certify the duration but cannot identify which label occupies each slot. These claims rely on unit duration, reorderable initially available tasks and one common cooldown; they are not a general scheduler for release dates or unequal task lengths."
+  },
+  "lesson:meeting-rooms-ii:rooms-recognize-1": {
+    "scenario": "Every meeting has integer start < end and must be held; meetings cannot move or be dropped. Times may be negative and input may be unsorted. A room is reusable when its previous end equals a new start. Return the minimum number of identical rooms. Choose an approach and a supporting reason.",
+    "approaches": [
+      {
+        "id": "end-heap",
+        "label": "Sort by start, remove expired active ends, and retain the peak heap length",
+        "requiredReasonIds": [
+          "active-overlap"
+        ]
+      },
+      {
+        "id": "event-sweep",
+        "label": "Sort start/end events, process ends before same-time starts, and retain the peak count",
+        "requiredReasonIds": [
+          "event-ties"
+        ]
+      },
+      {
+        "id": "merge-union",
+        "label": "Merge overlapping ranges and count the merged ranges",
+        "requiredReasonIds": [],
+        "rejectionFeedback": "Merged ranges measure occupied blocks of time, not simultaneous rooms. [0,3) and [1,2) merge to one range but need two rooms."
+      },
+      {
+        "id": "select-subset",
+        "label": "Choose the largest nonoverlapping subset using earliest finishes",
+        "requiredReasonIds": [],
+        "rejectionFeedback": "That selects meetings to keep in one room. This problem requires holding every meeting and counting rooms instead."
+      }
+    ],
+    "reasons": [
+      {
+        "id": "active-overlap",
+        "text": "After expired ends are removed, the heap counts meetings active at each start; their maximum is the necessary and sufficient room count."
+      },
+      {
+        "id": "event-ties",
+        "text": "A start adds one active meeting and an end removes one; ending first at a tie implements the stated room-reuse rule."
+      },
+      {
+        "id": "strict-only",
+        "text": "An end equal to a start must still occupy a separate room.",
+        "contradictory": true
+      },
+      {
+        "id": "drop-conflicts",
+        "text": "Overlapping meetings may be discarded so that the rest fit into one room.",
+        "contradictory": true
+      }
+    ],
+    "acceptableApproachIds": [
+      "end-heap"
+    ],
+    "alternatives": [
+      {
+        "approachId": "event-sweep",
+        "conditions": "Each meeting contributes a +1 start and -1 end, and end events precede starts at the same time (or their deltas are grouped).",
+        "tradeoff": "The sweep stores O(n) events and also takes O(n log(n+1)) time; it is especially convenient when only a count is needed.",
+        "requiredReasonIds": [
+          "event-ties"
+        ]
+      }
+    ],
+    "reflectionPrompt": "How does [0,3), [1,2) distinguish room counting from merging or selecting meetings?",
+    "modelExplanation": "Two rooms are needed while those two meetings overlap. An active-end heap or a correctly tied event sweep finds the maximum overlap. Any simultaneous meetings need distinct rooms, and processing starts in order can reuse any room whose meeting has ended; a new room is needed only when all existing rooms are busy. The local all-expired heap can shrink, so its peak, not its final length, is the answer."
+  }
+});
+
+// Complete FU-1/FU-2 contracts and local practice.
+Object.assign(EXERCISE_TESTS, {
+  "lesson:task-scheduler:scheduler-complete-1": "from collections import Counter\n\ndef check_schedule(tasks, cooldown, duration):\n    original = list(tasks)\n    slots = schedule(tasks, cooldown)\n    assert isinstance(slots, list), \"return a list, not printed output\"\n    assert tasks == original, \"do not mutate the input tasks\"\n    assert Counter(x for x in slots if x is not None) == Counter(tasks), \"execute each supplied task exactly once\"\n    previous = {}\n    for time, label in enumerate(slots):\n        if label is not None:\n            assert label not in previous or time - previous[label] >= cooldown + 1, \"a repeated task ran too early\"\n            previous[label] = time\n    assert len(slots) == duration, \"the schedule contains unnecessary idle time\"\n\nfor tasks, cooldown, duration in [\n    ([], 4, 0),\n    (list(\"AAA\"), 2, 7),\n    (list(\"AABB\"), 2, 5),\n    (list(\"ABCABC\"), 2, 6),\n    (list(\"AAAAABC\"), 2, 13),\n    (list(\"AAABBC\"), 2, 7),\n    (list(\"BAA\"), 0, 3),\n    (list(\"AB\"), 12, 2),\n]:\n    check_schedule(tasks, cooldown, duration)\nfor bad in [-1, 1.5, True]:\n    try:\n        schedule([], bad)\n    except ValueError:\n        pass\n    else:\n        raise AssertionError(\"reject invalid cooldown\")\nfor bad_label in [\"a\", \"AA\", 4, None]:\n    try:\n        schedule([bad_label], 1)\n    except ValueError:\n        pass\n    else:\n        raise AssertionError(\"reject a label outside A-Z\")",
+  "lesson:meeting-rooms-ii:rooms-complete-1": "for intervals, expected in [\n    ([], 0),\n    ([[0, 5], [5, 8]], 1),\n    ([[0, 10], [0, 10], [0, 10]], 3),\n    ([[0, 12], [2, 10], [4, 8]], 3),\n    ([[20, 25], [5, 15], [10, 20], [0, 10]], 2),\n    ([[-4, -1], [-1, 2], [-3, 0]], 2),\n    ([[0, 2], [0, 3], [0, 4], [4, 6]], 3),\n    ([[8, 10]], 1),\n]:\n    original = [pair[:] for pair in intervals]\n    actual = min_rooms(intervals)\n    assert type(actual) is int, \"return the room count, not printed output\"\n    assert actual == expected, (intervals, actual, expected)\n    assert intervals == original, \"do not mutate the caller's meetings\"\nfor intervals in [[[2, 2]], [[4, 1]], [[0, 1.5]], [[False, 2]]]:\n    try:\n        min_rooms(intervals)\n    except ValueError:\n        pass\n    else:\n        raise AssertionError(\"reject noninteger or nonpositive-duration meetings\")"
+});
+
+// Complete FU-1/FU-2 contracts and local practice.
+Object.assign(EXERCISE_HINTS, {
+  "lesson:task-scheduler:scheduler-complete-1": [
+    "For A, A, A with cooldown 2, the valid shortest timeline is A, idle, idle, A, idle, idle, A. Slots between uses count toward the cooldown; the execution slot does not.",
+    "Keep one remaining count per label. A label waiting for its cooldown is different from a label that is ready to run; one container cannot express both priorities conveniently.",
+    "After running a label at zero-based slot t, its next legal use is t+cooldown+1. Release it before choosing at that slot. Because every label has the same cooldown, release times enter the queue in order.",
+    "Use a heap of (-remaining, label) for eligible labels and a deque of (release, -remaining, label) for waiting labels. Choose the largest remaining eligible count; use None only when ready is empty but waiting still has work.",
+    "Pseudocode: count labels; heapify priorities; while ready OR waiting: t=output length; move all released labels to ready; if ready, pop/run/decrement and enqueue unfinished work for t+c+1; otherwise append None; return the output.",
+    "The complete solution is:\n\n```python\nfrom collections import Counter, deque\nimport heapq\n\ndef schedule(tasks, cooldown):\n    if type(cooldown) is not int or cooldown < 0:\n        raise ValueError(\"cooldown must be a nonnegative integer\")\n    for task in tasks:\n        if not isinstance(task, str) or len(task) != 1 or not \"A\" <= task <= \"Z\":\n            raise ValueError(\"tasks must be single letters A-Z\")\n    counts = Counter(tasks)\n    ready = [(-count, label) for label, count in counts.items()]\n    heapq.heapify(ready)\n    waiting = deque()\n    timeline = []\n    while ready or waiting:\n        time = len(timeline)\n        while waiting and waiting[0][0] <= time:\n            ready_at, neg_count, label = waiting.popleft()\n            heapq.heappush(ready, (neg_count, label))\n        if ready:\n            neg_count, label = heapq.heappop(ready)\n            timeline.append(label)\n            neg_count += 1\n            if neg_count < 0:\n                waiting.append((time + cooldown + 1, neg_count, label))\n        else:\n            timeline.append(None)\n    return timeline\n```\nThe OR condition preserves cooling work, the release offset preserves the gap, and the largest-remaining priority avoids postponing a long repetition chain. Work takes O(N log(K+1)+T) expected/amortized time, O(K) working storage, and O(T) returned timeline storage; K<=26 here."
+  ],
+  "lesson:task-scheduler:scheduler-recognize-1": [
+    "The output must identify each task or idle slot, so a correct duration is only part of the work.",
+    "Compare AA B with cooldown 1: fixed input order may waste a slot even though B can fill A’s gap.",
+    "Eligibility depends on the last use; priority among eligible labels depends on how much work remains.",
+    "Keep eligible and cooling work separately, or scan the small label alphabet with explicit next-release times.",
+    "For each slot: release ready labels; choose the eligible largest remaining count; append its label or None; move unfinished chosen work to its future release.",
+    "A ready heap with a release queue is the primary approach. A scan choosing the same priority is a valid alternative for at most 26 labels. A formula alone does not produce slots, and preserving input order can be longer."
+  ],
+  "lesson:meeting-rooms-ii:rooms-complete-1": [
+    "For [0,5) and [5,8), one room is enough: the first meeting has ended when the second starts. Three identical nonempty intervals need three rooms.",
+    "Once meetings are in start order, you only need the earliest active end to know whether any room can be released. A min-heap makes that end available without rescanning every active meeting.",
+    "The active-meeting variant removes every end <= the new start. Its current heap length can decrease, so retain a separate maximum; returning its final length loses earlier overlap.",
+    "Make a sorted copy by start. For each meeting, pop all expired ends, push this end, then update peak with the heap length. The input must contain integer start < end pairs.",
+    "Pseudocode: validate pairs; sort by start; heap=[]; peak=0; for (s,e): while heap and minimum<=s, pop; push e; peak=max(peak,heap length); return peak. The displayed history list is useful for playback but not required to compute the count.",
+    "The complete solution is:\n\n```python\nimport heapq\n\ndef min_rooms(intervals):\n    for start, end in intervals:\n        if type(start) is not int or type(end) is not int or start >= end:\n            raise ValueError(\"meetings need integer start < end\")\n    by_start = sorted(intervals, key=lambda meeting: meeting[0])\n    end_heap = []\n    peak = 0\n    active_counts = []\n    for start, end in by_start:\n        while end_heap and end_heap[0] <= start:\n            heapq.heappop(end_heap)\n        heapq.heappush(end_heap, end)\n        peak = max(peak, len(end_heap))\n        active_counts.append(len(end_heap))\n    return peak\n```\nAfter each push, heap length counts meetings active at that start. Its maximum is both necessary (those meetings cannot share rooms) and sufficient (released rooms can be reused). Sorting and all heap operations take O(n log(n+1)) worst-case time; the copied list, sort workspace and displayed history use O(n) auxiliary space."
+  ],
+  "lesson:meeting-rooms-ii:rooms-recognize-1": [
+    "Every meeting must be held, so an algorithm that selects a compatible subset solves a different problem.",
+    "Two overlapping meetings need two rooms even if their occupied time ranges merge into one connected block.",
+    "A simultaneous count is a lower bound on rooms. Reusing every free room in start order reaches that bound.",
+    "Consider an active end-time heap or a sweep of start/end events. Both must implement same-time room reuse.",
+    "Heap pseudocode: sort starts; remove all ends<=start; add the new end; update peak. Event pseudocode: sort (time,delta), with -1 before +1 at ties; accumulate and update peak.",
+    "The end-time heap and the properly tied event sweep both pass. Merge-union and earliest-finish subset selection do not count the resources needed for all meetings. In the active heap variant, keep the maximum rather than its final length."
+  ]
 });

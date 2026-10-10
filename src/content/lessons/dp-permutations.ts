@@ -32,7 +32,11 @@ export const dpPermutations: LessonDefinition = {
   id: "dp-permutations",
   title: "Backtracking: Permutations",
   area: "DP and recursion",
-  prerequisites: ["dp-backtracking"],
+  prerequisites: [
+  "dp-backtracking",
+  "references-mutation",
+  "loops"
+],
 
   explanation: `A **permutation** is an **ordering** of all the elements — order matters, and every element is used exactly once. For n distinct elements there are **n!** permutations (n choices for the first position, n−1 for the second, and so on). Unlike subsets, where each element is in or out, here **every** element appears in **every** permutation; only the arrangement differs.
 
@@ -49,61 +53,101 @@ The output for \`[1,2,3]\` is all 6 orderings in depth-first order: \`[[1,2,3],[
   ],
 
   concepts: {
-    purpose:
-      "Enumerate every ordering of a collection — needed when arrangement matters (schedules, sequences, orderings).",
-    operations:
-      "Fill positions left to right; at each, try each unused element, mark/append, recurse, then unmark/pop.",
-    uses:
-      "Generating orderings, brute-force TSP on tiny inputs, anagrams, sequencing/scheduling enumeration, testing all arrangements.",
-    tradeoffs:
-      "n! growth limits this to small n; a used array is O(n) space and O(1) checks. For counting-only questions, avoid materializing permutations.",
-    commonMistakes:
-      "Forgetting to clear used[i] on backtrack (permutations get truncated); storing path instead of path[:]; using a start index (that yields combinations, not permutations).",
-    edgeCases:
-      "Empty input yields [[]] (one empty ordering). Duplicate elements need extra skipping to avoid repeated permutations — inputs here are distinct.",
-  },
+  "purpose": "Enumerate every ordering of a collection — needed when arrangement matters (schedules, sequences, orderings).",
+  "operations": "Fill positions left to right; at each, try each unused element, mark/append, recurse, then unmark/pop.",
+  "uses": "Generating orderings, brute-force TSP on tiny inputs, anagrams, sequencing/scheduling enumeration, testing all arrangements.",
+  "tradeoffs": "n! growth limits this to small n; a used array is O(n) space and O(1) checks. For counting-only questions, avoid materializing permutations.",
+  "commonMistakes": "Forgetting to clear used[i] on backtrack (later full orderings are omitted); storing path instead of path[:]; using a start index (that yields combinations, not permutations).",
+  "edgeCases": "Empty input yields [[]] (one empty ordering). Duplicate elements need extra skipping to avoid repeated permutations — inputs here are distinct."
+},
 
   complexity: [
     { operation: "permutations (backtracking)", best: "O(n·n!)", average: "O(n·n!)", worst: "O(n·n!)", space: "O(n)", note: "n! orderings, each O(n) to copy; recursion depth O(n)." },
   ],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
-    costModel:
-      "Each complete permutation costs O(n) to copy into the results; there are n! of them. Per-node work is O(1) besides recursion.",
-    time: {
-      bound: "O(n·n!)",
-      case: "worst",
-      explanation:
-        "There are n! complete orderings. The search tree has n choices at the top, n−1 next, and so on, and reaching each leaf builds a permutation copied in O(n). Multiplying, total work is O(n·n!). This matches the output size, so it is essentially optimal for producing all permutations.",
-    },
-    space: {
-      bound: "O(n)",
-      case: "worst",
-      explanation:
-        "Auxiliary space is the recursion depth (n), the path (≤ n), and the used array (n) — all O(n). This excludes the results, which are output.",
-      inputOutputNote: "The results list holds n! permutations of total size O(n·n!) — required output, separate from the O(n) working space.",
-    },
-    derivation: [
-      { lines: [5, 6, 7], description: "Record each completed permutation (n! times, O(n) copy each).", cost: "O(n·n!)", dimension: "time" },
-      { lines: [8, 9, 10, 11, 12, 13, 14, 15], description: "Try-each-unused loop with choose/explore/un-choose drives the n! branching.", cost: "O(n!)", dimension: "time" },
-      { lines: [4, 16], description: "Recursion depth n, path ≤ n, used array n.", cost: "O(n)", dimension: "space" },
-    ],
-    assumptions: [
-      "Elements are distinct (no duplicate-permutation skipping needed).",
-      "The used array correctly enforces each element once.",
-      "n is small so n! and the trace stay manageable.",
-    ],
-    tradeoffs:
-      "Compared to subsets/combinations (which use a start index to forbid reordering), permutations use a used array to allow all orderings — trading O(n) space for the freedom to revisit earlier elements in later positions.",
-    counters: [
-      { label: "permutations recorded", definition: "executions of the record line (line 6)", countLines: [6] },
-      { label: "choices made", definition: "executions of the choose line (line 12)", countLines: [12] },
-    ],
-    fixedDataNote:
-      "permutations([1,2,3]) records 3! = 6 orderings. The O(n·n!) bound describes how that count and copy cost scale with n.",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of elements in nums"
+    }
+  ],
+  "costModel": "At each internal node this code scans all n indices, including used entries. Leaf recording copies n references. List append is amortized O(1); pop and used-array access are O(1).",
+  "time": {
+    "bound": "O(n·n!)",
+    "case": "worst",
+    "explanation": "There are n! complete orderings. The internal prefix nodes number Σ_{r=0}^{n−1} n!/(n−r)!, which is O(n!). Scanning n indices at each gives O(n*n!) work; n! leaf copies of length n give the same bound. It is not O(n!) branch work for this full-index-scan implementation. Empty input returns one empty ordering in O(1)."
   },
+  "space": {
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "Auxiliary space is the recursion depth (n), the path (≤ n), and the used array (n) — all O(n). This excludes the results, which are output.",
+    "inputOutputNote": "The results list holds n! permutations of total size O(n·n!) — required output, separate from the O(n) working space."
+  },
+  "derivation": [
+    {
+      "lines": [
+        5,
+        6,
+        7
+      ],
+      "description": "Record each completed permutation (n! times, O(n) copy each).",
+      "cost": "O(n·n!)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "description": "Every internal prefix scans n indices; O(n!) prefix nodes give O(n*n!) index checks.",
+      "cost": "O(n*n!)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        4,
+        16
+      ],
+      "description": "Recursion depth n, path ≤ n, used array n.",
+      "cost": "O(n)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Elements are distinct (no duplicate-permutation skipping needed).",
+    "The used array correctly enforces each element once.",
+    "n is small so n! and the trace stay manageable.",
+    "Inputs meet the stated type/domain contract. Scalar arithmetic, comparisons and array indexing use a unit-cost model; Python arbitrary-precision bit costs are not included.",
+    "Collection contents and scalar sizes meet the stated contract; duplicate-aware variants need additional rules.",
+    "Best/average/worst table entries are asymptotic upper bounds for the specified variant; no input probability distribution or tight average-time claim is assumed unless stated."
+  ],
+  "tradeoffs": "Compared to subsets/combinations (which use a start index to forbid reordering), permutations use a used array to allow all orderings — trading O(n) space for the freedom to revisit earlier elements in later positions.",
+  "counters": [
+    {
+      "label": "permutations recorded",
+      "definition": "executions of the record line Recorded line entries at 6 occur before the operation completes.",
+      "countLines": [
+        6
+      ]
+    },
+    {
+      "label": "choices made",
+      "definition": "executions of the choose line Recorded line entries at 12 occur before the operation completes.",
+      "countLines": [
+        12
+      ]
+    }
+  ],
+  "fixedDataNote": "permutations([1,2,3]) records 3! = 6 orderings. The O(n·n!) bound describes how that count and copy cost scale with n. Function analysis excludes demonstration input literals, imports, printing and tracer storage. A line event shows the next operation before it completes."
+},
 
   code,
 
@@ -141,88 +185,125 @@ The output for \`[1,2,3]\` is all 6 orderings in depth-first order: \`[[1,2,3],[
   ],
 
   experiments: [
-    "Print path at each completion to watch orderings emerge depth-first.",
-    "Remove `used[i] = False` on backtrack and see permutations come out too short.",
-    "Compare the count of results with math.factorial(len(nums)).",
-  ],
+  "Print path at each completion to watch orderings emerge depth-first.",
+  "Delete used[i] = False as a failure experiment: flags remain set after return, so many full orderings are lost. The full-length base case still prevents short results from being recorded.",
+  "Compare the count of results with math.factorial(len(nums))."
+],
 
   exercises: [
-    {
-      id: "dpperm-complete-1",
-      kind: "complete-code",
-      prompt: "Complete `permutations(nums)` so it returns every ordering of nums (as a list of lists). Fill in the choose/explore/un-choose block using the `used` array.",
-      starterCode:
-        "def permutations(nums):\n    res = []\n    path = []\n    used = [False] * len(nums)\n    def bt():\n        if len(path) == len(nums):\n            res.append(path[:])\n            return\n        for i in range(len(nums)):\n            if used[i]:\n                continue\n            # TODO: choose, explore, un-choose\n            pass\n    bt()\n    return res",
-      expected:
-        "def permutations(nums):\n    res = []\n    path = []\n    used = [False] * len(nums)\n    def bt():\n        if len(path) == len(nums):\n            res.append(path[:])\n            return\n        for i in range(len(nums)):\n            if used[i]:\n                continue\n            used[i] = True\n            path.append(nums[i])\n            bt()\n            path.pop()\n            used[i] = False\n    bt()\n    return res",
-      hints: [
-        "Mark used and append before recursing.",
-        "After recursing, undo both.",
-        "used[i]=True; path.append(...); bt(); path.pop(); used[i]=False",
-      ],
-    },
-    {
-      id: "dpperm-fix-1",
-      kind: "fix-mistake",
-      prompt: "`permutations(nums)` returns every ordering of nums. This forgets to clear the used flag on backtrack, producing truncated results. Fix it.",
-      starterCode:
-        "def permutations(nums):\n    res = []\n    path = []\n    used = [False] * len(nums)\n    def bt():\n        if len(path) == len(nums):\n            res.append(path[:])\n            return\n        for i in range(len(nums)):\n            if used[i]:\n                continue\n            used[i] = True\n            path.append(nums[i])\n            bt()\n            path.pop()\n            # bug: used[i] stays True\n    bt()\n    return res",
-      expected:
-        "def permutations(nums):\n    res = []\n    path = []\n    used = [False] * len(nums)\n    def bt():\n        if len(path) == len(nums):\n            res.append(path[:])\n            return\n        for i in range(len(nums)):\n            if used[i]:\n                continue\n            used[i] = True\n            path.append(nums[i])\n            bt()\n            path.pop()\n            used[i] = False\n    bt()\n    return res",
-      hints: [
-        "After backtracking, element i must be available again.",
-        "Undo the used flag too.",
-        "used[i] = False",
-      ],
-    },
-    {
-      id: "dpperm-predict-1",
-      kind: "predict-state",
-      prompt: "How many permutations of [1,2,3] are produced, and what is the first one?",
-      expected: "6 (=3!). The first is [1, 2, 3], built by choosing 1, then 2, then 3.",
-      hints: [
-        "3! = 6.",
-        "The first element tried is index 0 (value 1).",
-        "Depth-first fills 1,2,3 first.",
-      ],
-    },
-  ],
+  {
+    "id": "dpperm-complete-1",
+    "kind": "complete-code",
+    "prompt": "Complete `permutations(nums)` so it returns every ordering of nums (as a list of lists). Fill in the choose/explore/un-choose block using the `used` array.",
+    "starterCode": "def permutations(nums):\n    res = []\n    path = []\n    used = [False] * len(nums)\n    def bt():\n        if len(path) == len(nums):\n            res.append(path[:])\n            return\n        for i in range(len(nums)):\n            if used[i]:\n                continue\n            # TODO: choose, explore, un-choose\n            pass\n    bt()\n    return res",
+    "expected": "def permutations(nums):\n    res = []\n    path = []\n    used = [False] * len(nums)\n    def bt():\n        if len(path) == len(nums):\n            res.append(path[:])\n            return\n        for i in range(len(nums)):\n            if used[i]:\n                continue\n            used[i] = True\n            path.append(nums[i])\n            bt()\n            path.pop()\n            used[i] = False\n    bt()\n    return res",
+    "hints": [
+      "Goal: complete the choose/explore/un-choose block using a used[] array to build permutations.",
+      "Rescanning for unused elements is fine, but forgetting to undo the marks corrupts later branches.",
+      "Key insight: each element must be marked used before recursing and unmarked after, so it's available again.",
+      "Approach: skip used elements, then mark+append, recurse, and undo both on return.",
+      "Pseudocode: for each i: if used[i] skip; set used[i]=True; append nums[i]; recurse; pop; set used[i]=False.",
+      "Write `used[i]=True; path.append(nums[i]); bt(...); path.pop(); used[i]=False` around the recursion."
+    ],
+    "tests": "got = sorted(tuple(p) for p in permutations([1, 2, 3]))\nexpected = sorted([(1, 2, 3), (1, 3, 2), (2, 1, 3), (2, 3, 1), (3, 1, 2), (3, 2, 1)])\nassert got == expected, f'all 6 permutations, got {got}'\nassert all(len(p) == 3 for p in permutations([1, 2, 3])), 'each permutation uses all elements'\n# A different-size input so a hard-coded result cannot pass.\nassert sorted(tuple(p) for p in permutations([1, 2])) == [(1, 2), (2, 1)], 'two-element permutations'\nassert permutations([7]) == [[7]], 'singleton'\nassert permutations([]) == [[]], 'empty input -> the empty permutation'\nprint('OK')"
+  },
+  {
+    "id": "dpperm-fix-1",
+    "kind": "fix-mistake",
+    "prompt": "For a list of distinct values, permutations(nums) should return every full ordering. The used flag is never cleared on backtrack, so later orderings are missing. Restore the flag after exploring each choice.",
+    "starterCode": "def permutations(nums):\n    res = []\n    path = []\n    used = [False] * len(nums)\n    def bt():\n        if len(path) == len(nums):\n            res.append(path[:])\n            return\n        for i in range(len(nums)):\n            if used[i]:\n                continue\n            used[i] = True\n            path.append(nums[i])\n            bt()\n            path.pop()\n            # bug: used[i] stays True\n    bt()\n    return res",
+    "expected": "def permutations(nums):\n    res = []\n    path = []\n    used = [False] * len(nums)\n    def bt():\n        if len(path) == len(nums):\n            res.append(path[:])\n            return\n        for i in range(len(nums)):\n            if used[i]:\n                continue\n            used[i] = True\n            path.append(nums[i])\n            bt()\n            path.pop()\n            used[i] = False\n    bt()\n    return res",
+    "hints": [
+      "Goal: fix the permutation search so it stops producing missing full orderings.",
+      "The bug leaves used[i] set after backtracking, so element i stays unavailable and branches come up short.",
+      "Key insight: on backtrack, element i must be freed so sibling permutations can use it again.",
+      "Approach: mirror every used[i]=True with a used[i]=False after the recursive call.",
+      "Pseudocode: mark used[i]; append; recurse; pop; then clear used[i].",
+      "Add `used[i] = False` after popping so the element becomes available again."
+    ],
+    "tests": "# The buggy version never clears used[i] on backtrack, so after taking the\n# first element every deeper slot stays blocked and most orderings are lost.\ngot = sorted(tuple(p) for p in permutations([1, 2, 3]))\nexpected = sorted([(1, 2, 3), (1, 3, 2), (2, 1, 3), (2, 3, 1), (3, 1, 2), (3, 2, 1)])\nassert got == expected, f'all 6 permutations (buggy omits orderings), got {got}'\nassert sorted(tuple(p) for p in permutations([1, 2])) == [(1, 2), (2, 1)], 'two-element permutations'\nassert permutations([7]) == [[7]], 'singleton'\nassert permutations([]) == [[]], 'empty input -> the empty permutation'\nprint('OK')"
+  },
+  {
+    "id": "dpperm-predict-1",
+    "kind": "predict-state",
+    "prompt": "How many permutations of [1,2,3] are produced, and what is the first one?",
+    "expected": "6 (=3!). The first is [1, 2, 3], built by choosing 1, then 2, then 3.",
+    "hints": [
+      "3! = 6.",
+      "The first element tried is index 0 (value 1).",
+      "Depth-first fills 1,2,3 first."
+    ]
+  }
+],
 
   review: `A **permutation** is an ordering using **every** element once; there are **n!** of them. The backtracking template fills positions left to right, trying each **unused** element with **choose (mark used + append) → explore → un-choose (pop + clear used)**, and records a **copy** at full length. The \`used\` array (not a \`start\` index) is what allows all orderings. It is **O(n·n!)** time and **O(n)** auxiliary space. For \`[1,2,3]\` it yields all 6 orderings.`,
 
   expectedOutput: "[[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]\n",
 
   references: [
-    {
-      url: "https://leetcode.com/problems/permutations/editorial/",
-      title: "Permutations — LeetCode editorial",
-      section: "Backtracking with a used/visited marker",
-      topic: "dp/permutations",
-      purpose: "Confirm the permutation-backtracking template using a used marker and the n! output size.",
-      verifiedClaims: [
-        "Backtracking with a used array generates all n! permutations of distinct elements.",
-        "Each completed permutation is recorded as a copy.",
-      ],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://en.wikipedia.org/wiki/Permutation",
-      title: "Permutation — Wikipedia",
-      section: "Number of permutations (n!)",
-      topic: "dp/permutations",
-      purpose: "Cross-check that n distinct elements have n! orderings.",
-      verifiedClaims: [
-        "The number of permutations of n distinct objects is n factorial.",
-      ],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://docs.python.org/3.14/library/stdtypes.html#numeric-types-int-float-complex",
+    "title": "Python 3.14 numeric types",
+    "section": "Numeric Types — int, float, complex",
+    "topic": "dp-recursion",
+    "purpose": "Verify the named claim and the convention used by this example.",
+    "verifiedClaims": [
+      "Python integers have unlimited precision; a fixed number of integer variables is not fixed byte storage."
+    ],
+    "conventions": [
+      "Complexity below counts scalar/cell operations; large-integer bit costs and output formatting are separate."
+    ],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://web.stanford.edu/class/archive/cs/cs106b/cs106b.1258/lectures/11-backtracking1/",
+    "title": "Stanford CS106B: recursive backtracking",
+    "section": "Choose/explore/unchoose, subsets and string-by-value notes",
+    "topic": "dp-recursion",
+    "purpose": "Verify the named claim and the convention used by this example.",
+    "verifiedClaims": [
+      "Mutable shared paths must be restored for siblings; by-value strings need no explicit undo; output copies contribute to subset enumeration cost."
+    ],
+    "conventions": [
+      "Python shared-list append/pop is paired; immutable prefix strings remain in separate live frames."
+    ],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://see.stanford.edu/materials/icspacs106b/H19-RecBacktrackExamples.pdf",
+    "title": "Stanford CS106B handout 19",
+    "section": "Classic exhaustive permutation pattern",
+    "topic": "dp-recursion",
+    "purpose": "Verify the named claim and the convention used by this example.",
+    "verifiedClaims": [
+      "Trying every remaining unused element enumerates n! orderings."
+    ],
+    "conventions": [
+      "Source copies strings of remaining choices; app scans a fixed n-index used array and counts that work."
+    ],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://leetcode.com/problems/permutations/description/",
+    "title": "LeetCode: Permutations",
+    "section": "Problem definition, examples and constraints",
+    "topic": "dp-recursion",
+    "purpose": "Verify the named claim and the convention used by this example.",
+    "verifiedClaims": [
+      "Inputs are distinct; output consists of every full ordering."
+    ],
+    "conventions": [
+      "Empty-input extension is one empty ordering."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "e33e2bdf5a8cdd2a",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "ecc9a873462f66b2",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 6,
   },
 };

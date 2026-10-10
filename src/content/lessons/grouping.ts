@@ -256,7 +256,7 @@ export const grouping: LessonDefinition = {
   }
 ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "2ecb0bfaec932a6b",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

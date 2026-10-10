@@ -222,7 +222,7 @@ This "look up the complement" idea is the general **value-to-index** pattern: wh
   }
 ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "03058a26153bdd0d",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

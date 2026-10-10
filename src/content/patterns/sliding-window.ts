@@ -443,7 +443,7 @@ export const slidingWindowPattern: PatternDefinition = {
   }
 ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "dc095fe23ec0561f",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

@@ -281,7 +281,7 @@ export const cachingSeen: LessonDefinition = {
   }
 ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "e204707d577bcd02",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

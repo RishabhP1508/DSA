@@ -250,7 +250,7 @@ export const bitLogicalOps: LessonDefinition = {
   }
 ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "f0a77f6b1719bed3",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

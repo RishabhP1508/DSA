@@ -181,7 +181,7 @@ The key mental model: when a for loop **finishes normally**, its body runs **onc
     },
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "a25a71184fd4c0a1",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

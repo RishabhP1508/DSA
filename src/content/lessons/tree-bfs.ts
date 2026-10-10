@@ -37,11 +37,7 @@ export const treeBfs: LessonDefinition = {
   area: "Trees and tries",
   prerequisites: ["tree-dfs", "bfs-queues"],
 
-  explanation: `**Breadth-first search (BFS)** on a tree visits nodes **level by level** — the root, then everything at depth 1, then depth 2, and so on. Where DFS uses recursion (a stack), BFS uses a **FIFO queue**: you dequeue a node, record it, and enqueue its children. Because the queue preserves discovery order, siblings are processed before their children, producing the left-to-right, top-to-bottom order \`5, 3, 8, 2, 4, 7, 9\`.
-
-This is the tree specialization of the graph BFS you met with queues. The same three ingredients appear — a queue, the main loop, and enqueuing neighbours (here, children) — but trees need **no visited set** because a tree has no cycles and each node has exactly one parent.
-
-BFS visits every node once, so it is **O(n)** time. Its space is the **maximum width** of the tree (the most nodes on any one level), because that's the largest the queue gets — **O(w)**, which can be up to n/2 for the bottom level of a balanced tree. A tiny tweak (processing the queue one level-size at a time) yields **level-by-level grouping**, which is how you solve "level averages", "right side view", and "zigzag" problems. Use BFS when *distance from the root / level* matters; use DFS when you need to go deep (paths, subtrees).`,
+  explanation: "**Tree BFS** visits nodes in increasing depth using a FIFO queue. Remove one node, record it, then append its left and right children. On the example the order is 5, 3, 8, 2, 4, 7, 9. A proper tree needs no visited set because every non-root node has exactly one parent.\n\nTo group levels, save the queue's size at the start of each outer iteration and remove exactly that many nodes. Their children belong to the next level. During that iteration the queue can contain the remaining current level and some of the next level together; it does not always hold exactly one level. If w is the largest level size, its length is at most 2w, so auxiliary queue space is O(w). Every node is enqueued and removed once, giving O(n) time. The returned values need O(n) output storage.\n\nUse BFS for level output, per-depth aggregates and the first leaf at minimum depth. DFS with depth buckets is also valid for many level tasks. Python deque.popleft avoids the O(n) shifting cost of list.pop(0).",
 
   vocabulary: [
     { term: "BFS / level order", definition: "Visiting tree nodes level by level from the root outward." },
@@ -61,37 +57,116 @@ BFS visits every node once, so it is **O(n)** time. Its space is the **maximum w
   },
 
   complexity: [
-    { operation: "BFS traversal", best: "O(n)", average: "O(n)", worst: "O(n)", space: "O(w)", note: "Every node visited once; queue holds at most one level (width w, up to ~n/2)." },
-  ],
+  {
+    "operation": "BFS traversal",
+    "best": "O(n)",
+    "average": "O(n)",
+    "worst": "O(n)",
+    "space": "O(w)",
+    "note": "Each node is handled once. A queue may mix two adjacent levels; its size is O(w)."
+  }
+],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [
-      { symbol: "n", meaning: "the number of nodes in the tree" },
-      { symbol: "w", meaning: "the maximum width (most nodes on any single level)" },
-    ],
-    costModel: "deque.popleft/append are O(1); each node is enqueued and dequeued exactly once.",
-    time: {
-      bound: "O(n)",
-      case: "worst",
-      explanation: "Each node is enqueued once (when discovered as a child) and dequeued once (when processed), doing O(1) work each time — so BFS touches every node exactly once, giving O(n). No node is revisited because a tree has no cycles.",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of nodes in the tree"
     },
-    space: {
-      bound: "O(w)",
-      case: "worst",
-      explanation: "The queue holds the frontier — at most the nodes of one level. The largest a level gets is the tree's maximum width w. For a balanced binary tree the bottom level has about n/2 nodes, so the queue (and thus BFS space) can be O(n); for a degenerate chain the width is 1, so O(1). Hence the honest bound is O(w).",
-      inputOutputNote: "The tree of n nodes is the input; the output list (n) and the O(w) queue are the extra space.",
-    },
-    derivation: [
-      { lines: [19], description: "Each node is dequeued exactly once — O(n) total.", cost: "O(n)", dimension: "time" },
-      { lines: [21, 22, 23], description: "Enqueuing each child is O(1); each node enqueued once.", cost: "O(n)", dimension: "time" },
-      { lines: [18, 22, 23], description: "The queue holds at most one level — up to the width w.", cost: "O(w)", dimension: "space" },
-    ],
-    assumptions: ["deque operations are O(1).", "No visited set needed (a tree is acyclic).", "Width w bounds the queue size."],
-    tradeoffs: "DFS uses O(h) stack space (height) and goes deep; BFS uses O(w) queue space (width) and goes by level. Pick based on whether depth or level matters — and note w can be O(n) for wide balanced trees.",
-    counters: [{ label: "nodes dequeued", definition: "executions of the dequeue (line 19)", countLines: [19] }],
-    fixedDataNote: "This run visits 7 nodes in level order → [5,3,8,2,4,7,9]; the max width here is 4 (bottom level). The O(n)/O(w) bounds generalise.",
+    {
+      "symbol": "w",
+      "meaning": "the maximum width (most nodes on any single level)"
+    }
+  ],
+  "costModel": "deque.popleft/append are O(1); each node is enqueued and dequeued exactly once.",
+  "time": {
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "Each node is enqueued once (when discovered as a child) and dequeued once (when processed), doing O(1) work each time — so BFS touches every node exactly once, giving O(n). No node is revisited because a tree has no cycles."
   },
+  "space": {
+    "bound": "O(w)",
+    "case": "worst",
+    "explanation": "The queue can mix two adjacent levels. Their combined size is at most 2w, so it occupies O(w), excluding the O(n) output list.",
+    "inputOutputNote": "The input tree and n returned values are excluded; the queue is O(w) auxiliary storage."
+  },
+  "derivation": [
+    {
+      "lines": [
+        19
+      ],
+      "description": "Each node is dequeued exactly once — O(n) total.",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        21,
+        22,
+        23
+      ],
+      "description": "Enqueuing each child is O(1); each node enqueued once.",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        18,
+        22,
+        23
+      ],
+      "description": "The queue holds parts of at most two adjacent levels, using O(w).",
+      "cost": "O(w)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "A proper finite binary tree with no shared children or cycles.",
+    "deque append/popleft are O(1); w is the maximum number of nodes at one depth."
+  ],
+  "tradeoffs": "DFS uses O(h) stack space (height) and goes deep; BFS uses O(w) queue space (width) and goes by level. Pick based on whether depth or level matters — and note w can be O(n) for wide balanced trees.",
+  "counters": [
+    {
+      "label": "nodes dequeued",
+      "definition": "executions of the dequeue (line 19)",
+      "countLines": [
+        19
+      ]
+    }
+  ],
+  "fixedDataNote": "This run visits 7 nodes in level order → [5,3,8,2,4,7,9]; the max width here is 4 (bottom level). The O(n)/O(w) bounds generalise.",
+  "references": [
+    {
+      "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+      "title": "Open Data Structures: graph traversal",
+      "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "BFS discovers reachable vertices in distance order.",
+        "DFS records visited vertices before recursion."
+      ],
+      "conventions": [],
+      "accessDate": "2026-10-10"
+    },
+    {
+      "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+      "title": "MIT 6.006 Lecture 9: BFS",
+      "section": "Pages 1–4: representations, shortest paths, BFS",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Undirected adjacency stores both directions.",
+        "A path length counts edges."
+      ],
+      "conventions": [
+        "App may use -1 for unreachable distances instead of infinity."
+      ],
+      "accessDate": "2026-10-10"
+    }
+  ]
+},
 
   code,
 
@@ -124,68 +199,167 @@ BFS visits every node once, so it is **O(n)** time. Its space is the **maximum w
   ],
 
   bindings: [
-    { variable: "root", model: "tree" },
-    { variable: "out", model: "array" },
-  ],
+  {
+    "variable": "root",
+    "model": "tree"
+  },
+  {
+    "variable": "out",
+    "model": "array"
+  },
+  {
+    "variable": "q",
+    "model": "queue"
+  }
+],
 
   prediction: [
-    { atEventIndex: 0, prompt: "DFS space is O(h) (height). Why is BFS space O(w) (width), and when is that worse?", answer: "BFS's queue holds a whole level at once, so its size is the tree's maximum width w. For a wide balanced tree the bottom level is ~n/2 nodes, making BFS O(n) space — worse than DFS's O(log n) for the same tree.", explanation: "BFS keeps the current frontier (one level) in the queue, so space scales with width; DFS keeps one root-to-leaf path, scaling with height. For balanced trees width dominates height." },
-  ],
+  {
+    "atEventIndex": 0,
+    "prompt": "DFS space is O(h) (height). Why is BFS space O(w) (width), and when is that worse?",
+    "answer": "O(w)",
+    "explanation": "It can contain parts of two adjacent levels at once, at most 2w nodes. The asymptotic bound is O(w)."
+  }
+],
 
   experiments: [
-    "Process the queue one level-size at a time to group nodes by level.",
-    "Track the max queue length to observe the tree's width.",
-    "Build a degenerate chain and confirm the queue never holds more than one node.",
-  ],
+  "Process the queue one level-size at a time to group nodes by level.",
+  "Record the largest queue length on an uneven tree. Compare it with each level width; the queue can temporarily mix adjacent levels.",
+  "Build a degenerate chain and confirm the queue never holds more than one node."
+],
 
   exercises: [
-    {
-      id: "bfs-complete-1",
-      kind: "complete-code",
-      prompt: "Modify BFS to return a list of levels (list of lists).",
-      starterCode: "from collections import deque\ndef levels(root):\n    if not root:\n        return []\n    out = []\n    q = deque([root])\n    while q:\n        size = len(q)\n        level = []\n        # TODO: process exactly `size` nodes for this level\n        out.append(level)\n    return out",
-      expected: "from collections import deque\ndef levels(root):\n    if not root:\n        return []\n    out = []\n    q = deque([root])\n    while q:\n        size = len(q)\n        level = []\n        for _ in range(size):\n            node = q.popleft()\n            level.append(node.val)\n            if node.left: q.append(node.left)\n            if node.right: q.append(node.right)\n        out.append(level)\n    return out",
-      hints: ["Snapshot the current queue length as the level size.", "Loop exactly that many times, dequeuing each.", "Enqueue children as you go, then append the level list."],
-    },
-    {
-      id: "bfs-choose-1",
-      kind: "choose-approach",
-      prompt: "You need the value of every node's rightmost node at each depth ('right side view'). BFS or DFS, and why?",
-      expected: "BFS by levels: process each level and take its last node — level order makes 'per depth' natural. (A DFS tracking depth also works, visiting right child first.) BFS is the intuitive fit because the problem is defined per level.",
-      hints: ["The problem is defined per depth/level.", "Which traversal is organized by level?", "BFS: take the last node of each level."],
-    },
-  ],
+  {
+    "id": "bfs-complete-1",
+    "kind": "complete-code",
+    "prompt": "Modify BFS to return a list of levels (list of lists).",
+    "starterCode": "from collections import deque\ndef levels(root):\n    if not root:\n        return []\n    out = []\n    q = deque([root])\n    while q:\n        size = len(q)\n        level = []\n        # TODO: process exactly `size` nodes for this level\n        out.append(level)\n    return out",
+    "expected": "from collections import deque\ndef levels(root):\n    if not root:\n        return []\n    out = []\n    q = deque([root])\n    while q:\n        size = len(q)\n        level = []\n        for _ in range(size):\n            node = q.popleft()\n            level.append(node.val)\n            if node.left: q.append(node.left)\n            if node.right: q.append(node.right)\n        out.append(level)\n    return out",
+    "hints": [
+      "Goal: return the tree's values grouped level by level as a list of lists.",
+      "Mixing levels is the pitfall; you must know each level's boundary before dequeuing.",
+      "Key insight: the queue length at the start of a round equals the number of nodes on that level.",
+      "Approach: BFS by rounds, snapshotting the queue size and processing exactly that many nodes.",
+      "Pseudocode: while queue: size = len(queue); collect that many nodes into a level list, enqueueing children; append the level.",
+      "Snapshot `size = len(q)`, loop that many times appending `node.val` and enqueuing children, then append the level list."
+    ],
+    "tests": "class TreeNode:\n    def __init__(self, val, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\nassert levels(None) == [], 'empty tree -> no levels'\nassert levels(TreeNode(1)) == [[1]], 'single node -> one level'\nroot = TreeNode(1, TreeNode(2, TreeNode(4), TreeNode(5)), TreeNode(3))\nassert levels(root) == [[1], [2, 3], [4, 5]], f'level order wrong, got {levels(root)}'\nprint('OK')"
+  },
+  {
+    "id": "bfs-choose-1",
+    "kind": "choose-approach",
+    "prompt": "You need the value of the rightmost node at each depth ('right side view'). BFS or DFS, and why?",
+    "expected": "BFS by levels: process each level and take its last node — level order makes 'per depth' natural. (A DFS tracking depth also works, visiting right child first.) BFS is the intuitive fit because the problem is defined per level.",
+    "hints": [
+      "Goal: report the rightmost node value at each depth of a binary tree (the 'right side view'), choosing BFS or DFS.",
+      "The clumsy framing is a plain DFS with no notion of levels, which doesn't naturally group nodes by depth.",
+      "Key property: the problem is defined PER LEVEL, and level-order processing exposes each depth's nodes together.",
+      "Approach: run BFS level by level and take the last node of each level.",
+      "Reasoning: BFS processes one depth at a time, so the final node per level is the right-side view; a depth-tracking DFS that visits the right child first also works but BFS matches the per-level definition most directly.",
+      "Answer: BFS by levels — process each level and take its last node (a right-first depth-tracking DFS also works)."
+    ],
+    "recognition": {
+      "scenario": "You must report, for each depth of a binary tree, the value of its rightmost node (the 'right side view').",
+      "approaches": [
+        {
+          "id": "level-bfs",
+          "label": "Level-order BFS, taking the last node of each level",
+          "requiredReasonIds": [
+            "per-level-natural"
+          ]
+        },
+        {
+          "id": "depth-dfs",
+          "label": "Depth-tracking DFS visiting the right child first",
+          "requiredReasonIds": [
+            "dfs-depth-right-first"
+          ]
+        },
+        {
+          "id": "inorder-dfs",
+          "label": "Plain inorder DFS collecting values in order",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Inorder traversal visits nodes left-to-right across the whole tree without tracking depth, so it cannot pick out the rightmost node at each level."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "per-level-natural",
+          "text": "The answer is defined per depth, and BFS processes the tree one full level at a time, so the last node dequeued on each level is exactly the rightmost at that depth."
+        },
+        {
+          "id": "dfs-depth-right-first",
+          "text": "A DFS that records a node the first time it reaches a new depth, visiting the right child before the left, captures each level's rightmost node in O(n)."
+        },
+        {
+          "id": "sides-irrelevant-depth",
+          "text": "The problem does not depend on depth, so any traversal order gives the same answer.",
+          "contradictory": true
+        },
+        {
+          "id": "bfs-no-levels",
+          "text": "BFS cannot tell which level a node is on, so it is unsuitable here.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "level-bfs"
+      ],
+      "alternatives": [
+        {
+          "approachId": "depth-dfs",
+          "conditions": "A DFS that tracks the current depth and visits the right child first.",
+          "tradeoff": "Equally O(n) but the per-level framing is less direct than BFS's natural level order.",
+          "requiredReasonIds": [
+            "dfs-depth-right-first"
+          ]
+        }
+      ],
+      "modelExplanation": "BFS by levels is the intuitive fit: process each level and take its last node. A depth-tracking DFS that visits the right child first also works."
+    }
+  }
+],
 
   review: `**Tree BFS / level order** uses a **FIFO queue** to visit nodes level by level: dequeue, record, enqueue children (no visited set needed for trees). It is **O(n)** time and **O(w)** space, where w is the maximum **width** — which can be O(n) for wide balanced trees, unlike DFS's O(h). Processing the queue one level-size at a time gives level grouping for problems like right-side view and level averages.`,
 
   expectedOutput: "[5, 3, 8, 2, 4, 7, 9]\n",
 
   references: [
-    {
-      url: "https://neetcode.io/roadmap",
-      title: "NeetCode roadmap",
-      section: "Trees — Level Order Traversal (BFS)",
-      topic: "trees/bfs-level-order",
-      purpose: "Confirm queue-based level-order traversal and the level-size loop for grouping.",
-      verifiedClaims: ["Level-order traversal uses a FIFO queue and is O(n); processing per level-size groups nodes by depth"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://docs.python.org/3/library/collections.html#collections.deque",
-      title: "collections — deque — Python documentation",
-      section: "popleft / append",
-      topic: "trees/bfs-level-order",
-      purpose: "Confirm deque gives O(1) popleft, the correct BFS queue.",
-      verifiedClaims: ["deque supports O(1) append and popleft"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+    "title": "Open Data Structures: graph traversal",
+    "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "BFS discovers reachable vertices in distance order.",
+      "DFS records visited vertices before recursion."
+    ],
+    "conventions": [],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+    "title": "MIT 6.006 Lecture 9: BFS",
+    "section": "Pages 1–4: representations, shortest paths, BFS",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Undirected adjacency stores both directions.",
+      "A path length counts edges."
+    ],
+    "conventions": [
+      "App may use -1 for unreachable distances instead of infinity."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "c8508a48026b0490",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "e719eba1228698e7",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 5,
   },
 };

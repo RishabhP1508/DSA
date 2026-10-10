@@ -1,0 +1,86 @@
+[
+  {
+    "uid": "lesson:dp-house-robber:dphr-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "For [4,5,4], richest-first greedy takes the middle house 5 and blocks its neighbors. Which method finds the maximum without adjacent robberies, and what does each method return?",
+      "approaches": [
+        {
+          "id": "dp",
+          "label": "Dynamic programming (max of rob-this + best-two-back, or skip)",
+          "requiredReasonIds": [
+            "dp-correct-nonadjacent"
+          ]
+        },
+        {
+          "id": "greedy-richest",
+          "label": "Greedily grab the richest available non-adjacent house",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Richest-first picks 5 and blocks both endpoints, giving 5; selecting both 4-valued endpoints gives the larger valid total 8."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "dp-correct-nonadjacent",
+          "text": "Take/skip prefix DP compares skipping the current house with taking it plus the best two positions earlier; for [4,5,4], the endpoints give 8."
+        },
+        {
+          "id": "greedy-optimal-here",
+          "text": "Greedily taking the richest house always yields the optimum for this problem.",
+          "contradictory": true
+        },
+        {
+          "id": "dp-gives-11",
+          "text": "DP returns 5 for [4,5,4], so selecting both endpoints cannot improve it.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "dp"
+      ],
+      "modelExplanation": "Use take/skip dynamic programming. Greedy returns 5; the optimum takes the two endpoints for 4+4=8. The recurrence considers skipping each house or taking it plus the best two positions earlier."
+    }
+  },
+  {
+    "uid": "lesson:dp-coin-change:dpcc-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "For coins [1,3,4], amount 6: what does greedy give vs DP, and which should you trust?",
+      "approaches": [
+        {
+          "id": "dp",
+          "label": "Dynamic programming",
+          "requiredReasonIds": [
+            "non-canonical-needs-dp"
+          ]
+        },
+        {
+          "id": "greedy",
+          "label": "Greedy (always take the largest coin)",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Greedy gives 4+1+1 = 3 coins here, but DP finds 3+3 = 2; this coin system is non-canonical, so greedy is not optimal."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "non-canonical-needs-dp",
+          "text": "For [1,3,4], amount6, greedy gives three coins and DP gives two. The counterexample rejects a general greedy guarantee; the valid amount recurrence finds the exact optimum."
+        },
+        {
+          "id": "greedy-canonical",
+          "text": "This coin system is canonical, so the largest-coin-first greedy is always optimal.",
+          "contradictory": true
+        },
+        {
+          "id": "coins-unique-use",
+          "text": "Each coin may be used at most once, so it is a 0/1 subset problem.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "dp"
+      ],
+      "modelExplanation": "Trust DP: greedy gives 4+1+1 = 3 coins, but DP gives 3+3 = 2. Greedy is not optimal for this non-canonical coin system."
+    }
+  }
+]

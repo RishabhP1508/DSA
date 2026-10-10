@@ -157,7 +157,7 @@ This is a **greedy sweep**: sorting guarantees that once you move past an interv
     {"url":"https://docs.python.org/3.14/howto/sorting.html","title":"Python Sorting Techniques","section":"Sort stability and complex sorts","topic":"intervals","purpose":"Check the specific delegated-review correction against the source.","verifiedClaims":["list.sort mutates its input; Timsort exploits existing ordered runs."],"accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "a1204be518ade3e7",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

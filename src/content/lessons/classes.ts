@@ -148,7 +148,7 @@ Here we make a \`Counter\` starting at 10, call \`increment\` twice (10 â†’ 11 â
     },
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "e57a6eba22fe7173",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

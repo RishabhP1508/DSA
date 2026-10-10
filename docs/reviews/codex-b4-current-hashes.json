@@ -1,0 +1,263 @@
+[
+  {
+    "kind": "lesson",
+    "id": "linked-list-traversal",
+    "hash": "307bd234a6470b5f",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-a-linear-stacks.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "linked-list-slow-fast",
+    "hash": "d05f80d3a7da0d3c",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-a-linear-stacks.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "linked-list-cycle-detection",
+    "hash": "39d3b9278a1d42d4",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-a-linear-stacks.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "linked-list-reversal",
+    "hash": "7b51b215363ffc9d",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-a-linear-stacks.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "linked-list-middle",
+    "hash": "177fe06df5798e65",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-a-linear-stacks.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "linked-list-dummy-nodes",
+    "hash": "b180ab157478a517",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-a-linear-stacks.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "linked-list-merging",
+    "hash": "e6305727a6e75f48",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-a-linear-stacks.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "linked-list-pointer-manipulation",
+    "hash": "94d4075cc6df9487",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-a-linear-stacks.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "linked-list-variants",
+    "hash": "693bb9bc61dbd682",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-a-linear-stacks.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "linked-list-deques",
+    "hash": "6bb00cb0cf3326d3",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-a-linear-stacks.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "stack-queue-operations",
+    "hash": "7f379d26bcdf3751",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-a-linear-stacks.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "monotonic-stack",
+    "hash": "342be63760409f8d",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-a-linear-stacks.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "parentheses-matching",
+    "hash": "2f08634792aab3fb",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-a-linear-stacks.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "expression-evaluation",
+    "hash": "3135c836a61afdcd",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-a-linear-stacks.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "bfs-queues",
+    "hash": "2e245216518b3f20",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-a-linear-stacks.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "min-max-tracking",
+    "hash": "d06b86e6c201924d",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-b-heaps-patterns.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "min-max-heaps",
+    "hash": "6c21b6995b657143",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-b-heaps-patterns.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "heap-sift",
+    "hash": "6229334a1cf982c8",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-b-heaps-patterns.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "top-k",
+    "hash": "dbe40ceb7b86cc0f",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-b-heaps-patterns.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "kth-largest",
+    "hash": "7b64f0c65e9f9cca",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-b-heaps-patterns.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "running-median",
+    "hash": "59f4c4b71c7e01eb",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-b-heaps-patterns.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "two-heap-pattern",
+    "hash": "b085653b41869d2c",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-b-heaps-patterns.md"
+  },
+  {
+    "kind": "lesson",
+    "id": "merge-sorted-data",
+    "hash": "f601c829a21cc276",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-b-heaps-patterns.md"
+  },
+  {
+    "kind": "pattern",
+    "id": "fast-slow-pointers",
+    "hash": "6ecdb849e2629cc4",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-b-heaps-patterns.md"
+  },
+  {
+    "kind": "pattern",
+    "id": "in-place-linkedlist-reversal",
+    "hash": "b8cd8ab8a3d4253e",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-b-heaps-patterns.md"
+  },
+  {
+    "kind": "pattern",
+    "id": "top-k-heap",
+    "hash": "6e915ecffb790b5f",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-b-heaps-patterns.md"
+  },
+  {
+    "kind": "pattern",
+    "id": "two-heaps",
+    "hash": "fa39fab4979b6ed0",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-b-heaps-patterns.md"
+  },
+  {
+    "kind": "pattern",
+    "id": "k-way-merge",
+    "hash": "4ddcbd3fa5647945",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-b-heaps-patterns.md"
+  },
+  {
+    "kind": "pattern",
+    "id": "monotonic-stack",
+    "hash": "9fc6b611bc9d8161",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessmentPacket": "codex-b4-b-heaps-patterns.md"
+  }
+]

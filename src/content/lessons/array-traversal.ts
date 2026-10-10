@@ -141,7 +141,7 @@ Because a Python list is backed by a contiguous array, reading \`nums[i]\` is **
     {"url":"https://docs.python.org/3.14/tutorial/controlflow.html#defining-functions","title":"Python 3.14 — Defining Functions","section":"Defining Functions","verifiedClaims":["A return statement returns a value to the caller; printing is not a substitute for returning the sum."],"topic":"array-traversal","purpose":"Delegated Codex review: reconcile learner-facing explanations with the demonstrated implementation.","accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "e074694311042558",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

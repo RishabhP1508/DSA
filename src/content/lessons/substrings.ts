@@ -150,7 +150,7 @@ The lesson's takeaway is a warning as much as a technique: generating all substr
     {"url":"https://cp-algorithms.com/string/manacher.html","title":"CP-Algorithms palindromes","section":"Trivial algorithm","topic":"substrings","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Palindrome substring search can require center expansion rather than a monotone sliding window."],"accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "f73d909defbe3956",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

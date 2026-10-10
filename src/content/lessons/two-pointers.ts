@@ -157,7 +157,7 @@ The other common form is the **fast/slow** or **same-direction** two pointers (e
     {"url":"https://usaco.guide/silver/two-pointers?lang=py","title":"USACO Guide — Two Pointers","section":"Two Pointers; Sum of Two Values","verifiedClaims":["Converging pointers and same-direction pointers are different forms; eliminating pair-sum candidates relies on sorted order."],"topic":"two-pointers","purpose":"Delegated Codex review: reconcile learner-facing explanations with the demonstrated implementation.","accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "62f086c53ee27b63",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

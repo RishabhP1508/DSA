@@ -147,7 +147,7 @@ So appending n items is **O(n) total**, or **O(1) amortized each** — even thou
     },
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "eb623945ef0610d5",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

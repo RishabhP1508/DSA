@@ -1,0 +1,1196 @@
+[
+  {
+    "kind": "lesson",
+    "id": "tree-dfs",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:tree-dfs:dfs-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "tree-bfs",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:tree-bfs:bfs-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      },
+      {
+        "uid": "lesson:tree-bfs:bfs-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "tree-traversals",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:tree-traversals:trav-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "lesson:tree-traversals:trav-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "bst-operations",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:bst-operations:bst-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      },
+      {
+        "uid": "lesson:bst-operations:bst-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "tree-height-depth",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:tree-height-depth:height-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "lowest-common-ancestor",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:lowest-common-ancestor:lca-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      },
+      {
+        "uid": "lesson:lowest-common-ancestor:lca-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "tree-construction",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:tree-construction:build-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "lesson:tree-construction:build-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "trie-insertion",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:trie-insertion:trie-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      },
+      {
+        "uid": "lesson:trie-insertion:trie-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "prefix-search",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:prefix-search:prefix-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      },
+      {
+        "uid": "lesson:prefix-search:prefix-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "word-search",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:word-search:ws-fix-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      },
+      {
+        "uid": "lesson:word-search:ws-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "avl-rotations",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:avl-rotations:avl-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "lesson:avl-rotations:avl-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "graph-representations",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:graph-representations:grep-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      },
+      {
+        "uid": "lesson:graph-representations:grep-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "adjacency-lists",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:adjacency-lists:adj-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      },
+      {
+        "uid": "lesson:adjacency-lists:adj-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "graph-bfs",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:graph-bfs:gbfs-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      },
+      {
+        "uid": "lesson:graph-bfs:gbfs-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "graph-dfs",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:graph-dfs:gdfs-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      },
+      {
+        "uid": "lesson:graph-dfs:gdfs-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "connected-components",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:connected-components:cc-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      },
+      {
+        "uid": "lesson:connected-components:cc-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "graph-cycle-detection",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:graph-cycle-detection:cyc-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "lesson:graph-cycle-detection:cyc-fix-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "topological-sort",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:topological-sort:topo-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      },
+      {
+        "uid": "lesson:topological-sort:topo-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "multi-source-bfs",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:multi-source-bfs:msbfs-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "lesson:multi-source-bfs:msbfs-fix-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "shortest-paths-unweighted",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:shortest-paths-unweighted:spu-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      },
+      {
+        "uid": "lesson:shortest-paths-unweighted:spu-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "union-find",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:union-find:uf-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "lesson:union-find:uf-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "dijkstra",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:dijkstra:dij-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "lesson:dijkstra:dij-fix-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "bellman-ford",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:bellman-ford:bf-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "lesson:bellman-ford:bf-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "floyd-warshall",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:floyd-warshall:fw-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "lesson:floyd-warshall:fw-fix-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "prim",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:prim:prim-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "lesson:prim:prim-fix-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "kruskal",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:kruskal:kru-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "lesson:kruskal:kru-fix-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "fenwick-tree",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:fenwick-tree:fen-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      },
+      {
+        "uid": "lesson:fenwick-tree:fen-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      }
+    ]
+  },
+  {
+    "kind": "lesson",
+    "id": "segment-tree",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "lesson:segment-tree:seg-complete-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      },
+      {
+        "uid": "lesson:segment-tree:seg-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      }
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "bfs-shortest-path",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "pattern:bfs-shortest-path:pat-bfs-recognize-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "pattern:bfs-shortest-path:pat-bfs-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "pattern:bfs-shortest-path:pat-bfs-fix-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "tree-bfs",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "pattern:tree-bfs:pat-tbfs-recognize-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "pattern:tree-bfs:pat-tbfs-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "pattern:tree-bfs:pat-tbfs-fix-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "tree-dfs",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "pattern:tree-dfs:pat-tdfs-recognize-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "pattern:tree-dfs:pat-tdfs-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "pattern:tree-dfs:pat-tdfs-fix-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "graph-dfs-components",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "pattern:graph-dfs-components:pat-gdc-recognize-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "pattern:graph-dfs-components:pat-gdc-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "pattern:graph-dfs-components:pat-gdc-fix-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "topological-sort",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "pattern:topological-sort:pat-topo-recognize-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "pattern:topological-sort:pat-topo-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "pattern:topological-sort:pat-topo-fix-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "union-find",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "pattern:union-find:pat-uf-recognize-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "pattern:union-find:pat-uf-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "pattern:union-find:pat-uf-fix-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "dijkstra",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "pattern:dijkstra:pat-dij-recognize-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "pattern:dijkstra:pat-dij-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "pattern:dijkstra:pat-dij-fix-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  },
+  {
+    "kind": "pattern",
+    "id": "trie-prefix",
+    "ok": true,
+    "sample": true,
+    "explained": true,
+    "status": "completed",
+    "error": null,
+    "exercises": [
+      {
+        "uid": "pattern:trie-prefix:pat-trie-recognize-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "pattern:trie-prefix:pat-trie-choose-1",
+        "kind": "recognition",
+        "ok": true,
+        "errors": [],
+        "accepted": true
+      },
+      {
+        "uid": "pattern:trie-prefix:pat-trie-fix-1",
+        "kind": "coding",
+        "ok": true,
+        "modelStatus": "completed",
+        "error": null,
+        "wrong": {
+          "starter": true,
+          "empty": true,
+          "plausibleWrong": true,
+          "earlyExit": true,
+          "printAnswer": true
+        }
+      }
+    ]
+  }
+]

@@ -46,49 +46,130 @@ It runs in **O(V + E)** time and **O(V)** space — the same as plain BFS. The c
   ],
 
   concepts: {
-    purpose: "Find fewest-edge (shortest) paths in unweighted graphs using BFS.",
-    operations: "BFS from the start recording distances; stop at the target; use parent pointers to rebuild the path.",
-    uses: "Shortest hops in networks, maze/grid shortest path, degrees of separation, word ladders.",
-    tradeoffs: "O(V + E) and simple, but only correct for unweighted (equal-weight) edges; weighted graphs need Dijkstra.",
-    commonMistakes: "Using BFS on a weighted graph (wrong result); updating a distance after first reach (already minimal); forgetting the unreachable case (return -1).",
-    edgeCases: "Start == target → 0. Unreachable target → -1. Multiple shortest paths of equal length (BFS finds one).",
-  },
+  "purpose": "Find fewest-edge (shortest) paths in unweighted graphs using BFS.",
+  "operations": "BFS from the start recording distances; stop at the target; use parent pointers to rebuild the path.",
+  "uses": "Shortest hops in networks, maze/grid shortest path, degrees of separation, word ladders.",
+  "tradeoffs": "O(V + E) and simple, but only correct for unweighted (equal-weight) edges; weighted graphs need Dijkstra.",
+  "commonMistakes": "Using BFS on a weighted graph (wrong result); updating a distance after first reach (already minimal); forgetting the unreachable case (return -1).",
+  "edgeCases": "A valid start equal to target has distance 0. Unreachable targets return -1. Adjacency includes every reached vertex. Unit edges make hop count the distance; unequal nonnegative weights need Dijkstra, and negative weights require another algorithm such as Bellman–Ford."
+},
 
   complexity: [
     { operation: "Unweighted shortest path (BFS)", best: "O(1)", average: "O(V + E)", worst: "O(V + E)", space: "O(V)", note: "BFS; correct only for equal-weight edges." },
   ],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [
-      { symbol: "V", meaning: "the number of vertices" },
-      { symbol: "E", meaning: "the number of edges" },
-    ],
-    costModel: "deque and dict operations are O(1). Each vertex is enqueued once; each edge scanned once (standard BFS).",
-    time: {
-      bound: "O(V + E)",
-      case: "worst",
-      explanation: "This is just BFS with a distance map: each of the V vertices is enqueued once (on its first, nearest reach) and each edge scanned once, so O(V + E). Early termination when the target is popped can make it finish sooner in practice, but the worst case (target far or unreachable) explores the whole reachable graph — O(V + E).",
-      otherCases: [
-        { case: "best", bound: "O(1)", note: "start == target: answer 0 immediately." },
-      ],
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "V",
+      "meaning": "the number of vertices"
     },
-    space: {
-      bound: "O(V)",
-      case: "worst",
-      explanation: "The distance map holds up to V entries and the queue up to O(V). A parent map for path reconstruction is also O(V).",
-      inputOutputNote: "The graph (V + E) is the input; the distance/parent maps and queue are the O(V) auxiliary space.",
-    },
-    derivation: [
-      { lines: [8, 9, 10], description: "Each vertex is dequeued once; the target check is O(1).", cost: "O(V)", dimension: "time" },
-      { lines: [11, 12, 13, 14], description: "Each edge is scanned once, fixing the shortest distance.", cost: "O(V + E)", dimension: "time" },
-      { lines: [5, 6], description: "Distance map and queue are each O(V).", cost: "O(V)", dimension: "space" },
-    ],
-    assumptions: ["Edges are unweighted (equal cost) — the correctness precondition.", "First reach = shortest (BFS distance order).", "deque/dict ops O(1)."],
-    tradeoffs: "For weighted graphs, BFS is incorrect; Dijkstra (non-negative weights) runs in O((V+E) log V) with a heap. BFS is the right, cheaper tool only when all edges cost the same.",
-    counters: [{ label: "vertices settled", definition: "dequeues (line 8)", countLines: [8] }],
-    fixedDataNote: "This run finds distance 3 from 0 to 4, and 0 from 0 to itself. The O(V+E) bound generalises; correctness relies on equal-weight edges.",
+    {
+      "symbol": "E",
+      "meaning": "the number of edges"
+    }
+  ],
+  "costModel": "deque and dict operations are O(1). Each vertex is enqueued once; each edge scanned once (standard BFS).",
+  "time": {
+    "bound": "O(V + E)",
+    "case": "worst",
+    "explanation": "This is just BFS with a distance map: each of the V vertices is enqueued once (on its first, nearest reach) and each edge scanned once, so O(V + E). Early termination when the target is popped can make it finish sooner in practice, but the worst case (target far or unreachable) explores the whole reachable graph — O(V + E).",
+    "otherCases": [
+      {
+        "case": "best",
+        "bound": "O(1)",
+        "note": "start == target: answer 0 immediately."
+      }
+    ]
   },
+  "space": {
+    "bound": "O(V)",
+    "case": "worst",
+    "explanation": "The distance map holds up to V entries and the queue up to O(V). A parent map for path reconstruction is also O(V).",
+    "inputOutputNote": "The graph (V + E) is the input; the distance/parent maps and queue are the O(V) auxiliary space."
+  },
+  "derivation": [
+    {
+      "lines": [
+        8,
+        9,
+        10
+      ],
+      "description": "Each vertex is dequeued once; the target check is O(1).",
+      "cost": "O(V)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "description": "Each edge is scanned once, fixing the shortest distance.",
+      "cost": "O(V + E)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        5,
+        6
+      ],
+      "description": "Distance map and queue are each O(V).",
+      "cost": "O(V)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Edges are unweighted (equal cost) — the correctness precondition.",
+    "First reach = shortest (BFS distance order).",
+    "deque/dict ops O(1).",
+    "Unit-weight edges and a closed adjacency mapping with a valid start. Expected dictionary/set lookup cost.",
+    "The result counts edges, not vertices; directed traversal follows outgoing edges."
+  ],
+  "tradeoffs": "For unequal finite nonnegative weights use heap Dijkstra; for negative edges use Bellman–Ford with negative-cycle handling. BFS is the cheaper minimum-hop method.",
+  "counters": [
+    {
+      "label": "vertices settled",
+      "definition": "dequeues (line 8)",
+      "countLines": [
+        8
+      ]
+    }
+  ],
+  "fixedDataNote": "This run finds distance 3 from 0 to 4, and 0 from 0 to itself. The O(V+E) bound generalises; correctness relies on equal-weight edges.",
+  "references": [
+    {
+      "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+      "title": "Open Data Structures: graph traversal",
+      "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "BFS discovers reachable vertices in distance order.",
+        "DFS records visited vertices before recursion."
+      ],
+      "conventions": [],
+      "accessDate": "2026-10-10"
+    },
+    {
+      "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+      "title": "MIT 6.006 Lecture 9: BFS",
+      "section": "Pages 1–4: representations, shortest paths, BFS",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "Undirected adjacency stores both directions.",
+        "A path length counts edges."
+      ],
+      "conventions": [
+        "App may use -1 for unreachable distances instead of infinity."
+      ],
+      "accessDate": "2026-10-10"
+    }
+  ]
+},
 
   code,
 
@@ -120,8 +201,13 @@ It runs in **O(V + E)** time and **O(V)** space — the same as plain BFS. The c
   ],
 
   prediction: [
-    { atEventIndex: 0, prompt: "Why does BFS give the shortest path in an unweighted graph, and why does it FAIL when edges have weights?", answer: "BFS visits vertices in order of edge-count, so the first reach is the fewest-edge path — correct when all edges cost the same. With weights, fewest edges ≠ lowest total cost, so BFS's first reach may not be cheapest; you need Dijkstra.", explanation: "BFS's distance-order guarantee counts edges, not weights. Equal weights make edge-count equal cost; unequal weights break that equivalence, so a longer-in-edges path can be cheaper — beyond BFS's ability." },
-  ],
+  {
+    "atEventIndex": 0,
+    "prompt": "Why does BFS minimize hop count, and when does that also minimize total edge weight?",
+    "answer": "BFS reaches vertices by increasing edge count. Equal positive weights make minimum hops minimum cost. Unequal weights can make a route with more edges cheaper; use Dijkstra for finite nonnegative weights and Bellman–Ford when negative edges are allowed.",
+    "explanation": "The supplied function returns the number of edges, zero for start==goal and −1 if unreachable. Zero-weight edges make all reachable costs tie; negative edges need separate shortest-path reasoning."
+  }
+],
 
   experiments: [
     "Add a parent map and reconstruct the actual shortest path, not just its length.",
@@ -147,36 +233,46 @@ It runs in **O(V + E)** time and **O(V)** space — the same as plain BFS. The c
     },
   ],
 
-  review: `In an **unweighted** graph, the shortest path is the **fewest-edge** path, and **BFS** finds it: the first time BFS reaches a vertex is via a shortest path, so record distances on discovery. It's **O(V + E)** time / **O(V)** space, with **parent pointers** to rebuild the actual path. Crucial caveat: this holds **only for equal-weight edges** — weighted graphs need **Dijkstra**.`,
+  review: "BFS finds the minimum number of edges in an unweighted graph by recording distance on discovery. It takes O(V+E) time and O(V) working storage, returning zero for equal endpoints and −1 when unreachable. Parent pointers are an optional extension for returning a route. Unequal nonnegative weights call for Dijkstra; negative weights need another algorithm such as Bellman–Ford.",
 
   expectedOutput: "3\n0\n",
 
   references: [
-    {
-      url: "https://cp-algorithms.com/graph/breadth-first-search.html",
-      title: "Breadth-first search — CP-Algorithms",
-      section: "Shortest paths in unweighted graphs",
-      topic: "graphs/shortest-paths",
-      purpose: "Confirm BFS computes unweighted shortest paths in O(V+E) and that weighted graphs require Dijkstra.",
-      verifiedClaims: ["BFS finds shortest paths in unweighted graphs in O(V+E); weighted graphs need Dijkstra"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://neetcode.io/roadmap",
-      title: "NeetCode roadmap",
-      section: "Graphs — shortest path (BFS) vs weighted (Dijkstra)",
-      topic: "graphs/shortest-paths",
-      purpose: "Cross-check the unweighted-BFS vs weighted-Dijkstra decision and path reconstruction with parents.",
-      verifiedClaims: ["Unweighted shortest paths use BFS; parent pointers reconstruct the path"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://opendatastructures.org/ods-python/12_3_Graph_Traversal.html",
+    "title": "Open Data Structures: graph traversal",
+    "section": "12.3.1 BFS; 12.3.2 DFS; Figures 12.4–12.5",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "BFS discovers reachable vertices in distance order.",
+      "DFS records visited vertices before recursion."
+    ],
+    "conventions": [],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/196a95604877d326c6586e60477b59d4_MIT6_006S20_lec9.pdf",
+    "title": "MIT 6.006 Lecture 9: BFS",
+    "section": "Pages 1–4: representations, shortest paths, BFS",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "Undirected adjacency stores both directions.",
+      "A path length counts edges."
+    ],
+    "conventions": [
+      "App may use -1 for unreachable distances instead of infinity."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "a70d46380a9d4b19",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "24c5cc38b62191b2",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 5,
   },
 };

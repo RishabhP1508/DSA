@@ -154,7 +154,7 @@ Two practical rules: keys (and set elements) must be **hashable**: their hash mu
     {"url":"https://runestone.academy/ns/books/published/pythonds3/SortSearch/Hashing.html","title":"Runestone hashing","section":"Collision resolution and analysis","topic":"maps-sets","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Hash collisions require resolution and affect operation costs."],"accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "b144574b388e816f",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

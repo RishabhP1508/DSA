@@ -1,0 +1,62 @@
+[
+  {
+    "uid": "lesson:selection-sort:sel-choose-1",
+    "field": "hints",
+    "value": [
+      "Compare the worst-case list writes of the basic in-place bubble, selection and insertion algorithms.",
+      "The costly choice is bubble or insertion sort, which can perform O(n²) writes as they shuffle elements.",
+      "Key property: the cost model weights writes far above reads/comparisons, so write count is what matters.",
+      "Approach: choose selection sort, which commits one element to its final place per position.",
+      "Reasoning: selection sort does at most n swaps regardless of input, whereas bubble/insertion move elements repeatedly; it reads a lot but writes little, matching this cost model.",
+      "Selection sort uses at most n placement swaps (two list writes per swap, including self-swaps in this version), so O(n) writes. Basic bubble/insertion can make O(n²) writes in their worst cases. The returned-copy walkthrough adds O(n) copy writes; the in-place exercise avoids that copy."
+    ]
+  },
+  {
+    "uid": "lesson:selection-sort:sel-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Writes are expensive and reads are cheap. Among the basic in-place bubble, selection and insertion sorts taught here, which has the smallest worst-case growth in list writes?",
+      "approaches": [
+        {
+          "id": "selection",
+          "label": "Selection sort",
+          "requiredReasonIds": [
+            "at-most-n-writes"
+          ]
+        },
+        {
+          "id": "bubble",
+          "label": "Bubble sort",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Basic bubble sort can make O(n²) swaps and writes; selection makes O(n) placement writes."
+        },
+        {
+          "id": "insertion",
+          "label": "Insertion sort",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Insertion sort can make O(n²) shifts and writes; selection makes O(n) placement writes."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "at-most-n-writes",
+          "text": "One placement swap per position means two list writes per swap and O(n) writes total, including self-swaps here; bubble/insertion can write O(n²) times."
+        },
+        {
+          "id": "selection-many-writes",
+          "text": "Selection sort performs O(n²) writes, more than the other quadratic sorts.",
+          "contradictory": true
+        },
+        {
+          "id": "all-same-writes",
+          "text": "All O(n²) sorts perform the same number of writes.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "selection"
+      ],
+      "modelExplanation": "Selection sort uses at most n placement swaps (two list writes per swap, including self-swaps in this version), so O(n) writes. Basic bubble/insertion can make O(n²) writes in their worst cases. The returned-copy walkthrough adds O(n) copy writes; the in-place exercise avoids that copy."
+    }
+  }
+]

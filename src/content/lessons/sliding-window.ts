@@ -191,7 +191,7 @@ This is the **fixed-size** window (the width k never changes). A later variant i
     {"url":"https://usaco.guide/silver/two-pointers?lang=py","title":"USACO Guide — Two Pointers","section":"Sliding Window","verifiedClaims":["Updating the maintained range as its boundaries move avoids repeated summation."],"topic":"sliding-window","purpose":"Delegated Codex review: reconcile learner-facing explanations with the demonstrated implementation.","accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "617190ca5146555d",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

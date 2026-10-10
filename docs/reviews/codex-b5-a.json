@@ -1,0 +1,164 @@
+[
+  {
+    "kind": "lesson",
+    "id": "tree-dfs",
+    "hash": "8c4bd50424c157e3",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Preorder visit position, None base case and proper finite-tree precondition checked against Runestone and ODS. The sample visits [5,3,2,4,8,7,9]. Height counts path nodes here; O(n) time and O(h) frames exclude the returned order. Recursive depth is explicitly limited by Python. Real traced root and result bindings render, and traversal/height boundary probes agree."
+  },
+  {
+    "kind": "lesson",
+    "id": "tree-bfs",
+    "hash": "e719eba1228698e7",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "FIFO order and the fixed level-size exercise agree with actual deque execution. Corrected the queue description: pending nodes may mix two adjacent levels, but remain O(w), excluding returned values. A proper tree needs no visited set. Removed a duplicated queue binding and clarified right-side-view wording. Independent BFS references, actual sample and rendered root/queue/output checked."
+  },
+  {
+    "kind": "lesson",
+    "id": "tree-traversals",
+    "hash": "f57cb28fc4eac982",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Read all three displayed traversal bodies and per-line explanations. Visit placement yields preorder, inorder and postorder; inorder is nondecreasing under a valid duplicate policy and strictly increasing only for distinct keys. The three result lists are output, with O(h) recursive working frames. Corrected the consulted Runestone section to6.8; all sample outputs and empty/order probes pass."
+  },
+  {
+    "kind": "lesson",
+    "id": "bst-operations",
+    "hash": "d5cf50c46527978b",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Insertion actually sends equal keys right; corrected the code comment and taught invariant to left<node<=right. Iterative search uses O(1) working space, recursive insertion O(h); plain sorted insertion can form a chain. Random distinct-key and balanced-tree logarithmic claims are qualified. Python dictionaries preserve insertion order without a sorted-key index. Duplicate/missing-key probes, effective hints and recognition alternatives checked."
+  },
+  {
+    "kind": "lesson",
+    "id": "tree-height-depth",
+    "hash": "de8d80b85bdfbdb2",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Resolved ODS edge-count height versus this function’s node-count convention: None0, leaf1, root depth0. Review and assumptions now state the convention explicitly. The postorder combine visits every node and uses O(h) recursive frames. Actual balanced, skewed and empty constructions/height probes agree with the stated results; real tree binding renders."
+  },
+  {
+    "kind": "lesson",
+    "id": "lowest-common-ancestor",
+    "hash": "335ee763bc93066d",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "BST split/equality descent is correct when keys are unique and both targets exist; it does not verify membership. Self-ancestor and p==q cases were executed. A missing-target counterexample demonstrates why the precondition matters. Removed an unqualified logarithmic average claim and made the counter count actual comparisons. O(h) descent/O(1) working storage match the code and the general-tree exercise is separately scoped."
+  },
+  {
+    "kind": "lesson",
+    "id": "tree-construction",
+    "hash": "a54955dd8b1c3402",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Strictly increasing midpoint construction and the upper-middle convention were checked against the original problem and BST references. Sizes0..9 reconstruct ordered, balanced trees. Python slices copy references: displayed time O(n log(n+1)), peak live auxiliary slices O(n), excluding the result tree. Index-bound O(n) building is explicitly a different variant; traversal reconstruction need not be midpoint-balanced."
+  },
+  {
+    "kind": "lesson",
+    "id": "trie-insertion",
+    "hash": "a0d882b93c8e53c5",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Verified terminal flags, duplicate words, empty word and Unicode character paths. Dictionary setdefault eagerly creates its default node even if an existing child wins; this adds constant per-character work. Per-operation expected O(L) and O(1) working storage are distinct from at most N+1 retained nodes. USFCA APP/APPLE visual was operated and inspected; binding now resolves t.root and shows actual shared nodes/terminals."
+  },
+  {
+    "kind": "lesson",
+    "id": "prefix-search",
+    "hash": "48d89750581c170e",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Empty prefix is a root path, while count_prefix reports zero when no words are stored. Counting visits S subtree nodes in expected O(P+S), with O(S) pending stack; copied suggestion strings add K output characters. Corrected prediction, hint/model explanation and hash-set alternatives. Counts match an independent word-set oracle. The actual t.root binding and shared terminal paths render."
+  },
+  {
+    "kind": "lesson",
+    "id": "word-search",
+    "hash": "745fc48ded2a7c80",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Fixed empty word/board handling, rectangular validation and a # marker collision by using a unique object. Every normal DFS return restores the board, including successful paths. Independent immutable visited-set oracle covered496 A/# grid-word cases and verified restoration each time. Shape-validation cost O(m) is included before the exponential search; single-word search is distinguished from trie-guided dictionary search. Effective model, hints and new boundaries pass."
+  },
+  {
+    "kind": "lesson",
+    "id": "avl-rotations",
+    "hash": "378517a19ceb2355",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Reviewed right-rotation pointer order, transferred middle subtree and old-root-before-new-root height updates. Inspected the Runestone Figure 4 right-rotation diagram and cross-checked the MIT balance invariant. Oracle verifies node identity, inorder preservation and cached heights with and without a middle subtree. The supplied z and left child must exist; this is one rotation, not a complete AVL update. Removed universal AVL-versus-red-black speed claims."
+  },
+  {
+    "kind": "lesson",
+    "id": "graph-representations",
+    "hash": "358da22f2b8aae98",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Directed/undirected conventions, isolated vertices, parallel entries and weighted zero/no-edge distinction checked. This program builds both matrix and adjacency representations, so total storage/time includes V² and supplied E; matrix initialization alone does not erase the edge scan. Corrected the social-network degree sum to2E. Actual graph and matrix bindings render from recorded objects."
+  },
+  {
+    "kind": "lesson",
+    "id": "adjacency-lists",
+    "hash": "701532f135396d6c",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "The example is a directed weighted source-key defaultdict, with5 supplied edges and destination-only sink3. Missing-key lookup can add an empty list; isolated vertices cannot be inferred. Set explicit weighted-pairs binding format and directed arrows. Real trace rendering now includes4 vertices,5 edges and weight labels after the parent’s shared renderer fix. O(E) build and degree scans are distinguished from complete V+E representations."
+  },
+  {
+    "kind": "lesson",
+    "id": "graph-bfs",
+    "hash": "158618b140660aa6",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Read the mark-on-enqueue implementation and effective exercises. Only the source-reachable subgraph is traversed; closed adjacency and expected set lookup are stated. Each reached vertex queues once, each adjacency entry scans once, undirected edges contribute two entries. Output order is excluded from O(V) seen/queue working storage. Directed/disconnected boundary probes and actual visited overlays pass."
+  },
+  {
+    "kind": "lesson",
+    "id": "graph-dfs",
+    "hash": "7e65de190951f31f",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Actual recursive order is [0,1,3,2], marking seen before descent. Correctness does not imply shortest distances. Recursive frames/seen use O(V), excluding input and returned order; the mark-on-pop iterative exercise may retain O(E) duplicate pending entries. Explained the mark-on-push alternative and recursion limit. Directed/disconnected probes, sample and rendered visited state agree."
+  },
+  {
+    "kind": "lesson",
+    "id": "connected-components",
+    "hash": "c85962fa5228cb99",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Shared seen state partitions one undirected traversal sweep, including isolated vertices and n0. Internally built adjacency must count as auxiliary: corrected summaries/review/output note to O(V+E), plus O(V) stack/seen. An independent closure oracle verified all 64 simple4-vertex graphs. Mark-on-push keeps each vertex pending once; undirected adjacency entries are scanned once each. Static DSU is a valid alternative."
+  },
+  {
+    "kind": "lesson",
+    "id": "graph-cycle-detection",
+    "hash": "f7ac50e7cb143b8f",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Undirected parent exclusion is separate from directed recursion-stack detection; a visited vertex alone is insufficient for directed cycles. Includes all components and internally constructed O(V+E) adjacency storage. Independent cycle-count oracle checked all 64 simple4-vertex graphs, with self-loop and parallel-edge probes. Sample triangle/path results and real adjacency/seen bindings agree. Recursion-depth limits remain explicit."
+  },
+  {
+    "kind": "lesson",
+    "id": "topological-sort",
+    "hash": "8d35e103b81676bb",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Kahn indegrees and zero-indegree queue were checked against VisuAlgo and Princeton source. Main example now raises when processed count<n; blocked descendants need not themselves lie on a cycle. Mixed acyclic/cyclic regression passes. The lesson count/prefix exercise intentionally has a different contract. Internal adjacency makes auxiliary O(V+E), excluding output order. All64 generated DAGs satisfy every edge’s ordering."
+  }
+]

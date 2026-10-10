@@ -150,7 +150,7 @@ This is the archetype of the broader **"caching seen values"** pattern (next les
     {"url":"https://runestone.academy/ns/books/published/pythonds3/SortSearch/Hashing.html","title":"Runestone hashing","section":"Collision resolution","topic":"duplicate-detection","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Collision resolution can require multiple candidate checks."],"accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "d7b5e75d70d57aed",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

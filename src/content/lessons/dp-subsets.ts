@@ -26,7 +26,11 @@ export const dpSubsets: LessonDefinition = {
   id: "dp-subsets",
   title: "Backtracking: Subsets (Power Set)",
   area: "DP and recursion",
-  prerequisites: ["dp-backtracking"],
+  prerequisites: [
+  "dp-backtracking",
+  "references-mutation",
+  "loops"
+],
 
   explanation: `The **power set** is the collection of **all subsets** of a set, including the empty set and the set itself. For n distinct elements there are exactly **2ⁿ** subsets, because each element is independently either **in** or **out**. Generating them is the canonical **subset backtracking** pattern.
 
@@ -62,42 +66,81 @@ Recording \`path[:]\` (a **copy**) rather than \`path\` itself is essential: \`p
   ],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [{ symbol: "n", meaning: "the number of elements in nums" }],
-    costModel:
-      "Each recursive node does O(1) work plus copying the current path (O(path length)). There are 2ⁿ subsets to produce.",
-    time: {
-      bound: "O(n·2ⁿ)",
-      case: "worst",
-      explanation:
-        "There are exactly 2ⁿ subsets (each element in or out). Copying a subset into the results costs up to O(n). Multiplying, the total work to build and store all subsets is O(n·2ⁿ). This is optimal in the sense that the output itself has that size.",
-    },
-    space: {
-      bound: "O(n)",
-      case: "worst",
-      explanation:
-        "Auxiliary space is the recursion depth (at most n) plus the single reused path (at most n). This excludes the results list, which is output.",
-      inputOutputNote: "The results list holds 2ⁿ subsets of total size O(n·2ⁿ) — required output, separate from the O(n) working space.",
-    },
-    derivation: [
-      { lines: [5], description: "Record a copy of the current subset at every node (2ⁿ times, O(n) each).", cost: "O(n·2ⁿ)", dimension: "time" },
-      { lines: [6, 7, 8, 9], description: "Choose/explore/un-choose loop drives the 2ⁿ branching.", cost: "O(2ⁿ)", dimension: "time" },
-      { lines: [4], description: "Recursion depth ≤ n plus a single path of length ≤ n.", cost: "O(n)", dimension: "space" },
-    ],
-    assumptions: [
-      "Elements are distinct, so no duplicate subsets arise.",
-      "start = i + 1 prevents reuse and duplicate orderings.",
-      "path[:] copies the current subset before storing it.",
-    ],
-    tradeoffs:
-      "If you only need an aggregate over subsets (a sum, count, or best), DP over states can avoid materializing all 2ⁿ subsets. When you genuinely need every subset, O(n·2ⁿ) is inherent.",
-    counters: [
-      { label: "subsets recorded", definition: "executions of the record line (line 5)", countLines: [5] },
-      { label: "choices made", definition: "executions of the append/choose line (line 7)", countLines: [7] },
-    ],
-    fixedDataNote:
-      "subsets([1,2,3]) records 2³ = 8 subsets. The O(n·2ⁿ) bound describes how that count and copy cost scale with n.",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of elements in nums"
+    }
+  ],
+  "costModel": "There are exactly 2^n recursive nodes and 2^n−1 child choices. Each node copies its path, whose total element count is n·2^(n−1) for n≥1. List-end append is amortized O(1); pop and reference indexing are O(1).",
+  "time": {
+    "bound": "O(n·2ⁿ)",
+    "case": "worst",
+    "explanation": "Every subset occurs once with increasing indices. Across all subsets, each of n elements appears in exactly 2^(n−1) copies, so output element copies are n·2^(n−1). Including 2^n list headers gives O((n+1)2^n), conventionally O(n2^n) for n≥1; empty input takes O(1)."
   },
+  "space": {
+    "bound": "O(n)",
+    "case": "worst",
+    "explanation": "Auxiliary space is the recursion depth (at most n) plus the single reused path (at most n). This excludes the results list, which is output.",
+    "inputOutputNote": "The results list holds 2ⁿ subsets of total size O(n·2ⁿ) — required output, separate from the O(n) working space."
+  },
+  "derivation": [
+    {
+      "lines": [
+        5
+      ],
+      "description": "Record a copy of the current subset at every node (2ⁿ times, O(n) each).",
+      "cost": "O(n·2ⁿ)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "description": "Choose/explore/un-choose loop drives the 2ⁿ branching.",
+      "cost": "O(2ⁿ)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        4
+      ],
+      "description": "Recursion depth ≤ n plus a single path of length ≤ n.",
+      "cost": "O(n)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Elements are distinct, so no duplicate subsets arise.",
+    "start = i + 1 prevents reuse and duplicate orderings.",
+    "path[:] copies the current subset before storing it.",
+    "Inputs meet the stated type/domain contract. Scalar arithmetic, comparisons and array indexing use a unit-cost model; Python arbitrary-precision bit costs are not included.",
+    "Collection contents and scalar sizes meet the stated contract; duplicate-aware variants need additional rules.",
+    "Best/average/worst table entries are asymptotic upper bounds for the specified variant; no input probability distribution or tight average-time claim is assumed unless stated."
+  ],
+  "tradeoffs": "A count or optimum can sometimes be computed by DP without storing every subset, if a useful bounded state exists. Aggregation alone does not guarantee polynomial time. Explicitly returning all subsets still requires their output storage.",
+  "counters": [
+    {
+      "label": "subsets recorded",
+      "definition": "executions of the record line Recorded line entries at 5 occur before the operation completes.",
+      "countLines": [
+        5
+      ]
+    },
+    {
+      "label": "choices made",
+      "definition": "executions of the append/choose line Recorded line entries at 7 occur before the operation completes.",
+      "countLines": [
+        7
+      ]
+    }
+  ],
+  "fixedDataNote": "subsets([1,2,3]) records 2³ = 8 subsets. The O(n·2ⁿ) bound describes how that count and copy cost scale with n. Function analysis excludes demonstration input literals, imports, printing and tracer storage. A line event shows the next operation before it completes."
+},
 
   code,
 
@@ -129,10 +172,10 @@ Recording \`path[:]\` (a **copy**) rather than \`path\` itself is essential: \`p
   ],
 
   experiments: [
-    "Print path at each node to watch subsets grow and shrink as it backtracks.",
-    "Change bt(i + 1, path) to bt(i, path) and see elements get reused (combinations with repetition).",
-    "Count the results and confirm it equals 2**len(nums).",
-  ],
+  "Print path at each node to watch subsets grow and shrink as it backtracks.",
+  "Replace bt(i + 1, path) with bt(i, path) only as a failure experiment: the same index remains eligible forever, so there is no progress and Python raises RecursionError or the app stops at a trace limit. It is not a valid reusable-choice generator without a remaining target or depth bound.",
+  "Count the results and confirm it equals 2**len(nums)."
+],
 
   exercises: [
     {
@@ -181,36 +224,69 @@ Recording \`path[:]\` (a **copy**) rather than \`path\` itself is essential: \`p
   expectedOutput: "[[], [1], [1, 2], [1, 2, 3], [1, 3], [2], [2, 3], [3]]\n",
 
   references: [
-    {
-      url: "https://leetcode.com/problems/subsets/editorial/",
-      title: "Subsets — LeetCode editorial",
-      section: "Backtracking; start index to avoid duplicates",
-      topic: "dp/subsets",
-      purpose: "Confirm the subset-backtracking template, the start-index trick to avoid duplicate subsets, and the 2ⁿ output size.",
-      verifiedClaims: [
-        "Backtracking with a start index generates each of the 2ⁿ subsets exactly once.",
-        "The current path is recorded (as a copy) at each node.",
-      ],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://en.wikipedia.org/wiki/Power_set",
-      title: "Power set — Wikipedia",
-      section: "Cardinality (2^n)",
-      topic: "dp/subsets",
-      purpose: "Cross-check that an n-element set has exactly 2ⁿ subsets.",
-      verifiedClaims: [
-        "The power set of a set with n elements has 2^n elements.",
-      ],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://docs.python.org/3.14/library/stdtypes.html#numeric-types-int-float-complex",
+    "title": "Python 3.14 numeric types",
+    "section": "Numeric Types — int, float, complex",
+    "topic": "dp-recursion",
+    "purpose": "Verify the named claim and the convention used by this example.",
+    "verifiedClaims": [
+      "Python integers have unlimited precision; a fixed number of integer variables is not fixed byte storage."
+    ],
+    "conventions": [
+      "Complexity below counts scalar/cell operations; large-integer bit costs and output formatting are separate."
+    ],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://web.stanford.edu/class/archive/cs/cs106b/cs106b.1258/lectures/11-backtracking1/",
+    "title": "Stanford CS106B: recursive backtracking",
+    "section": "Choose/explore/unchoose, subsets and string-by-value notes",
+    "topic": "dp-recursion",
+    "purpose": "Verify the named claim and the convention used by this example.",
+    "verifiedClaims": [
+      "Mutable shared paths must be restored for siblings; by-value strings need no explicit undo; output copies contribute to subset enumeration cost."
+    ],
+    "conventions": [
+      "Python shared-list append/pop is paired; immutable prefix strings remain in separate live frames."
+    ],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://see.stanford.edu/materials/icspacs106b/H19-RecBacktrackExamples.pdf",
+    "title": "Stanford CS106B handout 19",
+    "section": "Classic exhaustive subset pattern",
+    "topic": "dp-recursion",
+    "purpose": "Verify the named claim and the convention used by this example.",
+    "verifiedClaims": [
+      "Include/exclude decisions enumerate all 2^n subsets."
+    ],
+    "conventions": [
+      "The app uses increasing-index DFS and shared append/pop rather than copied C++ strings."
+    ],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://leetcode.com/problems/subsets/description/",
+    "title": "LeetCode: Subsets",
+    "section": "Problem definition, examples and constraints",
+    "topic": "dp-recursion",
+    "purpose": "Verify the named claim and the convention used by this example.",
+    "verifiedClaims": [
+      "Distinct input values are required for unique value subsets; every subset is returned."
+    ],
+    "conventions": [
+      "App additionally allows empty input and chooses DFS output order."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "81b7c15935bfc244",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "c0d4723aa0315815",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 6,
   },
 };

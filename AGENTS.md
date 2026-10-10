@@ -67,6 +67,13 @@ Factual corrections supported by evidence should be incorporated and documented.
 Changes to the agreed **product scope** must be raised with the user, not made
 unilaterally.
 
+The user explicitly delegated technical review and sign-off to Codex for the
+completion milestone. Reviewed items record `delegated-agent` provenance and
+the exact content hash in the review ledger; unchanged prior human approvals
+remain intact. This authorization does not turn a passing test into a subject
+review. Future changes invalidate the matching review, and a generator must
+never grant review to an item that was not actually read and checked.
+
 ---
 
 ## Curriculum coverage (binding)

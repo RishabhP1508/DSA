@@ -149,7 +149,7 @@ For valid, bounded-size numeric tokens, the cost is linear in the total number o
     {"url":"https://docs.python.org/3.14/tutorial/controlflow.html#defining-functions","title":"Python defining functions","section":"Return statements","topic":"string-parsing","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Return supplies the function result; printing is a separate output operation."],"accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "5363bf6fc5194bf7",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

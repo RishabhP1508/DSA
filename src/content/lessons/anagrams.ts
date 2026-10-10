@@ -143,7 +143,7 @@ So both are correct, but they sit at different complexities: **O(n log n)** (sor
     {"url":"https://docs.python.org/3.14/library/collections.html#collections.Counter","title":"Python Counter","section":"Counter objects","topic":"anagrams","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Counter tallies hashable objects and supports equality of counts."],"accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "0eba2489bd20916a",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

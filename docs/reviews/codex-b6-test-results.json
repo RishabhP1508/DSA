@@ -1,0 +1,403 @@
+{
+  "runtime": "bundled Pyodide 314.0.7 / CPython 3.14.2",
+  "results": [
+    {
+      "name": "analysis scope excludes demonstration inputs and printing",
+      "passed": true
+    },
+    {
+      "name": "factorial exact calls and prediction include initial exactly once",
+      "passed": true
+    },
+    {
+      "name": "naive Fibonacci exact recurrence replaces doubling claim",
+      "passed": true
+    },
+    {
+      "name": "immutable prefixes retained across stack are counted",
+      "passed": true
+    },
+    {
+      "name": "subset repeated-index experiment warns nontermination",
+      "passed": true
+    },
+    {
+      "name": "combinations loop prunes unfillable prefixes",
+      "passed": true
+    },
+    {
+      "name": "permutation internal scans and failure description are correct",
+      "passed": true
+    },
+    {
+      "name": "stock retains constant space without a copied suffix",
+      "passed": true
+    },
+    {
+      "name": "house robber uses an actual greedy counterexample",
+      "passed": true
+    },
+    {
+      "name": "N Queens includes scan overhead and correct diagonal direction",
+      "passed": true
+    },
+    {
+      "name": "DP state storage and enumeration are distinguished",
+      "passed": true
+    },
+    {
+      "name": "sample dp-base-cases",
+      "passed": true
+    },
+    {
+      "name": "sample dp-recursive-calls",
+      "passed": true
+    },
+    {
+      "name": "sample dp-backtracking",
+      "passed": true
+    },
+    {
+      "name": "sample dp-subsets",
+      "passed": true
+    },
+    {
+      "name": "sample dp-permutations",
+      "passed": true
+    },
+    {
+      "name": "sample dp-combinations",
+      "passed": true
+    },
+    {
+      "name": "sample dp-memoization",
+      "passed": true
+    },
+    {
+      "name": "sample dp-tabulation",
+      "passed": true
+    },
+    {
+      "name": "sample dp-1d-2d",
+      "passed": true
+    },
+    {
+      "name": "sample dp-knapsack",
+      "passed": true
+    },
+    {
+      "name": "sample dp-subsequences",
+      "passed": true
+    },
+    {
+      "name": "sample dp-state-transitions",
+      "passed": true
+    },
+    {
+      "name": "sample dp-climbing-stairs",
+      "passed": true
+    },
+    {
+      "name": "sample dp-house-robber",
+      "passed": true
+    },
+    {
+      "name": "sample dp-grid-paths",
+      "passed": true
+    },
+    {
+      "name": "sample dp-coin-change",
+      "passed": true
+    },
+    {
+      "name": "sample dp-lis",
+      "passed": true
+    },
+    {
+      "name": "sample dp-lcs",
+      "passed": true
+    },
+    {
+      "name": "sample dp-divide-and-conquer",
+      "passed": true
+    },
+    {
+      "name": "sample dp-n-queens",
+      "passed": true
+    },
+    {
+      "name": "sample backtracking",
+      "passed": true
+    },
+    {
+      "name": "sample dynamic-programming",
+      "passed": true
+    },
+    {
+      "name": "sample knapsack",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-base-cases:dpbc-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-base-cases:dpbc-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-recursive-calls:dprc-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-backtracking:dpbt-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-backtracking:dpbt-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-subsets:dpss-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-subsets:dpss-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-permutations:dpperm-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-permutations:dpperm-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-combinations:dpcomb-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-memoization:dpmemo-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-tabulation:dptab-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-1d-2d:dp12-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-knapsack:dpks-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-subsequences:dpsub-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-state-transitions:dpst-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-climbing-stairs:dpcs-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-house-robber:dphr-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-grid-paths:dpgp-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-grid-paths:dpgp-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-coin-change:dpcc-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-lis:dplis-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-lis:dplis-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-lcs:dplcs-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-divide-and-conquer:dpdc-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-n-queens:dpnq-complete-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dp-n-queens:dpnq-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise backtracking:pat-bt-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise dynamic-programming:pat-dp-fix-1",
+      "passed": true
+    },
+    {
+      "name": "exercise knapsack:pat-ks-fix-1",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-base-cases",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-recursive-calls",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-backtracking",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-subsets",
+      "passed": true
+    },
+    {
+      "name": "boundary backtracking",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-permutations",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-combinations",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-memoization",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-tabulation",
+      "passed": true
+    },
+    {
+      "name": "boundary dynamic-programming",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-memoization",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-1d-2d",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-knapsack",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-subsequences",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-state-transitions",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-climbing-stairs",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-house-robber",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-grid-paths",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-grid-paths",
+      "passed": true
+    },
+    {
+      "name": "memoized comparison retains linear cold cost",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-coin-change",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-lis",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-lcs",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-divide-and-conquer",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-n-queens",
+      "passed": true
+    },
+    {
+      "name": "boundary knapsack",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-base-cases",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-recursive-calls",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-memoization",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-tabulation",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-climbing-stairs",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-1d-2d",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-knapsack",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-coin-change",
+      "passed": true
+    },
+    {
+      "name": "boundary dp-divide-and-conquer",
+      "passed": true
+    }
+  ],
+  "passed": 99,
+  "total": 99
+}

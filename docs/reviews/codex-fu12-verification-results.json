@@ -1,0 +1,360 @@
+{
+  "runtime": "bundled Pyodide 314.0.7 / CPython 3.14.2",
+  "items": [
+    {
+      "id": "task-scheduler",
+      "events": 101,
+      "lines": 34,
+      "stdout": "['A', 'B', 'C', 'A', 'B', None, 'A']\n7\n",
+      "contentHash": "e406fabf9a8e5dc5"
+    },
+    {
+      "id": "meeting-rooms-ii",
+      "events": 63,
+      "lines": 22,
+      "stdout": "2\n[[20, 25], [5, 15], [10, 20], [0, 10]]\n",
+      "contentHash": "866695c4805a26d6"
+    }
+  ],
+  "codingRejected": [
+    {
+      "uid": "lesson:task-scheduler:scheduler-complete-1",
+      "variant": "starter",
+      "error": {
+        "type": "AssertionError",
+        "message": "execute each supplied task exactly once",
+        "line": 14
+      }
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-complete-1",
+      "variant": "empty",
+      "error": {
+        "type": "NameError",
+        "message": "name 'schedule' is not defined",
+        "line": 6
+      }
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-complete-1",
+      "variant": "plausibleWrong",
+      "error": {
+        "type": "AssertionError",
+        "message": "a repeated task ran too early",
+        "line": 40
+      }
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-complete-1",
+      "variant": "earlyExit",
+      "error": {
+        "type": "AssertionError",
+        "message": "execute each supplied task exactly once",
+        "line": 36
+      }
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-complete-1",
+      "variant": "printAnswer",
+      "error": {
+        "type": "AssertionError",
+        "message": "return a list, not printed output",
+        "line": 34
+      }
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-complete-1",
+      "variant": "starter",
+      "error": {
+        "type": "AssertionError",
+        "message": "<tuple>",
+        "line": 19
+      }
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-complete-1",
+      "variant": "empty",
+      "error": {
+        "type": "NameError",
+        "message": "name 'min_rooms' is not defined",
+        "line": 13
+      }
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-complete-1",
+      "variant": "plausibleWrong",
+      "error": {
+        "type": "AssertionError",
+        "message": "<tuple>",
+        "line": 31
+      }
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-complete-1",
+      "variant": "earlyExit",
+      "error": {
+        "type": "AssertionError",
+        "message": "<tuple>",
+        "line": 32
+      }
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-complete-1",
+      "variant": "printAnswer",
+      "error": {
+        "type": "AssertionError",
+        "message": "return the room count, not printed output",
+        "line": 30
+      }
+    }
+  ],
+  "recognitionPairs": [
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "approach": "ready-heap",
+      "reason": "priority-and-release",
+      "outcome": "accepted"
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "approach": "ready-heap",
+      "reason": "small-alphabet",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "approach": "ready-heap",
+      "reason": "number-is-enough",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "approach": "ready-heap",
+      "reason": "too-early",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "approach": "scan-counts",
+      "reason": "priority-and-release",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "approach": "scan-counts",
+      "reason": "small-alphabet",
+      "outcome": "accepted-alternative"
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "approach": "scan-counts",
+      "reason": "number-is-enough",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "approach": "scan-counts",
+      "reason": "too-early",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "approach": "duration-only",
+      "reason": "priority-and-release",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "approach": "duration-only",
+      "reason": "small-alphabet",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "approach": "duration-only",
+      "reason": "number-is-enough",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "approach": "duration-only",
+      "reason": "too-early",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "approach": "input-order",
+      "reason": "priority-and-release",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "approach": "input-order",
+      "reason": "small-alphabet",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "approach": "input-order",
+      "reason": "number-is-enough",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:task-scheduler:scheduler-recognize-1",
+      "approach": "input-order",
+      "reason": "too-early",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "approach": "end-heap",
+      "reason": "active-overlap",
+      "outcome": "accepted"
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "approach": "end-heap",
+      "reason": "event-ties",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "approach": "end-heap",
+      "reason": "strict-only",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "approach": "end-heap",
+      "reason": "drop-conflicts",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "approach": "event-sweep",
+      "reason": "active-overlap",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "approach": "event-sweep",
+      "reason": "event-ties",
+      "outcome": "accepted-alternative"
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "approach": "event-sweep",
+      "reason": "strict-only",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "approach": "event-sweep",
+      "reason": "drop-conflicts",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "approach": "merge-union",
+      "reason": "active-overlap",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "approach": "merge-union",
+      "reason": "event-ties",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "approach": "merge-union",
+      "reason": "strict-only",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "approach": "merge-union",
+      "reason": "drop-conflicts",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "approach": "select-subset",
+      "reason": "active-overlap",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "approach": "select-subset",
+      "reason": "event-ties",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "approach": "select-subset",
+      "reason": "strict-only",
+      "outcome": "rejected"
+    },
+    {
+      "uid": "lesson:meeting-rooms-ii:rooms-recognize-1",
+      "approach": "select-subset",
+      "reason": "drop-conflicts",
+      "outcome": "rejected"
+    }
+  ],
+  "oracles": [
+    {
+      "group": "scheduler-exhaustive-actions",
+      "cases": 256,
+      "labels": 3,
+      "countsPerLabel": "0..3",
+      "cooldowns": "0..3"
+    },
+    {
+      "group": "rooms-direct-containment",
+      "cases": 462,
+      "meetingCounts": "0..5",
+      "baseIntervals": [
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          2,
+          3
+        ]
+      ]
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "task-scheduler",
+      "index": 83,
+      "line": 27,
+      "verifiedBeforeDecision": true
+    },
+    {
+      "id": "meeting-rooms-ii",
+      "index": 43,
+      "line": 13,
+      "verifiedBeforeDecision": true
+    }
+  ],
+  "pythonVersion": "3.14.2 (main, Sep 14 2026, 03:03:51) [Clang 23.0.0git (https:/github.com/llvm/llvm-project e5927fecf8a6ce89e1a4eac5b8"
+}

@@ -23,11 +23,7 @@ export const bubbleSort: LessonDefinition = {
   area: "Sorting",
   prerequisites: ["loops", "complexity"],
 
-  explanation: `**Bubble sort** is the simplest sorting algorithm to understand (though not to use in practice). It repeatedly walks the list comparing **adjacent** pairs and swapping any that are out of order. After each full pass, the largest remaining element has "bubbled" to its correct place at the end — so each pass can stop one element earlier.
-
-It is a great teaching example precisely because its cost is easy to see: two nested loops, each roughly proportional to n, give **O(n²)** comparisons. For an already-sorted list it still does O(n²) comparisons in this basic form (an optimized version adds an early-exit flag to make the best case O(n)). It uses **O(1)** extra space and is **stable** (equal elements keep their order).
-
-In real code you would call Python's built-in \`sorted\` (O(n log n)). Bubble sort earns its place as the clearest illustration of the nested-loop → quadratic relationship, which the complexity panel's comparison counter makes concrete.`,
+  explanation: "**Bubble sort** is the simplest sorting algorithm to understand (though not to use in practice). It repeatedly walks the list comparing **adjacent** pairs and swapping any that are out of order. After each full pass, the largest remaining element has \"bubbled\" to its correct place at the end — so each pass can stop one element earlier.\n\nIt is a great teaching example precisely because its cost is easy to see: two nested loops, each roughly proportional to n, give **O(n²)** comparisons. For an already-sorted list it still does O(n²) comparisons in this basic form (an optimized version adds an early-exit flag to make the best case O(n)). It uses **O(1)** extra space and is **stable** (equal elements keep their order).\n\nIn real code you would call Python's built-in `sorted` (O(n log n)). Bubble sort earns its place as the clearest illustration of the nested-loop → quadratic relationship, which the complexity panel's comparison counter makes concrete.\n\nThe shown function returns a shallow copy. Its sorting phase needs O(1) auxiliary storage beyond that O(n) result; total new memory including the returned copy is O(n). The in-place exercise instead modifies its supplied list.",
 
   vocabulary: [
     { term: "Bubble sort", definition: "Repeatedly swapping adjacent out-of-order elements until sorted." },
@@ -47,40 +43,102 @@ In real code you would call Python's built-in \`sorted\` (O(n log n)). Bubble so
   },
 
   complexity: [
-    { operation: "Bubble sort", best: "O(n^2)", average: "O(n^2)", worst: "O(n^2)", space: "O(1)", note: "Basic form; early-exit variant is O(n) best case." },
-  ],
+  {
+    "operation": "Bubble sort",
+    "best": "O(n^2)",
+    "average": "O(n^2)",
+    "worst": "O(n^2)",
+    "space": "O(1)",
+    "note": "Basic form; early-exit variant is O(n) best case. O(1) auxiliary space excludes the copied list that becomes the returned result; including that result requires O(n) memory."
+  }
+],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [{ symbol: "n", meaning: "the number of elements in the list" }],
-    costModel: "Each adjacent comparison and swap is O(1). The nested loops determine the comparison count.",
-    time: {
-      bound: "O(n^2)",
-      case: "worst",
-      explanation: "The outer loop runs n times; the inner loop runs about n-1, n-2, … comparisons across passes. Summed, that is (n-1)+(n-2)+…+1 = n(n-1)/2 comparisons — O(n²). Because the loops are NESTED, the counts multiply into a quadratic. The basic form does this many comparisons even on sorted input.",
-      otherCases: [
-        { case: "best", bound: "O(n)", note: "With an early-exit flag that stops when a pass makes no swaps (e.g. already sorted)." },
-      ],
-    },
-    space: {
-      bound: "O(1)",
-      case: "worst",
-      explanation: "Sorting happens by swapping within the list; only loop indices are extra. (The defensive a[:] copy is O(n) but is for safety, not the algorithm's working space.)",
-      inputOutputNote: "The a[:] copy of n elements is made so the input isn't mutated; the sort itself is in place.",
-    },
-    derivation: [
-      { lines: [5], description: "The outer loop runs n times.", cost: "O(n)", dimension: "time" },
-      { lines: [6, 7, 8], description: "The inner loop does up to n-1-i comparisons per pass; nested → about n²/2 total.", cost: "O(n^2)", dimension: "time" },
-      { lines: [3], description: "Only the copy grows with n; the sort itself uses O(1) working space.", cost: "O(1)", dimension: "space" },
-    ],
-    assumptions: ["Comparisons and swaps are O(1).", "This is the basic form without the early-exit optimization."],
-    tradeoffs: "O(n log n) sorts (merge/quick/Timsort) are dramatically faster for large n; bubble sort is only competitive on tiny or nearly-sorted inputs (with early exit).",
-    counters: [
-      { label: "comparisons", definition: "executions of the adjacent compare (line 7)", countLines: [7] },
-      { label: "swaps", definition: "executions of the swap (line 8)", countLines: [8] },
-    ],
-    fixedDataNote: "This run sorts 5 elements, doing 4+3+2+1 = 10 comparisons. The O(n²) bound generalises that triangular count to n.",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "n",
+      "meaning": "the number of elements in the list"
+    }
+  ],
+  "costModel": "Each adjacent comparison and swap is O(1). The nested loops determine the comparison count.",
+  "time": {
+    "bound": "O(n^2)",
+    "case": "worst",
+    "explanation": "The outer loop runs n times; the inner loop runs about n-1, n-2, … comparisons across passes. Summed, that is (n-1)+(n-2)+…+1 = n(n-1)/2 comparisons — O(n²). Because the loops are NESTED, the counts multiply into a quadratic. The basic form does this many comparisons even on sorted input.",
+    "otherCases": [
+      {
+        "case": "best",
+        "bound": "O(n^2)",
+        "note": "The shown basic form checks every adjacent pair in each scheduled pass, even on sorted input. A separate early-exit variant can have O(n) best time."
+      }
+    ]
   },
+  "space": {
+    "bound": "O(1)",
+    "case": "worst",
+    "explanation": "The sorting phase uses a constant number of scalar indices/values and edits its returned copy. Auxiliary O(1) excludes the required O(n) returned list; total function allocation is O(n).",
+    "inputOutputNote": "The function allocates a returned O(n) shallow-copy list at line 3. Treating that required result as output, the remaining working state is O(1); total new storage including the result is O(n)."
+  },
+  "derivation": [
+    {
+      "lines": [
+        5
+      ],
+      "description": "The outer loop runs n times.",
+      "cost": "O(n)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        6,
+        7,
+        8
+      ],
+      "description": "The inner loop does up to n-1-i comparisons per pass; nested → about n²/2 total.",
+      "cost": "O(n^2)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        4
+      ],
+      "description": "Only the copy grows with n; the sort itself uses O(1) working space.",
+      "cost": "O(1)",
+      "dimension": "space"
+    },
+    {
+      "lines": [
+        3
+      ],
+      "description": "The copy visits n element references; it is the returned result.",
+      "cost": "O(n)",
+      "dimension": "time"
+    }
+  ],
+  "assumptions": [
+    "Comparisons and swaps are O(1).",
+    "This is the basic form without the early-exit optimization."
+  ],
+  "tradeoffs": "O(n log n) sorts (merge/quick/Timsort) are dramatically faster for large n; bubble sort is only competitive on tiny or nearly-sorted inputs (with early exit).",
+  "counters": [
+    {
+      "label": "comparisons",
+      "definition": "executions of the adjacent compare (line 7)",
+      "countLines": [
+        7
+      ]
+    },
+    {
+      "label": "swaps",
+      "definition": "executions of the swap (line 8)",
+      "countLines": [
+        8
+      ]
+    }
+  ],
+  "fixedDataNote": "This run sorts 5 elements, doing 4+3+2+1 = 10 comparisons. The O(n²) bound generalises that triangular count to n. Function/query analysis excludes demonstration input literal creation and printing."
+},
 
   code,
 
@@ -117,44 +175,114 @@ In real code you would call Python's built-in \`sorted\` (O(n log n)). Bubble so
   ],
 
   exercises: [
-    {
-      id: "bub-fix-1",
-      kind: "fix-mistake",
-      prompt: "`bubble_sort(a)` should sort the list in place and return it, but the inner range reads past the end and raises an index error. Fix the inner range.",
-      starterCode: "def bubble_sort(a):\n    n = len(a)\n    for i in range(n):\n        for j in range(n):\n            if a[j] > a[j + 1]:\n                a[j], a[j + 1] = a[j + 1], a[j]\n    return a",
-      expected: "def bubble_sort(a):\n    n = len(a)\n    for i in range(n):\n        for j in range(n - 1 - i):\n            if a[j] > a[j + 1]:\n                a[j], a[j + 1] = a[j + 1], a[j]\n    return a",
-      hints: ["a[j+1] goes out of bounds when j reaches n-1.", "The last i elements are already sorted.", "Use range(n - 1 - i)."],
-    },
-    {
-      id: "bub-choose-1",
-      kind: "choose-approach",
-      prompt: "For n = 1,000,000 elements, is bubble sort acceptable? What should you use and why?",
-      expected: "No — O(n²) would be ~10^12 operations. Use an O(n log n) sort (Python's sorted/Timsort), which is ~2×10^7 operations.",
-      hints: ["What is n² for a million?", "About 10^12 — far too slow.", "Use O(n log n): sorted() / merge / quick."],
-    },
-  ],
+  {
+    "id": "bub-fix-1",
+    "kind": "fix-mistake",
+    "prompt": "`bubble_sort(a)` should sort the list in place and return it, but the inner range reads past the end and raises an index error. Fix the inner range.",
+    "starterCode": "def bubble_sort(a):\n    n = len(a)\n    for i in range(n):\n        for j in range(n):\n            if a[j] > a[j + 1]:\n                a[j], a[j + 1] = a[j + 1], a[j]\n    return a",
+    "expected": "def bubble_sort(a):\n    n = len(a)\n    for i in range(n):\n        for j in range(n - 1 - i):\n            if a[j] > a[j + 1]:\n                a[j], a[j + 1] = a[j + 1], a[j]\n    return a",
+    "hints": [
+      "Goal: fix the inner loop range so bubble sort does not index out of bounds.",
+      "The comparison reads a[j+1], which runs past the end when j reaches the last index.",
+      "Key insight: after i passes, the last i elements are already in place and need no comparison.",
+      "Approach: shrink the inner range each pass to stop before the sorted tail.",
+      "Pseudocode: for i in range(n): for j in range(n - 1 - i): if a[j] > a[j+1]: swap.",
+      "Use `range(n - 1 - i)` for the inner loop so a[j+1] stays in bounds."
+    ],
+    "tests": "assert bubble_sort([5, 1, 4, 2, 8]) == [1, 2, 4, 5, 8], 'sorts a mixed list'\nassert bubble_sort([]) == [], 'empty list'\nassert bubble_sort([1]) == [1], 'single element'\nassert bubble_sort([3, 2, 1]) == [1, 2, 3], 'reversed input'\nassert bubble_sort([2, 2, 1]) == [1, 2, 2], 'duplicates'\nprint('OK')"
+  },
+  {
+    "id": "bub-choose-1",
+    "kind": "choose-approach",
+    "prompt": "For n = 1,000,000 elements, is bubble sort acceptable? What should you use and why?",
+    "expected": "Use a worst-case O(n log n) sort such as Python sorted. Basic bubble makes n(n-1)/2 comparisons: 499,999,500,000 at n=1,000,000. n log2(n) is about 20,000,000 as a growth-scale comparison, not an exact count or measured run time.",
+    "hints": [
+      "Goal: decide whether bubble sort is acceptable for n = 1,000,000 elements, and if not, what to use.",
+      "Basic bubble makes n(n-1)/2 comparisons, around 5×10^11 for a million elements.",
+      "The operation-count growth gap is large; Big-O alone does not predict seconds or hours.",
+      "Approach: use an O(n log n) comparison sort such as Python's built-in sorted (Timsort).",
+      "A worst-case n log n comparison bound scales much better; n log2(n) ≈ 2×10^7 is a growth scale, not a promised exact count.",
+      "Use a worst-case O(n log n) sort such as Python sorted. Basic bubble makes n(n-1)/2 comparisons: 499,999,500,000 at n=1,000,000. n log2(n) is about 20,000,000 as a growth-scale comparison, not an exact count or measured run time."
+    ],
+    "recognition": {
+      "scenario": "You must sort n = 1,000,000 elements. You must decide whether bubble sort is acceptable, and if not, what to use.",
+      "approaches": [
+        {
+          "id": "nlogn-sort",
+          "label": "Use an O(n log n) sort (Python's sorted/Timsort)",
+          "requiredReasonIds": [
+            "quadratic-too-slow"
+          ]
+        },
+        {
+          "id": "bubble",
+          "label": "Use bubble sort",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "The shown basic bubble sort makes 499,999,500,000 adjacent comparisons at n=1,000,000. A worst-case O(n log n) comparison sort has a much smaller growth scale; this count does not predict elapsed seconds."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "quadratic-too-slow",
+          "text": "Bubble makes about 5×10^11 comparisons; n log2(n) is about 2×10^7 as a theoretical scale for a logarithmic-depth sort, not a measured operation count."
+        },
+        {
+          "id": "bubble-is-nlogn",
+          "text": "Bubble sort runs in O(n log n), so it scales fine to a million elements.",
+          "contradictory": true
+        },
+        {
+          "id": "quadratic-fine",
+          "text": "10^12 operations completes essentially instantly, so quadratic is acceptable.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "nlogn-sort"
+      ],
+      "modelExplanation": "Use a worst-case O(n log n) sort such as Python sorted. Basic bubble makes n(n-1)/2 comparisons: 499,999,500,000 at n=1,000,000. n log2(n) is about 20,000,000 as a growth-scale comparison, not an exact count or measured run time."
+    }
+  }
+],
 
-  review: `**Bubble sort** repeatedly swaps adjacent out-of-order pairs, bubbling the largest to the end each pass. Its **nested loops** make it **O(n²)** time (best O(n) only with an early-exit flag), **O(1)** space, and **stable**. It is a teaching tool for the nested-loop → quadratic relationship; use \`sorted\` (O(n log n)) in practice.`,
+  review: "**Bubble sort** repeatedly swaps adjacent out-of-order pairs, bubbling the largest to the end each pass. Its **nested loops** make it **O(n²)** time (best O(n) only with an early-exit flag), **O(1)** space, and **stable**. It is a teaching tool for the nested-loop → quadratic relationship; use `sorted` (O(n log n)) in practice. The walkthrough also allocates its O(n) returned copy.",
 
   expectedOutput: "[1, 2, 4, 5, 8]\n",
 
   references: [
-    {
-      url: "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheBubbleSort.html",
-      title: "The Bubble Sort — Problem Solving with Algorithms and DS using Python (Runestone)",
-      section: "Bubble sort analysis",
-      topic: "sorting/bubble",
-      purpose: "Confirm the bubble-sort algorithm, its O(n²) comparison count, and the short-bubble early-exit optimization.",
-      verifiedClaims: ["Bubble sort makes n(n-1)/2 comparisons (O(n²))", "An early-exit variant gives O(n) on sorted input"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://runestone.academy/ns/books/published/pythonds3/SortSearch/TheBubbleSort.html",
+    "title": "TheBubbleSort",
+    "section": "Algorithm, analysis and visual example",
+    "topic": "sorting/bubble-sort",
+    "purpose": "Check the specific claims and conventions used here.",
+    "verifiedClaims": [
+      "The basic sort has a triangular comparison count; early exit is a separate variant."
+    ],
+    "accessDate": "2026-10-10",
+    "conventions": []
+  },
+  {
+    "url": "https://raw.githubusercontent.com/python/cpython/v3.14.2/Objects/listobject.c",
+    "title": "CPython 3.14.2 list implementation",
+    "section": "list slicing; list_resize; binarysort",
+    "topic": "sorting/bubble-sort",
+    "purpose": "Check the specific claims and conventions used here.",
+    "verifiedClaims": [
+      "List copies allocate references; binary insertion sorting moves entries to make room."
+    ],
+    "accessDate": "2026-10-10",
+    "conventions": [
+      "This app returns a defensive copy and uses ascending minimum-selection rather than descending maximum-selection."
+    ]
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "68ada90c73e155c9",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "4cf9f584f08ce225",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 3,
   },
 };

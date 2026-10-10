@@ -155,7 +155,7 @@ This is different from the fixed-size window (which fixes a width k) and from ta
     {"url":"https://docs.python.org/3.14/tutorial/introduction.html#lists","title":"Python 3.14 — Lists","section":"Lists; slicing","verifiedClaims":["Slicing a list returns a new list; an indexed scan avoids allocating that slice."],"topic":"kadane","purpose":"Delegated Codex review: reconcile learner-facing explanations with the demonstrated implementation.","accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "a233d916247460a7",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

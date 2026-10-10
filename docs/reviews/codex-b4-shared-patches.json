@@ -1,0 +1,870 @@
+[
+  {
+    "uid": "lesson:top-k:topk-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You need the 10 largest of 10 million numbers under a memory limit that prevents storing all of them arriving as a stream. Full sort or a size-k heap?",
+      "approaches": [
+        {
+          "id": "size-k-heap",
+          "label": "Size-k (min-)heap",
+          "requiredReasonIds": [
+            "bounded-stream-heap"
+          ]
+        },
+        {
+          "id": "full-sort",
+          "label": "Sort everything, take the top 10",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "The specified memory limit prevents storing all n stream values. A size-k heap retains only the needed candidates."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "bounded-stream-heap",
+          "text": "A size-k min-heap holds only the k best seen: push each number, pop the smallest on overflow — O(n log(k+1)) time, O(k) space, stream-friendly."
+        },
+        {
+          "id": "all-in-memory",
+          "text": "The whole input fits in memory, so a full sort is fine.",
+          "contradictory": true
+        },
+        {
+          "id": "need-median-boundary",
+          "text": "You need the boundary between the lower and upper halves, so two heaps are required.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "size-k-heap"
+      ],
+      "modelExplanation": "A size-k min-heap: O(n log(k+1)) time, O(k) space, and it works on a stream. A full sort is O(n log n) and needs all n in memory — far worse."
+    }
+  },
+  {
+    "uid": "lesson:kth-largest:kth-choose-1",
+    "field": "hints",
+    "value": [
+      "Understand: only one rank is requested, and the entire array is available.",
+      "Sorting determines every rank even though only one is needed.",
+      "Partitioning can discard the side containing no requested rank.",
+      "Randomized quickselect offers expected O(n); a heap offers predictable scan work and streaming.",
+      "Pseudocode: partition; keep only the side containing rank k; repeat iteratively in place.",
+      "Solution: randomized quickselect is expected O(n), worst O(n²); a size-k heap is O(n log(k+1)). O(1) selection space needs iterative in-place partitioning. Neither bound promises that quickselect is faster for every k or input."
+    ]
+  },
+  {
+    "uid": "lesson:running-median:med-fix-1",
+    "field": "hints",
+    "value": [
+      "Understand: small must have the same size as large or one extra.",
+      "After routing through large, large can be one entry bigger than small.",
+      "That already violates the chosen lower-extra invariant.",
+      "If len(large)>len(small), move large's minimum back to small.",
+      "Pseudocode: if len(self.large)>len(self.small): heappush(self.small, -heappop(self.large)).",
+      "Solution: restore the lower-extra size rule after the ordered cross-move. Also retain every lower value <= every upper value."
+    ]
+  },
+  {
+    "uid": "pattern:two-heaps:pat-th-fix-1",
+    "field": "hints",
+    "value": [
+      "Understand: small stores negative lower-half values; large stores actual upper-half values.",
+      "Popping small obtains the negative of its current maximum.",
+      "Undo that sign before inserting into large.",
+      "Route the lower boundary value to the upper heap; this fragment does not promise size rebalancing.",
+      "Pseudocode: heappush(small,-num); heappush(large,-heappop(small)).",
+      "Solution: use heapq.heappush(large, -heapq.heappop(small)). These parameters are small and large, not self fields. Python 3.14 native max heaps are available, but this exercise specifically uses portable negation."
+    ]
+  },
+  {
+    "uid": "pattern:k-way-merge:pat-kwm-fix-1",
+    "field": "hints",
+    "value": [
+      "Understand: each front needs its source index and element position.",
+      "Tied (value, numeric_list) entries compare lists lexicographically and may inspect many elements.",
+      "A unique source index breaks equal-value ties cheaply; element position locates the successor.",
+      "Store (value, source_index, position) for each front.",
+      "Pseudocode: heappush(heap,(row[0],i,0)); pop into value,i,j; push row[j+1] if it exists.",
+      "Solution: tuple metadata identifies the source and successor. Equal numeric lists can compare without TypeError; tied unordered payloads in a different heap can raise TypeError, so do not assume every tuple tie crashes."
+    ]
+  },
+  {
+    "uid": "pattern:k-way-merge:pat-kwm-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You must find the k-th smallest element across m sorted rows of a matrix. K-way merge or something else? Rows contain finite integers, and 1<=k<=the total number of cells.",
+      "approaches": [
+        {
+          "id": "kway-heap",
+          "label": "K-way merge (heap of row fronts)",
+          "requiredReasonIds": [
+            "pop-k-times"
+          ]
+        },
+        {
+          "id": "bs-value",
+          "label": "Binary search on the value range",
+          "requiredReasonIds": [
+            "value-monotone"
+          ]
+        },
+        {
+          "id": "full-flatten-sort",
+          "label": "Flatten and sort all cells",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Sorting all cells wastes the per-row order; heap the fronts and pop k times instead."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "pop-k-times",
+          "text": "Heap the m row fronts and pop k times: the k-th pop is the k-th smallest — O(m + k log(m+1)), leveraging each row's sorted order."
+        },
+        {
+          "id": "value-monotone",
+          "text": "The count of cells ≤ a candidate value is monotone, so binary-searching the value range converges on the k-th smallest without popping k times."
+        },
+        {
+          "id": "median-boundary",
+          "text": "We must maintain a balanced two-heap median boundary.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "kway-heap"
+      ],
+      "alternatives": [
+        {
+          "approachId": "bs-value",
+          "conditions": "Rows contain finite integers, so a finite value range can be bisected. Count entries <=x by row binary search; compare its count cost and log(value-range size) rounds with m + k log(m+1).",
+          "tradeoff": "More complex to implement than the heap-of-fronts merge.",
+          "requiredReasonIds": [
+            "value-monotone"
+          ]
+        }
+      ],
+      "modelExplanation": "Heapify up to m row fronts in O(m), then pop k times and insert successors: O(m + k log(m+1)). Value-range binary search is another option for finite integer values, using the monotone count of cells <=x; per-row binary searches count these cells. Compare setup, k, row widths, and value-range size."
+    }
+  },
+  {
+    "uid": "lesson:linked-list-traversal:ll-fix-1",
+    "field": "hints",
+    "value": [
+      "Understand: collect(head) returns a Python list of values; it does not print them.",
+      "Repeated work: visit each reachable node once and keep the growing result.",
+      "Property: a node with next=None still has a value to collect.",
+      "Approach: loop while current is not None.",
+      "Pseudocode: append current.val; advance current=current.next; return out after the loop.",
+      "Solution: use while current is not None, append its value, advance, and return out. Empty input returns []."
+    ]
+  },
+  {
+    "uid": "lesson:linked-list-slow-fast:llsf-fix-1",
+    "field": "hints",
+    "value": [
+      "Understand: test a singleton and a three-node list.",
+      "Failure: on the final odd-length iteration fast exists but fast.next is None.",
+      "Property: reading fast.next.next requires both intermediate nodes to exist.",
+      "Approach: short-circuit with fast is not None and fast.next is not None.",
+      "Pseudocode: while both exist, advance slow once and fast twice.",
+      "Solution: while fast is not None and fast.next is not None: slow=slow.next; fast=fast.next.next. Even lengths already exit when fast becomes None."
+    ]
+  },
+  {
+    "uid": "lesson:linked-list-middle:llmid-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "A retained singly linked list has unknown length; find its second middle without a separate counting pass. O(1) auxiliary space is required.",
+      "approaches": [
+        {
+          "id": "slow-fast",
+          "label": "Slow/fast pointers in a single pass",
+          "requiredReasonIds": [
+            "one-pass-middle"
+          ]
+        },
+        {
+          "id": "count-then-walk",
+          "label": "Count the length, then walk to length/2",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Counting then walking is a valid O(1)-space baseline, but adds the separate counting pass excluded by this scenario."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "one-pass-middle",
+          "text": "Advancing fast by two and slow by one lands slow at the middle when fast reaches the end — one pass, no length known in advance."
+        },
+        {
+          "id": "need-length-first",
+          "text": "You must know the length before you can find the middle, so a counting pass is unavoidable.",
+          "contradictory": true
+        },
+        {
+          "id": "extra-pass-allowed",
+          "text": "The scenario allows a separate counting pass.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "slow-fast"
+      ],
+      "modelExplanation": "Slow/fast pointers: both start at head, slow advances one link and fast two while both fast and fast.next exist. This uses one traversal and O(1) auxiliary space. Counting then walking also uses O(1) space but needs a separate pass."
+    }
+  },
+  {
+    "uid": "lesson:linked-list-middle:llmid-choose-1",
+    "field": "hints",
+    "value": [
+      "Understand: nodes and next links stay available throughout the walk.",
+      "Baseline: count the length, then start another walk to index n//2.",
+      "Property: a pointer moving twice as fast reaches the end when the other reaches the middle.",
+      "Approach: slow and fast start at head.",
+      "Pseudocode: while fast and fast.next exist, slow=slow.next; fast=fast.next.next.",
+      "Solution: return slow (None for empty input; the second middle for even length). A consumable iterator does not support two independent node cursors."
+    ]
+  },
+  {
+    "uid": "lesson:linked-list-variants:llv-complete-1",
+    "field": "hints",
+    "value": [
+      "Understand: append returns the new tail reference.",
+      "Use a fresh detached node; an existing tail must have next=None.",
+      "Both forward and backward links must agree.",
+      "If tail is None, return node. Otherwise link both neighbours.",
+      "Pseudocode: tail.next=node; node.prev=tail; return node.",
+      "Solution: return the fresh node after attaching both links; the caller must also keep/update head for an initially empty list."
+    ]
+  },
+  {
+    "uid": "lesson:linked-list-deques:lldq-complete-1",
+    "field": "hints",
+    "value": [
+      "Understand: return (first removed value, remaining values as a list).",
+      "FIFO removes from the left; append inserts at the right.",
+      "deque.popleft avoids shifting a list.",
+      "Create q=deque(values), then first=q.popleft().",
+      "Pseudocode: return first, list(q).",
+      "Solution: first=q.popleft(); return first, list(q). This exercise assumes nonempty values. The list(q) result costs O(n), even though the removal itself is O(1)."
+    ]
+  },
+  {
+    "uid": "lesson:min-max-tracking:min-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You need the maximum within every sliding window of size k over an array, in O(n) total. You must decide whether a min/max stack suffices or something else is required.",
+      "approaches": [
+        {
+          "id": "monotonic-deque",
+          "label": "A monotonic double-ended queue (deque)",
+          "requiredReasonIds": [
+            "drop-both-ends"
+          ]
+        },
+        {
+          "id": "minmax-stack",
+          "label": "A plain min/max stack",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A stack only grows/shrinks at one end, so it cannot evict elements that fall out of the window's FRONT; you need to remove from both ends."
+        },
+        {
+          "id": "two-max-stacks",
+          "label": "Queue built from two max stacks",
+          "requiredReasonIds": [
+            "transfer-once"
+          ]
+        }
+      ],
+      "reasons": [
+        {
+          "id": "drop-both-ends",
+          "text": "A monotonic deque drops out-of-window elements from the front and dominated elements from the back, so each element is pushed and popped once — O(n) total for sliding-window maximum."
+        },
+        {
+          "id": "stack-handles-window",
+          "text": "A single-ended stack can evict elements leaving the window front, so it is enough.",
+          "contradictory": true
+        },
+        {
+          "id": "needs-sorting",
+          "text": "You must sort each window to find its maximum.",
+          "contradictory": true
+        },
+        {
+          "id": "transfer-once",
+          "text": "Transfer only when the output stack is empty; each item moves once and compare both stack maxima. This gives O(n) total for all windows."
+        }
+      ],
+      "acceptableApproachIds": [
+        "monotonic-deque",
+        "two-max-stacks"
+      ],
+      "modelExplanation": "A single max stack is insufficient for FIFO expiry. Use a monotonic deque, or a queue implemented with two max stacks and occasional transfers. Either gives O(n) total for fixed-size window maxima."
+    }
+  },
+  {
+    "uid": "lesson:min-max-tracking:min-choose-1",
+    "field": "hints",
+    "value": [
+      "Understand: windows expire the oldest value and insert the newest.",
+      "A single stack cannot remove its oldest value cheaply.",
+      "Keep candidates in a monotonic deque, or combine two max stacks into a queue.",
+      "Deque: expire indices at the front, remove dominated values at the back.",
+      "Pseudocode: maintain decreasing candidates; alternatively transfer between max stacks only when the output side empties.",
+      "Solution: either method costs O(n) total; each index is removed at most once from the deque, or each queue item transfers at most once between max stacks."
+    ]
+  },
+  {
+    "uid": "lesson:linked-list-variants:llv-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Match a list variant to each need: (a) browser history with back/forward, (b) a fixed-size ring buffer overwriting the oldest, (c) a memory-tight forward-only queue.",
+      "approaches": [
+        {
+          "id": "doubly-circular-singly",
+          "label": "Doubly for (a), circular for (b), singly for (c)",
+          "requiredReasonIds": [
+            "variant-matches-need"
+          ]
+        },
+        {
+          "id": "singly-everywhere",
+          "label": "Use a singly linked list for all three",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A singly linked structure has no direct backward link; finding a predecessor requires a forward search. It can be circular: wrap-around is an independent choice, not something singly linking prevents."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "variant-matches-need",
+          "text": "A doubly list moves both directions and deletes a known node in O(1) (history); a circular list wraps with no None end (ring buffer); a singly list is the leanest for forward-only traversal (queue)."
+        },
+        {
+          "id": "singly-does-all",
+          "text": "A singly linked list gives direct O(1) movement to both predecessor and successor.",
+          "contradictory": true
+        },
+        {
+          "id": "circular-cant-wrap",
+          "text": "A circular list cannot cycle back to the start, so it is unsuited to a ring buffer.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "doubly-circular-singly"
+      ],
+      "modelExplanation": "(a) doubly — move both directions and delete given a node in O(1). (b) circular — cycle through slots with no None end. (c) singly — least memory, forward-only is enough. Circular can also be singly or doubly linked."
+    }
+  },
+  {
+    "uid": "lesson:stack-queue-operations:sq-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: choose a structure for FIFO processing with millions of enqueues and dequeues — a list or a collections.deque.",
+      "The costly choice is a list, because removing from the front with pop(0) shifts every remaining element.",
+      "Property: deque.popleft removes without shifting remaining elements; list.pop(0) shifts them.",
+      "Approach: use a deque, appending to enqueue and popleft to dequeue.",
+      "Reasoning: deque end operations make m FIFO operations O(m). Growing a list queue to m items and draining it via pop(0) costs O(m²); bounded occupancy can have a smaller total.",
+      "Answer: deque — append and popleft are O(1), whereas list.pop(0) is O(n) and far too slow at scale."
+    ]
+  },
+  {
+    "uid": "lesson:monotonic-stack:mono-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: choose the O(n) structure for 'how many days until a warmer temperature' per day.",
+      "Comparing every later day is O(n^2); you want each day resolved once.",
+      "Key insight: this is a next-greater-element variant, where earlier unresolved days wait for a warmer day.",
+      "Approach: keep a non-increasing monotonic stack of indices awaiting resolution.",
+      "Pseudocode: for each day, pop stacked days colder than today and record the index gap, then push today.",
+      "Use a non-increasing monotonic stack of indices; when a warmer day arrives, pop and record the day gap for O(n) total."
+    ]
+  },
+  {
+    "uid": "lesson:monotonic-stack:mono-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "For each day, how many days until a warmer temperature? Which structure gives O(n), and what does it hold?",
+      "approaches": [
+        {
+          "id": "mono-stack",
+          "label": "Monotonic (non-increasing) stack of indices",
+          "requiredReasonIds": [
+            "pop-on-warmer-day"
+          ]
+        },
+        {
+          "id": "brute",
+          "label": "For each day scan forward for a warmer day",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "The nested forward scan is O(n^2); a monotonic stack answers all days in O(n)."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "pop-on-warmer-day",
+          "text": "Keep a non-increasing stack of day indices awaiting a warmer day; when a warmer day arrives, pop the waiting days and record the index gap — O(n) total."
+        },
+        {
+          "id": "window-expiry",
+          "text": "Elements expire from the front of a fixed-size window, so a deque is required.",
+          "contradictory": true
+        },
+        {
+          "id": "sort-temps",
+          "text": "The temperatures must be sorted before processing.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "mono-stack"
+      ],
+      "modelExplanation": "A monotonic non-increasing stack of indices: each warmer day pops the cooler days waiting below and records the wait, giving O(n) total."
+    }
+  },
+  {
+    "uid": "pattern:monotonic-stack:pat-ms-recognize-1",
+    "field": "hints",
+    "value": [
+      "Goal: for each day, find how many days until a warmer temperature.",
+      "Scanning forward from every day is O(n^2); a stack reuses unresolved days instead of rescanning.",
+      "Key insight: it's a 'next greater' problem, and you need distances, so the stack should hold indices.",
+      "Approach: use a monotonic non-increasing stack of indices, resolving days when a warmer one arrives.",
+      "Pseudocode: for each i: while stack top is cooler than today, pop and record i minus its index; push i.",
+      "Use a non-increasing monotonic stack storing indices; a warmer day pops cooler ones and records the index gap — O(n)."
+    ]
+  },
+  {
+    "uid": "pattern:monotonic-stack:pat-ms-recognize-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "For each day, how many days until a warmer temperature? Which pattern applies and what does the stack hold?",
+      "approaches": [
+        {
+          "id": "mono-stack",
+          "label": "Monotonic (non-increasing) stack of indices",
+          "requiredReasonIds": [
+            "pop-on-warmer"
+          ]
+        },
+        {
+          "id": "brute",
+          "label": "For each day scan forward for a warmer day",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "The nested forward scan is O(n^2); a monotonic stack answers all days in O(n) total."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "pop-on-warmer",
+          "text": "Keep a non-increasing stack of day INDICES awaiting a warmer day; when a warmer day arrives, pop the cooler days and record the index gap — O(n) total."
+        },
+        {
+          "id": "window-expires",
+          "text": "Elements expire from the front as a fixed window slides, so a deque is required.",
+          "contradictory": true
+        },
+        {
+          "id": "needs-sorting",
+          "text": "The temperatures must be sorted first.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "mono-stack"
+      ],
+      "modelExplanation": "A monotonic non-increasing stack of indices: each warmer day pops the cooler days waiting below it and records the wait, giving O(n) total work."
+    }
+  },
+  {
+    "uid": "pattern:monotonic-stack:pat-ms-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: find the maximum of every sliding window of size k as it moves.",
+      "A monotonic stack can't handle elements expiring from the front as the window advances.",
+      "Key insight: the window drops old elements from the front, which a stack's single working end can't do.",
+      "Approach: use a monotonic non-increasing deque, evicting the front when it leaves the window.",
+      "Pseudocode: for each i: pop smaller values from the back; append i; pop the front if it's out of the window; record the front's value.",
+      "Use a monotonic (non-increasing) deque, popping the front when it leaves the window — O(n), not a plain stack."
+    ]
+  },
+  {
+    "uid": "pattern:monotonic-stack:pat-ms-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You need the MAXIMUM of every sliding window of size k as the window moves.",
+      "approaches": [
+        {
+          "id": "mono-deque",
+          "label": "Monotonic (non-increasing) deque",
+          "requiredReasonIds": [
+            "expire-front"
+          ]
+        },
+        {
+          "id": "mono-stack",
+          "label": "Plain monotonic stack",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Elements expire from the FRONT as the window slides, which a stack (LIFO, one end) cannot remove — you need a deque."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "expire-front",
+          "text": "As the window slides, the oldest element leaves from the front and dominated elements leave from the back, so a double-ended queue maintains the max in O(n)."
+        },
+        {
+          "id": "no-expiry",
+          "text": "Nothing ever leaves from the front, so a one-ended stack is enough.",
+          "contradictory": true
+        },
+        {
+          "id": "needs-heap",
+          "text": "Only a heap can report the window maximum.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "mono-deque"
+      ],
+      "modelExplanation": "Not a plain stack — window elements expire from the front, so use a monotonic non-increasing DEQUE, popping the front when it leaves the window: O(n)."
+    }
+  },
+  {
+    "uid": "pattern:monotonic-stack:pat-ms-fix-1",
+    "field": "hints",
+    "value": [
+      "Goal: fix 'next greater' so answers aren't left unresolved by the wrong comparison.",
+      "The bug uses the wrong inequality, so smaller stacked elements never get resolved by a larger arrival.",
+      "Key insight: an arriving x should resolve stacked elements that are SMALLER than it, keeping the stack non-increasing.",
+      "Approach: pop while the stacked value is less than x, assigning x as their next greater.",
+      "Pseudocode: for i,x: while stack and nums[stack[-1]] < x: res[stack.pop()] = x; push i.",
+      "Use `while stack and nums[stack[-1]] < x` (compare with < , not >) so smaller elements resolve to x."
+    ]
+  },
+  {
+    "uid": "lesson:min-max-tracking:min-complete-1",
+    "field": "hints",
+    "value": [
+      "Goal: implement push so a parallel mins stack always holds the running minimum.",
+      "Rescanning the stack for the minimum is O(n); tracking it per push is O(1).",
+      "Key insight: the new minimum is x compared against the previous top of the mins stack.",
+      "Approach: on push, compute min(x, current min) and push it too, handling the empty case.",
+      "Pseudocode: push x; m = x if mins empty else min(x, mins[-1]); push m onto mins.",
+      "Write `m = x if not self.mins else min(x, self.mins[-1])` then `self.mins.append(m)`. List updates are amortized O(1), while a get_min root read is worst-case O(1)."
+    ]
+  },
+  {
+    "uid": "lesson:top-k:topk-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: choose between a full sort and a size-k heap for the 10 largest of a 10-million-number stream.",
+      "A full sort needs all n in memory and O(n log n) time, which a stream may not allow.",
+      "Key insight: keeping only k elements bounds both memory and per-element cost when k is tiny.",
+      "Approach: maintain a size-k min-heap, evicting the smallest when it overflows.",
+      "Pseudocode: for each x: push x; if heap size > k: pop the smallest; the heap holds the k largest.",
+      "Use a size-k min-heap: O(n log(k+1)) time and O(k) space, and it works on a stream."
+    ]
+  },
+  {
+    "uid": "lesson:kth-largest:kth-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Kth largest in a fixed in-memory array with no streaming. Heap (O(n log(k+1))) or quickselect (expected O(n))? What's the risk with quickselect?",
+      "approaches": [
+        {
+          "id": "quickselect",
+          "label": "Quickselect",
+          "requiredReasonIds": [
+            "partition-expected-linear"
+          ]
+        },
+        {
+          "id": "size-k-heap",
+          "label": "Size-k heap",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A heap remains valid here; choose it when predictable scan work is the desired tradeoff, or k is small."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "partition-expected-linear",
+          "text": "Randomized partitioning gives expected O(n), worst O(n²); iterative in-place partitioning uses O(1) extra storage. It need not beat a heap for every k (both are linear for k=1)."
+        },
+        {
+          "id": "heap-predictable",
+          "text": "The heap gives O(n log(k+1)) scan time and O(k) storage for valid ranks, with no selection pivot risk."
+        },
+        {
+          "id": "need-all-k",
+          "text": "You need all top-k elements, not just the k-th.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "quickselect"
+      ],
+      "alternatives": [
+        {
+          "approachId": "size-k-heap",
+          "conditions": "Predictable work or small k is preferred, even when the input is in memory; a stream also makes the heap suitable.",
+          "tradeoff": "O(n log(k+1)) versus randomized selection expected O(n) and quadratic worst case.",
+          "requiredReasonIds": [
+            "heap-predictable"
+          ]
+        }
+      ],
+      "modelExplanation": "Randomized quickselect offers expected O(n) with an iterative in-place O(1)-space implementation, but can take O(n²). A size-k heap costs O(n log(k+1)) and handles streams. For k=1 both are linear; speed also depends on constants. Median-of-three does not ensure linear worst case; median-of-medians is a separate deterministic linear method."
+    }
+  },
+  {
+    "uid": "lesson:running-median:med-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: choose between two heaps and re-sorting for the median after every insertion in a million-number stream.",
+      "Repeated sorting recomputes order; general bounds total O(n² log n), while Python can exploit the previously sorted prefix and still needs growing-prefix work.",
+      "Key insight: keeping the two halves as heaps exposes the median at the roots in O(1).",
+      "Approach: maintain a low-half max-heap and high-half min-heap, balanced by size.",
+      "Pseudocode: insert into the correct heap, rebalance sizes, read the median from the roots.",
+      "Two heaps give O(log n) insert and O(1) median → O(n log n) total, far better than re-sorting's O(n^2 log n)."
+    ]
+  },
+  {
+    "uid": "lesson:running-median:med-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You must report the median after every insertion in a stream of a million numbers. Two heaps or re-sort each time?",
+      "approaches": [
+        {
+          "id": "two-heaps",
+          "label": "Two heaps (balanced halves)",
+          "requiredReasonIds": [
+            "log-insert-const-query"
+          ]
+        },
+        {
+          "id": "resort",
+          "label": "Re-sort on every query",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "Re-sorting is O(n log n) per query → general upper bound O(n² log n) overall — hopeless for a million insertions."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "log-insert-const-query",
+          "text": "A low-half max-heap and high-half min-heap kept balanced give O(log n) per insert and O(1) per median → O(n log n) total."
+        },
+        {
+          "id": "single-report",
+          "text": "The median is reported only once at the end, so a single sort suffices.",
+          "contradictory": true
+        },
+        {
+          "id": "one-extreme-only",
+          "text": "Only one extreme value is ever needed, so a single heap works.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "two-heaps"
+      ],
+      "modelExplanation": "Two heaps preserve order and size invariants: O(log(n+1)) amortized per insert and O(1) per median, O(n log(n+1)) total. Rebuilding order after every insertion is unnecessary; generic re-sort analysis gives O(n² log n) total, while adaptive Python sorting can exploit prior order and still scan each growing prefix."
+    }
+  },
+  {
+    "uid": "lesson:merge-sorted-data:merge-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: merge 1000 sorted files too large to fit in memory into one sorted stream — concatenate-and-sort or heap-based k-way merge.",
+      "The costly route is concatenate-and-sort: it needs all N items in memory and re-sorts data that is already sorted.",
+      "Key property: each file is already sorted, so the global next element is always one of the k current front elements.",
+      "Approach: run a heap-based k-way merge, keeping one front element per file in a min-heap.",
+      "Reasoning: the heap holds only k=1000 items (O(k) space) and emits output lazily in O(k + N log(k+1)), while concatenate-and-sort needs O(N) memory and O(N log N) time.",
+      "Answer: heap-based k-way merge — O(k) space and O(k + N log(k+1)) streaming, versus concatenate-and-sort's O(N) memory and O(N log N)."
+    ]
+  },
+  {
+    "uid": "lesson:merge-sorted-data:merge-complete-1",
+    "field": "hints",
+    "value": [
+      "Goal: merge two sorted lists into one sorted list using heapq.merge.",
+      "Concatenating then sorting is the generic O(n log n) comparison upper bound (adaptive sorting can exploit existing runs); merging pre-sorted inputs is linear.",
+      "Key insight: heapq.merge lazily interleaves already-sorted iterables in order.",
+      "Approach: call heapq.merge on both lists and materialise it.",
+      "Pseudocode: return list(heapq.merge(a, b)).",
+      "Write `return list(heapq.merge(a, b))`."
+    ]
+  },
+  {
+    "uid": "pattern:top-k-heap:pat-tk-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: find just the single k-th largest element when all n numbers are in memory.",
+      "A heap gives all top-k in O(n log(k+1)), but you only need one order statistic, not the whole set.",
+      "Key insight: partitioning around a pivot can locate the k-th largest in O(n) average without a heap.",
+      "Approach: use quickselect since everything is in memory and you need one value.",
+      "Pseudocode: partition around a pivot; recurse only into the side containing the k-th position.",
+      "Randomized quickselect is a useful expected O(n) alternative for a single in-memory rank, with O(n²) worst case. Iterative in-place partitioning uses O(1) extra space. The heap remains valid and predictable, costs O(n log(k+1)), and also supports streaming. For k=1 both are linear."
+    ]
+  },
+  {
+    "uid": "pattern:top-k-heap:pat-tk-choose-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "You have all n numbers in memory and want just the single k-th largest.",
+      "approaches": [
+        {
+          "id": "quickselect",
+          "label": "Quickselect",
+          "requiredReasonIds": [
+            "single-order-stat"
+          ]
+        },
+        {
+          "id": "min-heap-k",
+          "label": "Size-k min-heap",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "The heap is O(n log(k+1)) and best when streaming or when you need ALL top-k; for a single in-memory order statistic quickselect is an expected linear alternative with randomized pivots; k=1 heap scans are also linear."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "single-order-stat",
+          "text": "All data is in memory and only one order statistic is needed, so partitioning around a pivot finds it in expected O(n), O(1) extra space."
+        },
+        {
+          "id": "heap-streamable",
+          "text": "A size-k heap holds only k items, so it works on a stream and yields all top-k, at O(n log(k+1)) rather than expected O(n)."
+        },
+        {
+          "id": "need-all-topk",
+          "text": "We need every one of the top-k elements, not just the k-th.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "quickselect"
+      ],
+      "alternatives": [
+        {
+          "approachId": "min-heap-k",
+          "conditions": "Small k, streaming, or predictable scan work is preferred. A heap is also valid for a single rank in memory.",
+          "tradeoff": "O(n log(k+1)) versus quickselect's expected O(n), but predictable and streaming-capable.",
+          "requiredReasonIds": [
+            "heap-streamable"
+          ]
+        }
+      ],
+      "modelExplanation": "Randomized quickselect is a useful expected O(n) alternative for a single in-memory rank, with O(n²) worst case. Iterative in-place partitioning uses O(1) extra space. The heap remains valid and predictable, costs O(n log(k+1)), and also supports streaming. For k=1 both are linear."
+    }
+  },
+  {
+    "uid": "pattern:k-way-merge:pat-kwm-recognize-1",
+    "field": "hints",
+    "value": [
+      "Goal: merge k sorted linked lists into one sorted list efficiently.",
+      "Concatenating then sorting ignores that the inputs are already sorted, costing O(N log N).",
+      "Key insight: the next output node is always the smallest among the k current list heads.",
+      "Approach: use a k-way merge with a min-heap holding the current head of each list.",
+      "Pseudocode: push all heads; pop the smallest, append it, and push that list's next; repeat until empty.",
+      "Use a k-way merge with a size-k min-heap: pop the smallest head and advance that list — O(k + N log(k+1)), O(k) space."
+    ]
+  },
+  {
+    "uid": "pattern:k-way-merge:pat-kwm-recognize-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "Merge k sorted linked lists into one sorted list efficiently.",
+      "approaches": [
+        {
+          "id": "kway-heap",
+          "label": "K-way merge with a min-heap of the k heads",
+          "requiredReasonIds": [
+            "heap-of-fronts"
+          ]
+        },
+        {
+          "id": "concat-sort",
+          "label": "Concatenate all, then sort",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A heap of fronts directly reuses each sorted chain and supports bounded frontier storage. Concatenate-and-sort is a valid alternative when storing all nodes is allowed; its generic comparison bound is O(N log N), with adaptive sort able to exploit runs."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "heap-of-fronts",
+          "text": "Keep the k current heads in a min-heap: pop the smallest, advance that list — O(k + N log(k+1)) time, O(k) space, using the per-list sortedness."
+        },
+        {
+          "id": "unsorted-lists",
+          "text": "The lists are unsorted, so their order gives no advantage.",
+          "contradictory": true
+        },
+        {
+          "id": "need-two-heaps",
+          "text": "This needs two opposing heaps to track a median boundary.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "kway-heap"
+      ],
+      "modelExplanation": "K-way merge: retain one current head per sorted, acyclic, node-disjoint input. Heapify the fronts, pop the smallest and advance its list. O(k + N log(k+1)) time and O(k) heap storage, reusing nodes instead of materializing extra result nodes."
+    }
+  },
+  {
+    "uid": "pattern:k-way-merge:pat-kwm-choose-1",
+    "field": "hints",
+    "value": [
+      "Goal: find the k-th smallest element across m sorted rows of a matrix.",
+      "Flattening and sorting discards the row ordering and is more work than needed.",
+      "Key insight: the k-th smallest is reached by popping the smallest current front exactly k times.",
+      "Approach: use a k-way merge with a heap of the row fronts.",
+      "Pseudocode: collect each nonempty row's first element and heapify the fronts; pop the smallest k times, pushing the next element from that row each pop.",
+      "K-way merge fits: heap the row fronts and pop k times — O(m + k log(m+1)); binary-search-on-value is an alternative for large matrices."
+    ]
+  },
+  {
+    "uid": "pattern:top-k-heap:pat-tk-recognize-1",
+    "field": "recognition",
+    "value": {
+      "scenario": "From a huge stream of numbers you cannot store fully, report the 100 largest.",
+      "approaches": [
+        {
+          "id": "min-heap-k",
+          "label": "Top-K with a size-100 min-heap",
+          "requiredReasonIds": [
+            "stream-bounded"
+          ]
+        },
+        {
+          "id": "full-sort",
+          "label": "Sort everything, take the top 100",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "A full sort needs all n items in memory and is O(n log n); the stream cannot be stored fully."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "stream-bounded",
+          "text": "A size-100 MIN-heap keeps only the 100 best seen: push each number, pop the smallest when size exceeds 100 — O(n log 100) time, O(100) space, stream-friendly."
+        },
+        {
+          "id": "need-all-in-memory",
+          "text": "All n numbers fit in memory, so a full sort is fine.",
+          "contradictory": true
+        },
+        {
+          "id": "max-heap-k",
+          "text": "Use a size-100 MAX-heap so the largest stays on top.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "min-heap-k"
+      ],
+      "modelExplanation": "Use a size-100 min-heap: push each arrival and pop the minimum when size exceeds 100. Retain at most 100 values between updates, with a temporary 101st entry. The scan is O(n) for fixed 100, bounded storage O(100); after 100 arrivals its root is the 100th largest. Sorting the final 100 values is a bounded additional step."
+    }
+  }
+]

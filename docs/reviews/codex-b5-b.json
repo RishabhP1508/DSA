@@ -1,0 +1,164 @@
+[
+  {
+    "kind": "lesson",
+    "id": "multi-source-bfs",
+    "hash": "14146ab50bd23b4d",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Seeding now deduplicates sources before traversal. Reading arbitrary k supplied entries still costs O(k); k<=V is valid only for distinct sources. Corrected prediction and scope to O(k+V+E), with returned distance array excluded. Directed distances from sources follow outgoing edges; distance-to-target problems require reversal. Empty/duplicate sources, disconnected vertices and direction probes pass."
+  },
+  {
+    "kind": "lesson",
+    "id": "shortest-paths-unweighted",
+    "hash": "24c5cc38b62191b2",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "The result counts edges, returning0 for start==goal and−1 if unreachable. BFS discovery order minimizes hops; unequal finite nonnegative weights call for Dijkstra and negative weights need another method. Parent reconstruction is an optional extension, not implemented here. Corrected weighted-graph advice and effective hint. Directed/disconnected and endpoint probes agree with actual sample and bindings."
+  },
+  {
+    "kind": "lesson",
+    "id": "union-find",
+    "hash": "f685346da91b8a96",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Implementation uses iterative path halving and union by rank, matching independently read Princeton UF source. Rank is an upper bound after compression, not the current height. Initialization/retained arrays O(n), working pointers O(1), individual worst bound O(log(n+1)), and amortized α(n) are separately stated. Repeated-union, representative and rank-forest invariants pass. Actual parent-array binding is exposed."
+  },
+  {
+    "kind": "lesson",
+    "id": "dijkstra",
+    "hash": "ed13ace6af5f5374",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Finite nonnegative edges and valid source are now checked before running the lazy heap. O(E) duplicate candidates mean general time O(V+E log(E+1)) and heap storage O(E); indexed decrease-key bounds are separate. Stale skipping prevents repeated expansion but its omission is not automatically a wrong-distance defect on every input. Negative-edge regression and exhaustive simple-path comparison on64 weighted DAGs/all 4 sources pass."
+  },
+  {
+    "kind": "lesson",
+    "id": "bellman-ford",
+    "hash": "107ddf63e222902a",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Main code now performs the stated reachable-negative-cycle detection and returns None. Disconnected negative cycles do not invalidate this source’s distances. The V−1 argument concerns a simple shortest representative, not all walks; zero cycles can repeat. O(V+V*E) includes initialization and the edgeless case; the returned V distances are output. Negative DAG, reachable/unreachable cycle and exhaustive source oracles pass."
+  },
+  {
+    "kind": "lesson",
+    "id": "floyd-warshall",
+    "hash": "3e88a4a42cf0178c",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Read phase invariant, parallel-edge minimum initialization and negative diagonal behavior against CP Algorithms and Princeton. k is outermost; affected pairs through a negative cycle lack finite shortest distances. Time is O(V³+E), with V² returned matrix and O(1) loop working storage. Dense repeated Dijkstra comparison names its heap/array variant. Exhaustive DAG/all-source and negative-DAG oracle comparisons pass; matrix renders."
+  },
+  {
+    "kind": "lesson",
+    "id": "prim",
+    "hash": "55a5e218c8627f60",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "The lazy candidate key is a crossing-edge weight, distinct from Dijkstra source distance. Negative weights and ties are valid; cut choice is safe for some consistent MST. n0 returns0, disconnected nonempty input raises instead of silently returning a component cost. O(V+E log(E+1)) lazy-heap bounds differ from indexed/dense variants. Independent exhaustive forest subsets check connected cases, negative edges and rejection of disconnected graphs."
+  },
+  {
+    "kind": "lesson",
+    "id": "kruskal",
+    "hash": "757c20a4dd94f9f2",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Added actual rank balancing to existing path halving so the α(V) amortized claim has both required optimizations. Initialization, sorted-copy storage and adaptive-sort best case are included. Disconnected input deliberately returns minimum spanning forest cost; self-loops are skipped and parallel/negative edges are valid. Independent exhaustive forest subsets check all 64 undirected graphs. Counter counts body work rather than the final exhausted for-line event."
+  },
+  {
+    "kind": "lesson",
+    "id": "fenwick-tree",
+    "hash": "cd3e4ca8333bc7a5",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "One-based delta updates, prefix boundary0 and inclusive range endpoints are explicit. Guards prevent update0 looping and reject invalid bounds; adjacent reversed interval is empty. All ranges and point changes for sizes 0..9 match a direct sum oracle. Displayed build uses n updates, not the separate linear builder. Working/retained storage and specialized minimum variants are distinguished; bit.tree and index overlay render actual7-cell storage."
+  },
+  {
+    "kind": "lesson",
+    "id": "segment-tree",
+    "hash": "fa3d8511fc0b1ca8",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Zero-based point assignments and half-open queries, including empty size/ranges and invalid indices, are tested for sizes 0..9 against direct sums. Compact2n storage has n leaves,n−1 parents,unused0; arbitrary n can wrap internal order, so not every parent is a contiguous input segment. One accumulator relies on commutative addition; ordered combines need two. Corrected query/refresh counters to body lines. Actual12-cell storage and boundaries render."
+  },
+  {
+    "kind": "pattern",
+    "id": "bfs-shortest-path",
+    "hash": "cc87b16548600da8",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Unweighted shortest-hop clues and first-discovery invariant match the walkthrough and exercise. Weighted recognition directs to Dijkstra only under nonnegative weights; negative edges need another algorithm. Distance dictionary is returned output, leaving queue working storage O(V). Effective model/hints and recognition choices were read after shared integration; coding model passes while starter,empty and3 authored faulty variants fail."
+  },
+  {
+    "kind": "pattern",
+    "id": "tree-bfs",
+    "hash": "a46d8158f33e2625",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Level-size capture prevents newly enqueued children from joining the current group. Queue may contain two adjacent levels and remains O(w), excluding output groups. Depth-bucket DFS is now accepted for level averages; it is a valid alternative rather than an incorrect approach. Tree/path comparison points to tree-dfs where appropriate. All effective recognition rules and real queue walkthrough checked."
+  },
+  {
+    "kind": "pattern",
+    "id": "tree-dfs",
+    "hash": "b98d79459499ed4a",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Backtracking append/pop and copying successful paths were read line by line. Time includes O(K) copied output entries: O(n+K), with O(h) current path/frames. BFS carrying path totals is a valid alternative for maximum root-to-leaf sums, and DFS depth buckets can group levels; recognition now accepts those reasons. Effective model/faulty checks pass and real recursive frame binding renders."
+  },
+  {
+    "kind": "pattern",
+    "id": "graph-dfs-components",
+    "hash": "1edb49a48caf29b5",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Undirected flood fill differs from strong directed components and shortest-hop tasks. Internal adjacency counts toward O(V+E) auxiliary storage; recursion limits and expected hashing are stated. Static DSU land-neighbor unions are now a valid islands approach; incremental connectivity maps to union-find. Oracle closure checks, effective model/hints, recognition grading and actual seen/count bindings all agree."
+  },
+  {
+    "kind": "pattern",
+    "id": "topological-sort",
+    "hash": "54704d9a363f66f7",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Main Kahn walkthrough rejects cycles; practice returns [] for any cycle, including a disconnected acyclic component beside a cycle. Indegree zero means all predecessors completed, and blocked downstream vertices need not be cycle members. Internally built adjacency counts as auxiliary. Shortest unweighted routing maps to BFS rather than dependency sorting. Effective mixed-cycle tests, all accepted reasons and queue/indegree traces pass."
+  },
+  {
+    "kind": "pattern",
+    "id": "union-find",
+    "hash": "d29f1056463de97b",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Rank plus halving and amortized versus individual bounds checked with CP Algorithms and independent Princeton source. Initialization/retained arrays are separate from per-operation pointers. A static component count may validly use DSU, while DFS is the direct preferred alternative; deletion/general dynamic graph support is not promised. Fragment hint no longer attributes linear height to rank-balanced trees. Models, faulty variants and recognition rules pass."
+  },
+  {
+    "kind": "pattern",
+    "id": "dijkstra",
+    "hash": "216dd9045bd7bbb6",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Walkthrough enforces source/nonnegative preconditions and uses lazy candidate skipping. Bounds count obsolete pops and O(E) heap entries; dense array and indexed-heap variants are distinguished. Bellman–Ford is correct but slower for the explicitly requested efficient nonnegative default; negative-edge scenario does not point to a nonexistent local pattern. Effective grader/hints, negative regression, DAG oracle and actual heap/distance bindings pass."
+  },
+  {
+    "kind": "pattern",
+    "id": "trie-prefix",
+    "hash": "557f3fb82e64a0c5",
+    "reviewer": "Codex",
+    "reviewerKind": "delegated-agent",
+    "reviewedAt": "2026-10-10",
+    "assessment": "Explicit terminal flags distinguish prefix paths and words; empty prefix exists even before insertion. Exact-only hash membership is a valid simpler alternative, and prefix scanning is possible without an index. Exercise dictionary terminal key changed from $ to a unique object to avoid character collision; empty/$/Unicode tests pass. Expected O(L), O(1) working pointers and T+1 retained nodes are distinct. USFCA reference and actual t.root rendering checked."
+  }
+]

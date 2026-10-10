@@ -28,6 +28,7 @@ import { contentHashOf } from "./lib/content-hash.mjs";
 import { validateExample } from "./lib/example-model.mjs";
 import { resolveToday, verifiedAtFor } from "./lib/evidence-date.mjs";
 import { evidenceSelection } from './lib/evidence-selection.mjs';
+import { definitionId } from './lib/definition-id.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -97,8 +98,8 @@ function fileIndex(dir) {
   for (const f of readdirSync(path.join(ROOT, dir)).filter((x) => x.endsWith(".ts"))) {
     const p = path.join(ROOT, dir, f);
     const src = readFileSync(p, "utf8");
-    const m = src.match(/\n\s*id:\s*"([^"]+)"/);
-    if (m) map.set(m[1], p);
+    const id = definitionId(src, p);
+    if (id) map.set(id, p);
   }
   return map;
 }
@@ -176,7 +177,8 @@ function writeEvidence(filePath, evidenceBlock) {
   // Now the file must end with `...\n};`. Insert the fresh evidence before it.
   const idx = src.lastIndexOf("\n};");
   if (idx === -1) throw new Error(`no closing }; in ${filePath}`);
-  src = src.slice(0, idx) + "\n" + evidenceBlock + "\n};" + src.slice(idx + "\n};".length);
+  const comma = src.slice(0,idx).trimEnd().endsWith(",") ? "" : ",";
+  src = src.slice(0, idx).trimEnd() + comma + "\n" + evidenceBlock + "\n};" + src.slice(idx + "\n};".length);
   writeFileSync(filePath, src, "utf8");
 }
 

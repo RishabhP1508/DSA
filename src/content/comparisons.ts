@@ -31,7 +31,9 @@ export const COMPARISONS: ComparisonExperiment[] = [
       code:
         "def solve(nums, target):\n    seen = {}\n    for i, x in enumerate(nums):\n        __op()\n        need = target - x\n        if need in seen:\n            return [seen[need], i]\n        seen[x] = i\n    return []",
     },
-    sizes: [8, 16, 32, 64],
+    // Representative sizes complete within the normal event and trace budgets.
+    // Every published size is checked by codex-comparison-budget.real.test.ts.
+    sizes: [8, 16, 24, 32],
     operation: "inner comparison / element visit",
   },
   {
@@ -52,7 +54,8 @@ export const COMPARISONS: ComparisonExperiment[] = [
       code:
         "def solve(data, queries):\n    s = set(data)\n    count = 0\n    for q in queries:\n        __op()\n        if q in s:\n            count += 1\n    return count",
     },
-    sizes: [8, 16, 32, 64],
+    // List scans record more states; keep the full comparison within normal limits.
+    sizes: [8, 12, 16, 24],
     operation: "membership probe",
   },
 ];

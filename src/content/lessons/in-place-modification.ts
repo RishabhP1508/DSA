@@ -166,7 +166,7 @@ The subtlety is correctness: because \`insert <= i\` always, we never overwrite 
     {"url":"https://docs.python.org/3.14/reference/simple_stmts.html#assignment-statements","title":"Python 3.14 — Assignment statements","section":"Assignment statements","verifiedClaims":["The right-hand side is evaluated before the assignment target is updated."],"topic":"in-place-modification","purpose":"Delegated Codex review: reconcile learner-facing explanations with the demonstrated implementation.","accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "ffc709f8e3ce96fb",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

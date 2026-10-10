@@ -142,7 +142,7 @@ In this workspace you supply the input ahead of time (a "supplied input" box), a
     },
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "c76bd4181538df89",
     verifiedAt: "2026-10-04",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

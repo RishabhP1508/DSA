@@ -5,6 +5,8 @@
  */
 
 import type { LessonDefinition, PatternDefinition } from "../core/types";
+import { meetingRoomsII } from "./lessons/meeting-rooms-ii";
+import { taskScheduler } from "./lessons/task-scheduler";
 import { variablesAndTypes } from "./lessons/variables-and-types";
 import { expressions } from "./lessons/expressions";
 import { conditions } from "./lessons/conditions";
@@ -316,6 +318,8 @@ const _lessons: LessonDefinition[] = [
   fenwickTree,
   segmentTree,
   // Strings — KMP
+  taskScheduler,
+  meetingRoomsII,
   kmp,
 ];
 

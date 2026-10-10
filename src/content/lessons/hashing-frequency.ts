@@ -145,7 +145,7 @@ Frequency maps are the engine behind anagrams, "majority element", "top-K freque
     {"url":"https://docs.python.org/3.14/howto/sorting.html","title":"Python Sorting Techniques","section":"Sorting basics","topic":"hashing-frequency","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Sorting keys for display is separate work from frequency counting."],"accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "d30d59dea192c2ea",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },

@@ -45,43 +45,137 @@ The cost is three nested loops over all vertices: **O(V³)** time and **O(V²)**
   ],
 
   concepts: {
-    purpose: "Compute shortest paths between all pairs of vertices with a simple DP over a distance matrix.",
-    operations: "Initialize d with self=0 and direct edges; for each intermediate k, relax every (i, j).",
-    uses: "All-pairs distances, transitive closure, small dense graphs, routing tables, graph diameter.",
-    tradeoffs: "O(V³) time, O(V²) space; simple and handles negatives, but too slow for large sparse graphs (use Dijkstra per source).",
-    commonMistakes: "Putting k as an inner loop (breaks correctness — k must be outermost); forgetting to initialize d[i][i]=0; using it on huge graphs where O(V³) is infeasible.",
-    edgeCases: "Unreachable pairs stay infinity. Negative edges are allowed. A negative d[i][i] flags a negative cycle. Multiple edges between a pair keep the minimum.",
-  },
+  "purpose": "Compute shortest paths between all pairs of vertices with a simple DP over a distance matrix.",
+  "operations": "Initialize d with self=0 and direct edges; for each intermediate k, relax every (i, j).",
+  "uses": "All-pairs distances, transitive closure, small dense graphs, routing tables, graph diameter.",
+  "tradeoffs": "O(V³) time, O(V²) space; simple and handles negatives, but too slow for large sparse graphs (use Dijkstra per source).",
+  "commonMistakes": "Putting k as an inner loop (breaks correctness — k must be outermost); forgetting to initialize d[i][i]=0; using it on huge graphs where O(V³) is infeasible.",
+  "edgeCases": "Empty graph returns an empty matrix. Keep the minimum parallel-edge weight. Finite negative edges are allowed, but a negative diagonal indicates a negative cycle: pairs that can reach it and then reach their destination have no finite optimum."
+},
 
   complexity: [
-    { operation: "Floyd-Warshall", best: "O(V^3)", average: "O(V^3)", worst: "O(V^3)", space: "O(V^2)", note: "Three nested loops over vertices; matrix of all pairs." },
-  ],
+  {
+    "operation": "Floyd-Warshall",
+    "best": "O(V³+E)",
+    "average": "O(V³+E)",
+    "worst": "O(V³+E)",
+    "space": "O(1) working; O(V²) output",
+    "note": "Scan supplied edges and execute V³ relaxations. Output matrix is quadratic; simple graphs simplify time to cubic."
+  }
+],
 
   complexityExplanation: {
-    scope: "program",
-    variables: [{ symbol: "V", meaning: "the number of vertices" }],
-    costModel: "Each relaxation d[i][j] = min(...) is O(1). The algorithm does three nested loops over all vertices.",
-    time: {
-      bound: "O(V^3)",
-      case: "worst",
-      explanation: "The intermediate loop k, the row loop i, and the column loop j each run V times and are NESTED, so the body executes V × V × V = V³ times, each an O(1) relaxation. Hence O(V³). There is no data-dependent variation — it always does exactly V³ relaxations. For all-pairs on a DENSE graph this beats running Dijkstra from each vertex (V · O((V+E) log V) ≈ V³ log V when E ≈ V²); for sparse graphs, per-source Dijkstra can be better.",
+  "scope": "function",
+  "variables": [
+    {
+      "symbol": "V",
+      "meaning": "the number of vertices"
     },
-    space: {
-      bound: "O(V^2)",
-      case: "worst",
-      explanation: "The distance matrix stores all V² pairs — O(V²). The algorithm updates it in place, adding only O(1).",
-      inputOutputNote: "The V×V distance matrix is both the working state and the all-pairs result.",
-    },
-    derivation: [
-      { lines: [10], description: "The intermediate loop k runs V times (must be outermost).", cost: "O(V)", dimension: "time" },
-      { lines: [11, 12, 13, 14], description: "The nested i and j loops run V×V, each an O(1) relaxation.", cost: "O(V^3)", dimension: "time" },
-      { lines: [4], description: "The distance matrix holds all V² pairs.", cost: "O(V^2)", dimension: "space" },
-    ],
-    assumptions: ["Relaxations are O(1).", "k is the OUTERMOST loop (required for correctness).", "Edge weights may be negative but no negative cycles for finite results."],
-    tradeoffs: "For all-pairs on dense graphs Floyd–Warshall's O(V³) and tiny code win; on sparse graphs, running Dijkstra from each source (O(V·(V+E) log V)) can be faster. Bellman–Ford handles negatives for a single source in O(V·E).",
-    counters: [],
-    fixedDataNote: "This run on 4 vertices does 4³ = 64 relaxations; d[0] = [0, 3, 1, 4]. The O(V³) bound generalises to any vertex count.",
+    {
+      "symbol": "E",
+      "meaning": "number of supplied edges, including parallel entries"
+    }
+  ],
+  "costModel": "Each relaxation d[i][j] = min(...) is O(1). The algorithm does three nested loops over all vertices.",
+  "time": {
+    "bound": "O(V³+E)",
+    "case": "worst",
+    "explanation": "Initialize a V² output matrix, scan E edges, then evaluate V³ (k,i,j) phase candidates: O(V³+E) for V>=1. E=0,V=0 returns an empty matrix in constant time."
   },
+  "space": {
+    "bound": "O(1)",
+    "case": "worst",
+    "explanation": "Only loop indices and temporary arithmetic are auxiliary. The V by V matrix is the required all-pairs output and is updated in place.",
+    "inputOutputNote": "The returned distance matrix uses O(V²); input edges and output matrix are excluded from auxiliary storage."
+  },
+  "derivation": [
+    {
+      "lines": [
+        10
+      ],
+      "description": "The intermediate loop k runs V times (must be outermost).",
+      "cost": "O(V)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "description": "The nested i and j loops run V×V, each an O(1) relaxation.",
+      "cost": "O(V^3)",
+      "dimension": "time"
+    },
+    {
+      "lines": [
+        4
+      ],
+      "description": "Constant loop state beyond the required V² output matrix.",
+      "cost": "O(1)",
+      "dimension": "space"
+    }
+  ],
+  "assumptions": [
+    "Relaxations are O(1).",
+    "k is the OUTERMOST loop (required for correctness).",
+    "Edge weights may be negative but no negative cycles for finite results.",
+    "Finite weights; valid endpoints. Python infinity plus a finite negative weight stays infinity.",
+    "No affected pair has a finite shortest distance when a reachable negative cycle lies on a route. Inspect the negative diagonal before interpreting those results.",
+    "For simple graphs E=O(V²), so the bound simplifies to O(V³). Parallel edges need the extra E input scan."
+  ],
+  "tradeoffs": "Floyd–Warshall is a direct O(V³+E) all-pairs method. Repeated binary-heap Dijkstra can be useful for sparse nonnegative graphs; dense array-scan Dijkstra is another cubic all-pairs variant. Bellman–Ford handles one source with negative edges in O(V+V*E).",
+  "counters": [],
+  "fixedDataNote": "With V=4 the example makes 64 phase relaxations after scanning edges. Its first output row is [0,3,1,4]. Parallel-edge input requires the additional E scan.",
+  "references": [
+    {
+      "url": "https://cp-algorithms.com/graph/all-pair-shortest-path-floyd-warshall.html",
+      "title": "CP Algorithms: Floyd–Warshall",
+      "section": "Phase invariant; implementation; negative cycles",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "k is the outer phase loop.",
+        "Negative cycles invalidate affected pairs."
+      ],
+      "conventions": [
+        "App numbers vertices from zero and uses Python infinity."
+      ],
+      "accessDate": "2026-10-10"
+    },
+    {
+      "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/2430d7903a5529451d80c17f89a41fe8_MIT6_006S20_lec12.pdf",
+      "title": "MIT 6.006 Lecture 12: Bellman–Ford",
+      "section": "Pages 1–3: simple shortest paths and negative-cycle witnesses",
+      "topic": "trees-graphs-range",
+      "purpose": "Verify the stated algorithm and identify implementation conventions.",
+      "verifiedClaims": [
+        "A finite optimum has a simple representative with at most V−1 edges."
+      ],
+      "conventions": [],
+      "accessDate": "2026-10-10"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/kevin-wayne/algs4/master/src/main/java/edu/princeton/cs/algs4/FloydWarshall.java",
+      "title": "Princeton algs4: Floyd–Warshall",
+      "section": "Class documentation lines 18–38; initialization/phase/negative diagonal lines 57–95",
+      "topic": "trees-graphs-range",
+      "purpose": "Cross-check the exact implementation variant and boundary contract.",
+      "verifiedClaims": [
+        "Floyd–Warshall permits negative edges when shortest distances are well defined.",
+        "The outer loop controls allowed intermediate vertices.",
+        "A negative diagonal detects a negative cycle.",
+        "Distance matrix storage is quadratic."
+      ],
+      "conventions": [
+        "Source additionally stores a predecessor matrix and rejects negative-cycle distance queries.",
+        "App returns the distance matrix; its returned matrix is output storage, and affected pairs must not be interpreted as finite shortest distances."
+      ],
+      "accessDate": "2026-10-10"
+    }
+  ]
+},
 
   code,
 
@@ -122,53 +216,133 @@ The cost is three nested loops over all vertices: **O(V³)** time and **O(V²)**
   ],
 
   exercises: [
-    {
-      id: "fw-choose-1",
-      kind: "choose-approach",
-      prompt: "You need shortest distances between ALL pairs in a small dense graph (V ≈ 200, edges ≈ V²). Floyd–Warshall or Dijkstra-from-every-source? Why?",
-      expected: "Floyd–Warshall: O(V³) with tiny code, and on a dense graph running Dijkstra from every source is ~O(V·(V+E) log V) ≈ O(V³ log V) — Floyd–Warshall avoids the log factor and is simpler for all-pairs on dense/small graphs.",
-      hints: ["All pairs, dense, small V.", "Per-source Dijkstra adds a log factor when dense.", "Floyd–Warshall is O(V³) and simplest here."],
-    },
-    {
-      id: "fw-fix-1",
-      kind: "fix-mistake",
-      prompt: "`floyd_warshall(d, n)` returns the all-pairs shortest-distance matrix (d is the initial distance matrix, n the vertex count). This has the intermediate loop k innermost, giving wrong distances. Fix the loop order so k is outermost.",
-      starterCode: "def floyd_warshall(d, n):\n    for i in range(n):\n        for j in range(n):\n            for k in range(n):\n                if d[i][k] + d[k][j] < d[i][j]:\n                    d[i][j] = d[i][k] + d[k][j]\n    return d",
-      expected: "def floyd_warshall(d, n):\n    for k in range(n):\n        for i in range(n):\n            for j in range(n):\n                if d[i][k] + d[k][j] < d[i][j]:\n                    d[i][j] = d[i][k] + d[k][j]\n    return d",
-      hints: ["k is the intermediate vertex.", "It must enclose i and j.", "Move the k loop to be the outermost."],
-    },
-  ],
+  {
+    "id": "fw-choose-1",
+    "kind": "choose-approach",
+    "prompt": "You need shortest distances between ALL pairs in a small dense graph (V ≈ 200, edges ≈ V²). Floyd–Warshall or Dijkstra-from-every-source? Why?",
+    "expected": "Floyd–Warshall: O(V³) with tiny code, and on a dense graph running Dijkstra from every source is ~O(V·(V+E) log V) ≈ O(V³ log V) — Floyd–Warshall avoids the log factor and is simpler for all-pairs on dense/small graphs.",
+    "hints": [
+      "Goal: get shortest distances between ALL pairs in a small dense graph (V ≈ 200, E ≈ V²) — Floyd–Warshall or Dijkstra-from-every-source.",
+      "The costlier option on a dense graph is running Dijkstra from every source, which carries a log factor across all V runs.",
+      "Key property: you need all-pairs distances on a small, dense graph where a simple O(V³) triple loop is entirely affordable.",
+      "Approach: use Floyd–Warshall's three nested loops over intermediate vertices.",
+      "Reasoning: Floyd–Warshall is O(V³) with tiny code, while Dijkstra from every source is ~O(V³ log V) on dense graphs; the all-source Dijkstra approach wins mainly on sparse graphs.",
+      "Answer: Floyd–Warshall — O(V³) and simple, avoiding the log factor of ~O(V³ log V) all-source Dijkstra on a small dense graph."
+    ],
+    "recognition": {
+      "scenario": "You need shortest distances between ALL pairs of vertices in a small, dense graph (V ≈ 200, edges ≈ V²).",
+      "approaches": [
+        {
+          "id": "floyd-warshall",
+          "label": "Floyd–Warshall",
+          "requiredReasonIds": [
+            "fw-dense-allpairs"
+          ]
+        },
+        {
+          "id": "dijkstra-each-source",
+          "label": "Binary-heap Dijkstra from every vertex",
+          "requiredReasonIds": [],
+          "rejectionFeedback": "For dense input the binary-heap upper bound adds a logarithmic factor; Floyd–Warshall is a simple cubic all-pairs choice. Array-based dense Dijkstra is also cubic, so this comparison is specific to the heap variant."
+        }
+      ],
+      "reasons": [
+        {
+          "id": "fw-dense-allpairs",
+          "text": "Floyd–Warshall is O(V³) with tiny triple-loop code, and on a dense graph that beats the O(V³ log V) of Dijkstra-from-every-source while being far simpler."
+        },
+        {
+          "id": "fw-slower-dense",
+          "text": "Floyd–Warshall is asymptotically slower than Dijkstra-from-every-source on dense graphs.",
+          "contradictory": true
+        },
+        {
+          "id": "fw-single-source",
+          "text": "Floyd–Warshall only computes paths from a single source.",
+          "contradictory": true
+        }
+      ],
+      "acceptableApproachIds": [
+        "floyd-warshall"
+      ],
+      "modelExplanation": "Floyd–Warshall: O(V³) with tiny code; on a dense graph, Dijkstra from every source is ~O(V³ log V). Floyd–Warshall avoids the log factor and is simpler for all-pairs on dense/small graphs."
+    }
+  },
+  {
+    "id": "fw-fix-1",
+    "kind": "fix-mistake",
+    "prompt": "`floyd_warshall(d, n)` returns the all-pairs shortest-distance matrix (d is the initial distance matrix, n the vertex count). This has the intermediate loop k innermost, giving wrong distances. Fix the loop order so k is outermost.",
+    "starterCode": "def floyd_warshall(d, n):\n    for i in range(n):\n        for j in range(n):\n            for k in range(n):\n                if d[i][k] + d[k][j] < d[i][j]:\n                    d[i][j] = d[i][k] + d[k][j]\n    return d",
+    "expected": "def floyd_warshall(d, n):\n    for k in range(n):\n        for i in range(n):\n            for j in range(n):\n                if d[i][k] + d[k][j] < d[i][j]:\n                    d[i][j] = d[i][k] + d[k][j]\n    return d",
+    "hints": [
+      "Goal: fix Floyd–Warshall's loop order so all-pairs distances come out correct.",
+      "With k innermost, intermediate vertices aren't fully considered before being used, giving wrong results.",
+      "Key insight: k is the intermediate vertex and must be the outermost loop so each k is finished before the next.",
+      "Approach: order the loops k, then i, then j.",
+      "Pseudocode: for k: for i: for j: if d[i][k] + d[k][j] < d[i][j]: update d[i][j].",
+      "Move the `k` loop to be outermost, enclosing the `i` and `j` loops."
+    ],
+    "tests": "INF = float('inf')\nd = floyd_warshall([[0, 3, INF, 7], [8, 0, 2, INF], [5, INF, 0, 1], [2, INF, INF, 0]], 4)\nassert d[0] == [0, 3, 5, 6], f'row 0 all-pairs shortest, got {d[0]}'\nassert d[1] == [5, 0, 2, 3], f'row 1, got {d[1]}'\nassert d[2] == [3, 6, 0, 1], f'row 2, got {d[2]}'\nassert d[3] == [2, 5, 7, 0], f'row 3, got {d[3]}'\n# A different graph so a hard-coded matrix cannot pass.\nd2 = floyd_warshall([[0, 1, INF], [INF, 0, 1], [1, INF, 0]], 3)\nassert d2[0] == [0, 1, 2], f'triangle row 0, got {d2[0]}'\nassert d2[1] == [2, 0, 1], f'triangle row 1, got {d2[1]}'\nassert d2[2] == [1, 2, 0], f'triangle row 2, got {d2[2]}'\n# Single vertex.\nassert floyd_warshall([[0]], 1) == [[0]], 'single vertex matrix unchanged'\nprint('OK')"
+  }
+],
 
-  review: `**Floyd–Warshall** finds **all-pairs** shortest paths via DP on a distance matrix: for each **intermediate vertex k (outermost loop)**, relax every pair through k. It's **O(V³)** time / **O(V²)** space, handles **negative edges** (and detects negative cycles via a negative diagonal), and its tiny code beats per-source Dijkstra on **dense** graphs. Rule: single source → BFS/Dijkstra/Bellman–Ford; **all pairs, small/dense → Floyd–Warshall**.`,
+  review: "Floyd–Warshall updates all-pairs output using k as the outer intermediate-vertex phase. Cost is O(V³+E), or O(V³) on simple graphs; the V² matrix is output and loop working storage O(1). A negative diagonal identifies a negative cycle, invalidating any pair whose route can pass through it.",
 
   expectedOutput: "[0, 3, 1, 4]\n",
 
   references: [
-    {
-      url: "https://cp-algorithms.com/graph/all-pair-shortest-path-floyd-warshall.html",
-      title: "Floyd-Warshall — CP-Algorithms",
-      section: "Algorithm, loop order, complexity",
-      topic: "graphs/floyd-warshall",
-      purpose: "Confirm the DP formulation, the k-outermost loop requirement, and O(V³) time / O(V²) space.",
-      verifiedClaims: ["Floyd-Warshall is O(V³) time and O(V²) space; the intermediate loop k must be outermost"],
-      accessDate: "2026-09-20",
-    },
-    {
-      url: "https://algs4.cs.princeton.edu/44sp/",
-      title: "Shortest Paths — Algorithms, 4th Edition (Princeton)",
-      section: "All-pairs shortest paths",
-      topic: "graphs/floyd-warshall",
-      purpose: "Cross-check the all-pairs problem and when a matrix-based cubic method is appropriate.",
-      verifiedClaims: ["All-pairs shortest paths can be computed with a dynamic-programming matrix method"],
-      accessDate: "2026-09-20",
-    },
-  ],
+  {
+    "url": "https://cp-algorithms.com/graph/all-pair-shortest-path-floyd-warshall.html",
+    "title": "CP Algorithms: Floyd–Warshall",
+    "section": "Phase invariant; implementation; negative cycles",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "k is the outer phase loop.",
+      "Negative cycles invalidate affected pairs."
+    ],
+    "conventions": [
+      "App numbers vertices from zero and uses Python infinity."
+    ],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/2430d7903a5529451d80c17f89a41fe8_MIT6_006S20_lec12.pdf",
+    "title": "MIT 6.006 Lecture 12: Bellman–Ford",
+    "section": "Pages 1–3: simple shortest paths and negative-cycle witnesses",
+    "topic": "trees-graphs-range",
+    "purpose": "Verify the stated algorithm and identify implementation conventions.",
+    "verifiedClaims": [
+      "A finite optimum has a simple representative with at most V−1 edges."
+    ],
+    "conventions": [],
+    "accessDate": "2026-10-10"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/kevin-wayne/algs4/master/src/main/java/edu/princeton/cs/algs4/FloydWarshall.java",
+    "title": "Princeton algs4: Floyd–Warshall",
+    "section": "Class documentation lines 18–38; initialization/phase/negative diagonal lines 57–95",
+    "topic": "trees-graphs-range",
+    "purpose": "Cross-check the exact implementation variant and boundary contract.",
+    "verifiedClaims": [
+      "Floyd–Warshall permits negative edges when shortest distances are well defined.",
+      "The outer loop controls allowed intermediate vertices.",
+      "A negative diagonal detects a negative cycle.",
+      "Distance matrix storage is quadratic."
+    ],
+    "conventions": [
+      "Source additionally stores a predecessor matrix and rejects negative-cycle distance queries.",
+      "App returns the distance matrix; its returned matrix is output storage, and affected pairs must not be interpreted as finite shortest distances."
+    ],
+    "accessDate": "2026-10-10"
+  }
+],
   evidence: {
-    inventoryVersion: 19,
-    contentHash: "30e73ca8dd1451e1",
-    verifiedAt: "2026-09-21",
+    inventoryVersion: 20,
+    contentHash: "3e88a4a42cf0178c",
+    verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
-    semanticReview: false,
+    semanticReview: true,
     reviewBatch: 5,
   },
 };

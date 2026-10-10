@@ -153,7 +153,7 @@ The early \`break\` gives a good best case (a mismatch at the very first pair is
     {"url":"https://docs.python.org/3.14/tutorial/introduction.html#strings","title":"Python strings","section":"Strings","topic":"string-two-pointers","purpose":"Verify claims during the delegated Codex review.","verifiedClaims":["Strings support indexing and slicing."],"accessDate":"2026-10-10"},
   ],
   evidence: {
-    inventoryVersion: 19,
+    inventoryVersion: 20,
     contentHash: "2940595d02fe2042",
     verifiedAt: "2026-10-10",
     checks: { content: true, implementation: true, visualization: true, exercise: true, complexity: true, references: true },
