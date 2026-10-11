@@ -32,7 +32,9 @@ The named Windows ZIP includes the portable app. GitHub's automatic "Source code
 archives contain the repository and require a development setup. Release assets
 also include a `.sha256` checksum. The previous
 [1.0.0 delivery record](docs/releases/1.0.0.md) preserves its original checks;
-the [UI hierarchy audit](docs/reviews/ui-content-hierarchy.md) records the 1.0.1 changes.
+the [1.0.1 delivery record](docs/releases/1.0.1.md) records the current archive,
+launcher and offline checks. The [UI hierarchy audit](docs/reviews/ui-content-hierarchy.md)
+records its interface changes.
 
 Version 1.0.1 adds numbered reading sections, a page outline, topic-grouped lessons,
 separate exercise panels and stacked answer choices. All pages share readable

@@ -88,3 +88,8 @@ actual native 200% page zoom in both browsers, in addition to the earlier reflow
 proxy. It fixes section/exercise hierarchy, small-screen controls, dark editor
 syntax contrast and scrolling through navigation in short zoomed windows.
 Curriculum reviews, execution and saved-progress formats remain unchanged.
+
+The [1.0.1 Windows delivery record](releases/1.0.1.md) records the immutable
+archive, 11/11 native launcher checks, Chrome/Edge offline acceptance before and
+after fresh extraction, and public GitHub download. The release tag points to
+the frozen packaging commit; later delivery documentation does not change it.

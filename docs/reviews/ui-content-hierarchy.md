@@ -74,3 +74,13 @@ checks establish the tested hierarchy and behavior; they do not certify every
 future content edit or general accessibility conformance. Package identities and
 archive acceptance are recorded separately after the immutable archive checks.
 Historical 1.0.0 results retain their original attribution.
+
+## Verified Windows delivery
+
+The [1.0.1 release record](../releases/1.0.1.md) identifies the frozen tree,
+archive checksum and public download. All 11 native launcher checks pass.
+Chrome and Edge each pass the offline release harness on the immutable stage
+and a fresh ZIP extraction. Every archive entry and extracted file matches the
+manifest; the extracted server uses its bundled Node executable. The public
+ZIP and checksum asset have matching GitHub digests. These post-package records
+are documentation-only changes after frozen commit `a83e309`.
