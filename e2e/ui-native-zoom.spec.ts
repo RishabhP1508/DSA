@@ -17,6 +17,9 @@ test('native 200% page zoom keeps every main page and learning tab reachable', a
     ...browserOptions,
     headless: true,
     viewport: null,
+    // Clear the test project's Desktop Chrome emulation default. Native page
+    // zoom requires an un-emulated viewport and the browser's actual DPR.
+    deviceScaleFactor: undefined,
     args: ['--window-size=1440,1000'],
     reducedMotion: 'reduce',
   });
