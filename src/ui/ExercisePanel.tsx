@@ -13,13 +13,15 @@
  * Hints always reveal ONE AT A TIME. Progress is recorded via the storage layer.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import type { Exercise, PatternExercise } from "../core/types";
 import { recordExerciseAttempt } from "../storage/progress";
 import { exerciseUid, type OwnerKind } from "../storage/exercise-id";
 import { CodeEditor } from "./CodeEditor";
 import { useExerciseRunner } from "./useExerciseRunner";
 import { RecognitionPanel } from "./RecognitionPanel";
+import { Button } from '../components/ui/button';
+import { mdInline } from './md';
 
 const KIND_LABEL: Record<Exercise["kind"], string> = {
   "predict-state": "Predict the state",
@@ -35,6 +37,7 @@ export function ExercisePanel({
   patternMode,
   ownerKind,
   ownerId,
+  exerciseNumber,
 }: {
   exercise: Exercise | PatternExercise;
   /** In the Pattern Library, choose-approach exercises are recognition drills. */
@@ -42,6 +45,7 @@ export function ExercisePanel({
   /** The lesson/pattern that owns this exercise (for the globally unique id). */
   ownerKind: OwnerKind;
   ownerId: string;
+  exerciseNumber?: number;
 }) {
   const runnable = Boolean(exercise.tests);
   const recognition = exercise.recognition;
@@ -51,12 +55,15 @@ export function ExercisePanel({
   const [showModel, setShowModel] = useState(false);
   const [selfResult, setSelfResult] = useState<"correct" | "close" | "revisit" | null>(null);
   const runner = useExerciseRunner();
+  const headingId = useId();
+  const hintLabel = revealed === 0 ? 'Show a hint' : revealed >= exercise.hints.length ? 'No more hints' : 'Next hint';
 
   // Globally unique identity for storage/attempts (R3-A): two exercises that
   // share a bare id across owners no longer collide.
   const uid = exerciseUid(ownerKind, ownerId, exercise.id);
   const record = (solved: boolean) => void recordExerciseAttempt(uid, solved);
   const revealNext = () => setRevealed((r) => Math.min(r + 1, exercise.hints.length));
+  const hintButton = <Button variant="outline" onClick={revealNext} disabled={revealed >= exercise.hints.length}>{hintLabel}</Button>;
 
   const reveal = () => {
     setShowModel(true);
@@ -82,34 +89,36 @@ export function ExercisePanel({
   }, [outcome, runnable, uid]);
 
   return (
-    <div className="exercise-panel">
-      <div className="exercise-head">
-        <span className="kind-badge">{KIND_LABEL[exercise.kind]}</span>
-        {runnable && <span className="kind-badge runnable">runnable</span>}
-        <p className="exercise-prompt">{exercise.prompt}</p>
-      </div>
+    <article className="exercise-panel" aria-labelledby={headingId}>
+      <header className="exercise-head">
+        <div className="exercise-heading-row">
+          {exerciseNumber != null && <span className="exercise-number">Exercise {exerciseNumber}</span>}
+          <h3 className="exercise-title" id={headingId}>{KIND_LABEL[exercise.kind]}</h3>
+          {runnable && <span className="kind-badge runnable">Code challenge</span>}
+        </div>
+        <p className="exercise-prompt" dangerouslySetInnerHTML={{__html: mdInline(exercise.prompt)}} />
+      </header>
 
       {!runnable && recognition ? (
         <RecognitionPanel
           grading={recognition}
           onGraded={(accepted) => record(accepted)}
+          hintAction={hintButton}
         />
       ) : runnable ? (
         <div className="runnable-block">
           <div className="dim tiny">Edit the code, then run the tests.</div>
           <CodeEditor value={code} onChange={setCode} />
           <div className="exercise-actions">
-            <button onClick={runTests} disabled={!runner.ready || runner.running}>
+            <Button onClick={runTests} disabled={!runner.ready || runner.running}>
               {runner.ready ? (runner.running ? "Running…" : "▶ Run tests") : "Loading Python…"}
-            </button>
-            <button onClick={revealNext} disabled={revealed >= exercise.hints.length}>
-              {revealed === 0 ? "Show a hint" : revealed >= exercise.hints.length ? "No more hints" : "Next hint"}
-            </button>
-            <button onClick={reveal} disabled={showModel}>Reveal model answer</button>
+            </Button>
+            {hintButton}
+            <Button variant="secondary" onClick={reveal} disabled={showModel}>Reveal model answer</Button>
           </div>
 
           {outcome && (
-            <div className={`test-result ${outcome.status}`}>
+            <div className={`test-result ${outcome.status}`} role="status">
               <strong>
                 {outcome.status === "pass"
                   ? "✓ All tests passed"
@@ -158,20 +167,18 @@ export function ExercisePanel({
             />
           </label>
           <div className="exercise-actions">
-            <button onClick={revealNext} disabled={revealed >= exercise.hints.length}>
-              {revealed === 0 ? "Show a hint" : revealed >= exercise.hints.length ? "No more hints" : "Next hint"}
-            </button>
-            <button onClick={reveal} disabled={showModel}>Reveal model answer</button>
+            {hintButton}
+            <Button variant="secondary" onClick={reveal} disabled={showModel}>Reveal model answer</Button>
           </div>
         </>
       )}
 
       {revealed > 0 && (
-        <ol className="hints">
+        <div className="hint-panel" aria-live="polite"><h4>Hints · {revealed} of {exercise.hints.length}</h4><ol className="hints">
           {exercise.hints.slice(0, revealed).map((h, i) => (
-            <li key={i}>{h}</li>
+            <li key={i} dangerouslySetInnerHTML={{__html:mdInline(h)}} />
           ))}
-        </ol>
+        </ol></div>
       )}
 
       {showModel && exercise.expected && (
@@ -192,9 +199,9 @@ export function ExercisePanel({
               </p>
               <div className="self-assess">
                 <span className="dim tiny">How did you do?</span>
-                <button className={selfResult === "correct" ? "sa on" : "sa"} onClick={() => selfAssess("correct")}>Got it</button>
-                <button className={selfResult === "close" ? "sa on" : "sa"} onClick={() => selfAssess("close")}>Close</button>
-                <button className={selfResult === "revisit" ? "sa on" : "sa"} onClick={() => selfAssess("revisit")}>Revisit</button>
+                <Button variant="outline" className={selfResult === "correct" ? "sa on" : "sa"} onClick={() => selfAssess("correct")}>Got it</Button>
+                <Button variant="outline" className={selfResult === "close" ? "sa on" : "sa"} onClick={() => selfAssess("close")}>Close</Button>
+                <Button variant="outline" className={selfResult === "revisit" ? "sa on" : "sa"} onClick={() => selfAssess("revisit")}>Revisit</Button>
               </div>
               {selfResult && (
                 <p className={`self-result ${selfResult}`}>
@@ -209,6 +216,6 @@ export function ExercisePanel({
           )}
         </div>
       )}
-    </div>
+    </article>
   );
 }

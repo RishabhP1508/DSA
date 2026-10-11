@@ -64,19 +64,21 @@ export function BackupView() {
     refresh();
   };
   return (
-    <div className="app-body">
-      <main className="content" id="main-content">
-        <div className="lesson-content">
-          <h2>Backup &amp; progress</h2>
-          <p className="dim">
+      <main className="support-page backup-page" id="main-content">
+        <header className="support-header">
+          <div className="eyebrow">KEEP YOUR LEARNING</div>
+          <h1>Backup &amp; progress</h1>
+          <p className="page-description">
             Progress is stored locally in this browser profile. Use a backup to move it to another
             browser or computer. Backups are versioned JSON (current version {BACKUP_VERSION}).
           </p>
+        </header>
 
-          <section>
-            <h3>Your progress</h3>
+          <section className="support-section" aria-labelledby="backup-progress-heading">
+            <div className="support-section-heading"><h2 id="backup-progress-heading">Your progress</h2><p className="dim">Saved in this browser profile.</p></div>
             {summary ? (
-              <table className="complexity">
+              <div className="table-scroll"><table className="complexity">
+                <caption className="sr-only">Local learning progress</caption>
                 <tbody>
                   <tr><td>Lessons viewed</td><td>{summary.lessonsViewed}</td></tr>
                   <tr><td>Lessons completed</td><td>{summary.lessonsCompleted}</td></tr>
@@ -84,32 +86,34 @@ export function BackupView() {
                   <tr><td>Exercises solved</td><td>{summary.exercisesSolved}</td></tr>
                   <tr><td>Saved drafts</td><td>{summary.drafts}</td></tr>
                 </tbody>
-              </table>
+              </table></div>
             ) : (
               <p className="dim">Loading…</p>
             )}
           </section>
 
-          <section>
-            <h3>Export</h3>
+          <div className="support-grid backup-actions">
+          <section className="support-section" aria-labelledby="backup-export-heading">
+            <h2 id="backup-export-heading">Export</h2>
             <p className="dim">Download a JSON backup of all local progress, drafts and preferences.</p>
-            <button onClick={doExport}>⬇ Download backup</button>
+            <div className="support-actions"><button onClick={doExport}>⬇ Download backup</button></div>
           </section>
 
-          <section>
-            <h3>Restore</h3>
+          <section className="support-section" aria-labelledby="backup-restore-heading">
+            <h2 id="backup-restore-heading">Restore</h2>
             <p className="dim">
               Import a backup file. It is validated first; only a valid DSA Visual Lab backup will
               replace your current data.
             </p>
-            <label className="answer-label">Choose a backup to restore<input aria-label="Backup file to restore" ref={fileRef} type="file" accept="application/json,.json" onChange={onFile} /></label><p className="dim tiny">A snapshot of your current data is kept before a successful import.</p>{hasPrevious&&<button onClick={()=>void recoverPrevious()}>Restore previous snapshot</button>}
+            <label className="answer-label backup-file-label">Choose a backup to restore<input aria-label="Backup file to restore" ref={fileRef} type="file" accept="application/json,.json" onChange={onFile} /></label>
+            <p className="dim">A snapshot of your current data is kept before a successful import.</p>
+            {hasPrevious&&<div className="support-actions"><button onClick={()=>void recoverPrevious()}>Restore previous snapshot</button></div>}
           </section>
+          </div>
 
           {status && (
             <p role="status" className={status.kind === "ok" ? "self-result correct" : "error"}>{status.text}</p>
           )}
-        </div>
       </main>
-    </div>
   );
 }

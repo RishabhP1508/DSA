@@ -162,18 +162,19 @@ export function Playground() {
   const err = engine.result?.error;
 
   return (
-    <div className="app-body">
-      <main className="content playground" id="main-content">
-        <div className="lesson-content">
+      <main className="support-page playground" id="main-content">
+        <header className="support-header">
           <div className="eyebrow">FOLLOW YOUR “WHAT IF?”</div><h1>Code Playground</h1>
-          <p className="dim">
+          <p className="page-description">
             Your own single-file Python, executed with the same real tracer as the lessons. State is
-            observed, not guessed — the panels show actual variables, calls, output and errors.
+            observed, not guessed. The panels show actual variables, calls, output and errors.
           </p>
+        </header>
 
           <div className="workspace">
-            <div className="workspace-left">
-              <div className="toolbar">
+            <section className="workspace-left" aria-labelledby="playground-code-heading">
+              <div className="workspace-heading"><h2 id="playground-code-heading">Code and execution</h2><p className="dim">Edit your program, run it, then replay the recorded steps.</p></div>
+              <div className="toolbar" role="group" aria-label="Run and playback controls">
                 <button onClick={() => engine.run(source, stdin)} disabled={!engine.ready || engine.running}>
                   {engine.ready ? "▶ Run" : "Loading Python…"}
                 </button>
@@ -215,6 +216,8 @@ export function Playground() {
               </div>
 
               {/* R8.3 — named drafts, import/export, clear save status. */}
+              <section className="playground-draft-controls" aria-labelledby="playground-drafts-heading">
+              <h3 id="playground-drafts-heading">Saved drafts and files</h3>
               <div className="toolbar draft-bar">
                 <label className="speed-control">
                   Draft
@@ -247,6 +250,7 @@ export function Playground() {
                 <button onClick={() => exportPythonFile(source, slotLabel(slot))}>💾 Export .py</button>
               </div>
               {status && <div className="dim tiny save-status" role="status">{status}</div>}
+              </section>
               {stale && engine.result && (
                 <div className="stale-banner" role="status">
                   ⚠ Source or input changed since this run — the trace below is outdated (it predates
@@ -259,6 +263,8 @@ export function Playground() {
 
               {savedAt && <div className="dim tiny">Draft saved {new Date(savedAt).toLocaleString()}</div>}
 
+              <section className="playground-input" aria-labelledby="playground-input-heading">
+              <h3 id="playground-input-heading">Program input</h3>
               <label className="answer-label">
                 Input for input() (one value per line)
                 <textarea
@@ -269,8 +275,11 @@ export function Playground() {
                   placeholder="Optional stdin…"
                 />
               </label>
+              </section>
 
               {engine.result && (
+                <section className="playground-timeline" aria-labelledby="playground-timeline-heading">
+                <h3 id="playground-timeline-heading">Playback timeline</h3>
                 <div className="timeline">
                   <input
                     type="range"
@@ -288,26 +297,31 @@ export function Playground() {
                     {engine.result.incomplete ? " · incomplete" : ""}
                   </span>
                 </div>
+                </section>
               )}
 
               {err && (
                 <div className="explanation-box">
-                  <h4>Error</h4>
+                  <h3>Error</h3>
                   <p className="error">
                     {err.type}: {err.message}
                     {err.line ? ` (line ${err.line})` : ""}
                   </p>
                 </div>
               )}
-            </div>
+            </section>
 
-            <div className="workspace-right">
+            <section className="workspace-right" aria-labelledby="playground-state-heading">
+              <div className="workspace-heading"><h2 id="playground-state-heading">Recorded state</h2><p className="dim">Inspect the variables, calls and output from your run.</p></div>
+              <section className="playground-visualization" aria-labelledby="playground-visualization-heading">
+              <h3 id="playground-visualization-heading">Visualization</h3>
               <VisualizeAs event={!stale?engine.event:undefined} binding={vizBinding} onChange={setVizBinding} />
               {!stale && vizBinding && engine.event && (
                 <div className="viz-slot">
                   <Visualizer event={engine.event} binding={vizBinding} />
                 </div>
               )}
+              </section>
               {/* Playground code is the learner's own — no authored artifacts to
                   disable. The recorded trace stays available after an edit; the
                   banner just notes it predates the edit until re-run. */}
@@ -318,10 +332,8 @@ export function Playground() {
                 stale={stale}
               />
               <ComparisonLab />
-            </div>
+            </section>
           </div>
-        </div>
       </main>
-    </div>
   );
 }

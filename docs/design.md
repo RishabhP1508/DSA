@@ -35,6 +35,26 @@ recorded indices; the learner chooses when to reveal the explanation.
 
 ## Interaction and accessibility
 
+### Reading hierarchy
+
+Page titles use 36px type on desktop and 28px on narrow screens. Reading sections
+use 24px headings (22px on mobile), 18px subheadings and 16px body text. Prose
+is limited to 72ch. Numbered sections and an "On this page" outline distinguish
+the topic from its subtopics. The outline becomes a disclosure on smaller screens.
+Authored time and space notes remain in the main reading content at every width.
+
+Each exercise has its own bordered panel, a heading, a prompt and separate
+approach/reason groups. Radio choices occupy labelled rows; feedback, progressive
+hints and model explanations have their own space. Actions wrap and stack on
+mobile. Learn groups lessons under their topic headings, while Glossary, Backup
+and Playground use the same page and section hierarchy.
+
+The editor uses theme-specific syntax colors. Native browser zoom can shorten
+the viewport, so the navigation rail scrolls vertically and all destinations
+remain reachable. Browser regressions check computed sizes, wrapping, real
+answer feedback and every lesson/pattern tab. Native 200% tests change the
+browser's own page-zoom setting in a disposable profile.
+
 Search supports Ctrl+K, Escape, focus containment and return to its opener.
 Closed mobile navigation is inert; Escape returns focus to its opener. Tabs
 support arrow keys. Skip links target the current main content. Narrow layouts
