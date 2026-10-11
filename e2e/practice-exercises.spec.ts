@@ -62,8 +62,9 @@ test("a recognition drill grades an authored approach + reason", async ({ page }
   await expect(check).toBeDisabled();
   // Choose the first approach and first reason, then check — a verdict appears.
   await page.getByRole("radio").first().check();
-  // Pick the first "reason" radio (second group). Radios are grouped by name.
-  const reasonRadios = page.locator('input[name="reason"]');
+  // Each drill has distinct radio names. Use its labelled reason group,
+  // rather than a shared name that would link unrelated exercises together.
+  const reasonRadios = page.getByRole('group', { name: 'Because…', exact: true }).first().getByRole('radio');
   await reasonRadios.first().check();
   await expect(check).toBeEnabled();
   await check.click();
