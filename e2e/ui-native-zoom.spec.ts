@@ -1,6 +1,7 @@
 import { chromium, test, expect } from '@playwright/test';
 import { mkdir, mkdtemp, readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { tmpdir } from 'node:os';
 
 // This is actual browser page zoom, selected through browser Settings. It is
 // deliberately independent of the viewport/DPR reflow proxy in ui-hierarchy.
@@ -8,7 +9,9 @@ import path from 'node:path';
 test('native 200% page zoom keeps every main page and learning tab reachable', async ({ baseURL }, info) => {
   test.setTimeout(180_000);
   await mkdir(info.outputDir, { recursive: true });
-  const profile = await mkdtemp(path.join(info.outputDir, 'native-zoom-profile-'));
+  // Chrome cannot persist all profile files under very long Windows paths.
+  // A short disposable profile also keeps personal browser profiles untouched.
+  const profile = await mkdtemp(path.join(tmpdir(), 'dsa-native-zoom-'));
   const channel = info.project.use.channel;
   // A full Chromium executable includes chrome://settings. The default
   // headless-shell executable does not provide that native settings UI.
