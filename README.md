@@ -5,13 +5,14 @@ patterns in a local browser app. It starts with variables and loops, then moves
 through core and advanced DSA. Lessons use plain explanations, original exercises
 and diagrams built from actual Python execution states.
 
-Version 1.0.0 contains 133 lessons, 29 pattern guides and 393 exercises. The
+Version 1.0.1 contains 133 lessons, 29 pattern guides and 393 exercises. The
 offline Windows package includes the app, Python runtime, portable Node, source
 code and dependency notices. No account, API key or AI service is required.
 
 ## Run the Windows package
 
-Use the supplied `DSA-Visual-Lab-1.0.0-Windows-x64.zip`:
+Download [DSA-Visual-Lab-1.0.1-Windows-x64.zip](https://github.com/RishabhP1508/DSA/releases/download/v1.0.1/DSA-Visual-Lab-1.0.1-Windows-x64.zip)
+from [GitHub Releases](https://github.com/RishabhP1508/DSA/releases/latest):
 
 1. Extract the entire ZIP to a normal folder. Keep its contents together.
 2. Double-click `Start.cmd` inside the extracted folder.
@@ -27,10 +28,18 @@ occupied, the launcher reports the conflict. It does not stop another app or a
 different DSA build. If startup fails, read the message in the launcher window
 and resolve the named port conflict before restarting.
 
-The prebuilt ZIP was delivered separately and is not checked into this
-repository. The [1.0.0 delivery record](docs/releases/1.0.0.md) contains its exact
-filename, checksum, runtime versions and test results. This repository contains
-the source and tools for building another package.
+The named Windows ZIP includes the portable app. GitHub's automatic "Source code"
+archives contain the repository and require a development setup. Release assets
+also include a `.sha256` checksum. The previous
+[1.0.0 delivery record](docs/releases/1.0.0.md) preserves its original checks;
+the [1.0.1 delivery record](docs/releases/1.0.1.md) records the current archive,
+launcher and offline checks. The [UI hierarchy audit](docs/reviews/ui-content-hierarchy.md)
+records its interface changes.
+
+Version 1.0.1 adds numbered reading sections, a page outline, topic-grouped lessons,
+separate exercise panels and stacked answer choices. All pages share readable
+heading sizes and responsive layouts. Python syntax colors adapt to light and dark
+themes; short zoomed windows can scroll through the complete navigation.
 
 ## Learn and practice
 
@@ -184,7 +193,14 @@ $env:PLAYWRIGHT_CHANNEL = "msedge"
 npm run test:browser
 ```
 
-The recorded 1.0.0 checks on October 10, 2026 passed 999 tests across 93 files,
+The 1.0.1 source checks passed 1,007 tests across 94 files. Windows Chrome and
+Edge each passed all 52 browser tests, with no skips. The hierarchy inventory
+checked all 648 learning tabs at desktop and mobile widths in each browser.
+Dark theme, real feedback, hints, keyboard flows and native 200% page zoom were
+also checked. Exact commits and scope are in the
+[UI hierarchy audit](docs/reviews/ui-content-hierarchy.md).
+
+The original 1.0.0 checks on October 10, 2026 passed 999 tests across 93 files,
 all 162 standard Python examples, 163 coding model solutions and 166 recognition
 exercises. All 163 coding exercises reject each of five authored faulty-solution
 categories. All 329 interactive exercises have five hints followed by an

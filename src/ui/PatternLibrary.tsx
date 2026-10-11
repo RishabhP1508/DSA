@@ -1,25 +1,9 @@
 import { useMemo, useState } from 'react';
-import { ArrowLeft, ArrowRight, Check, GitBranch, Search } from 'lucide-react';
-import { lessons, patterns } from '../content/registry';
-import type { PatternDefinition } from '../core/types';
+import { ArrowRight, GitBranch, Search } from 'lucide-react';
+import { patterns } from '../content/registry';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Badge } from '../components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { PatternWorkspace } from './PatternWorkspace';
-import { ExercisePanel } from './ExercisePanel';
-import { mdInline } from './md';
-const prose = (text:string) => <p dangerouslySetInnerHTML={{__html:mdInline(text)}}/>;
-const items = (rows:string[]) => <ul>{rows.map((text,i)=><li key={i} dangerouslySetInnerHTML={{__html:mdInline(text)}}/>)}</ul>;
-function PatternDetail({pattern,onBack,onOpenLesson}:{pattern:PatternDefinition;onBack:()=>void;onOpenLesson?:(id:string)=>void}) {
- const [tab,setTab]=useState('recognize');
- return <main className="lesson-reader pattern-reader" id="main-content"><button className="reader-back" onClick={onBack}><ArrowLeft size={16}/>All patterns</button><header className="reader-heading"><div><div className="eyebrow">{pattern.category}</div><h1>{pattern.title}</h1>{prose(pattern.summary)}</div><Badge variant="secondary"><GitBranch size={14}/>Pattern guide</Badge></header>
- <Tabs value={tab} onValueChange={setTab}><TabsList className="reader-tabs"><TabsTrigger value="recognize">Recognize</TabsTrigger><TabsTrigger value="watch">Watch the code</TabsTrigger><TabsTrigger value="practice">Try & practice</TabsTrigger><TabsTrigger value="references">Related & sources</TabsTrigger></TabsList>
- <TabsContent value="recognize" className="reader-pane"><div className="reading-layout"><article className="reading-prose"><section><div className="eyebrow">START WITH THE PROBLEM</div><h2>What should catch your eye?</h2>{items(pattern.clues)}</section><section><h2>The straightforward starting point</h2>{prose(pattern.naiveApproach)}</section><section><h2>Where the improvement comes from</h2>{prose(pattern.whyItHelps)}</section><section className="condition-callout"><h2>Check these conditions</h2>{items(pattern.conditions)}</section><section><h2>Compare your options</h2>{items(pattern.alternatives)}</section><section><h2>Clues can mislead you</h2>{items(pattern.counterexamples)}</section><Button onClick={()=>setTab('watch')}>Watch a worked example<ArrowRight/></Button></article><aside className="reading-aside"><GitBranch size={26}/><h3>Reason before choosing</h3><p>A familiar shape is a clue. The constraints and correctness conditions decide whether it fits.</p><div className="study-sequence"><span><Check size={15}/>Understand the input and output</span><span><Check size={15}/>Find the repeated work</span><span><Check size={15}/>Check the required conditions</span><span><Check size={15}/>Test a counterexample</span></div>{prose(pattern.complexityNote??"")}</aside></div></TabsContent>
- <TabsContent value="watch" forceMount hidden={tab!=='watch'} className="reader-pane"><div className="workspace-intro"><h2>Follow the reasoning through real Python</h2><p>Each line event shows the state before that line runs. Step forward to see its effect.</p></div><PatternWorkspace key={pattern.id} pattern={pattern}/><details className="line-guide"><summary>Read every line explanation</summary><table><thead><tr><th>Line</th><th>What it does</th></tr></thead><tbody>{pattern.codeExplanations.map(row=><tr key={row.line}><td>{row.line}</td><td dangerouslySetInnerHTML={{__html:mdInline(row.explanation)}}/></tr>)}</tbody></table></details></TabsContent>
- <TabsContent value="practice" className="reader-pane"><div className="workspace-intro"><h2>Choose an approach, then explain why</h2><p>Use a hint when you need it. Check the conditions, including why a tempting alternative fails.</p></div>{pattern.exercises.map(ex=><ExercisePanel key={ex.id} exercise={ex} patternMode ownerKind="pattern" ownerId={pattern.id}/>)}</TabsContent>
- <TabsContent value="references" className="reader-pane reading-prose"><h2>Connect this idea</h2><div className="related-grid">{pattern.linkedLessons.map(id=><button key={id} onClick={()=>onOpenLesson?.(id)}><span>{lessons.find(l=>l.id===id)?.title??id}</span><ArrowRight size={16}/></button>)}</div><h2>Sources consulted</h2><p className="dim">These links need internet. The guide and its examples are already included locally.</p><div className="source-list">{pattern.references.map(r=><article key={r.url}><a href={r.url} target="_blank" rel="noreferrer">{r.title}<ArrowRight size={14}/></a><p>{r.section}</p><small>Accessed {r.accessDate} · {r.purpose}</small></article>)}</div></TabsContent></Tabs></main>;
-}
+import { PatternDetail } from './PatternDetail';
 export function PatternLibrary({initialId,onOpenLesson}:{initialId?:string;onOpenLesson?:(id:string)=>void}){
  const [activeId,setActiveId]=useState(initialId);
  const [query,setQuery]=useState('');const [category,setCategory]=useState('all');
