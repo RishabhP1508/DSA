@@ -8,7 +8,26 @@ import { EditorView, lineNumbers, Decoration, gutter, GutterMarker, type Decorat
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { keymap } from "@codemirror/view";
 import { python } from "@codemirror/lang-python";
-import { syntaxHighlighting, defaultHighlightStyle } from '@codemirror/language';
+import { HighlightStyle, syntaxHighlighting } from '@codemirror/language';
+import { tags } from '@lezer/highlight';
+import { EDITOR_SYNTAX_COLORS } from './editor-syntax';
+
+// Colors are scoped to the existing editor. The ancestor theme changes these
+// CSS variables without recreating the EditorView or losing an unsaved draft.
+const syntaxTokens = HighlightStyle.define([
+  { tag: tags.comment, class: 'cm-syntax-comment' },
+  { tag: tags.keyword, class: 'cm-syntax-keyword' },
+  { tag: [tags.number, tags.bool, tags.null], class: 'cm-syntax-number' },
+  { tag: [tags.string, tags.regexp], class: 'cm-syntax-string' },
+  { tag: [tags.function(tags.variableName), tags.className, tags.typeName], class: 'cm-syntax-function' },
+  { tag: [tags.operator, tags.punctuation], class: 'cm-syntax-operator' },
+]);
+
+const syntaxTheme = EditorView.theme({
+  '&': Object.fromEntries(Object.entries(EDITOR_SYNTAX_COLORS.light).map(([name, color]) => [`--editor-${name}`, color])),
+  '.dark &': Object.fromEntries(Object.entries(EDITOR_SYNTAX_COLORS.dark).map(([name, color]) => [`--editor-${name}`, color])),
+  ...Object.fromEntries(Object.keys(EDITOR_SYNTAX_COLORS.light).map(name => [`.cm-syntax-${name}`, { color: `var(--editor-${name})` }])),
+});
 
 const setHighlight = StateEffect.define<number | null>();
 const setBreakpoints = StateEffect.define<ReadonlySet<number>>();
@@ -89,7 +108,8 @@ export function CodeEditor({
         history(),
         keymap.of([...defaultKeymap, ...historyKeymap]),
         python(),
-        syntaxHighlighting(defaultHighlightStyle),
+        syntaxHighlighting(syntaxTokens),
+        syntaxTheme,
         highlightField,
         EditorView.editable.of(!readOnly),
         EditorView.updateListener.of((u) => {

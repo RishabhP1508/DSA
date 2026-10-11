@@ -7,6 +7,7 @@
 
 import { useMemo, useState } from "react";
 import { buildGlossary } from "./Glossary";
+import { mdInline } from "./md";
 
 export function GlossaryView({ onOpenLesson }: { onOpenLesson?: (id: string) => void }) {
   const glossary = useMemo(() => buildGlossary(), []);
@@ -21,26 +22,33 @@ export function GlossaryView({ onOpenLesson }: { onOpenLesson?: (id: string) => 
     : glossary;
 
   return (
-    <div className="app-body">
-      <main className="content" id="main-content">
-        <div className="lesson-content">
-          <h2>Glossary</h2>
-          <p className="dim">
+      <main className="support-page glossary-page" id="main-content">
+        <header className="support-header">
+          <div className="eyebrow">WORDS YOU WILL MEET</div>
+          <h1>Glossary</h1>
+          <p className="page-description">
             Every term introduced across the curriculum, with the topic it was defined in. A term
             with more than one meaning keeps all of its senses so you can tell them apart.
           </p>
-          <label className="answer-label">
+        </header>
+        <section className="glossary-tools" aria-label="Find a term">
+          <label className="answer-label" htmlFor="glossary-filter">
             Filter terms
             <input
               className="answer-box"
+              id="glossary-filter"
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Type to filter…"
             />
           </label>
+          <p className="dim glossary-count" role="status">{shown.length} of {glossary.length} terms</p>
+        </section>
+        <section className="support-section" aria-labelledby="glossary-terms-heading">
+          <h2 id="glossary-terms-heading">Terms and definitions</h2>
           <dl className="glossary">
             {shown.map((e) => (
-              <div key={e.term}>
+              <div className="glossary-entry" key={e.term}>
                 <dt>
                   {e.term}
                   {e.senses.length > 1 && (
@@ -50,23 +58,22 @@ export function GlossaryView({ onOpenLesson }: { onOpenLesson?: (id: string) => 
                   )}
                 </dt>
                 {e.senses.map((s, i) => (
-                  <dd key={i}>
-                    {s.definition}{" "}
+                  <dd className="glossary-sense" key={i}>
+                    <p dangerouslySetInnerHTML={{ __html: mdInline(s.definition) }} />
                     <button
-                      className="link-like"
+                      className="link-like glossary-context"
                       onClick={() => onOpenLesson?.(s.lessonId)}
                       title={`Open ${s.lessonTitle}`}
                     >
-                      — {s.area}: {s.lessonTitle}
+                      {s.area}: {s.lessonTitle}
                     </button>
                   </dd>
                 ))}
               </div>
             ))}
           </dl>
-          {shown.length === 0 && <p className="dim">No terms match “{q}”.</p>}
-        </div>
+          {shown.length === 0 && <p className="dim">No terms match "{q}".</p>}
+        </section>
       </main>
-    </div>
   );
 }

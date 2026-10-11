@@ -9,18 +9,23 @@
  * scored (plan §3 / requirement R6.4.3).
  */
 
-import { useState } from "react";
+import { useId, useState, type ReactNode } from "react";
 import type { RecognitionGrading } from "../core/types";
 import { gradeRecognition, type RecognitionVerdict } from "../core/recognition-grading";
+import { Button } from '../components/ui/button';
+import { mdInline } from './md';
 
 export function RecognitionPanel({
   grading,
   onGraded,
+  hintAction,
 }: {
   grading: RecognitionGrading;
   /** Reports a graded verdict so the owner can record an attempt. */
   onGraded?: (accepted: boolean) => void;
+  hintAction?: ReactNode;
 }) {
+  const groupId = useId();
   const [approachId, setApproachId] = useState<string | null>(null);
   const [reasonId, setReasonId] = useState<string | null>(null);
   const [verdict, setVerdict] = useState<RecognitionVerdict | null>(null);
@@ -38,15 +43,15 @@ export function RecognitionPanel({
 
   return (
     <div className="recognition-block">
-      <p className="dim tiny">{grading.scenario}</p>
+      <p className="recognition-scenario" dangerouslySetInnerHTML={{__html:mdInline(grading.scenario)}} />
 
       <fieldset className="recognition-group">
         <legend>Which approach fits?</legend>
         {grading.approaches.map((a) => (
-          <label key={a.id} className="recognition-choice">
+          <label key={a.id} className={'recognition-choice' + (approachId === a.id ? ' is-selected' : '')}>
             <input
               type="radio"
-              name="approach"
+              name={`${groupId}-approach`}
               value={a.id}
               checked={approachId === a.id}
               onChange={() => {
@@ -54,7 +59,7 @@ export function RecognitionPanel({
                 setVerdict(null);
               }}
             />
-            {a.label}
+            <span className="choice-copy" dangerouslySetInnerHTML={{__html:mdInline(a.label)}} />
           </label>
         ))}
       </fieldset>
@@ -62,10 +67,10 @@ export function RecognitionPanel({
       <fieldset className="recognition-group">
         <legend>Because…</legend>
         {grading.reasons.map((r) => (
-          <label key={r.id} className="recognition-choice">
+          <label key={r.id} className={'recognition-choice' + (reasonId === r.id ? ' is-selected' : '')}>
             <input
               type="radio"
-              name="reason"
+              name={`${groupId}-reason`}
               value={r.id}
               checked={reasonId === r.id}
               onChange={() => {
@@ -73,22 +78,23 @@ export function RecognitionPanel({
                 setVerdict(null);
               }}
             />
-            {r.text}
+            <span className="choice-copy" dangerouslySetInnerHTML={{__html:mdInline(r.text)}} />
           </label>
         ))}
       </fieldset>
 
       <div className="exercise-actions">
-        <button onClick={check} disabled={!approachId || !reasonId}>
+        <Button onClick={check} disabled={!approachId || !reasonId}>
           Check my reasoning
-        </button>
-        <button onClick={() => setShowModel((s) => !s)}>
+        </Button>
+        {hintAction}
+        <Button variant="secondary" onClick={() => setShowModel((s) => !s)}>
           {showModel ? "Hide explanation" : "Show model explanation"}
-        </button>
+        </Button>
       </div>
 
       {verdict && (
-        <div className={`recognition-verdict ${accepted ? "accepted" : "rejected"}`}>
+        <div className={`recognition-verdict ${accepted ? "accepted" : "rejected"}`} role="status">
           <strong>
             {verdict.outcome === "accepted"
               ? "✓ Correct — that approach and reason hold."
@@ -96,7 +102,7 @@ export function RecognitionPanel({
                 ? "✓ Valid alternative — with conditions."
                 : "✗ Not quite."}
           </strong>
-          <p>{verdict.feedback}</p>
+          <p dangerouslySetInnerHTML={{__html:mdInline(verdict.feedback)}} />
           {verdict.conditions && (
             <p className="dim tiny">Conditions: {verdict.conditions}</p>
           )}
@@ -107,7 +113,7 @@ export function RecognitionPanel({
       {showModel && (
         <div className="model-answer">
           <div className="dim tiny">Model explanation</div>
-          <p>{grading.modelExplanation}</p>
+          <p dangerouslySetInnerHTML={{__html:mdInline(grading.modelExplanation)}} />
           {grading.alternatives && grading.alternatives.length > 0 && (
             <ul className="dim tiny">
               {grading.alternatives.map((alt) => (
