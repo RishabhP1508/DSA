@@ -40,6 +40,37 @@ origin. The aggregate checks still execute every standard Python example and
 coding model, reject authored faulty solutions and validate current review
 evidence. No passing UI test grants curriculum sign-off.
 
-Final tested commits, outcomes and package identities are recorded after the
-integrated verification and archive checks. Historical 1.0.0 results remain
-attributed to their original build.
+## Completed source and browser checks
+
+Checks completed on Windows on October 10, 2026 (October 11 UTC).
+
+| Check | Exact tested commit | Result |
+|---|---|---|
+| `npm run check:all` | `fb0053f48df6a04c6223e6ddf10f2fee229ebb93` | Exit 0; 1,007 tests across 94 files |
+| Complete Windows Chrome suite | `470ca3038d1471d1d345f897eddd7a24fbd80ea0` | 52/52, zero skips |
+| Complete Windows Edge suite | `470ca3038d1471d1d345f897eddd7a24fbd80ea0` | 52/52, zero skips |
+| Every learning tab, desktop and mobile | Same browser commit | 648 at 1440px plus 648 at 390px, per browser; zero hierarchy/layout findings |
+| Native 200% browser zoom | Same browser commit | All seven pages, eight learning tabs and search pass in both browsers |
+| Syntax readability | Same browser commit | Actual computed light/dark token contrast is at least 4.5:1 |
+
+Only browser tests changed between the two tested commits. The production UI,
+engine, content and storage are identical. All 133 lesson and 29 pattern outputs
+pass; all 163 coding models pass and reject each of the five faulty variants;
+166 recognition exercises and 329 hint progressions pass. Content hashes and
+all 162 current curriculum review records remain unchanged. Lint reports zero
+errors and 33 warnings, including the intentional internal formatting-marker
+regex. The existing 25 semantic consistency advisories remain documented.
+
+The first full Chrome attempt exposed two test setup assumptions: a selector
+expected the old shared `reason` name, and the native zoom context inherited
+Playwright's DPR emulation. The corrected test uses the labelled reason group
+and clears emulation. A short temporary profile also avoids Windows long-path
+limitations when Chrome writes its preferences. The final complete runs above
+pass with zero retries; no application assertion was disabled.
+
+Supporting pages, empty search/filter states and representative learning screens
+received a separate screenshot review at desktop, mobile and dark theme. These
+checks establish the tested hierarchy and behavior; they do not certify every
+future content edit or general accessibility conformance. Package identities and
+archive acceptance are recorded separately after the immutable archive checks.
+Historical 1.0.0 results retain their original attribution.

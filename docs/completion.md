@@ -31,7 +31,7 @@ keyboard/mobile navigation, lesson tabs, pattern catalogue, practice, playground
 and backup recovery. [Design notes](design.md) record its behavior and references.
 This is implemented code, not a proposal that Kiro must integrate.
 
-## Final verification
+## Original 1.0.0 verification
 
 Validated source tree: `f975ec5c23675c45dd59f2aad6047eb982241131`, based on
 merged main `f0213e5`. Checks completed on native Windows on 2026-10-10:
@@ -77,3 +77,14 @@ The package includes curriculum, bundled Python, a checksum-verified portable
 Node runtime, local servers, Start/Stop launchers, source and dependency notices.
 See [packaging procedure](windows-package.md) and the
 [verified 1.0.0 delivery record](releases/1.0.0.md).
+
+## 1.0.1 UI hierarchy update
+
+The [hierarchy audit](reviews/ui-content-hierarchy.md) records the latest source
+and browser checks: 1,007 unit/component tests and 52 browser tests each in
+Windows Chrome and Edge, with no skips. Every tab of all 133 lessons and 29
+patterns was checked at desktop and mobile widths. This update also verifies
+actual native 200% page zoom in both browsers, in addition to the earlier reflow
+proxy. It fixes section/exercise hierarchy, small-screen controls, dark editor
+syntax contrast and scrolling through navigation in short zoomed windows.
+Curriculum reviews, execution and saved-progress formats remain unchanged.

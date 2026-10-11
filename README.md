@@ -191,7 +191,14 @@ $env:PLAYWRIGHT_CHANNEL = "msedge"
 npm run test:browser
 ```
 
-The recorded 1.0.0 checks on October 10, 2026 passed 999 tests across 93 files,
+The 1.0.1 source checks passed 1,007 tests across 94 files. Windows Chrome and
+Edge each passed all 52 browser tests, with no skips. The hierarchy inventory
+checked all 648 learning tabs at desktop and mobile widths in each browser.
+Dark theme, real feedback, hints, keyboard flows and native 200% page zoom were
+also checked. Exact commits and scope are in the
+[UI hierarchy audit](docs/reviews/ui-content-hierarchy.md).
+
+The original 1.0.0 checks on October 10, 2026 passed 999 tests across 93 files,
 all 162 standard Python examples, 163 coding model solutions and 166 recognition
 exercises. All 163 coding exercises reject each of five authored faulty-solution
 categories. All 329 interactive exercises have five hints followed by an
