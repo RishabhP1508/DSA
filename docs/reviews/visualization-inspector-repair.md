@@ -23,6 +23,7 @@ layout regression pass. It starts from merged main `9faa64b`.
 | String whitespace could disappear | Visible whitespace glyphs preserve original code-point indices |
 | Empty roots could be confused with missing variables | Separate recorded `None`, empty and unbound states |
 | Huge values, keys, labels and frame previews could flood the DOM | Bounded previews with omission notices and paged recorded text |
+| Personal programs could render thousands of top-level variables at once | Fifty variables per page, keyboard page jumps and counts, preserving off-page aliases |
 | A previous frame selection could reappear in later calls | Reset selection when the observed stack changes; clear current-frame markers |
 | Playground retained stale variables and enabled some playback controls | State panels and controls consistently follow source/input freshness |
 | Deep mutations were missed by the changes summary | Cycle-safe propagation through recorded references, with each object compared once |
@@ -58,7 +59,45 @@ the corresponding fixes. Independent agents review the inspector, diagram
 families and browser behavior; their reports distinguish synthetic fixtures,
 actual bundled-Python states and rendered browser checks.
 
-Final source commits, full-suite counts, browser runs, actual curriculum trace
-inventory and Windows package identities are recorded here after verification.
-Until those receipts are recorded, intermediate passing checks are development
-evidence rather than a release-completion claim.
+Final source and browser checks ran on
+`afc42e18fc72a8913c66af6fc72e61bfbaeadf83`. The browser suites passed 65/65
+in installed Windows Chrome and 65/65 in installed Windows Edge, with zero skips
+or retries. They cover all seven main pages and search; all 648 learning tabs at
+1440px and 390px per browser; all 17 populated diagram families at
+320/390/768/1440px in both themes; empty and None states; aliases, copies,
+typed keys, cycles, long values, root pagination, call/return/error states,
+keyboard controls and actual native 200% browser Settings zoom. Computed text
+contrast is checked separately from screenshots.
+
+`npm run check:all` passed with 1,070 tests across 103 files, all 133 lesson and
+29 pattern outputs, 133 verified coverage entries and all 162 current subject
+reviews intact. All 163 coding models and all five faulty-solution categories
+pass, as do 166 recognition exercises and 329 complete hint progressions.
+Lint reports 33 warnings and zero errors. Learner-facing content, the tracing
+engine and persistence formats are unchanged.
+
+The actual-program inventory executed all 133 lessons and 29 patterns in Chrome,
+checking final and representative interior states at desktop and mobile widths:
+648 state/width checks, 628 rendered SVG diagrams, zero layout issues or page
+errors. This receipt is deliberately attributed in two parts: the first 124
+lessons and 496 checks ran at `6f5e508cab90a830e1720bd4816da911d0a80376`;
+the remaining nine lessons and 29 patterns, 152 checks, ran at
+`c8881e0e7d42a508fd2abe95402df94d7c5bb2bd`. The first long-lived context
+timed out waiting for House Robber during concurrent rebuilds. That partial
+receipt is retained; House Robber passed immediately in the fresh stable tail
+context. Later changes only add root-variable pagination and its checks, plus
+test setup and documentation. The final full browser suites check those changes.
+
+Two aggregate attempts exposed an existing five-second factual-test timeout
+during cold Python startup. Runtime initialization now runs in the setup hook
+with its own 120-second budget. The factual assertions and their five-second
+budget are unchanged. Failure logs are retained alongside the final gate.
+Earlier browser checks also caught the missing legacy `.viz-slot` integration
+class; it was restored and the unchanged assertions pass in the final suites.
+
+The aggregate and delivery results are linked from the
+[1.0.2 release record](../releases/1.0.2.md) after packaging. Local receipts stay
+under `outputs/visualization-repair-*` and the delivery's `Verification 1.0.2/`
+folder. Representative diagrams and inspector screenshots received separate
+visual review; DOM checks are not a claim that every screenshot was manually
+reviewed or that the application has general accessibility certification.
