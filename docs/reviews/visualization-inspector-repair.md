@@ -29,6 +29,7 @@ layout regression pass. It starts from merged main `9faa64b`.
 | Many aliases repeated expensive object comparisons | Shared per-snapshot comparison work instead of repeating it per variable |
 | Manual source inspection could point beyond shortened code | Clamp the selected line to the current source |
 | Exception exits could be shown as successful `None` returns | Recognize adjacent same-frame exception/exit pairs conservatively and label unwinding |
+| A long function name widened the mobile complexity explanation | Wrap recorded analysis text within its panel, confirmed with deep recursion at 390px |
 
 Grouping is conservative: two views with different models, field adapters,
 overlays, graph direction or range metadata remain separate even when they
