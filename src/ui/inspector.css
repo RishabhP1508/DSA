@@ -15,6 +15,12 @@
 .inspector-columns, .oi-row, .oi-node > .oi-toggle { display: grid; grid-template-columns: minmax(72px, .9fr) minmax(60px, .65fr) minmax(0, 1.6fr); column-gap: 16px; align-items: start; }
 .inspector-columns { font-size: 12px; font-weight: 650; color: var(--muted); padding: 0 10px 9px; border-bottom: 1px solid var(--border); }
 .variables-panel .vars-inspect { display: flex; flex-direction: column; gap: 0; padding: 0; overflow: visible; }
+.inspector-page-count { font-size: 13px; color: var(--muted); line-height: 1.6; margin: 12px 0; }
+.inspector-pagination, .inspector-pagination form, .inspector-pagination label { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.inspector-pagination { padding: 10px 0 16px; font-size: 13px; }
+.variables-panel .inspector-pagination button { min-height: 44px; font-size: 13px; }
+.variables-panel .inspector-pagination button:disabled { opacity: .5; cursor: default; }
+.inspector-pagination input { width: 68px; min-width: 0; min-height: 44px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--foreground); }
 .oi-entry, .oi-node { min-width: 0; max-width: 100%; font: 14px/1.7 var(--mono); }
 .oi-row, .oi-node > .oi-toggle { padding: 11px 10px; min-width: 0; max-width: 100%; border-bottom: 1px solid var(--border); }
 .oi-node > .oi-toggle { width: 100%; font: inherit !important; color: var(--foreground); border: 0 !important; border-bottom: 1px solid var(--border) !important; border-radius: 0; background: transparent; text-align: left; padding: 11px 10px !important; min-height: 44px; }

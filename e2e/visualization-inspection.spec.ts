@@ -354,6 +354,33 @@ test('a deep recorded call stack scrolls locally and keeps its current frame rea
   await screenshot(page, 'deep-stack-local-scroll-current-frame');
 });
 
+test('hundreds of recorded globals stay paged while every variable and shared identity remains reachable', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 1000 }); await page.goto('/');
+  await playground(page, 'globals().update(dict.fromkeys(map(str, range(150)), []))\nprint("ready")');
+  const section = page.locator('.variables-panel .inspector-variables');
+  const rows = section.locator('.vars-inspect > [data-inspector-label]');
+  expect(await rows.count()).toBeLessThanOrEqual(50);
+  await expect(section.getByRole('status')).toContainText('1–50 of 150');
+  await expect(rows.first()).toHaveAttribute('data-inspector-label', '0');
+  const identity = await rows.first().getAttribute('data-object-id'); expect(identity).toBeTruthy();
+  const names = new Set<string>();
+  for (let pageNumber = 1; pageNumber <= 3; pageNumber++) {
+    await expect(rows).toHaveCount(50);
+    for (const label of await rows.evaluateAll(nodes => nodes.map(node => node.getAttribute('data-inspector-label')!))) names.add(label);
+    for (const recordedId of await rows.evaluateAll(nodes => nodes.map(node => node.getAttribute('data-object-id')))) expect(recordedId).toBe(identity);
+    await noPageOverflow(page);
+    const next = section.getByRole('button', { name: 'Next variables page', exact: true });
+    if (pageNumber < 3) await next.click(); else await expect(next).toBeDisabled();
+  }
+  expect(names.size).toBe(150);
+  await expect(rows.last()).toHaveAttribute('data-inspector-label', '149');
+  const jump = section.getByRole('spinbutton', { name: 'Variables page number', exact: true });
+  await jump.fill('1'); await jump.press('Enter');
+  await expect(rows.first()).toHaveAttribute('data-inspector-label', '0');
+  await expect(section.getByRole('button', { name: 'Previous variables page', exact: true })).toBeDisabled();
+  await screenshot(page, 'mobile-paged-globals-shared-object', section);
+});
+
 test('populated diagrams and aligned inspector remain usable with actual native 200% page zoom', async ({ baseURL }, info) => {
   test.setTimeout(120_000);
   const profile = await mkdtemp(path.join(tmpdir(), 'dsa-viz-zoom-'));
