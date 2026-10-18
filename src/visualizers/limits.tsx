@@ -1,4 +1,5 @@
-import type { CSSProperties } from 'react';
+import type { CSSProperties, SVGProps } from 'react';
+import './diagrams.css';
 import type { TraceObject, TraceEvent, TraceValue } from '../core/types';
 import type { ResolvedOverlay } from './helpers';
 
@@ -123,8 +124,42 @@ export function hiddenPointers(overlays: ResolvedOverlay[], entries: Entry[]) {
 }
 
 /** Small diagrams retain their layout; larger diagrams scroll at natural size. */
-export function boundedSvgStyle(width: number, height: number): CSSProperties | undefined {
-  return width > 900 || height > 360 ? { width, minWidth: width, height, maxHeight: 'none' } : undefined;
+export function boundedSvgStyle(width: number, height: number): CSSProperties {
+  // Always set the natural size. Letting a small viewBox inherit width:100%
+  // enlarges its cells, labels and whitespace to fill the whole workspace.
+  return { width, minWidth: width, maxWidth: 'none', height, maxHeight: 'none', flexShrink: 0 };
+}
+
+export function DiagramCaption({ children }: { children: React.ReactNode }) {
+  return <p className="diagram-caption">{children}</p>;
+}
+
+/** Fit visible text to a known cell; retain the bounded recorded label accessibly. */
+export function SvgLabel({ text, maxChars = 6, ...props }: SVGProps<SVGTextElement> & { text: string; maxChars?: number }) {
+  // The accessible preview is bounded too. A tooltip must not smuggle a huge
+  // identifier/value back into the DOM after its visible label was shortened.
+  const recorded = labelDisplay(text).text;
+  const characters = Array.from(recorded);
+  const columns = (character: string) => /[\u1100-\u115f\u2329\u232a\u2e80-\ua4cf\uac00-\ud7a3\uf900-\ufaff\ufe10-\ufe6f\uff01-\uff60\uffe0-\uffe6]|\p{Extended_Pictographic}/u.test(character) ? 2 : 1;
+  let short = recorded;
+  if (characters.reduce((total, ch) => total + columns(ch), 0) > maxChars) {
+    short = '';
+    let used = 0;
+    for (const ch of characters) {
+      if (used + columns(ch) > Math.max(1, maxChars - 1)) break;
+      short += ch;
+      used += columns(ch);
+    }
+    short += '…';
+  }
+  const aria = short !== recorded || recorded !== text ? recorded : props['aria-label'] ? labelDisplay(String(props['aria-label'])).text : undefined;
+  return <text {...props} aria-label={aria}>
+    {short !== text && <title>{recorded}</title>}{short}
+  </text>;
+}
+
+export function bindingLabel(binding: Pick<import('../core/types').VisualBinding, 'variable' | 'path'>) {
+  return labelDisplay(binding.path ? `${binding.variable}.${binding.path}` : binding.variable).text;
 }
 
 export function DiagramNotice({ text }: { text: string }) {

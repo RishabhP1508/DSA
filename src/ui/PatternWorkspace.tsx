@@ -6,16 +6,17 @@
  * pattern's walkthroughCode on the same tracing engine used by lessons.
  */
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import type { PatternDefinition } from "../core/types";
 import { useEngine, PLAYBACK_SPEEDS } from "./useEngine";
-import { labelForLine } from "./line-label";
+import { AuthoredStep, ExecutionPhase } from './ExecutionState';
+import { mdInline } from './md';
 import { RuntimeProgress } from "./RuntimeProgress";
 import { ObservedStep } from "./ObservedStep";
 import { CodeEditor } from "./CodeEditor";
 import { VariablesPanel } from "./VariablesPanel";
 import { ComplexityPanel } from './ComplexityPanel';
-import { Visualizer } from "../visualizers";
+import { Visualizations } from "../visualizers";
 
 export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
   const engine = useEngine("pattern:" + pattern.id);
@@ -38,10 +39,6 @@ export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
   const currentLine = traceMatchesEditor ? engine.event?.line ?? null : null;
   const liveEvent = traceMatchesEditor ? engine.event : undefined;
 
-  const lineExplanation = useMemo(() => {
-    if (!authoredMatchesTrace || !currentLine) return null;
-    return pattern.codeExplanations.find((c) => c.line === currentLine) ?? null;
-  }, [authoredMatchesTrace, currentLine, pattern]);
 
   return (
     <div className="workspace">
@@ -108,13 +105,12 @@ export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
             <span className="dim">
               {engine.length === 0
                 ? `no steps recorded · ${engine.result.status}`
-                : `step ${engine.position + 1} / ${engine.length} · ${engine.result.status}`}
+                : `step ${engine.position + 1} / ${engine.length} · ${engine.result.status} run`}
             </span>
           </div>
         )}
 
         <div className="explanation-box">
-          <h4>What this line does</h4>
           {!authoredMatchesTrace ? (
             <p className="dim">
               {edited
@@ -123,15 +119,8 @@ export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
                   ? "Run again to see line-by-line explanations for the current code."
                   : "Run the walkthrough and step through to see line-by-line explanations."}
             </p>
-          ) : lineExplanation ? (
-            <p>
-              <span className="line-badge">line {lineExplanation.line}</span>{" "}
-              {(() => {
-                const label = labelForLine(pattern.walkthroughCode, lineExplanation.line);
-                return label ? <em>{label} </em> : "";
-              })()}
-              {lineExplanation.explanation}
-            </p>
+          ) : liveEvent ? (
+            <AuthoredStep event={liveEvent} previous={engine.result?.events[engine.position-1]} source={pattern.walkthroughCode} explanations={pattern.codeExplanations}/>
           ) : (
             <p className="dim">Run the walkthrough and step through to see line-by-line explanations.</p>
           )}
@@ -140,7 +129,7 @@ export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
         {pattern.complexityNote && authoredMatchesTrace && (
           <div className="explanation-box">
             <h4>Time &amp; space</h4>
-            <p>{pattern.complexityNote}</p>
+            <p dangerouslySetInnerHTML={{__html:mdInline(pattern.complexityNote)}}/>
           </div>
         )}
       </div>
@@ -149,6 +138,7 @@ export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
         {edited && traceMatchesEditor && <ObservedStep source={source} event={engine.event} previous={engine.result?.events[engine.position-1]}/>}
         <div className="diagram">
           <h4>Visualization</h4>
+          <ExecutionPhase event={authoredMatchesTrace ? liveEvent : undefined} previous={engine.result?.events[engine.position-1]}/>
           {(() => {
             if (!traceMatchesEditor)
               return (
@@ -167,14 +157,11 @@ export function PatternWorkspace({ pattern }: { pattern: PatternDefinition }) {
               );
             if (pattern.bindings.length === 0)
               return <p className="dim">This pattern has no visual bindings.</p>;
-            return pattern.bindings.map((b, i) => (
-              <div key={`${b.variable}-${b.model}-${i}`} className="viz-slot">
-                <Visualizer event={liveEvent!} binding={b} />
-              </div>
-            ));
+            return <Visualizations event={liveEvent!} bindings={pattern.bindings}/>;
           })()}
+          {authoredMatchesTrace && <p className="diagram-label-help">An ellipsis (…) marks a shortened label. Inspect variables below for the recorded details. Large diagrams scroll inside their panel.</p>}
         </div>
-        <VariablesPanel event={liveEvent} output={traceMatchesEditor ? engine.outputSoFar : ""} />
+        <VariablesPanel event={liveEvent} previous={engine.result?.events[engine.position-1]} output={traceMatchesEditor ? engine.outputSoFar : ""} />
         {pattern.complexityExplanation && authoredMatchesTrace && <details className="analysis-disclosure">
           <summary>Time &amp; space analysis <span className="dim">{pattern.complexityExplanation.time.bound} time · {pattern.complexityExplanation.space.bound} space</span></summary>
           <ComplexityPanel explanation={pattern.complexityExplanation} result={engine.result} currentIndex={engine.position} onHighlightLines={setCxHighlight} fixedData={Boolean(pattern.complexityExplanation.fixedDataNote)}/>

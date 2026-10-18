@@ -10,12 +10,13 @@ import { useEffect, useState } from "react";
 import { useEngine, PLAYBACK_SPEEDS } from "./useEngine";
 import { RuntimeProgress } from "./RuntimeProgress";
 import { ObservedStep } from "./ObservedStep";
+import { ExecutionPhase } from './ExecutionState';
 import { CodeEditor } from "./CodeEditor";
 import { VariablesPanel } from "./VariablesPanel";
 import { PersonalComplexityPanel } from "./PersonalComplexityPanel";
 import { ComparisonLab } from "./ComparisonLab";
 import { VisualizeAs } from "./VisualizeAs";
-import { Visualizer } from "../visualizers";
+import { Visualizations } from "../visualizers";
 import {
   saveDraft,
   listDrafts,
@@ -188,7 +189,7 @@ export function Playground() {
                 </button>
                 <button onClick={engine.restart} disabled={!engine.result || stale}>⏮ Restart</button>
                 <button onClick={engine.prev} disabled={!engine.result || stale || engine.position <= 0}>‹ Prev</button>
-                <button onClick={engine.next} disabled={!engine.result || engine.position >= engine.length - 1}>
+                <button onClick={engine.next} disabled={!engine.result || stale || engine.position >= engine.length - 1}>
                   Next ›
                 </button>
                 <label className="speed-control">
@@ -288,12 +289,12 @@ export function Playground() {
                     value={engine.position}
                     onChange={(e) => engine.seek(Number(e.target.value))}
                     aria-label="Timeline"
-                    disabled={engine.length === 0}
+                    disabled={stale || engine.length === 0}
                   />
                   <span className="dim">
                     {engine.length === 0
                       ? `no steps recorded · ${engine.result.status}`
-                      : `step ${engine.position + 1} / ${engine.length} · ${engine.result.status}`}
+                      : `step ${engine.position + 1} / ${engine.length} · ${engine.result.status} run`}
                     {engine.result.incomplete ? " · incomplete" : ""}
                   </span>
                 </div>
@@ -302,7 +303,7 @@ export function Playground() {
 
               {err && (
                 <div className="explanation-box">
-                  <h3>Error</h3>
+                  <h3>{stale ? "Previous run error" : "Error"}</h3>
                   <p className="error">
                     {err.type}: {err.message}
                     {err.line ? ` (line ${err.line})` : ""}
@@ -315,17 +316,16 @@ export function Playground() {
               <div className="workspace-heading"><h2 id="playground-state-heading">Recorded state</h2><p className="dim">Inspect the variables, calls and output from your run.</p></div>
               <section className="playground-visualization" aria-labelledby="playground-visualization-heading">
               <h3 id="playground-visualization-heading">Visualization</h3>
+              <ExecutionPhase event={!stale ? engine.event : undefined} previous={!stale ? engine.result?.events[engine.position-1] : undefined}/>
               <VisualizeAs event={!stale?engine.event:undefined} binding={vizBinding} onChange={setVizBinding} />
               {!stale && vizBinding && engine.event && (
-                <div className="viz-slot">
-                  <Visualizer event={engine.event} binding={vizBinding} />
-                </div>
+                <Visualizations event={engine.event} bindings={[vizBinding]}/>
               )}
               </section>
               {/* Playground code is the learner's own — no authored artifacts to
                   disable. The recorded trace stays available after an edit; the
                   banner just notes it predates the edit until re-run. */}
-              <ObservedStep source={source} event={!stale?engine.event:undefined} previous={!stale?engine.result?.events[engine.position-1]:undefined}/><VariablesPanel event={engine.event} output={engine.outputSoFar} />
+              <ObservedStep source={source} event={!stale?engine.event:undefined} previous={!stale?engine.result?.events[engine.position-1]:undefined}/><VariablesPanel event={!stale ? engine.event : undefined} previous={!stale ? engine.result?.events[engine.position-1] : undefined} output={!stale ? engine.outputSoFar : ''} />
               <PersonalComplexityPanel
                 result={engine.result}
                 currentIndex={engine.position}

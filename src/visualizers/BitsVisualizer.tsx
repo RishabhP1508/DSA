@@ -13,6 +13,7 @@
 
 import type { TraceEvent, TraceValue, VisualBinding } from "../core/types";
 import { resolveBindingValue, resolveOverlays } from "./helpers";
+import { boundedSvgStyle, DiagramCaption, DiagramNotice, bindingLabel } from './limits';
 
 const CELL = 34;
 const GAP = 4;
@@ -85,7 +86,7 @@ function digitPreview(decimal: string): { preview: string; digits: number } {
 
 export function BitsVisualizer({ event, binding }: { event: TraceEvent; binding: VisualBinding }) {
   const value = resolveBindingValue(event, binding);
-  const label = binding.path ? `${binding.variable}.${binding.path}` : binding.variable;
+  const label = bindingLabel(binding);
 
   // First-cut type/size check WITHOUT parsing a possibly-enormous integer:
   // decide "too large" from the raw decimal STRING LENGTH so we never BigInt-parse
@@ -169,25 +170,18 @@ export function BitsVisualizer({ event, binding }: { event: TraceEvent; binding:
     .filter((x): x is number => x !== undefined);
 
   const width = PAD * 2 + shownBits * (CELL + GAP);
-  const noteLines = (negative ? 1 : 0) + (capped ? 1 : 0);
-  const height = TOP + CELL + 30 + noteLines * 16;
+  const height = TOP + CELL + 30;
   const x = (i: number) => PAD + i * (CELL + GAP);
   // Keep the title/aria-label BOUNDED: use the preview for wide values so a
   // capped SVG never embeds a multi-thousand-digit decimal string.
   const shownFull = previewNeeded ? preview : full;
 
   return (
-    <svg className="array-viz" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Bits of ${label} = ${shownFull}`}>
-      <text x={PAD} y={22} className="viz-title">
-        {label} = {shownFull} ·{" "}
+    <><DiagramCaption><code>{label}</code> = {shownFull} ·{" "}
         {capped ? `low ${shownBits} of ~${trueBits} bits` : `${shownBits}-bit`}
         {negative ? " (magnitude)" : ""}
-      </text>
-      {capped && (
-        <text x={PAD} y={40} className="cell-index">
-          … higher bits (position ≥ {shownBits}) omitted — full value in the inspector
-        </text>
-      )}
+      </DiagramCaption><DiagramNotice text={capped ? `… higher bits (position ≥ ${shownBits}) omitted — full value in the inspector` : ''}/>
+    <svg className="array-viz" style={boundedSvgStyle(width,height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Bits of ${label} = ${shownFull}`}>
       {bits.map((b, i) => {
         const pos = shownBits - 1 - i; // bit position (0 = LSB) — accurate for the retained window
         const hi = highlightPositions.includes(pos);
@@ -199,13 +193,6 @@ export function BitsVisualizer({ event, binding }: { event: TraceEvent; binding:
           </g>
         );
       })}
-      {negative && (
-        <text x={PAD} y={TOP + CELL + 34} className="viz-note">
-          Negative: bits show the magnitude |{shownFull}|. In Python, a negative int behaves in
-          bitwise ops as an infinite two&rsquo;s-complement sign extension (leading 1s), not a fixed
-          width.
-        </text>
-      )}
-    </svg>
+    </svg><DiagramNotice text={negative ? `Negative: bits show the magnitude |${shownFull}|. In Python, a negative int behaves in bitwise ops as an infinite two's-complement sign extension (leading 1s), not a fixed width.` : ''}/></>
   );
 }

@@ -10,7 +10,7 @@
 
 import type { TraceEvent, VisualBinding } from "../core/types";
 import { resolveBindingObject, resolveOverlays } from "./helpers";
-import { sequencePreview, collectionCount, collectionNotice, boundedSvgStyle, DiagramNotice, cellDisplay, labelDisplay, valueNotice } from './limits';
+import { sequencePreview, collectionCount, collectionNotice, boundedSvgStyle, DiagramNotice, DiagramCaption, SvgLabel, bindingLabel, cellDisplay, labelDisplay, valueNotice } from './limits';
 
 const ROW_H = 34;
 const PAD = 16;
@@ -18,7 +18,7 @@ const TOP = 44;
 
 export function DictVisualizer({ event, binding }: { event: TraceEvent; binding: VisualBinding }) {
   const { object: obj } = resolveBindingObject(event, binding);
-  if (!obj || !obj.entries) return <p className="viz-empty">No dict “{binding.variable}” yet.</p>;
+  if (!obj || !obj.entries) return <p className="viz-empty">No dict “{bindingLabel(binding)}” yet.</p>;
 
   const overlays = resolveOverlays(event, binding);
   const highlightKeys = overlays
@@ -32,8 +32,8 @@ export function DictVisualizer({ event, binding }: { event: TraceEvent; binding:
   const height = TOP + Math.max(1, rows.length) * ROW_H + 12;
 
   return (
-    <><svg className="array-viz" style={boundedSvgStyle(width, height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Dictionary ${binding.variable} with ${collectionCount(obj, 'entries')}`}>
-      <text x={PAD} y={22} className="viz-title">{binding.variable} (dict, {collectionCount(obj, 'entries')})</text>
+    <><DiagramCaption><code>{bindingLabel(binding)}</code> · dict · {collectionCount(obj, 'entries')}</DiagramCaption><svg className="array-viz" style={boundedSvgStyle(width, height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Dictionary ${bindingLabel(binding)} with ${collectionCount(obj, 'entries')}`}>
+      <text x={PAD + 55} y={22} className="cell-index">Key</text><text x={PAD + 195} y={22} className="cell-index">Value</text>
       {rows.length === 0 && <text x={PAD} y={TOP + ROW_H / 2} className="viz-empty-svg">{"{}"}</text>}
       {rows.map((e, i) => {
         const y = TOP + i * ROW_H;
@@ -41,10 +41,10 @@ export function DictVisualizer({ event, binding }: { event: TraceEvent; binding:
         return (
           <g key={`${e.keyKind}:${e.key}:${i}`}>
             <rect x={PAD} y={y} width={110} height={ROW_H - 6} rx={5} className={hi ? "cell cell-active" : "cell cell-key"} />
-            <text x={PAD + 55} y={y + ROW_H / 2} className="cell-value-sm">{keys[i].text}</text>
+            <SvgLabel x={PAD + 55} y={y + (ROW_H - 6) / 2} className="cell-value-sm" text={keys[i].text} maxChars={12}/>
             <line x1={PAD + 118} y1={y + (ROW_H - 6) / 2} x2={PAD + 138} y2={y + (ROW_H - 6) / 2} className="ll-edge" markerEnd="url(#ds-arrow)" />
             <rect x={PAD + 140} y={y} width={110} height={ROW_H - 6} rx={5} className="cell" />
-            <text x={PAD + 195} y={y + ROW_H / 2} className="cell-value-sm">{values[i].text}</text>
+            <SvgLabel x={PAD + 195} y={y + (ROW_H - 6) / 2} className="cell-value-sm" text={values[i].text} maxChars={12}/>
           </g>
         );
       })}
@@ -59,7 +59,7 @@ export function DictVisualizer({ event, binding }: { event: TraceEvent; binding:
 
 export function SetVisualizer({ event, binding }: { event: TraceEvent; binding: VisualBinding }) {
   const { object: obj } = resolveBindingObject(event, binding);
-  if (!obj || !obj.entries) return <p className="viz-empty">No set “{binding.variable}” yet.</p>;
+  if (!obj || !obj.entries) return <p className="viz-empty">No set “{bindingLabel(binding)}” yet.</p>;
 
   const chips = sequencePreview(obj);
   const values = chips.map(chip => cellDisplay(chip.value, event.objects));
@@ -67,12 +67,11 @@ export function SetVisualizer({ event, binding }: { event: TraceEvent; binding: 
   const GAP = 8;
   const perRow = 6;
   const rows = Math.ceil(Math.max(1, chips.length) / perRow);
-  const width = PAD * 2 + perRow * (CHIP + GAP);
+  const width = Math.max(180, PAD * 2 + Math.min(perRow, Math.max(1, chips.length)) * (CHIP + GAP));
   const height = TOP + rows * (CHIP + GAP) + 8;
 
   return (
-    <><svg className="array-viz" style={boundedSvgStyle(width, height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Set ${binding.variable} with ${collectionCount(obj, 'members')}`}>
-      <text x={PAD} y={22} className="viz-title">{binding.variable} (set, {collectionCount(obj, 'members')})</text>
+    <><DiagramCaption><code>{bindingLabel(binding)}</code> · set · {collectionCount(obj, 'members')}</DiagramCaption><svg className="array-viz" style={boundedSvgStyle(width, height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Set ${bindingLabel(binding)} with ${collectionCount(obj, 'members')}`}>
       {chips.length === 0 && <text x={PAD} y={TOP + CHIP / 2} className="viz-empty-svg">(empty set)</text>}
       {chips.map((_, i) => {
         const cx = PAD + (i % perRow) * (CHIP + GAP);
@@ -80,7 +79,7 @@ export function SetVisualizer({ event, binding }: { event: TraceEvent; binding: 
         return (
           <g key={i}>
             <rect x={cx} y={cy} width={CHIP} height={CHIP} rx={CHIP / 2} className="cell" />
-            <text x={cx + CHIP / 2} y={cy + CHIP / 2 + 4} className="cell-value-sm">{values[i].text}</text>
+            <SvgLabel x={cx + CHIP / 2} y={cy + CHIP / 2} className="cell-value-sm" text={values[i].text} maxChars={5}/>
           </g>
         );
       })}

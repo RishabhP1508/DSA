@@ -39,10 +39,10 @@ function graphEvent(adj: Record<string, number[]>): TraceEvent {
 
 function countArrows(container: HTMLElement): number {
   // Directed edges carry marker-end="url(#g-arrow)".
-  return container.querySelectorAll('line[marker-end]').length;
+  return container.querySelectorAll('.graph-edge[marker-end]').length;
 }
 function countEdges(container: HTMLElement): number {
-  return container.querySelectorAll("line.graph-edge").length;
+  return container.querySelectorAll(".graph-edge").length;
 }
 
 describe("GraphVisualizer — explicit direction (no inference from reverse edges)", () => {
@@ -53,6 +53,11 @@ describe("GraphVisualizer — explicit direction (no inference from reverse edge
     // Two distinct directed arcs (0→1 and 1→0), each with an arrowhead.
     expect(countEdges(container)).toBe(2);
     expect(countArrows(container)).toBe(2);
+    // Reciprocal edges must remain visibly separate, rather than two
+    // arrowheads on the same overlapping line.
+    const arcs = [...container.querySelectorAll('path.graph-edge')];
+    expect(arcs).toHaveLength(2);
+    expect(arcs[0].getAttribute('d')).not.toBe(arcs[1].getAttribute('d'));
   });
 
   it("renders a reciprocal pair as ONE undirected edge when the binding is undirected", () => {

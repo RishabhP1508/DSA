@@ -7,17 +7,17 @@
  * without workspace changes. Later phases add breakpoints and speed control.
  */
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import type { LessonDefinition } from "../core/types";
 import { useEngine, PLAYBACK_SPEEDS } from "./useEngine";
-import { labelForLine } from "./line-label";
+import { AuthoredStep, ExecutionPhase } from './ExecutionState';
 import { RuntimeProgress } from "./RuntimeProgress";
 import { PredictionCheckpoint } from './PredictionCheckpoint';
 import { ObservedStep } from "./ObservedStep";
 import { CodeEditor } from "./CodeEditor";
 import { VariablesPanel } from "./VariablesPanel";
 import { ComplexityPanel } from "./ComplexityPanel";
-import { Visualizer } from "../visualizers";
+import { Visualizations } from "../visualizers";
 import { markLessonViewed } from "../storage/progress";
 
 export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
@@ -64,10 +64,6 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
 
   // Authored line explanations are keyed to the ORIGINAL source and the current
   // trace; only show them when both match.
-  const lineExplanation = useMemo(() => {
-    if (!authoredMatchesTrace || !currentLine) return null;
-    return lesson.codeExplanations.find((c) => c.line === currentLine) ?? null;
-  }, [authoredMatchesTrace, currentLine, lesson]);
 
   // The event fed to the trace/variables/visualization panels: only the current
   // (non-stale) trace; a stale result's panels are hidden until rerun.
@@ -135,13 +131,12 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
             <span className="dim">
               {engine.length === 0
                 ? `no steps recorded · ${engine.result.status}`
-                : `step ${engine.position + 1} / ${engine.length} · ${engine.result.status}`}
+                : `step ${engine.position + 1} / ${engine.length} · ${engine.result.status} run`}
             </span>
           </div>
         )}
 
         <div className="explanation-box">
-          <h4>What this line does</h4>
           {!authoredMatchesTrace ? (
             <p className="dim">
               {edited
@@ -150,15 +145,8 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
                   ? "Run again to see line-by-line explanations for the current code."
                   : "Run the program and step through to see line-by-line explanations."}
             </p>
-          ) : lineExplanation ? (
-            <p>
-              <span className="line-badge">line {lineExplanation.line}</span>{" "}
-              {(() => {
-                const label = labelForLine(lesson.code, lineExplanation.line);
-                return label ? <em>{label} </em> : "";
-              })()}
-              {lineExplanation.explanation}
-            </p>
+          ) : liveEvent ? (
+            <AuthoredStep event={liveEvent} previous={engine.result?.events[engine.position-1]} source={lesson.code} explanations={lesson.codeExplanations}/>
           ) : (
             <p className="dim">Run the program and step through to see line-by-line explanations.</p>
           )}
@@ -169,6 +157,7 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
         {edited && traceMatchesEditor && <ObservedStep source={source} event={engine.event} previous={engine.result?.events[engine.position-1]}/>}
         <div className="diagram">
           <h4>Visualization</h4>
+          <ExecutionPhase event={authoredMatchesTrace ? liveEvent : undefined} previous={engine.result?.events[engine.position-1]}/>
           {(() => {
             if (!traceMatchesEditor)
               return (
@@ -189,14 +178,11 @@ export function LessonWorkspace({ lesson }: { lesson: LessonDefinition }) {
               );
             if (lesson.bindings.length === 0)
               return <p className="dim">This lesson has no visual bindings.</p>;
-            return lesson.bindings.map((b, i) => (
-              <div key={`${b.variable}-${b.model}-${i}`} className="viz-slot">
-                <Visualizer event={liveEvent!} binding={b} />
-              </div>
-            ));
+            return <Visualizations event={liveEvent!} bindings={lesson.bindings}/>;
           })()}
+          {authoredMatchesTrace && <p className="diagram-label-help">An ellipsis (…) marks a shortened label. Inspect variables below for the recorded details. Large diagrams scroll inside their panel.</p>}
         </div>
-        <VariablesPanel event={liveEvent} output={traceMatchesEditor ? engine.outputSoFar : ""} />
+        <VariablesPanel event={liveEvent} previous={engine.result?.events[engine.position-1]} output={traceMatchesEditor ? engine.outputSoFar : ""} />
         <PredictionCheckpoint steps={lesson.prediction} result={engine.result} valid={authoredMatchesTrace} position={engine.position} playing={engine.playing} onPause={engine.pause} onSeek={engine.seek} />
         {lesson.complexityExplanation && authoredMatchesTrace && (
           <details className="analysis-disclosure">

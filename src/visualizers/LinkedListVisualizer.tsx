@@ -12,14 +12,13 @@
  */
 
 import type { TraceEvent, TraceObject, VisualBinding } from "../core/types";
-import { displayValue } from "../engine/replay";
 import { resolveBindingObject, resolveVariable, overlayColor } from "./helpers";
+import { NODE_LIMIT, boundedSvgStyle, DiagramCaption, DiagramNotice, SvgLabel, bindingLabel, cellDisplay } from './limits';
 
 const NODE_W = 74;
 const NODE_H = 46;
 const GAP = 44;
 const PAD = 16;
-const TOP = 52;
 
 function fieldValue(obj: TraceObject, name: string) {
   return obj.entries?.find((e) => e.key === name)?.value;
@@ -32,9 +31,10 @@ export function LinkedListVisualizer({
   event: TraceEvent;
   binding: VisualBinding;
 }) {
-  const { object: head } = resolveBindingObject(event, binding);
+  const { value: headValue, object: head } = resolveBindingObject(event, binding);
   if (!head) {
-    return <p className="viz-empty">No node “{binding.variable}” in scope yet (empty list?).</p>;
+    if (headValue?.kind === 'none') return <p className="viz-empty"><code>{bindingLabel(binding)}</code> is None. There is no linked node to draw.</p>;
+    return <p className="viz-empty">No node “{bindingLabel(binding)}” in scope yet (empty list?).</p>;
   }
 
   // Walk the chain, guarding against cycles.
@@ -59,7 +59,7 @@ export function LinkedListVisualizer({
     }
     cur = event.objects[nextId];
     curId = nextId;
-    if (nodes.length > 200) break; // safety
+    if (nodes.length >= NODE_LIMIT) break;
   }
 
   // Map pointer-overlay variables to node indices by object identity.
@@ -71,28 +71,28 @@ export function LinkedListVisualizer({
     })
     .filter((m) => m.idx >= 0);
 
-  const width = PAD * 2 + nodes.length * NODE_W + Math.max(0, nodes.length - 1) * GAP + 20;
+  const TOP = 36 + Math.max(1, pointerMarks.length) * 18;
+  // Reserve a complete terminal-label slot after the final node.
+  const width = PAD * 2 + nodes.length * (NODE_W + GAP) + 200;
   const height = TOP + NODE_H + 60;
   const x = (i: number) => PAD + i * (NODE_W + GAP);
   const midY = TOP + NODE_H / 2;
+  const lastNext = fieldValue(nodes.at(-1)!.obj, nextField);
+  const limited = nodes.length >= NODE_LIMIT && lastNext?.kind === 'ref' && !seen.has(lastNext.id);
 
   return (
-    <svg
+    <><DiagramCaption><code>{bindingLabel(binding)}</code> · {hasPrev ? 'doubly' : 'singly'} linked · {nodes.length} displayed nodes{cycleToIndex !== null ? ' · cyclic' : ''}</DiagramCaption><svg
       className="array-viz"
       viewBox={`0 0 ${width} ${height}`}
       role="img"
-      aria-label={`${hasPrev ? "Doubly" : "Singly"} linked list ${binding.variable} with ${nodes.length} nodes${cycleToIndex !== null ? ", contains a cycle" : ""}`}
+      style={boundedSvgStyle(width, height)}
+      aria-label={`${hasPrev ? "Doubly" : "Singly"} linked list ${bindingLabel(binding)} with ${nodes.length} nodes${cycleToIndex !== null ? ", contains a cycle" : ""}`}
     >
       <defs>
         <marker id="ll-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
           <path d="M0,0 L6,3 L0,6 Z" className="arrow-head" />
         </marker>
       </defs>
-
-      <text x={PAD} y={22} className="viz-title">
-        {binding.variable} ({hasPrev ? "doubly" : "singly"} linked, {nodes.length}
-        {cycleToIndex !== null ? ", cyclic" : ""})
-      </text>
 
       {nodes.map((n, i) => {
         const mark = pointerMarks.filter((m) => m.idx === i);
@@ -102,9 +102,7 @@ export function LinkedListVisualizer({
           <g key={n.id}>
             <rect x={x(i)} y={TOP} width={NODE_W} height={NODE_H} rx={6} className={mark.length ? "cell cell-active" : "cell"} />
             <line x1={x(i) + NODE_W * 0.7} y1={TOP} x2={x(i) + NODE_W * 0.7} y2={TOP + NODE_H} className="node-divider" />
-            <text x={x(i) + NODE_W * 0.35} y={midY + 5} className="cell-value">
-              {displayValue(binding.fields?.value ? fieldValue(n.obj,binding.fields.value) ?? {kind:'unknown',repr:'?'} : fieldValue(n.obj, "val") ?? fieldValue(n.obj, "value") ?? { kind: "unknown", repr: "?" }, event.objects)}
-            </text>
+            <SvgLabel x={x(i) + NODE_W * 0.35} y={midY} className="cell-value" maxChars={5} text={cellDisplay(binding.fields?.value ? fieldValue(n.obj,binding.fields.value) ?? {kind:'unknown',repr:'?'} : fieldValue(n.obj, "val") ?? fieldValue(n.obj, "value") ?? { kind: "unknown", repr: "?" }, event.objects).text}/>
             {/* forward arrow */}
             {i < nodes.length - 1 && (
               <line x1={x(i) + NODE_W} y1={midY} x2={x(i + 1)} y2={midY} className="ll-edge" markerEnd="url(#ll-arrow)" />
@@ -113,19 +111,18 @@ export function LinkedListVisualizer({
             {previousIndex >= 0 && (previousIndex < i
               ? <line x1={x(i)} y1={midY + 10} x2={x(previousIndex) + NODE_W} y2={midY + 10} className="ll-edge-back" markerEnd="url(#ll-arrow)" />
               : <path d={cyclePath(x(i) + 12, TOP + NODE_H, x(previousIndex) + NODE_W - 12, TOP + NODE_H)} className="ll-edge-back" fill="none" markerEnd="url(#ll-arrow)" />)}
-            {hasPrev && previous?.kind === 'none' && <text x={x(i)} y={TOP + NODE_H + 17} className="cell-index">prev: None</text>}
+            {hasPrev && previous?.kind === 'none' && <text x={x(i)+NODE_W/2} y={TOP + NODE_H + 17} className="cell-index">prev: None</text>}
             {mark.map((m, k) => (
-              <text key={k} x={x(i) + NODE_W * 0.35} y={TOP - 8 - k * 15} className="pointer-label" fill={overlayColor(k)}>
-                {m.label}↓
-              </text>
+              <SvgLabel key={k} x={x(i) + NODE_W * 0.35} y={TOP - 12 - k * 18} className="pointer-label" fill={overlayColor(k)} text={`${m.label}↓`} maxChars={9}/>
             ))}
           </g>
         );
       })}
 
       {/* terminal or cycle indicator */}
+      {cycleToIndex === null && lastNext?.kind === 'none' && <line x1={x(nodes.length-1)+NODE_W} y1={midY} x2={x(nodes.length)-20} y2={midY} className="ll-edge" markerEnd="url(#ll-arrow)"/>}
       {cycleToIndex === null ? (
-        <text x={x(nodes.length)} y={midY + 5} className="cell-index">
+        <text x={x(nodes.length)} y={midY + 5} className="cell-index" style={{textAnchor:'start'}}>
           {(() => { const next = fieldValue(nodes.at(-1)!.obj, nextField); return next?.kind === 'none' ? 'None' : next?.kind === 'ref' ? '… more nodes not shown' : 'next not recorded'; })()}
         </text>
       ) : (
@@ -136,7 +133,7 @@ export function LinkedListVisualizer({
           fill="none"
         />
       )}
-    </svg>
+    </svg><DiagramNotice text={limited ? `Display limit: at most ${NODE_LIMIT} linked nodes are shown. Follow the object inspector for additional recorded nodes.` : ''}/></>
   );
 }
 

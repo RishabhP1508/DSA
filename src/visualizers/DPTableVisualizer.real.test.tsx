@@ -78,9 +78,10 @@ describe("DPTableVisualizer — 1D fill progress on a real lesson (dp-tabulation
 
 // The 2D DP renderer lays cells out in row-major order at
 //   x = PAD + c*(CELL+GAP),  y = TOP + r*(CELL+GAP)
-// with PAD=16, TOP=44, CELL=46, GAP=3 (see DPTableVisualizer). Invert the active
+// with PAD=48 (including row-label gutter), TOP=44, CELL=46, GAP=3.
+// Invert the active
 // rect's coordinates to recover the highlighted (row, col).
-const PAD = 16, TOP = 44, CELL = 46, GAP = 3;
+const PAD = 48, TOP = 44, CELL = 46, GAP = 3;
 function activeCellCoords(container: HTMLElement): { row: number; col: number } | null {
   const rect = container.querySelector("rect.cell-active");
   if (!rect) return null;

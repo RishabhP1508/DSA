@@ -1,0 +1,22 @@
+/* All diagrams use their authored CSS-pixel geometry. Only the local viewport
+   scrolls; small structures never stretch and large structures never shrink
+   their text until it is unreadable. */
+svg.array-viz { display: block; flex: none; max-width: none; max-height: none; }
+.diagram-caption { margin: 0 0 12px; color: var(--muted); font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+.diagram-caption code { color: var(--foreground); font: 14px var(--mono); }
+.alias-note { margin: 0 0 12px; color: var(--primary); font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+svg.array-viz .cell-value { font: 14px var(--mono); text-anchor: middle; dominant-baseline: middle; }
+svg.array-viz .cell-value-sm { font: 12px var(--mono); text-anchor: middle; dominant-baseline: middle; }
+svg.array-viz .cell-index { font: 11px var(--mono); text-anchor: middle; }
+svg.array-viz .pointer-label, svg.array-viz .edge-label { font: 11px var(--mono); }
+svg.array-viz .frame-name, svg.array-viz .var-name-svg { fill: var(--foreground); font: 13px var(--mono); }
+svg.array-viz .frame-args { fill: var(--muted); font: 12px var(--mono); }
+svg.array-viz .viz-empty-svg { fill: var(--foreground); font: 14px var(--mono); text-anchor: start; }
+svg.array-viz .ll-edge { stroke: var(--primary); stroke-width: 1.5; fill: none; }
+svg.array-viz .ll-edge-back { stroke: var(--muted); stroke-width: 1.5; fill: none; stroke-dasharray: 4 3; }
+svg.array-viz .node-divider { stroke: var(--border); stroke-width: 1.5; }
+.viz-note { overflow-wrap: anywhere; }
+.diagram-value-key { font: 13px var(--mono); }
+.sequence-state { display: flex; flex-wrap: wrap; gap: 8px 12px; margin-top: 12px; min-width: 0; }
+.sequence-state > span { max-width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--secondary); font: 13px/1.6 var(--mono); overflow-wrap: anywhere; }
+.sequence-state > p { flex-basis: 100%; margin: 0; }

@@ -12,13 +12,11 @@
 
 import type { TraceEvent, TraceObject, TraceValue, VisualBinding } from "../core/types";
 import { resolveBindingObject, resolveVariable, overlayColor } from "./helpers";
-import { NODE_LIMIT, DEPTH_LIMIT, boundedSvgStyle, DiagramNotice, cellDisplay, valueNotice } from './limits';
+import { NODE_LIMIT, DEPTH_LIMIT, boundedSvgStyle, DiagramNotice, DiagramCaption, SvgLabel, bindingLabel, cellDisplay, valueNotice } from './limits';
 
 const R = 18;
-const V_GAP = 60;
-const H_GAP = 40;
+const H_GAP = 64;
 const PAD = 24;
-const TOP = 40;
 
 type Placed = { id: string; obj: TraceObject; depth: number; order: number };
 
@@ -29,7 +27,8 @@ function field(obj: TraceObject, name: string): TraceValue | undefined {
 export function TreeVisualizer({ event, binding }: { event: TraceEvent; binding: VisualBinding }) {
   const { value: rootVal, object: root } = resolveBindingObject(event, binding);
   if (!root || rootVal?.kind !== "ref") {
-    return <p className="viz-empty">No tree “{binding.variable}” in scope yet.</p>;
+    if (rootVal?.kind === 'none') return <p className="viz-empty"><code>{bindingLabel(binding)}</code> is None. There is no tree root to draw.</p>;
+    return <p className="viz-empty">No tree “{bindingLabel(binding)}” in scope yet.</p>;
   }
 
   const placed: Placed[] = [];
@@ -63,6 +62,8 @@ export function TreeVisualizer({ event, binding }: { event: TraceEvent; binding:
   }
   walk(rootVal.id, 0);
 
+  const TOP = 40 + (binding.overlays?.length ?? 0) * 18;
+  const V_GAP = 60 + (binding.overlays?.length ?? 0) * 18;
   const maxDepth = placed.reduce((m, p) => Math.max(m, p.depth), 0);
   const width = PAD * 2 + Math.max(1, orderCounter) * H_GAP;
   const height = TOP + (maxDepth + 1) * V_GAP + PAD;
@@ -80,8 +81,7 @@ export function TreeVisualizer({ event, binding }: { event: TraceEvent; binding:
   const count = partial ? `${placed.length} displayed nodes (partial view; total unknown)` : `${placed.length} nodes`;
 
   return (
-    <><svg className="array-viz" style={boundedSvgStyle(width, height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Binary tree ${binding.variable} with ${count}`}>
-      <text x={PAD} y={22} className="viz-title">{binding.variable} (tree, {count})</text>
+    <><DiagramCaption><code>{bindingLabel(binding)}</code> · tree · {count}</DiagramCaption><svg className="array-viz" style={boundedSvgStyle(width, height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Binary tree ${bindingLabel(binding)} with ${count}`}>
 
       {edges.map((e, i) => {
         const a = byId.get(e.from);
@@ -98,12 +98,10 @@ export function TreeVisualizer({ event, binding }: { event: TraceEvent; binding:
         return (
           <g key={p.id} data-node={p.id}>
             <circle cx={cx} cy={cy} r={R} className={marks.length ? "cell cell-active node-circle" : "cell node-circle"} />
-            <text x={cx} y={cy + 4} className="cell-value-sm">
-              {displayed[i].text}
-            </text>
+            <SvgLabel x={cx} y={cy} className="cell-value-sm" text={displayed[i].text} maxChars={4}/>
             {omittedParents.has(p.id) && <text x={cx + R + 8} y={cy + 4} className="cell-index" aria-label="Some child data is omitted">…</text>}
             {marks.map((m, k) => (
-              <text key={k} x={cx} y={cy - R - 4 - k * 14} className="pointer-label" fill={overlayColor(k)}>{m.label}</text>
+              <SvgLabel key={k} x={cx} y={cy - R - 8 - k * 18} className="pointer-label" fill={overlayColor(k)} text={m.label} maxChars={8}/>
             ))}
           </g>
         );

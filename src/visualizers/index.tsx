@@ -22,6 +22,24 @@ import { RecursionVisualizer } from "./RecursionVisualizer";
 import { DPTableVisualizer } from "./DPTableVisualizer";
 import { BitsVisualizer } from "./BitsVisualizer";
 import { ObjectVisualizer } from "./ObjectVisualizer";
+import { groupBindings } from './binding-groups';
+import '../ui/execution-workspace.css';
+
+/** One card per recorded object and semantic view, shared by every workspace. */
+export function Visualizations({ event, bindings }: { event: TraceEvent; bindings: VisualBinding[] }) {
+  return <div className="visualization-list">{groupBindings(event, bindings).map((group, index) => (
+    <article className="visualization-card" key={`${group.objectId ?? 'value'}:${index}`} data-object-id={group.objectId} data-shared={group.names.length > 1 ? 'true' : 'false'} aria-label={`${group.binding.model} view: ${group.names.slice(0, 8).map(name=>name.slice(0,80)).join(', ')}`}>
+      <header className="visualization-card-heading">
+        <div className="visualization-aliases">{group.names.slice(0,8).map(name=><code key={name}>{name.length>80 ? name.slice(0,80)+'…' : name}</code>)}<span aria-hidden="true">→</span></div>
+        <div className="visualization-identity">{group.objectId ? <><span>{group.names.length > 1 ? 'Shared object' : 'Object'}</span><code>{group.objectId}</code></> : <span>{group.binding.model === 'recursion' ? 'Recorded call stack' : 'Recorded value'}</span>}</div>
+        {group.names.length > 8 && <p className="dim">{group.names.length - 8} more names share this object. Inspect variables for their references.</p>}
+      </header>
+      <div className="diagram-scroll" role="region" aria-label={`${group.binding.model} diagram, scroll for larger structures`} tabIndex={0}>
+        <Visualizer event={event} binding={group.binding}/>
+      </div>
+    </article>
+  ))}</div>;
+}
 
 export const SUPPORTED_MODELS: VisualModel[] = [
   "array",
