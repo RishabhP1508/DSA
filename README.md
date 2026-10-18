@@ -34,7 +34,9 @@ also include a `.sha256` checksum. The previous
 [1.0.0 delivery record](docs/releases/1.0.0.md) preserves its original checks;
 the [1.0.1 delivery record](docs/releases/1.0.1.md) retains that release's archive,
 launcher and offline checks. The [visualization and inspector audit](docs/reviews/visualization-inspector-repair.md)
-records the latest repair and its verification.
+records the latest repair and its verification. The
+[1.0.2 delivery record](docs/releases/1.0.2.md) identifies the new archive,
+65/65 Chrome and Edge browser checks, launcher acceptance and fresh offline extraction.
 
 Version 1.0.2 gives diagrams readable intrinsic sizes, shared-object views and
 wrapping captions. The inspector separates names, types, indices and values.

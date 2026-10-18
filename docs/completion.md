@@ -109,5 +109,8 @@ zero skips or retries. Actual runs of all 162 teaching examples pass 648
 desktop/mobile state checks. The audit records the exact commits for that
 inventory, its partial-run recovery and the limits of automated visual checks.
 All curriculum review hashes remain current; source execution and saved data
-formats are unchanged. The Windows delivery record is added after the frozen
-package passes its launcher and fresh-extraction offline checks.
+formats are unchanged. The [1.0.2 Windows delivery record](releases/1.0.2.md)
+records 11/11 native launcher checks, offline Chrome/Edge acceptance on the
+frozen stage and fresh ZIP extraction, per-file verification and public download.
+The release tag points to the frozen packaging commit; these later documentation
+changes leave the archive unchanged.
