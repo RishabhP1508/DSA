@@ -3,6 +3,7 @@
 .viz-slot { overflow: visible; max-height: none; padding: 0; }
 .visualization-list { display: grid; gap: 16px; min-width: 0; }
 .visualization-card { min-width: 0; border: 1px solid var(--border); border-radius: 10px; background: var(--card); overflow: hidden; }
+.visualization-card.viz-slot { padding: 0; max-height: none; overflow: hidden; }
 .visualization-card-heading { padding: 14px 16px; border-bottom: 1px solid var(--border); background: var(--secondary); }
 .visualization-aliases { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; font-size: 14px; }
 .visualization-aliases code { overflow-wrap: anywhere; max-width: 100%; font-size: 14px; }

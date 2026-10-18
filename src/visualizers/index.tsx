@@ -28,7 +28,7 @@ import '../ui/execution-workspace.css';
 /** One card per recorded object and semantic view, shared by every workspace. */
 export function Visualizations({ event, bindings }: { event: TraceEvent; bindings: VisualBinding[] }) {
   return <div className="visualization-list">{groupBindings(event, bindings).map((group, index) => (
-    <article className="visualization-card" key={`${group.objectId ?? 'value'}:${index}`} data-object-id={group.objectId} data-shared={group.names.length > 1 ? 'true' : 'false'} aria-label={`${group.binding.model} view: ${group.names.slice(0, 8).map(name=>name.slice(0,80)).join(', ')}`}>
+    <article className="visualization-card viz-slot" key={`${group.objectId ?? 'value'}:${index}`} data-object-id={group.objectId} data-shared={group.names.length > 1 ? 'true' : 'false'} aria-label={`${group.binding.model} view: ${group.names.slice(0, 8).map(name=>name.slice(0,80)).join(', ')}`}>
       <header className="visualization-card-heading">
         <div className="visualization-aliases">{group.names.slice(0,8).map(name=><code key={name}>{name.length>80 ? name.slice(0,80)+'…' : name}</code>)}<span aria-hidden="true">→</span></div>
         <div className="visualization-identity">{group.objectId ? <><span>{group.names.length > 1 ? 'Shared object' : 'Object'}</span><code>{group.objectId}</code></> : <span>{group.binding.model === 'recursion' ? 'Recorded call stack' : 'Recorded value'}</span>}</div>

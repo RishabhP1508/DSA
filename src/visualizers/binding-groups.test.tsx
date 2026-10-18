@@ -13,6 +13,7 @@ describe('rendered shared-reference diagrams',()=>{
  it('draws two aliases once and an equal copy separately',()=>{
   const {container}=render(<Visualizations event={event} bindings={['scores','best','copy'].map(binding)}/>);
   expect(container.querySelectorAll('.array-viz')).toHaveLength(2);
+  expect(container.querySelectorAll('.viz-slot svg')).toHaveLength(2);
   const shared=container.querySelector('.visualization-card[data-object-id="shared"]')!;
   expect(shared.querySelector('.visualization-aliases')).toHaveTextContent('scores');
   expect(shared.querySelector('.visualization-aliases')).toHaveTextContent('best');
