@@ -1,0 +1,29 @@
+/* Shared recorded-state layout. Geometry scrolls locally; text keeps its size. */
+.workspace, .workspace-left, .workspace-right, .diagram, .playground-visualization { min-width: 0; }
+.viz-slot { overflow: visible; max-height: none; padding: 0; }
+.visualization-list { display: grid; gap: 16px; min-width: 0; }
+.visualization-card { min-width: 0; border: 1px solid var(--border); border-radius: 10px; background: var(--card); overflow: hidden; }
+.visualization-card.viz-slot { padding: 0; max-height: none; overflow: hidden; }
+.visualization-card-heading { padding: 14px 16px; border-bottom: 1px solid var(--border); background: var(--secondary); }
+.visualization-aliases { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; font-size: 14px; }
+.visualization-aliases code { overflow-wrap: anywhere; max-width: 100%; font-size: 14px; }
+.visualization-identity { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin-top: 8px; font-size: 13px; color: var(--muted-foreground); }
+.visualization-identity code { overflow-wrap: anywhere; font-size: 12px; }
+.visualization-card[data-shared="true"] .alias-note { display: none; }
+.diagram-scroll { overflow: auto; max-height: 440px; max-width: 100%; padding: 14px; min-width: 0; overscroll-behavior: contain; }
+.diagram-scroll:focus-visible { outline: 3px solid var(--primary); outline-offset: -3px; }
+.diagram-scroll .viz-note { white-space: normal; overflow-wrap: anywhere; }
+.diagram-label-help { font-size: 13px; color: var(--muted-foreground); margin: 14px 0 0; line-height: 1.65; }
+.execution-phase { padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--secondary); margin: 0 0 16px; overflow-wrap: anywhere; }
+.execution-phase strong { font-size: 15px; color: var(--primary); }
+.execution-phase p { font-size: 13px; line-height: 1.6; margin-top: 5px; color: var(--muted-foreground); }
+.statement-explanation { padding-bottom: 16px; }
+.statement-explanation .statement-pending { color: var(--muted-foreground); font-size: 13px; margin-bottom: 10px; line-height: 1.65; }
+.recorded-changes { border-top: 1px solid var(--border); padding-top: 16px; }
+.recorded-changes > p { font-size: 13px; margin-bottom: 10px; }
+.recorded-changes ul { font-size: 14px; margin: 0; padding-left: 20px; overflow-wrap: anywhere; }
+.statement-explanation p, .observed-step p, .all-lines li > span { overflow-wrap: anywhere; }
+.explanation-box code { white-space: normal; overflow-wrap: anywhere; }
+.complexity-panel, .comparison-lab { min-width: 0; overflow-wrap: anywhere; }
+.playground-visualization > .execution-phase { margin-top: 16px; }
+@media(max-width:580px) { .diagram-scroll { padding: 10px; max-height: 360px; } .visualization-card-heading { padding: 12px; } }

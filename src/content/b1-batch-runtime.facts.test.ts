@@ -8,7 +8,11 @@
  */
 import { describe, it, expect, beforeAll } from "vitest";
 // @ts-expect-error mjs harness has no types
-import { runProgram } from "../../scripts/lib/pyodide-harness.mjs";
+import { getPyodide, runProgram } from "../../scripts/lib/pyodide-harness.mjs";
+
+// Runtime startup is setup work, not part of the five-second factual assertion
+// budget. Cold WASM initialization can exceed that budget on Windows.
+beforeAll(async () => { await getPyodide(); }, 120_000);
 
 async function run(lines: string[]): Promise<string> {
   const res = await runProgram(lines.join("\n"), "");

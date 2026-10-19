@@ -13,7 +13,7 @@
 
 import type { TraceEvent, VisualBinding } from "../core/types";
 import { resolveBindingObject, resolveOverlays, indexOverlays, overlayColor } from "./helpers";
-import { sequencePreview, sequenceCount, sequenceNotice, recordedIndex, hiddenPointers, boundedSvgStyle, DiagramNotice, HEAP_LIMIT, cellDisplay, valueNotice } from './limits';
+import { sequencePreview, sequenceCount, sequenceNotice, recordedIndex, hiddenPointers, boundedSvgStyle, DiagramNotice, DiagramCaption, SvgLabel, bindingLabel, HEAP_LIMIT, cellDisplay, valueNotice } from './limits';
 
 const CELL = 42;
 const GAP = 4;
@@ -22,7 +22,7 @@ const R = 18;
 
 export function HeapVisualizer({ event, binding }: { event: TraceEvent; binding: VisualBinding }) {
   const { object: obj } = resolveBindingObject(event, binding);
-  if (!obj || !obj.entries) return <p className="viz-empty">No heap “{binding.variable}” yet.</p>;
+  if (!obj || !obj.entries) return <p className="viz-empty">No heap “{bindingLabel(binding)}” yet.</p>;
 
   const items = sequencePreview(obj, HEAP_LIMIT);
   const displayed = items.map(item => cellDisplay(item.value, event.objects));
@@ -32,7 +32,7 @@ export function HeapVisualizer({ event, binding }: { event: TraceEvent; binding:
   const marks = indexOverlays(overlays, obj.entries.length).filter(mark => visible.has(mark.index));
 
   // Array row layout.
-  const arrTop = 44;
+  const arrTop = 24 + Math.max(1, (binding.overlays ?? []).filter(o => ['pointer','boundary','highlight'].includes(o.role)).length) * 20;
   const arrWidth = PAD * 2 + Math.max(1, n) * (CELL + GAP);
 
   // Tree layout: level of index i is floor(log2(i+1)); position within level.
@@ -41,7 +41,7 @@ export function HeapVisualizer({ event, binding }: { event: TraceEvent; binding:
   const treeTop = arrTop + CELL + 48;
   const V_GAP = 56;
   const treeWidth = PAD * 2 + Math.pow(2, maxLevel) * 56;
-  const width = Math.max(arrWidth, treeWidth);
+  const width = Math.max(180, arrWidth, treeWidth);
   const height = treeTop + (maxLevel + 1) * V_GAP + PAD;
 
   const arrX = (i: number) => PAD + i * (CELL + GAP);
@@ -58,8 +58,7 @@ export function HeapVisualizer({ event, binding }: { event: TraceEvent; binding:
   }
 
   return (
-    <><svg className="array-viz" style={boundedSvgStyle(width, height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Binary heap ${binding.variable} with ${sequenceCount(obj)}, zero-based array and tree views`}>
-      <text x={PAD} y={22} className="viz-title">{binding.variable} (heap, {sequenceCount(obj)}, 0-based)</text>
+    <><DiagramCaption><code>{bindingLabel(binding)}</code> · heap · {sequenceCount(obj)} · zero-based array and tree</DiagramCaption><svg className="array-viz" style={boundedSvgStyle(width, height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Binary heap ${bindingLabel(binding)} with ${sequenceCount(obj)}, zero-based array and tree views`}>
       {n === 0 && <text x={PAD} y={arrTop + CELL / 2} className="viz-empty-svg">(empty heap)</text>}
 
       {/* array view */}
@@ -68,7 +67,7 @@ export function HeapVisualizer({ event, binding }: { event: TraceEvent; binding:
         return (
           <g key={`a-${e.key}`} data-index={e.key}>
             <rect x={arrX(i)} y={arrTop} width={CELL} height={CELL} rx={5} className={mark ? "cell cell-active" : "cell"} />
-            <text x={arrX(i) + CELL / 2} y={arrTop + CELL / 2 + 5} className="cell-value-sm">{displayed[i].text}</text>
+            <SvgLabel x={arrX(i) + CELL / 2} y={arrTop + CELL / 2} className="cell-value-sm" text={displayed[i].text} maxChars={5}/>
             <text x={arrX(i) + CELL / 2} y={arrTop + CELL + 16} className="cell-index">{e.key}</text>
           </g>
         );
@@ -90,16 +89,14 @@ export function HeapVisualizer({ event, binding }: { event: TraceEvent; binding:
         return (
           <g key={`t-${e.key}`} data-index={e.key}>
             <circle cx={cx} cy={cy} r={R} className={mark ? "cell cell-active node-circle" : "cell node-circle"} />
-            <text x={cx} y={cy + 4} className="cell-value-sm">{displayed[i].text}</text>
+            <SvgLabel x={cx} y={cy} className="cell-value-sm" text={displayed[i].text} maxChars={4}/>
             <text x={cx} y={cy + R + 12} className="cell-index">{e.key}</text>
           </g>
         );
       })}
 
       {marks.map((m, k) => (
-        <text key={`m-${k}`} x={arrX(items.findIndex(item => recordedIndex(item) === m.index)) + CELL / 2} y={arrTop - 8 - (k % 2) * 14} className="pointer-label" fill={overlayColor(k)}>
-          {m.label}↓
-        </text>
+        <SvgLabel key={`m-${k}`} x={arrX(items.findIndex(item => recordedIndex(item) === m.index)) + CELL / 2} y={arrTop - 12 - k * 20} className="pointer-label" fill={overlayColor(k)} text={`${m.label}↓`} maxChars={6}/>
       ))}
     </svg><DiagramNotice text={[sequenceNotice(obj, items), hiddenPointers(overlays, items), valueNotice(displayed)].filter(Boolean).join(' ')}/></>
   );

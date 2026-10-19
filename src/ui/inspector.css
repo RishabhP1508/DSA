@@ -1,0 +1,63 @@
+/* Inspector-only styles. Do not depend on the workspace or a fixed SVG scale. */
+.variables-panel { min-width: 0; container-type: inline-size; }
+.variables-panel section > h3 { font-size: 18px; line-height: 1.4; font-weight: 650; margin: 0 0 12px; overflow-wrap: anywhere; }
+.variables-panel section + section { padding-top: 20px; margin-top: 20px; }
+.variables-panel .inspector-help { color: var(--muted); font-size: 14px; line-height: 1.65; max-width: 70ch; margin: 0 0 14px; }
+.variables-panel .frames { gap: 10px; max-height: 300px; overflow: auto; padding: 4px; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.variables-panel .frames > li { min-width: 0; max-width: 100%; }
+.variables-panel .frame-btn { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; min-height: 44px; padding: 10px 12px; text-align: left; }
+.variables-panel .frame-btn[aria-pressed="true"] { box-shadow: inset 3px 0 var(--primary); }
+.frame-name { font: 600 14px/1.6 var(--mono); overflow-wrap: anywhere; }
+.frame-location, .frame-status { font-size: 13px; color: var(--muted); }
+.frame-status { flex-basis: 100%; }
+.inspector-frame-detail { font-size: 13px; overflow-wrap: anywhere; margin-top: 12px; }
+.inspector-frame-detail > summary { min-height: 44px; padding: 10px 0; cursor: pointer; }
+.inspector-columns, .oi-row, .oi-node > .oi-toggle { display: grid; grid-template-columns: minmax(72px, .9fr) minmax(60px, .65fr) minmax(0, 1.6fr); column-gap: 16px; align-items: start; }
+.inspector-columns { font-size: 12px; font-weight: 650; color: var(--muted); padding: 0 10px 9px; border-bottom: 1px solid var(--border); }
+.variables-panel .vars-inspect { display: flex; flex-direction: column; gap: 0; padding: 0; overflow: visible; }
+.inspector-page-count { font-size: 13px; color: var(--muted); line-height: 1.6; margin: 12px 0; }
+.inspector-pagination, .inspector-pagination form, .inspector-pagination label { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.inspector-pagination { padding: 10px 0 16px; font-size: 13px; }
+.variables-panel .inspector-pagination button { min-height: 44px; font-size: 13px; }
+.variables-panel .inspector-pagination button:disabled { opacity: .5; cursor: default; }
+.inspector-pagination input { width: 68px; min-width: 0; min-height: 44px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--foreground); }
+.oi-entry, .oi-node { min-width: 0; max-width: 100%; font: 14px/1.7 var(--mono); }
+.oi-row, .oi-node > .oi-toggle { padding: 11px 10px; min-width: 0; max-width: 100%; border-bottom: 1px solid var(--border); }
+.oi-node > .oi-toggle { width: 100%; font: inherit !important; color: var(--foreground); border: 0 !important; border-bottom: 1px solid var(--border) !important; border-radius: 0; background: transparent; text-align: left; padding: 11px 10px !important; min-height: 44px; }
+.oi-node > .oi-toggle:hover { background: var(--secondary); }
+.oi-node > .oi-toggle:focus-visible, .oi-entry button:focus-visible, .oi-node button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+.oi-key, .oi-type, .oi-value, .oi-name-cell, .oi-identity { min-width: 0; overflow-wrap: anywhere; word-break: normal; white-space: normal; }
+.oi-key { color: var(--primary); }
+.oi-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.oi-name-cell { display: flex; gap: 6px; align-items: baseline; }
+.oi-caret { flex: none; color: var(--primary); }
+.oi-key-kind { display: block; color: var(--muted); font: 12px/1.6 var(--sans, sans-serif); }
+.oi-type { color: var(--muted); font-size: 13px; }
+.oi-value { color: var(--foreground); }
+.oi-summary { display: flex; flex-direction: column; gap: 3px; }
+.oi-count { color: var(--muted); font-size: 12px; }
+.oi-alias { font-size: 12px; color: var(--primary); }
+.oi-children { margin: 0 0 4px 12px; padding: 0 0 0 10px; border-left: 2px solid var(--border); min-width: 0; }
+.oi-children .oi-row, .oi-children .oi-node > .oi-toggle { column-gap: 12px; grid-template-columns: minmax(50px, .8fr) minmax(50px, .6fr) minmax(0, 1.6fr); }
+.oi-node .oi-more, .oi-text-actions button, .oi-recorded-text > .oi-text-toggle { min-height: 44px; font: 13px/1.5 var(--sans, sans-serif); margin: 6px 0; padding: 8px 10px; white-space: normal; text-align: left; }
+.oi-truncated, .oi-cycle, .oi-entry-note, .oi-opaque, .oi-key-detail, .oi-type-detail, .oi-unresolved { color: var(--foreground); font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
+.oi-truncated, .oi-entry-note, .oi-opaque, .oi-key-detail, .oi-type-detail { padding: 10px; background: var(--secondary); border-radius: 6px; margin: 8px 0; }
+.oi-recorded-text { display: block; min-width: 0; max-width: 100%; }
+.oi-text-pages { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.oi-text-position { color: var(--muted); font: 12px/1.6 var(--sans, sans-serif); }
+.oi-text-page { display: block; padding: 10px; background: var(--secondary); white-space: pre-wrap; overflow-wrap: anywhere; border: 1px solid var(--border); border-radius: 6px; }
+.oi-text-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.inspector-error { overflow-wrap: anywhere; }
+.variables-panel .output { max-width: 100%; white-space: pre-wrap; overflow-wrap: anywhere; }
+/* Respond to the panel's width, including narrow two-column workspaces. */
+@container (max-width: 440px) {
+  .inspector-columns { display: none; }
+  .oi-row, .oi-node > .oi-toggle, .oi-children .oi-row, .oi-children .oi-node > .oi-toggle { grid-template-columns: minmax(0, 1fr) minmax(0, .6fr); gap: 5px 12px; }
+  .oi-row > .oi-value, .oi-toggle > .oi-value { grid-column: 1 / -1; padding-left: 0; border-left: 2px solid var(--border); padding-inline-start: 10px; }
+  .oi-type { max-width: 110px; text-align: right; }
+  .oi-children { margin-left: 6px; padding-left: 6px; }
+  .oi-children .oi-children .oi-children .oi-children { margin-left: 0; padding-left: 4px; }
+}
+@media (max-width: 480px) {
+  .oi-node > .oi-toggle, .oi-row { padding: 10px 6px !important; }
+}

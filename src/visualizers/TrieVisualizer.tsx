@@ -9,11 +9,11 @@
 
 import type { TraceEvent, TraceObject, VisualBinding } from "../core/types";
 import { resolveBindingObject } from "./helpers";
-import { NODE_LIMIT, EDGE_LIMIT, DEPTH_LIMIT, boundedSvgStyle, DiagramNotice, labelDisplay, valueNotice } from './limits';
+import { NODE_LIMIT, EDGE_LIMIT, DEPTH_LIMIT, boundedSvgStyle, DiagramNotice, DiagramCaption, SvgLabel, bindingLabel, labelDisplay, valueNotice } from './limits';
 
 const R = 16;
 const V_GAP = 62;
-const H_GAP = 46;
+const H_GAP = 64;
 const PAD = 24;
 const TOP = 40;
 
@@ -41,7 +41,8 @@ function isTerminal(obj: TraceObject, terminalField?: string): boolean {
 export function TrieVisualizer({ event, binding }: { event: TraceEvent; binding: VisualBinding }) {
   const { value: rootVal, object: root } = resolveBindingObject(event, binding);
   if (!root || rootVal?.kind !== "ref") {
-    return <p className="viz-empty">No trie “{binding.variable}” in scope yet.</p>;
+    if (rootVal?.kind === 'none') return <p className="viz-empty"><code>{bindingLabel(binding)}</code> is None. There is no trie root to draw.</p>;
+    return <p className="viz-empty">No trie “{bindingLabel(binding)}” in scope yet.</p>;
   }
 
   const nodes: Node[] = [];
@@ -84,8 +85,7 @@ export function TrieVisualizer({ event, binding }: { event: TraceEvent; binding:
   const pos = (n: Node) => ({ cx: PAD + n.order * H_GAP + H_GAP / 2, cy: TOP + n.depth * V_GAP });
 
   return (
-    <><svg className="array-viz" style={boundedSvgStyle(width, height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Trie ${binding.variable} with ${count}`}>
-      <text x={PAD} y={22} className="viz-title">{binding.variable} (trie, {count})</text>
+    <><DiagramCaption><code>{bindingLabel(binding)}</code> · trie · {count}</DiagramCaption><svg className="array-viz" style={boundedSvgStyle(width, height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Trie ${bindingLabel(binding)} with ${count}`}>
       {edges.map((e, i) => {
         const a = byId.get(e.from);
         const b = byId.get(e.to);
@@ -95,7 +95,7 @@ export function TrieVisualizer({ event, binding }: { event: TraceEvent; binding:
         return (
           <g key={i}>
             <line x1={pa.cx} y1={pa.cy} x2={pb.cx} y2={pb.cy} className="tree-edge" />
-            <text x={(pa.cx + pb.cx) / 2 + 6} y={(pa.cy + pb.cy) / 2} className="edge-label">{edgeLabels[i].text}</text>
+            <SvgLabel x={(pa.cx + pb.cx) / 2 + 6} y={(pa.cy + pb.cy) / 2} className="edge-label" text={edgeLabels[i].text} maxChars={7}/>
           </g>
         );
       })}
@@ -105,7 +105,7 @@ export function TrieVisualizer({ event, binding }: { event: TraceEvent; binding:
           <g key={n.id} data-node={n.id}>
             <circle cx={cx} cy={cy} r={R} className={n.terminal ? "cell cell-active node-circle" : "cell node-circle"} />
             {n.depth === 0 && <text x={cx} y={cy + 4} className="cell-index">•</text>}
-            {n.depth > 0 && <text x={cx} y={cy + 4} className="cell-value-sm">{nodeLabels[i].text}</text>}
+            {n.depth > 0 && <SvgLabel x={cx} y={cy} className="cell-value-sm" text={nodeLabels[i].text} maxChars={3}/>}
             {omittedParents.has(n.id) && <text x={cx + R + 8} y={cy + 4} className="cell-index" aria-label="Some child data is omitted">…</text>}
           </g>
         );

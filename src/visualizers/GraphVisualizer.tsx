@@ -16,7 +16,7 @@
 
 import type { TraceEvent, TraceValue, VisualBinding } from "../core/types";
 import { resolveBindingObject, resolveVariable, deref } from "./helpers";
-import { DiagramNotice, boundedSvgStyle, cellDisplay } from './limits';
+import { DiagramNotice, DiagramCaption, SvgLabel, bindingLabel, boundedSvgStyle, cellDisplay } from './limits';
 
 const R = 20;
 const PAD = 40;
@@ -36,13 +36,9 @@ function numericIdentity(key: string, kind: string): string {
   return key;
 }
 
-function keyToLabel(k: string): string {
-  return k;
-}
-
 export function GraphVisualizer({ event, binding }: { event: TraceEvent; binding: VisualBinding }) {
   const { object: adj } = resolveBindingObject(event, binding);
-  if (!adj || !adj.entries) return <p className="viz-empty">No graph “{binding.variable}” yet.</p>;
+  if (!adj || !adj.entries) return <p className="viz-empty">No graph “{bindingLabel(binding)}” yet.</p>;
 
   type Edge = { u: string; v: string; directed: boolean; weight?: string };
   const labels = new Map<string,string>();
@@ -121,14 +117,14 @@ export function GraphVisualizer({ event, binding }: { event: TraceEvent; binding
   };
 
   return (
-    <><DiagramNotice text={omitted ? 'Display limit: showing a recorded graph prefix, at most 128 nodes and 256 adjacency entries. Other nodes or edges are omitted or were not inspected; this is not the full graph.' : ''}/>
-    <svg className="array-viz" style={boundedSvgStyle(size+64,size+72)} viewBox={`-32 -40 ${size + 64} ${size + 72}`} role="img" aria-label={omitted ? `Graph ${binding.variable}: partial diagram, ${nodeKeys.length} displayed nodes and ${edges.length} displayed edges` : `Graph ${binding.variable} with ${nodeKeys.length} nodes and ${edges.length} edges`}>
+    <><DiagramCaption><code>{bindingLabel(binding)}</code> · {directed ? 'directed' : 'undirected'} graph · {nodeKeys.length} displayed nodes</DiagramCaption><DiagramNotice text={omitted ? 'Display limit: showing a recorded graph prefix, at most 128 nodes and 256 adjacency entries. Other nodes or edges are omitted or were not inspected; this is not the full graph.' : ''}/>
+    <svg className="array-viz" style={boundedSvgStyle(size+64,size+72)} viewBox={`-32 -40 ${size + 64} ${size + 72}`} role="img" aria-label={omitted ? `Graph ${bindingLabel(binding)}: partial diagram, ${nodeKeys.length} displayed nodes and ${edges.length} displayed edges` : `Graph ${bindingLabel(binding)} with ${nodeKeys.length} nodes and ${edges.length} edges`}>
       <defs>
         <marker id="g-arrow" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
           <path d="M0,0 L6,3 L0,6 Z" className="arrow-head" />
         </marker>
       </defs>
-      <text x={12} y={20} className="viz-title">{binding.variable} (graph, {nodeKeys.length} nodes)</text>
+      {nodeKeys.length === 0 && <text x={12} y={20} className="viz-empty-svg">(empty graph)</text>}
 
       {edges.map((e, i) => {
         const ui = nodeIndex.get(e.u);
@@ -141,13 +137,17 @@ export function GraphVisualizer({ event, binding }: { event: TraceEvent; binding
         const len = Math.hypot(dx, dy) || 1;
         const bx = b.cx - (dx / len) * (R + 4);
         const by = b.cy - (dy / len) * (R + 4);
+        const reciprocal = e.directed && edges.some(other => other.u === e.v && other.v === e.u);
+        const qx = (a.cx + b.cx) / 2 - (dy / len) * 30;
+        const qy = (a.cy + b.cy) / 2 + (dx / len) * 30;
         return (
           <g key={i}>
             {e.u === e.v
               ? <path d={`M ${a.cx - 12} ${a.cy - 16} C ${a.cx - 45} ${a.cy - 68}, ${a.cx + 45} ${a.cy - 68}, ${a.cx + 12} ${a.cy - 16}`} className="graph-edge" fill="none" markerEnd={e.directed ? "url(#g-arrow)" : undefined} />
+              : reciprocal ? <path d={`M ${a.cx + dx / len * R} ${a.cy + dy / len * R} Q ${qx} ${qy} ${bx} ${by}`} className="graph-edge" fill="none" markerEnd="url(#g-arrow)" />
               : <line x1={a.cx} y1={a.cy} x2={bx} y2={by} className="graph-edge" markerEnd={e.directed ? "url(#g-arrow)" : undefined} />}
             {e.weight !== undefined && (
-              <text x={(a.cx + bx) / 2} y={(a.cy + by) / 2 - 4} className="edge-label">{e.weight}</text>
+              <SvgLabel x={reciprocal ? qx : (a.cx + bx) / 2} y={(reciprocal ? qy : (a.cy + by) / 2) - 6} className="edge-label" text={e.weight} maxChars={8}/>
             )}
           </g>
         );
@@ -165,7 +165,7 @@ export function GraphVisualizer({ event, binding }: { event: TraceEvent; binding
         return (
           <g key={k}>
             <circle cx={cx} cy={cy} r={R} className={cls.join(" ")} strokeDasharray={isFrontier && !isCurrent ? "4 3" : undefined} />
-            <text x={cx} y={cy + 4} className="cell-value-sm">{keyToLabel(label)}</text>
+            <SvgLabel x={cx} y={cy} className="cell-value-sm" text={label} maxChars={5}/>
           </g>
         );
       })}

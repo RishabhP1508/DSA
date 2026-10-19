@@ -14,11 +14,11 @@
 import type { TraceEvent, TraceValue, VisualBinding } from "../core/types";
 import { displayValue } from "../engine/replay";
 import { resolveBindingObject, deref, resolveOverlays, resolveVariable } from "./helpers";
-import { sequencePreview, sequenceCount, sequenceNotice, recordedIndex, hiddenPointers, boundedSvgStyle, DiagramNotice, gridPreview, cellDisplay, valueNotice } from './limits';
+import { sequencePreview, sequenceCount, sequenceNotice, recordedIndex, hiddenPointers, boundedSvgStyle, DiagramNotice, DiagramCaption, SvgLabel, bindingLabel, gridPreview, cellDisplay, valueNotice } from './limits';
 
 const CELL = 46;
 const GAP = 3;
-const PAD = 16;
+const PAD = 48;
 const TOP = 44;
 
 /**
@@ -54,7 +54,7 @@ function cellKeyOf(event: TraceEvent, v: TraceValue): string {
 
 export function DPTableVisualizer({ event, binding }: { event: TraceEvent; binding: VisualBinding }) {
   const { object: obj } = resolveBindingObject(event, binding);
-  if (!obj || !obj.entries) return <p className="viz-empty">No DP table “{binding.variable}” yet.</p>;
+  if (!obj || !obj.entries) return <p className="viz-empty">No DP table “{bindingLabel(binding)}” yet.</p>;
 
   const is2D = obj.entries.length > 0 && obj.entries[0].value.kind === "ref" && deref(event, obj.entries[0].value)?.entries !== undefined;
 
@@ -67,12 +67,12 @@ export function DPTableVisualizer({ event, binding }: { event: TraceEvent; bindi
   if (!is2D) {
     const cells = sequencePreview(obj);
     const displayed = cells.map(cell => cellDisplay(cell.value, event.objects));
-    const width = PAD * 2 + Math.max(1, cells.length) * (CELL + GAP);
+    const width = Math.max(180, PAD * 2 + Math.max(1, cells.length) * (CELL + GAP));
     const height = TOP + CELL + 26;
     const x = (i: number) => PAD + i * (CELL + GAP);
     return (
-      <><svg className="array-viz" style={boundedSvgStyle(width, height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`DP table ${binding.variable}, ${sequenceCount(obj)}`}>
-        <text x={PAD} y={22} className="viz-title">{binding.variable} (dp, {sequenceCount(obj)})</text>
+      <><DiagramCaption><code>{bindingLabel(binding)}</code> · DP table · {sequenceCount(obj)}</DiagramCaption><svg className="array-viz" style={boundedSvgStyle(width, height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`DP table ${bindingLabel(binding)}, ${sequenceCount(obj)}`}>
+        {cells.length === 0 && <text x={PAD} y={TOP+22} className="viz-empty-svg">(empty table)</text>}
         {cells.map((c, i) => {
           const index = recordedIndex(c);
           const filled = computed?.has(c.key) ?? false;
@@ -80,7 +80,7 @@ export function DPTableVisualizer({ event, binding }: { event: TraceEvent; bindi
           return (
             <g key={c.key} data-index={c.key}>
               <rect x={x(i)} y={TOP} width={CELL} height={CELL} rx={5} className={active ? "cell cell-active" : filled ? "cell cell-filled" : "cell"} />
-              <text x={x(i) + CELL / 2} y={TOP + CELL / 2 + 5} className="cell-value-sm">{displayed[i].text}</text>
+              <SvgLabel x={x(i) + CELL / 2} y={TOP + CELL / 2} className="cell-value-sm" text={displayed[i].text} maxChars={5}/>
               <text x={x(i) + CELL / 2} y={TOP + CELL + 15} className="cell-index">{c.key}</text>
             </g>
           );
@@ -92,23 +92,25 @@ export function DPTableVisualizer({ event, binding }: { event: TraceEvent; bindi
   // 2D
   const { rows, columns: cols, summary, notice } = gridPreview(event, obj);
   const displayed = rows.map(row => row.cells.map(cell => cellDisplay(cell.value, event.objects)));
-  const width = PAD * 2 + Math.max(1, cols) * (CELL + GAP);
+  const width = Math.max(cols === 0 ? 340 : 180, PAD * 2 + Math.max(1, cols) * (CELL + GAP));
   const height = TOP + Math.max(1, rows.length) * (CELL + GAP) + 8;
   const x = (c: number) => PAD + c * (CELL + GAP);
   const y = (r: number) => TOP + r * (CELL + GAP);
 
   return (
-    <><svg className="array-viz" style={boundedSvgStyle(width, height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`DP table ${binding.variable}, ${summary}`}>
-      <text x={PAD} y={22} className="viz-title">{binding.variable} (dp, {summary})</text>
+    <><DiagramCaption><code>{bindingLabel(binding)}</code> · DP table · {summary}</DiagramCaption><svg className="array-viz" style={boundedSvgStyle(width, height)} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`DP table ${bindingLabel(binding)}, ${summary}`}>
+      {cols === 0 && <text x={PAD} y={TOP+22} className="viz-empty-svg">(rows contain no recorded cells)</text>}
+      {Array.from({length:cols}, (_, c) => <text key={`col-${c}`} x={x(c)+CELL/2} y={TOP-14} className="cell-index grid-column-index">[{c}]</text>)}
+      {rows.map((row,r)=><SvgLabel key={`row-${row.key}`} x={PAD-12} y={y(r)+CELL/2} className="cell-index grid-row-index" style={{textAnchor:'end'}} text={`[${row.key}]`} maxChars={4}/>)}
       {rows.map((row, r) =>
         row.cells.map((cell, c) => {
           const column = recordedIndex(cell);
           const active = row.index !== undefined && column !== undefined && iMark === row.index && jMark === column;
           const filled = computed?.has(`${row.key},${cell.key}`) ?? false;
           return (
-            <g key={`${row.key}-${cell.key}`} data-row={row.key} data-col={cell.key} aria-label={`${binding.variable}[${row.key}][${cell.key}]`}>
+            <g key={`${row.key}-${cell.key}`} data-row={row.key} data-col={cell.key} aria-label={`${bindingLabel(binding)}[${row.key}][${cell.key}]`}>
               <rect x={x(c)} y={y(r)} width={CELL} height={CELL} rx={4} className={active ? "cell cell-active" : filled ? "cell cell-filled" : "cell"} />
-              <text x={x(c) + CELL / 2} y={y(r) + CELL / 2 + 5} className="cell-value-sm">{displayed[r][c].text}</text>
+              <SvgLabel x={x(c) + CELL / 2} y={y(r) + CELL / 2} className="cell-value-sm" text={displayed[r][c].text} maxChars={5}/>
             </g>
           );
         }),

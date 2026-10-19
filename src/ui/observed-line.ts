@@ -31,13 +31,29 @@ export function syntaxExplanation(source:string,line:number):string {
  };
  return descriptions[node.name]??'This is part of a Python statement. Follow the next recorded event for its observable effect; no algorithm intent is inferred.';
 }
+/** Includes nested mutations and handles cycles, entirely within saved snapshots. */
+function changedObjects(current:TraceEvent,previous:TraceEvent):Set<string> {
+ const changed=new Set<string>(),parents=new Map<string,Set<string>>();
+ const ids=new Set([...Object.keys(current.objects),...Object.keys(previous.objects)]);
+ for(const id of ids){
+  if(JSON.stringify(current.objects[id])!==JSON.stringify(previous.objects[id]))changed.add(id);
+  for(const object of [current.objects[id],previous.objects[id]])for(const entry of object?.entries??[])if(entry.value.kind==='ref'){
+   const owners=parents.get(entry.value.id)??new Set<string>();owners.add(id);parents.set(entry.value.id,owners);
+  }
+ }
+ const pending=[...changed];
+ for(let index=0;index<pending.length;index++)for(const parent of parents.get(pending[index])??[])if(!changed.has(parent)){changed.add(parent);pending.push(parent);}
+ return changed;
+}
+const observedName=(name:string)=>name.length>96?name.slice(0,96)+'…':name;
 export function recordedChanges(current:TraceEvent,previous?:TraceEvent):string[]{
  if(!previous)return ['This is the first recorded state.'];
  const now=current.frames.at(-1),before=previous.frames.at(-1);
  if(!now||!before)return ['The recorded call stack changed.'];
- if(now.name!==before.name||current.frames.length!==previous.frames.length)return [current.kind==='return'?`The frame ${now.name} is returning.`:`The active frame is now ${now.name}.`];
+ if(now.name!==before.name||current.frames.length!==previous.frames.length)return [current.kind==='return'?`The frame ${observedName(now.name)} is returning.`:`The active frame is now ${observedName(now.name)}.`];
  const old=new Map(before.locals.map(l=>[l.name,l.value]));const changes:string[]=[];
- for(const local of now.locals){const last=old.get(local.name);if(!last)changes.push(`${local.name} now has a binding.`);else if(JSON.stringify(last)!==JSON.stringify(local.value))changes.push(`${local.name} has a different recorded value or reference.`);else if(local.value.kind==='ref'&&last.kind==='ref'&&JSON.stringify(current.objects[local.value.id])!==JSON.stringify(previous.objects[last.id]))changes.push(`The object referenced by ${local.name} changed.`);old.delete(local.name);}
- for(const name of old.keys())changes.push(`${name} no longer has a binding in this frame.`);
+ const changed=changedObjects(current,previous);
+ for(const local of now.locals){const last=old.get(local.name);if(!last)changes.push(`${observedName(local.name)} now has a binding.`);else if(JSON.stringify(last)!==JSON.stringify(local.value))changes.push(`${observedName(local.name)} has a different recorded value or reference.`);else if(local.value.kind==='ref'&&last.kind==='ref'&&changed.has(local.value.id))changes.push(`The object referenced by ${observedName(local.name)} changed.`);old.delete(local.name);}
+ for(const name of old.keys())changes.push(`${observedName(name)} no longer has a binding in this frame.`);
  return changes.length?changes:['No local value or referenced object changed between these two recorded states.'];
 }

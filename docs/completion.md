@@ -93,3 +93,24 @@ The [1.0.1 Windows delivery record](releases/1.0.1.md) records the immutable
 archive, 11/11 native launcher checks, Chrome/Edge offline acceptance before and
 after fresh extraction, and public GitHub download. The release tag points to
 the frozen packaging commit; later delivery documentation does not change it.
+
+## 1.0.2 visualization and inspector update
+
+The [visualization audit](reviews/visualization-inspector-repair.md) records
+repairs across all 17 diagram families and the shared state panels. Diagrams
+retain readable sizes, captions wrap, aliases share recorded-object views and
+copies remain distinct. The inspector separates names, keys, types and values;
+large text and root-variable lists have accessible pages. Execution phases,
+exception exits and changes already recorded are labelled separately.
+
+On `afc42e18fc72a8913c66af6fc72e61bfbaeadf83`, the aggregate gate passes
+1,070 tests across 103 files. Chrome and Edge each pass 65 browser tests, with
+zero skips or retries. Actual runs of all 162 teaching examples pass 648
+desktop/mobile state checks. The audit records the exact commits for that
+inventory, its partial-run recovery and the limits of automated visual checks.
+All curriculum review hashes remain current; source execution and saved data
+formats are unchanged. The [1.0.2 Windows delivery record](releases/1.0.2.md)
+records 11/11 native launcher checks, offline Chrome/Edge acceptance on the
+frozen stage and fresh ZIP extraction, per-file verification and public download.
+The release tag points to the frozen packaging commit; these later documentation
+changes leave the archive unchanged.

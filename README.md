@@ -5,13 +5,13 @@ patterns in a local browser app. It starts with variables and loops, then moves
 through core and advanced DSA. Lessons use plain explanations, original exercises
 and diagrams built from actual Python execution states.
 
-Version 1.0.1 contains 133 lessons, 29 pattern guides and 393 exercises. The
+Version 1.0.2 contains 133 lessons, 29 pattern guides and 393 exercises. The
 offline Windows package includes the app, Python runtime, portable Node, source
 code and dependency notices. No account, API key or AI service is required.
 
 ## Run the Windows package
 
-Download [DSA-Visual-Lab-1.0.1-Windows-x64.zip](https://github.com/RishabhP1508/DSA/releases/download/v1.0.1/DSA-Visual-Lab-1.0.1-Windows-x64.zip)
+Download [DSA-Visual-Lab-1.0.2-Windows-x64.zip](https://github.com/RishabhP1508/DSA/releases/download/v1.0.2/DSA-Visual-Lab-1.0.2-Windows-x64.zip)
 from [GitHub Releases](https://github.com/RishabhP1508/DSA/releases/latest):
 
 1. Extract the entire ZIP to a normal folder. Keep its contents together.
@@ -32,11 +32,18 @@ The named Windows ZIP includes the portable app. GitHub's automatic "Source code
 archives contain the repository and require a development setup. Release assets
 also include a `.sha256` checksum. The previous
 [1.0.0 delivery record](docs/releases/1.0.0.md) preserves its original checks;
-the [1.0.1 delivery record](docs/releases/1.0.1.md) records the current archive,
-launcher and offline checks. The [UI hierarchy audit](docs/reviews/ui-content-hierarchy.md)
-records its interface changes.
+the [1.0.1 delivery record](docs/releases/1.0.1.md) retains that release's archive,
+launcher and offline checks. The [visualization and inspector audit](docs/reviews/visualization-inspector-repair.md)
+records the latest repair and its verification. The
+[1.0.2 delivery record](docs/releases/1.0.2.md) identifies the new archive,
+65/65 Chrome and Edge browser checks, launcher acceptance and fresh offline extraction.
 
-Version 1.0.1 adds numbered reading sections, a page outline, topic-grouped lessons,
+Version 1.0.2 gives diagrams readable intrinsic sizes, shared-object views and
+wrapping captions. The inspector separates names, types, indices and values.
+Execution labels distinguish the next statement from changes already recorded,
+including exception unwinding. Huge values remain inspectable through bounded text pages.
+
+Version 1.0.1 added numbered reading sections, a page outline, topic-grouped lessons,
 separate exercise panels and stacked answer choices. All pages share readable
 heading sizes and responsive layouts. Python syntax colors adapt to light and dark
 themes; short zoomed windows can scroll through the complete navigation.
@@ -215,7 +222,7 @@ The zoom check used an equivalent reduced CSS viewport.
 All 162 lessons and patterns have review records tied to their current content
 hashes. Unchanged prior human approvals are preserved, and delegated technical
 reviews record their provenance. Tests check that evidence is current; passing
-tests alone does not establish teaching correctness. Lint recorded 32 warnings
+tests alone does not establish teaching correctness. The original release's lint recorded 32 warnings
 and zero errors; 25 semantic consistency scope advisories remain documented.
 The [completion record](docs/completion.md) and
 [release record](docs/releases/1.0.0.md) identify the exact tested source and
